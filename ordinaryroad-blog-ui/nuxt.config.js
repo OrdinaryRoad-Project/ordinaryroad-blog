@@ -1,4 +1,5 @@
-import colors from 'vuetify/es5/util/colors'
+import en from 'vuetify/lib/locale/en'
+import zhHans from 'vuetify/lib/locale/zh-Hans'
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -6,25 +7,50 @@ export default {
     titleTemplate: '%s - ordinaryroad-blog-ui',
     title: 'ordinaryroad-blog-ui',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'zh-Hans'
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1'
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: ''
+      },
+      {
+        name: 'format-detection',
+        content: 'telephone=no'
+      }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico'
+      }
     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    // 权限插件
+    '~/plugins/access/index.js',
+    // api插件
+    '@/plugins/api/index',
+    // api插件 Server端
+    { src: '@/plugins/api/server/index', mode: 'server' },
+    // dayjs
+    '~/plugins/dayjs/index.js',
+    // 国际化插件
+    '~/plugins/i18n/index.js',
+    // vuetify client mode
+    { src: '~/plugins/vuetify/index.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -41,7 +67,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/dayjs'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -52,24 +79,33 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: {
-      dark: true,
-      themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+    lang: {
+      locales: { en, 'zh-Hans': zhHans },
+      current: 'zh-Hans'
+    },
+    customVariables: ['~/assets/variables.scss']
+  },
+
+  dayjs: {
+    locales: ['en', 'zh-cn'],
+    defaultLocale: 'zh-cn'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {},
+
+  // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
+  publicRuntimeConfig: {
+    CLIENT_ID: 'ordinaryroad-blog',
+    // REDIRECT_URI: 'https://blog.ordinaryroad.tech/authorized',
+    REDIRECT_URI: 'http://blog.ordinaryroad.tech:3000/user/authorized',
+    BASE_URL: process.env.BASE_URL,
+    AUTH_BASE_URL: process.env.AUTH_BASE_URL
+  },
+  privateRuntimeConfig: {
+    CLIENT_SECRET: 'g8DxQweDHm4CAtda'
+  },
+
+  // https://www.nuxtjs.cn/api/configuration-env
+  env: {}
 }
