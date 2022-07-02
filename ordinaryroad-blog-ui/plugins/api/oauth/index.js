@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
-import oauthApis from './oauth/index'
-import blogApis from './blog/index'
+let $axios = null
+let $config = null
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  oauthApis.initAxios($axios, $config)
-  blogApis.initAxios($axios)
-  const $apis = {
-    oauth: oauthApis.apis,
-    blog: blogApis.apis
+export default {
+  initAxios (axios, config) {
+    $axios = $axios || axios
+    $config = $config || config
+  },
+  apis: {
+    token: (code) => {
+      return $axios({
+        url: `/api/auth/oauth2/token?grant_type=authorization_code&client_id=${$config.CLIENT_ID}&client_secret=${$config.CLIENT_SECRET}&code=${code}`,
+        method: 'get'
+      })
+    }
   }
-  // $apis
-  inject('apis', $apis)
 }

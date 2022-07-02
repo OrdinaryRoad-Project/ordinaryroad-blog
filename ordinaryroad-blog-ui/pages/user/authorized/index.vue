@@ -34,49 +34,84 @@
 <script>
 export default {
   layout: 'empty',
-  asyncData ({
-    store, route, redirect
+  async asyncData ({
+    $apis,
+    store,
+    route,
+    redirect
   }) {
     const oAuth2State = store.getters['user/getOAuth2State']
-    console.log('oAuth2State', oAuth2State)
     if (oAuth2State == null) {
-      // TODO 返回登录页面
-      console.log('返回登录页面')
+      // 返回登录页面
       redirect('/user/login')
     } else {
       const stateFromServer = route.query.state
-      if (decodeURIComponent(stateFromServer) !== decodeURIComponent(oAuth2State)) {
-        // TODO state不一致
-        console.log('state不一致', decodeURIComponent(stateFromServer), decodeURIComponent(oAuth2State))
-      } else {
-        const redirectFromLogin = decodeURIComponent(oAuth2State).split(',')[1]
+      const redirectFromLogin = decodeURIComponent(oAuth2State).split(',')[1]
+      try {
+        if (decodeURIComponent(stateFromServer) !== decodeURIComponent(oAuth2State)) {
+          // state不一致
+          throw new Error('state不一致')
+        } else {
+          const code = route.query.code
+          const tokenResponse = await $apis.oauth.token(code)
+          const tokenData = tokenResponse.data
+
+          if (tokenData.success !== undefined && !tokenData.success) {
+            throw new Error(tokenData.msg)
+          }
+
+          const openid = tokenData.openid
+          const accessToken = tokenData.access_token
+          const tokenType = tokenData.token_type
+
+          // 调用callback接口，换取用户信息和token
+          const callbackResponse = await $apis.blog.oauth2.callback('or', `${tokenType} ${accessToken}`, openid)
+          if (callbackResponse.status === 200) {
+            const { data } = callbackResponse
+            return {
+              success: true,
+              token: data.token,
+              userinfo: data.userinfo,
+              redirect: redirectFromLogin
+            }
+          } else {
+            throw new Error('失败')
+          }
+        }
+      } catch (e) {
         return {
-          code: 'CODE',
-          redirect: redirectFromLogin
+          redirect: redirectFromLogin,
+          msg: e
         }
       }
     }
   },
   data () {
     return {
-      code: '',
-      redirect: ''
+      success: false,
+      redirect: '',
+      msg: '失败',
+      token: null,
+      userinfo: null
     }
   },
   mounted () {
-    // TODO Code换取用户信息
-
-    console.log(this.$store.getters['user/getTokenInfo'])
-    this.$store.commit('user/SET_TOKEN_INFO', { satoken: 'TEST_TOKEN' })
-    console.log(this.$store.getters['user/getTokenInfo'])
-
-    console.log(this.$store.getters['user/getUserInfo'])
-    this.$store.commit('user/SET_USER_INFO', { username: 'TEST_USER_INFO' })
-    console.log(this.$store.getters['user/getUserInfo'])
-
-    this.$store.commit('user/REMOVE_OAUTH2_STATE')
-    console.log('跳转到', this.redirect)
-    this.$router.replace(this.redirect)
+    if (this.success) {
+      this.$store.commit('user/REMOVE_OAUTH2_STATE')
+      this.$store.commit('user/SET_TOKEN_INFO', this.token)
+      this.$store.commit('user/SET_USER_INFO', this.userinfo)
+      console.log(this.$store.getters['user/getTokenInfo'])
+      this.$router.replace(this.redirect)
+    } else {
+      this.$dialog({
+        persistent: true,
+        title: '系统提示',
+        content: '失败，请重试<br>' + this.msg,
+        confirmText: '确定'
+      }).then(() => {
+        this.$router.replace(`/user/login?redirect=${this.redirect}`)
+      })
+    }
   }
 }
 </script>

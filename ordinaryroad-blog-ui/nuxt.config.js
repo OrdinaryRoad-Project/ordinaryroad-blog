@@ -44,13 +44,19 @@ export default {
     // api插件
     '@/plugins/api/index',
     // api插件 Server端
-    { src: '@/plugins/api/server/index', mode: 'server' },
+    {
+      src: '@/plugins/api/server/index',
+      mode: 'server'
+    },
     // dayjs
     '~/plugins/dayjs/index.js',
     // 国际化插件
     '~/plugins/i18n/index.js',
     // vuetify client mode
-    { src: '~/plugins/vuetify/index.js', mode: 'client' }
+    {
+      src: '~/plugins/vuetify/index.js',
+      mode: 'client'
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -74,13 +80,34 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/'
+    // baseURL: '/',
+    // prefix: '/api',
+    // https://axios.nuxtjs.org/options/#proxy
+    proxy: true // Can be also an object with default options
+  },
+
+  proxy: {
+    '/api/blog': {
+      target: process.env.BASE_URL,
+      pathRewrite: {
+        '^/api/blog': '/'
+      }
+    },
+    '/api/auth': {
+      target: process.env.AUTH_BASE_URL,
+      pathRewrite: {
+        '^/api/auth': '/'
+      }
+    }
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     lang: {
-      locales: { en, 'zh-Hans': zhHans },
+      locales: {
+        en,
+        'zh-Hans': zhHans
+      },
       current: 'zh-Hans'
     },
     customVariables: ['~/assets/variables.scss']
