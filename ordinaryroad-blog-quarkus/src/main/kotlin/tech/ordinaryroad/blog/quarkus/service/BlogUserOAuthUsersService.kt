@@ -1,0 +1,66 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 苗锦洲
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package tech.ordinaryroad.blog.quarkus.service
+
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import tech.ordinaryroad.blog.quarkus.dao.BlogUserOAuthUsersDAO
+import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import javax.enterprise.context.ApplicationScoped
+
+@ApplicationScoped
+class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAuthUsers>() {
+
+    /**
+     * 根据用户Id查询所有关联关系
+     */
+    fun findAllByUserId(userId: String): List<BlogUserOAuthUsers> {
+        val wrapper = Wrappers.lambdaQuery<BlogUserOAuthUsers>()
+        wrapper.eq(BlogUserOAuthUsers::getUserId, userId)
+        return super.dao.selectList(wrapper)
+    }
+
+    /**
+     * 根据OAuthUser查询所有的关联关系
+     */
+    fun findAllByOAuthUserId(oAuthUserId: String): List<BlogUserOAuthUsers> {
+        val wrapper = Wrappers.lambdaQuery<BlogUserOAuthUsers>()
+        wrapper.eq(BlogUserOAuthUsers::getOAuthUserId, oAuthUserId)
+        return super.dao.selectList(wrapper)
+    }
+
+    /**
+     * 根据OAuthUser查询关联的BlogUser Id
+     */
+    fun findUserIdByOAuthUserId(oAuthUserId: String): String? {
+        val list = this.findAllByOAuthUserId(oAuthUserId)
+        return if (list.isEmpty()) {
+            null
+        } else {
+            list.first().userId
+        }
+    }
+
+}
