@@ -24,13 +24,11 @@
 package tech.ordinaryroad.blog.quarkus.dto
 
 import tech.ordinaryroad.commons.base.dto.BaseDTO
-import java.io.Serial
 
 data class BlogUserinfoDTO(
     var user: BlogUserDTO
 ) : BaseDTO() {
     companion object {
-        @Serial
         private const val serialVersionUID: Long = 2028801912014094849L
     }
 }

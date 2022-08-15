@@ -26,10 +26,17 @@ export default {
   getOAuth2State: state => state.oAuth2State,
   getTokenInfo: state => state.tokenInfo,
   getUserInfo: state => state.userInfo,
+  getUsername: (state) => {
+    return state.userInfo.user.username
+  },
   getAvatarPath: (state) => {
-    if (!state.userInfo.user.avatar) {
+    const avatar = state.userInfo.user.avatar
+    if (!avatar) {
       return require('static/vuetify-logo.svg')
     }
-    return '/api/upms/file/download' + state.userInfo.user.avatar
+    if (avatar.startsWith('/ordinaryroad-')) {
+      return `/api/upms/file/download${avatar}`
+    }
+    return avatar
   }
 }

@@ -36,7 +36,7 @@ import javax.inject.Inject
 class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
 
     @Inject
-    private lateinit var userOAuthUsersService: BlogUserOAuthUsersService
+    protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
     /**
      * 创建主账号，并关联OAuth用户

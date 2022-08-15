@@ -24,6 +24,9 @@
 
 package tech.ordinaryroad.blog.quarkus
 
+import cn.dev33.satoken.annotation.SaCheckLogin
+import cn.dev33.satoken.stp.StpUtil
+import org.jboss.resteasy.reactive.RestPath
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -34,5 +37,18 @@ class GreetingResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    fun hello() = "Hello RESTEasy"
+    fun hello() = "Hello RESTEasy Reactive"
+
+    @GET
+    @Path("{path}")
+    @Produces(MediaType.TEXT_PLAIN)
+    fun restPath(@RestPath("path") path: String) = "hello $path"
+
+    @SaCheckLogin
+    @GET
+    @Path("sa_check_login")
+    @Produces(MediaType.TEXT_PLAIN)
+    fun saCheckLogin(): String {
+        return StpUtil.getLoginIdAsString()
+    }
 }

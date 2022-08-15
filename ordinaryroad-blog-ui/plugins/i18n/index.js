@@ -26,15 +26,30 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
-export default ({ app, store }) => {
+export default ({
+  app,
+  store
+}) => {
   // Set i18n instance on app
   // This way we can use it in middleware and pages asyncData/fetch
+  const enOr = require('~/plugins/ordinaryroad/i18n/en.json')
+  const zhHansOr = require('~/plugins/ordinaryroad/i18n/zh-Hans.json')
+
+  const en = {
+    ...require('~/locales/en.json'),
+    ...enOr
+  }
+  const zhHans = {
+    ...require('~/locales/zh-Hans.json'),
+    ...zhHansOr
+  }
+
   app.i18n = new VueI18n({
     locale: store.getters['i18n/getLocale'],
     fallbackLocale: 'zh-Hans',
     messages: {
-      en: require('~/locales/en.json'),
-      'zh-Hans': require('~/locales/zh-Hans.json')
+      en,
+      'zh-Hans': zhHans
     }
   })
   app.i18n.path = (link) => {

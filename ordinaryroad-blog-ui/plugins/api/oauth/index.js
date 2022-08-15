@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
+
 let $axios = null
 let $config = null
 
@@ -31,11 +33,33 @@ export default {
     $config = $config || config
   },
   apis: {
-    token: (code) => {
-      return $axios({
-        url: `/api/auth/oauth2/token?grant_type=authorization_code&client_id=${$config.CLIENT_ID}&client_secret=${$config.CLIENT_SECRET}&code=${code}`,
-        method: 'get'
-      })
+    token: (provider, code) => {
+      const data = {
+        client_id: $config.OAUTH2[provider].CLIENT_ID,
+        client_secret: $config.OAUTH2[provider].CLIENT_SECRET,
+        code
+      }
+      const accessTokenEndpoint = `${$config.OAUTH2[provider].ACCESS_TOKEN_ENDPOINT}`
+      if (provider === 'ordinaryroad') {
+        return $axios({
+          url: `${accessTokenEndpoint}?grant_type=authorization_code${urlEncode(data)}`,
+          method: 'get'
+        })
+      } else if (provider === 'github') {
+        return $axios({
+          url: `${accessTokenEndpoint}?1=1${urlEncode(data)}`,
+          headers: {
+            Accept: 'application/json'
+          },
+          method: 'post'
+        })
+      } else {
+        return $axios({
+          url: `${accessTokenEndpoint}&redirect_uri=${$config.OAUTH2.REDIRECT_URI}`,
+          method: 'post',
+          data
+        })
+      }
     }
   }
 }

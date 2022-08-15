@@ -29,12 +29,16 @@ export default {
     $axios = $axios || axios
   },
   apis: {
-    callback: (iss, authorization, openid) => {
+    callback: (provider, authorization, openid) => {
+      let newAuthorization = authorization
+      if (provider === 'github') {
+        newAuthorization = `token ${authorization.split(' ')[1]}`
+      }
       return $axios({
-        url: `/api/blog/oauth2/callback/${iss}?openid=${openid}`,
+        url: `/api/blog/oauth2/callback/${provider}?openid=${openid}&device=PC`,
         method: 'post',
         headers: {
-          Authorization: authorization
+          Authorization: newAuthorization
         }
       })
     }

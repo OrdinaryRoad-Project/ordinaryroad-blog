@@ -24,7 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import tech.ordinaryroad.blog.quarkus.dao.BlogOAuthUserDAO
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class BlogOAuthUserService : BaseService<BlogOAuthUserDAO, BlogOAuthUser>() {
 
     @Inject
-    private lateinit var userOAuthUsersService: BlogUserOAuthUsersService
+    protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
     fun findAllByUserId(userId: String): List<BlogOAuthUser> {
         val userOAuthUsers = userOAuthUsersService.findAllByUserId(userId)
@@ -47,9 +47,9 @@ class BlogOAuthUserService : BaseService<BlogOAuthUserDAO, BlogOAuthUser>() {
     }
 
     fun findByOpenidAndProvider(openid: String, provider: String): BlogOAuthUser? {
-        val wrapper = LambdaQueryWrapper<BlogOAuthUser>()
-        wrapper.eq(BlogOAuthUser::getOpenid, openid)
-        wrapper.eq(BlogOAuthUser::getProvider, provider)
+        val wrapper = Wrappers.query<BlogOAuthUser>()
+        wrapper.eq("openid", openid)
+        wrapper.eq("provider", provider)
         return super.dao.selectOne(wrapper)
     }
 

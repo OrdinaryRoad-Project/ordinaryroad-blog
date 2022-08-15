@@ -23,101 +23,50 @@
  */
 
 export default () => ({
+  dashboardDrawerModel: true,
+  rightDrawerModel: false,
   selectedThemeOption: 0,
-  userMenuItems: [
+  dashboardMenuItems: [
     {
+      to: '/dashboard',
+      titleKey: 'dashboardMenuTitles.dashboardTitle',
+      children: []
+    },
+    {
+      titleKey: 'dashboardMenuTitles.dashboard.article.boxTitle',
       children: [
         {
-          titleKey: 'userMenuTitles.userProfile',
-          to: '/user/profile',
-          icon: 'mdi-account'
+          titleKey: 'dashboardMenuTitles.dashboard.article.box.draft',
+          to: '/dashboard/article/box/DRAFT',
+          children: []
         },
         {
-          titleKey: 'logout',
-          icon: 'mdi-logout'
+          titleKey: 'dashboardMenuTitles.dashboard.article.box.publish',
+          to: '/dashboard/article/box/PUBLISH',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.box.trash',
+          to: '/dashboard/article/box/TRASH',
+          children: []
         }
       ]
     }
   ],
-  /**
-   * 最多三层
-   */
-  menuItems: [
+  userMenuItems: [
     {
-      titleKey: 'menuTitles.accessControl',
-      icon: 'mdi-key',
-      children: [
-        {
-          titleKey: 'menuTitles.userManagement',
-          to: '/upms/user',
-          icon: 'mdi-account',
-          meta: {
-            permission: 'upms:user:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.roleManagement',
-          to: '/upms/role',
-          icon: 'mdi-account-multiple',
-          meta: {
-            permission: 'upms:role:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.permissionManagement',
-          to: '/upms/permission',
-          icon: 'mdi-lock',
-          meta: {
-            permission: 'upms:permission:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.requestPathManagement',
-          to: '/upms/request_path',
-          icon: 'mdi-menu',
-          meta: {
-            permission: 'upms:request_path:list'
-          }
-        }
-      ]
+      titleKey: 'userMenuTitles.dashboard',
+      to: '/dashboard',
+      icon: 'mdi-view-dashboard'
     },
     {
-      titleKey: 'menuTitles.systemManagement',
-      icon: 'mdi-cog',
-      children: [
-        {
-          titleKey: 'menuTitles.dictManagement',
-          to: '/upms/dict',
-          icon: 'mdi-book-cog',
-          meta: {
-            permission: 'upms:dict:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.fileManagement',
-          to: '/upms/file',
-          icon: 'mdi-file-multiple',
-          meta: {
-            permission: 'upms:file:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.registeredClientManagement',
-          to: '/auth/registered_client',
-          icon: 'mdi-web',
-          meta: {
-            permission: 'auth:registered_client:list'
-          }
-        },
-        {
-          titleKey: 'menuTitles.openidManagement',
-          to: '/auth/openid',
-          icon: 'mdi-identifier',
-          meta: {
-            permission: 'auth:openid:list'
-          }
-        }
-      ]
+      titleKey: 'userMenuTitles.profile',
+      to: '/dashboard/user/profile',
+      icon: 'mdi-account'
+    },
+    {
+      titleKey: 'logout',
+      icon: 'mdi-logout'
     }
   ],
   titleKey: null,
@@ -138,7 +87,7 @@ export default () => ({
     {
       titleKey: 'themeTitles.system',
       // icon: 'mdi-desktop-tower-monitor'
-      icon: 'mdi-arm-flex'
+      icon: 'mdi-arm-flex-outline'
     }
   ]
 })

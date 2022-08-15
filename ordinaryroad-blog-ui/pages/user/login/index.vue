@@ -23,47 +23,55 @@
   -->
 
 <template>
-  <v-img
-    class="align-center"
-    height="100vh"
-    src="https://api.dujin.org/bing/1920.php"
-  >
-    <base-material-card
-      style="opacity:0.85"
-      width="400"
+  <v-container fluid class="pa-0 fill-height">
+    <v-img
+      class="align-center"
+      style="height: 100vh"
+      src="https://api.dujin.org/bing/1920.php"
     >
-      <template #heading>
-        <div class="text-center">
-          <h2 class="font-weight-bold mb-2">
-            {{ $t('loginFormTitle') }}
-          </h2>
-          <v-btn @click="login">
-            使用OR账号登录
-          </v-btn>
-          <br>
-          <br>
-          <v-btn icon>
-            <v-icon>
-              mdi-github
-            </v-icon>
-          </v-btn>
-          <v-btn icon>
-            <v-icon>
-              mdi-qqchat
-            </v-icon>
-          </v-btn>
-        </div>
-      </template>
-    </base-material-card>
-  </v-img>
+      <base-material-card
+        style="opacity:0.85"
+        width="400"
+      >
+        <template #heading>
+          <div class="text-center">
+            <h2 class="font-weight-bold mb-2">
+              {{ $t('loginFormTitle') }}
+            </h2>
+            <v-btn @click="login('ordinaryroad')">
+              使用OR账号登录
+            </v-btn>
+            <br>
+            <br>
+            <v-btn icon @click="login('github')">
+              <v-icon>
+                mdi-github
+              </v-icon>
+            </v-btn>
+            <v-btn icon @click="login('gitee')">
+              <simple-icons-gitee />
+            </v-btn>
+            <v-btn icon>
+              <v-icon>
+                mdi-qqchat
+              </v-icon>
+            </v-btn>
+          </div>
+        </template>
+      </base-material-card>
+    </v-img>
+  </v-container>
 </template>
 
 <script>
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
+
 export default {
   layout: 'empty',
   asyncData ({
-    store, route, redirect,
-    $config: { AUTH_BASE_URL, CLIENT_ID, REDIRECT_URI }
+    store,
+    route,
+    redirect
   }) {
     const redirectPath = route.query.redirect || '/'
     const userInfo = store.getters['user/getUserInfo']
@@ -72,31 +80,31 @@ export default {
       redirect(redirectPath)
     } else {
       return {
-        loginUrl: `${AUTH_BASE_URL}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=openid,userinfo&redirect_uri=${REDIRECT_URI}`,
         redirect: redirectPath
       }
     }
   },
   data () {
     return {
-      loginUrl: '',
-
       redirect: undefined
     }
   },
   methods: {
-    login () {
-      const oAuth2State = this.$store.getters['user/getOAuth2State']
-      let state
-      if (oAuth2State == null) {
-        // 首次访问登录界面
-        state = this.$dayjs().valueOf() + ',' + this.redirect
-        this.$store.commit('user/SET_OAUTH2_STATE', state)
-      } else {
-        // 读取Cookie中的
-        state = oAuth2State
+    login (provider) {
+      const { OAUTH2 } = this.$config
+      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}`
+      this.$store.commit('user/SET_OAUTH2_STATE', state)
+
+      const oauth2Query = {
+        client_id: OAUTH2[provider].CLIENT_ID,
+        scope: OAUTH2[provider].SCOPE,
+        redirect_uri: OAUTH2.REDIRECT_URI,
+        state
       }
-      window.open(this.loginUrl + '&state=' + state, '_self')
+      // https://github.com/login/oauth/authorize?client_id=c0615d2a28cfb7a20a84&scope=read:user&state=1,1,github&redirect_uri=http://blog.ordinaryroad.tech:3000/user/authorized
+      const loginUrl = `${OAUTH2[provider].AUTHORIZE_ENDPOINT}${urlEncode(oauth2Query)}`
+
+      window.open(loginUrl, '_self')
     }
   }
 }

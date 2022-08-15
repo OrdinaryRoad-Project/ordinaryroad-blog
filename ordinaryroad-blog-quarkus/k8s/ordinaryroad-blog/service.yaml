@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog
+  namespace: or-pro
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080     # 容器暴露的端口，与Dockerfile暴露端口保持一致
+  selector:
+    tier: blog

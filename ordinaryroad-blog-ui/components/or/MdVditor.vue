@@ -50,11 +50,7 @@ export default {
       type: String,
       required: true
     },
-    darkWhenReadOnly: {
-      type: Boolean,
-      default: false
-    },
-    darkWhenEdit: {
+    dark: {
       type: Boolean,
       default: false
     },
@@ -71,43 +67,19 @@ export default {
       scrollEndTimer: null,
       currentScrollTop: 0
     },
-    instance: null
+    instance: undefined,
+    headingElements: []
   }),
   watch: {
-    placeholder (val) {
-      if (!this.readOnly) {
-        if (this.instance) {
-          this.$refs.vditor
-            .getElementsByClassName('vditor-reset')[0]
-            .setAttribute('placeholder', val)
+    dark (val) {
+      try {
+        if (this.readOnly) {
+          this.updatePreviewerTheme(val)
+        } else {
+          this.updateEditorTheme(val)
         }
+      } catch (e) {
       }
-    },
-    preSetContent (val) {
-      // console.log('watch:preSetContent', this.preSetContent)
-      // // 当编辑博客的时候触发watch和mounted方法，但是只有在watch中才有值，因为prop异步
-      if (this.readOnly) {
-        // this.initPreviewer(val)
-      } else {
-        const current = this.instance.getValue()
-        // console.log(current === val)
-        if (current !== val) {
-          this.instance.setValue(val || '')
-          this.$nextTick(() => {
-            console.log(this.commentMode)
-            if (!this.commentMode) {
-              // this.instance.focus()
-            }
-          })
-        }
-        // this.initEditor(null)
-      }
-    },
-    darkWhenReadOnly (val) {
-      this.updatePreviewerTheme(val)
-    },
-    darkWhenEdit (val) {
-      this.updateEditorTheme(val)
     }
   },
   created () {
@@ -123,9 +95,39 @@ export default {
   },
   beforeDestroy () {
   },
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll, false)
+  },
   methods: {
+    setPlaceholder (val) {
+      if (!this.readOnly) {
+        const byClassName = this.$refs.vditor.getElementsByClassName('vditor-reset')
+        if (byClassName && byClassName.length > 0) {
+          byClassName[0].setAttribute('placeholder', val)
+        }
+      }
+    },
+    setValue (val) {
+      // console.log('watch:preSetContent', this.preSetContent)
+      // // 当编辑博客的时候触发watch和mounted方法，但是只有在watch中才有值，因为prop异步
+      if (this.readOnly) {
+        // this.initPreviewer(val)
+      } else {
+        const current = this.instance.getValue()
+        // console.log(current === val)
+        if (current !== val) {
+          this.instance.setValue(val || '')
+          this.$nextTick(() => {
+            if (!this.commentMode) {
+              // this.instance.focus()
+            }
+          })
+        }
+        // this.initEditor(null)
+      }
+    },
     updateEditorTheme (dark) {
-      if (this.instance != null) {
+      if (this.instance) {
         let editorTheme = 'classic'
         let theme = 'light'
         let codeTheme = 'github'
@@ -138,6 +140,7 @@ export default {
       }
     },
     updatePreviewerTheme (dark) {
+      // TODO 夜间模式链接颜色不对
       let theme = 'light'
       let codeTheme = 'github'
       if (dark) {
@@ -148,24 +151,7 @@ export default {
       Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.15/dist/css/content-theme')
     },
     initEditor () {
-      let editorTheme = 'classic'
-      let theme = 'light'
-      let codeTheme = 'github'
-      if (this.darkWhenEdit) {
-        editorTheme = 'dark'
-        theme = 'dark'
-        codeTheme = 'dracula'
-      }
       this.instance = new Vditor(this.$refs.vditor, {
-        // cdn: PATH,
-        // hint: {
-        //   emojiPath: PATH + "/dist/images/emoji",
-        // },
-        // preview: {
-        //   theme: {
-        //     path: PATH + "/dist/css/content-theme"
-        //   },
-        // },
         placeholder: this.placeholder,
         toolbarConfig: {
           hide: this.commentMode,
@@ -198,11 +184,10 @@ export default {
             }
           ]
         },
-        height: this.commentMode ? 200 : 'auto',
-        minHeight: this.commentMode ? 100 : 600,
+        minHeight: this.commentMode ? 50 : 600,
         value: this.preSetContent || '',
         mode: 'wysiwyg',
-        theme: editorTheme,
+        theme: this.dark ? 'dark' : 'classic',
         icon: 'material',
         counter: {
           type: 'text',
@@ -213,16 +198,16 @@ export default {
         },
         preview: {
           hljs: {
-            style: codeTheme,
+            style: this.dark ? 'dracula' : 'github',
             lineNumber: true
           },
           theme: {
-            current: theme
+            current: this.dark ? 'dark' : 'light'
           }
         },
         upload: {
           max: 30 * 1024 * 1024,
-          url: '/api/blog/upload',
+          url: '/api/blog/common/upload',
           // 跨站点访问控制。默认值: false
           withCredentials: true,
           headers: {},
@@ -265,16 +250,15 @@ export default {
           enable: !this.commentMode
         },
         after: () => {
+          this.updateEditorTheme(this.dark)
           this.$nextTick(() => {
             if (this.commentMode) {
               // 评论的时候设置padding
-              this.$refs.vditor
-                .getElementsByClassName('vditor-reset')[0]
-                .setAttribute('style', 'padding:5px 10px')
             } else {
               // this.instance.focus()
             }
           })
+          this.$emit('after', 'edit')
         },
         input: (value) => {
           this.$emit('update:transferContent', value)
@@ -285,12 +269,17 @@ export default {
       const previewElement = this.$refs.vditor
       // const renderHeading = false
       // const textTemp = ''
-      previewElement.style.paddingLeft = '20px'
-      previewElement.style.paddingRight = '20px'
+      if (this.commentMode) {
+        previewElement.style.paddingLeft = '0'
+        previewElement.style.paddingRight = '0'
+      } else {
+        previewElement.style.paddingLeft = '20px'
+        previewElement.style.paddingRight = '20px'
+      }
       let mode = 'light'
       let theme = 'light'
       let codeTheme = 'github'
-      if (this.darkWhenReadOnly) {
+      if (this.dark) {
         mode = 'dark'
         theme = 'dark'
         codeTheme = 'dracula'
@@ -335,6 +324,7 @@ export default {
             // }
           },
           after: () => {
+            this.updatePreviewerTheme(this.dark)
             previewElement.addEventListener('click', (event) => {
               if (event.target.tagName === 'IMG') {
                 Vditor.previewImage(event.target, null, this.$vuetify.theme.dark ? 'dark' : 'light')
@@ -342,8 +332,6 @@ export default {
             })
 
             if (this.commentMode) {
-              previewElement.style.paddingLeft = '0'
-              previewElement.style.paddingRight = '0'
               // 评论不需要目录
               return
             }
@@ -376,55 +364,61 @@ export default {
               this.$emit('update:currentTocIndex', 0)
               // console.log('MdVditor 需要激活的目录', 0)
 
-              window.addEventListener('scroll', () => {
-                // 发生滚动重置计时器
-                clearTimeout(this.scrollingOptions.scrollEndTimer)
-                this.scrollingOptions.currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-                // 100ms后调用函数判断t1,t2是否一致
-                this.scrollingOptions.scrollEndTimer = setTimeout(() => {
-                  const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-                  if (this.scrollingOptions.currentScrollTop === scrollTop) {
-                    // console.log("滚动结束")
-                    for (let i = 0; i < headingElements.length; i++) {
-                      // 找到 屏幕上 离offset最近的 元素
-                      const offset = this.headingsOffsetTop
-                      const element = headingElements[i]
-                      const currentTop = element.getBoundingClientRect().top
-                      if (currentTop >= offset) {
-                        if (currentTop === offset) {
-                          this.$emit('update:currentTocIndex', i)
-                          // console.log('MdVditor 滑动后需要激活的目录', i)
-                        } else if (i > 1) {
-                          const preElement = headingElements[i - 1]
-                          const preTop = preElement.getBoundingClientRect().headingsOffsetTop
-                          const distance = currentTop - preTop
-                          if (distance < offset) {
-                            // 间距过小，直接设置当前的位置
-                            this.$emit('update:currentTocIndex', i)
-                            // console.log('MdVditor 滑动后需要激活的目录 distance < offset', i)
-                          } else if (currentTop - offset < 3) {
-                            // 当前紧靠offset位置
-                            this.$emit('update:currentTocIndex', i)
-                            // console.log('MdVditor 滑动后需要激活的目录 currentTop - offset < 3', i)
-                          } else {
-                            // 上一部分还没完全遮住
-                            this.$emit('update:currentTocIndex', i - 1)
-                            // console.log('MdVditor 滑动后需要激活的目录', i - 1)
-                          }
-                        } else {
-                          this.$emit('update:currentTocIndex', 0)
-                          // console.log('MdVditor 滑动后需要激活的目录', 0)
-                        }
-                        break
-                      }
-                    }
-                  }
-                }, 100)
-              })
+              this.headingElements = headingElements
+
+              window.addEventListener('scroll', this.handleScroll)
             }
+
+            this.$emit('after', 'preview')
           }
         }
       )
+    },
+    handleScroll () {
+      const headingElements = this.headingElements
+      // 发生滚动重置计时器
+      clearTimeout(this.scrollingOptions.scrollEndTimer)
+      this.scrollingOptions.currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      // 100ms后调用函数判断t1,t2是否一致
+      this.scrollingOptions.scrollEndTimer = setTimeout(() => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        if (this.scrollingOptions.currentScrollTop === scrollTop) {
+          // console.log("滚动结束")
+          for (let i = 0; i < headingElements.length; i++) {
+            // 找到 屏幕上 离offset最近的 元素
+            const offset = this.headingsOffsetTop
+            const element = headingElements[i]
+            const currentTop = element.getBoundingClientRect().top
+            if (currentTop >= offset) {
+              if (currentTop === offset) {
+                this.$emit('update:currentTocIndex', i)
+                // console.log('MdVditor 滑动后需要激活的目录', i)
+              } else if (i > 1) {
+                const preElement = headingElements[i - 1]
+                const preTop = preElement.getBoundingClientRect().headingsOffsetTop
+                const distance = currentTop - preTop
+                if (distance < offset) {
+                  // 间距过小，直接设置当前的位置
+                  this.$emit('update:currentTocIndex', i)
+                  // console.log('MdVditor 滑动后需要激活的目录 distance < offset', i)
+                } else if (currentTop - offset < 3) {
+                  // 当前紧靠offset位置
+                  this.$emit('update:currentTocIndex', i)
+                  // console.log('MdVditor 滑动后需要激活的目录 currentTop - offset < 3', i)
+                } else {
+                  // 上一部分还没完全遮住
+                  this.$emit('update:currentTocIndex', i - 1)
+                  // console.log('MdVditor 滑动后需要激活的目录', i - 1)
+                }
+              } else {
+                this.$emit('update:currentTocIndex', 0)
+                // console.log('MdVditor 滑动后需要激活的目录', 0)
+              }
+              break
+            }
+          }
+        }
+      }, 100)
     }
   }
 }

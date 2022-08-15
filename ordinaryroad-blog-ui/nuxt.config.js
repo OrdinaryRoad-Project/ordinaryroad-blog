@@ -35,7 +35,12 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    '@/assets/css/ordinaryroad.css'
+  ],
+  less: [
+    '@/assets/vditor-custom.less'
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -48,10 +53,14 @@ export default {
       src: '@/plugins/api/server/index',
       mode: 'server'
     },
+    // axios拦截器等
+    '~/plugins/axios/index.js',
     // dayjs
     '~/plugins/dayjs/index.js',
     // 国际化插件
     '~/plugins/i18n/index.js',
+    // 自定义常量 工具类等
+    '~/plugins/ordinaryroad/index.js',
     // vuetify client mode
     {
       src: '~/plugins/vuetify/index.js',
@@ -88,7 +97,7 @@ export default {
 
   proxy: {
     '/api/blog': {
-      target: process.env.BASE_URL,
+      target: process.env.BLOG_BASE_URL,
       pathRewrite: {
         '^/api/blog': '/'
       }
@@ -97,6 +106,12 @@ export default {
       target: process.env.AUTH_BASE_URL,
       pathRewrite: {
         '^/api/auth': '/'
+      }
+    },
+    '/api': {
+      target: process.env.BASE_URL,
+      pathRewrite: {
+        '^/api': '/'
       }
     }
   },
@@ -110,7 +125,8 @@ export default {
       },
       current: 'zh-Hans'
     },
-    customVariables: ['~/assets/variables.scss']
+    customVariables: ['~/assets/variables.scss'],
+    treeShake: true
   },
 
   dayjs: {
@@ -123,16 +139,61 @@ export default {
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {
-    CLIENT_ID: 'ordinaryroad-blog',
-    // REDIRECT_URI: 'https://blog.ordinaryroad.tech/authorized',
-    REDIRECT_URI: 'http://blog.ordinaryroad.tech:3000/user/authorized',
     BASE_URL: process.env.BASE_URL,
-    AUTH_BASE_URL: process.env.AUTH_BASE_URL
+    // 文件下载地址
+    FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
+
+    OAUTH2: {
+      // TODO REDIRECT_URI: 'https://blog.ordinaryroad.tech/authorized',
+      REDIRECT_URI: 'http://blog.ordinaryroad.tech:3000/user/authorized',
+      /*       ordinaryroad: {
+              CLIENT_ID: 'ordinaryroad-blog',
+              SCOPE: 'openid,userinfo',
+              AUTHORIZE_ENDPOINT: 'http://ordinaryroad-auth-server:9302/oauth2/authorize?response_type=code',
+              ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
+            }, */
+      ordinaryroad: {
+        CLIENT_ID: 'ordinaryroad-blog',
+        SCOPE: 'openid,userinfo',
+        AUTHORIZE_ENDPOINT: `${process.env.AUTH_BASE_URL}/oauth2/authorize?response_type=code`,
+        ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
+      },
+      github: {
+        CLIENT_ID: 'c0615d2a28cfb7a20a84',
+        SCOPE: 'read:user',
+        AUTHORIZE_ENDPOINT: 'https://github.com/login/oauth/authorize?1=1',
+        ACCESS_TOKEN_ENDPOINT: 'https://github.com/login/oauth/access_token'
+      },
+      gitee: {
+        CLIENT_ID: 'f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882',
+        SCOPE: 'user_info',
+        AUTHORIZE_ENDPOINT: 'https://gitee.com/oauth/authorize?response_type=code',
+        ACCESS_TOKEN_ENDPOINT: 'https://gitee.com/oauth/token?grant_type=authorization_code'
+      }
+    }
+
   },
   privateRuntimeConfig: {
-    CLIENT_SECRET: 'g8DxQweDHm4CAtda'
+    OAUTH2: {
+      ordinaryroad: {
+        CLIENT_SECRET: 'g8DxQweDHm4CAtda'
+      },
+      github: {
+        CLIENT_SECRET: 'ed77e156befab6fdd8bac32840b78b829ad89e1f'
+      },
+      gitee: {
+        CLIENT_SECRET: 'eef8d98731611f2af7fb638aee03020cc9812461deaeceb537e69315fac0b57f'
+      }
+    }
   },
 
   // https://www.nuxtjs.cn/api/configuration-env
-  env: {}
+  env: {},
+
+  // https://www.nuxtjs.cn/api/configuration-router
+  router: {
+    extendRoutes (routes, resolve) {
+      console.log('extendRoutes', routes)
+    }
+  }
 }

@@ -37,8 +37,8 @@ class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAu
      * 根据用户Id查询所有关联关系
      */
     fun findAllByUserId(userId: String): List<BlogUserOAuthUsers> {
-        val wrapper = Wrappers.lambdaQuery<BlogUserOAuthUsers>()
-        wrapper.eq(BlogUserOAuthUsers::getUserId, userId)
+        val wrapper = Wrappers.query<BlogUserOAuthUsers>()
+        wrapper.eq("user_id", userId)
         return super.dao.selectList(wrapper)
     }
 
@@ -46,8 +46,8 @@ class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAu
      * 根据OAuthUser查询所有的关联关系
      */
     fun findAllByOAuthUserId(oAuthUserId: String): List<BlogUserOAuthUsers> {
-        val wrapper = Wrappers.lambdaQuery<BlogUserOAuthUsers>()
-        wrapper.eq(BlogUserOAuthUsers::getOAuthUserId, oAuthUserId)
+        val wrapper = Wrappers.query<BlogUserOAuthUsers>()
+        wrapper.eq("oauth_user_id", oAuthUserId)
         return super.dao.selectList(wrapper)
     }
 

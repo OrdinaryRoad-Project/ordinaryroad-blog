@@ -42,8 +42,16 @@ import javax.inject.Inject
 @ApplicationScoped
 class StpInterfaceImpl : StpInterface {
 
+//    @Produces
+//    @DefaultBean
+//    @Unremovable
+//    @ApplicationScoped
+//    fun annotationInterceptor(): SaAnnotationInterceptor {
+//        return SaAnnotationInterceptor()
+//    }
+
     @Inject
-    private lateinit var userService: BlogUserService
+    protected lateinit var userService: BlogUserService
 
     /**
      * 返回一个账号所拥有的权限码集合

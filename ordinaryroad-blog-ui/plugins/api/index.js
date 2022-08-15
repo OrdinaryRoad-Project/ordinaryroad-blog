@@ -23,6 +23,7 @@
  */
 
 import oauthApis from './oauth/index'
+import oauthUserApis from './oauth_user/index'
 import blogApis from './blog/index'
 
 export default function ({
@@ -35,6 +36,7 @@ export default function ({
   blogApis.initAxios($axios)
   const $apis = {
     oauth: oauthApis.apis,
+    oauth_user: oauthUserApis.apis,
     blog: blogApis.apis
   }
   // $apis

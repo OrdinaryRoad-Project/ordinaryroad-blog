@@ -24,36 +24,51 @@
 
 <template>
   <v-app>
-    <v-app-bar app>
-      <v-toolbar-title>OR博客</v-toolbar-title>
-      <v-spacer />
-      <v-menu offset-y open-on-hover>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            large
-            depressed
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-account</v-icon>
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="logout">
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>退出登录</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>
+    <!-- 控制台侧边栏 -->
+    <v-navigation-drawer
+      v-if="$route.path.startsWith('/dashboard')"
+      v-model="localDashboardDrawerModel"
+      clipped
+      app
+    >
+      <OrBaseTreeList
+        :nav="true"
+        :items="dashboardMenuItems"
+      />
+    </v-navigation-drawer>
+
+    <!-- 设置 -->
+    <or-settings-drawer />
+
+    <!-- 标题 用户名 -->
+    <or-header />
+
     <v-main>
       <v-container>
-        <Nuxt />
+        <nuxt />
       </v-container>
     </v-main>
+
+    <!-- Footer -->
+    <or-footer />
+
+    <!-- 回到顶部按钮 -->
+    <v-fab-transition>
+      <v-btn
+        v-if="scrollToTopFab"
+        :small="$vuetify.breakpoint.smAndDown"
+        fab
+        fixed
+        bottom
+        right
+        color="accent"
+        @click="$vuetify.goTo(0)"
+      >
+        <v-icon :small="$vuetify.breakpoint.smAndDown">
+          mdi-chevron-up
+        </v-icon>
+      </v-btn>
+    </v-fab-transition>
   </v-app>
 </template>
 
@@ -63,11 +78,9 @@ import { mapActions, mapGetters } from 'vuex'
 import { updateTheme } from 'static/js/utils/vuetify'
 
 export default {
-  middleware: ['userInfo'],
   data () {
     return {
-      drawer: false,
-      rightDrawer: false
+      scrollToTopFab: false
     }
   },
   head () {
@@ -79,61 +92,53 @@ export default {
   },
   computed: {
     ...mapGetters('app', {
-      selectedThemeOption: 'getSelectedThemeOption',
-      themeOptions: 'getThemeOptions',
+      dashboardDrawerModel: 'getDashboardDrawerModel',
+      rightDrawerModel: 'getRightDrawerModel',
       titleKey: 'getTitleKey',
-      userMenuItems: 'getUserMenuItems'
+      userMenuItems: 'getUserMenuItems',
+      dashboardMenuItems: 'getDashboardMenuItems'
     }),
-    ...mapGetters('i18n', {
-      localeOptions: 'getLocaleOptions',
-      locales: 'getLocales'
-    }),
-    ...mapGetters('user', {
-      userInfo: 'getUserInfo',
-      avatarPath: 'getAvatarPath'
-    }),
-    selectedThemeOptionModel: {
+    localDashboardDrawerModel: {
       get () {
-        return this.selectedThemeOption
+        return this.dashboardDrawerModel
       },
       set (val) {
-        // ignore
+        this.setDashboardDrawerModel(val)
       }
     }
-
   },
   mounted () {
-    // dom初始化完成再初始化主题
     this.$nextTick(() => {
-      updateTheme(this.selectedThemeOption, this.$vuetify)
+      updateTheme(this.$store.getters['app/getSelectedThemeOption'], this.$vuetify)
+      window.addEventListener('scroll', this.handleScroll)
     })
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
     ...mapActions('app', {
-      setSelectedThemeOption: 'setSelectedThemeOption'
-    }),
-    ...mapActions('i18n', {
-      setLang: 'setLang'
+      setDashboardDrawerModel: 'setDashboardDrawerModel'
     }),
 
     logout () {
       this.$dialog({
+        persistent: false,
         content: this.$i18n.t('confirmLogout'),
         loading: true
-      }).then((value) => {
-        this.$store.dispatch('user/logout', {
-          $apis: this.$apis,
-          $router: this.$router,
-          $route: this.$route
-        }).then(() => value.cancel())
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$store.dispatch('user/logout', {
+            $apis: this.$apis,
+            $router: this.$router,
+            $route: this.$route
+          }).then(() => dialog.cancel())
+        }
       })
     },
 
-    click (index) {
-      this.setSelectedThemeOption({
-        value: index,
-        $vuetify: this.$vuetify
-      })
+    handleScroll (event) {
+      this.scrollToTopFab = event.target.scrollingElement.scrollTop !== 0
     }
   }
 }

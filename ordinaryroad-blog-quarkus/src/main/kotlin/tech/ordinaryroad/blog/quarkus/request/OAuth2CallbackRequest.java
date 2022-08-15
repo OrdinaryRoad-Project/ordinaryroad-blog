@@ -24,24 +24,25 @@
 
 package tech.ordinaryroad.blog.quarkus.request;
 
-import org.jboss.resteasy.annotations.jaxrs.HeaderParam;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
-import org.jboss.resteasy.annotations.jaxrs.QueryParam;
+
+import org.jboss.resteasy.reactive.RestHeader;
+import org.jboss.resteasy.reactive.RestPath;
+import org.jboss.resteasy.reactive.RestQuery;
 
 import javax.ws.rs.core.HttpHeaders;
 
 public class OAuth2CallbackRequest {
 
-    @HeaderParam(HttpHeaders.AUTHORIZATION)
+    @RestHeader(HttpHeaders.AUTHORIZATION)
     public String authorization;
 
-    @QueryParam
+    @RestQuery
     public String openid;
 
-    @QueryParam
+    @RestQuery
     public String device;
 
-    @PathParam
+    @RestPath
     public String provider;
 
 }

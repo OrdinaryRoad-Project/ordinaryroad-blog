@@ -22,11 +22,42 @@
  * SOFTWARE.
  */
 
-export default ({ app, store, route, router, $dialog }, inject) => {
+export default ({
+  app,
+  store,
+  route
+}, inject) => {
+  const isLogged = () => {
+    const userInfo = store.getters['user/getUserInfo']
+    return userInfo != null
+  }
   inject('access', {
-    isLogged: () => {
-      const userInfo = store.getters['user/getUserInfo']
-      return userInfo != null
+    has: (permissionCode) => {
+      return true
+      // const userInfo = store.getters['user/getUserInfo']
+      // let permissions = []
+      // if (userInfo && userInfo.permissions) {
+      //   permissions = userInfo.permissions
+      // }
+      // return permissions.includes(permissionCode)
+    },
+    isLogged,
+    checkLogin: () => {
+      const logged = isLogged()
+      if (!logged) {
+        app.$dialog({
+          persistent: false,
+          content: '请登录'
+        }).then(({ isConfirm }) => {
+          if (isConfirm) {
+            app.router.push({
+              path: '/user/login',
+              query: { redirect: route.fullPath }
+            })
+          }
+        })
+      }
+      return logged
     }
   })
 }

@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-export default function ({ $axios, app }, inject) {
+export default function ({
+  $axios,
+  app
+}, inject) {
   // $apisServer
   inject('apisServer', {
     blog: {
-      userInfo: (satoken) => {
+      userinfo: (token) => {
         return $axios({
-          url: '/userinfo',
-          method: 'post',
-          // 默认是application/x-www-form-urlencoded;charset=UTF-8，接口不支持
-          data: {},
+          url: '/api/blog/common/userinfo',
+          method: 'get',
           // 在server端调用的方法必须手动设置header，因为获取不到client的cookie
-          headers: { satoken }
+          headers: { or_blog_token: token }
         })
       }
     }

@@ -24,6 +24,7 @@
 
 import { SELECTED_THEME_OPTION_KEY } from 'static/js/utils/cookie/vuex/app'
 import { OAUTH2_STATE_KEY, TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
+import { SELECTED_LANG_OPTION_KEY } from 'static/js/utils/cookie/vuex/i18n'
 
 function parseCookieString (string) {
   const cookie = {}
@@ -61,29 +62,43 @@ function getObjectFromCookie (string, key, defaultValue) {
 }
 
 export const actions = {
-  async nuxtServerInit ({ commit }, { $vuetify, $apisServer, $access, req, app }) {
-    const store = app.store
+  async nuxtServerInit ({ commit }, {
+    $vuetify,
+    $apisServer,
+    $access,
+    req,
+    app
+  }) {
+    const {
+      store,
+      $dayjs,
+      i18n
+    } = app
+    const $i18n = i18n
     // 初始化，可以获取初始值
     if (typeof req !== 'undefined' && req.headers && req.headers.cookie) {
       const cookieString = req.headers.cookie
+
       commit('app/SET_SELECTED_THEME_OPTION', {
         value: getNumberFromCookie(cookieString, SELECTED_THEME_OPTION_KEY, store.getters['app/getSelectedThemeOption']),
         $vuetify
+      })
+
+      commit('i18n/SET_LANG', {
+        value: getStringFromCookie(cookieString, SELECTED_LANG_OPTION_KEY, store.getters['i18n/getLocale']),
+        $i18n,
+        $vuetify,
+        $dayjs
       })
       commit('user/SET_OAUTH2_STATE', getStringFromCookie(cookieString, OAUTH2_STATE_KEY, store.getters['user/getOAuth2State']))
 
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
       if (tokenInfo) {
         try {
-          // TODO userInfo
-          // const { data } = await $apisServer.blog.userInfo(tokenInfo.satoken)
-
-          const { data } = await new Promise((resolve, reject) => {
-            resolve({ data: { username: 'TEST_USERNAME_NUXT_INIT' } })
-          })
-          commit('user/SET_TOKEN_INFO', tokenInfo)
-          commit('user/SET_USER_INFO', data)
-        } catch {
+          const userinfo = await $apisServer.blog.userinfo(tokenInfo.value)
+          commit('user/SET_TOKEN_INFO', tokenInfo.value)
+          commit('user/SET_USER_INFO', userinfo)
+        } catch (e) {
           // Token无效或其他异常，不做任何操作
         }
       }

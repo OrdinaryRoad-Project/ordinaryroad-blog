@@ -28,10 +28,24 @@ import { updateTheme } from 'static/js/utils/vuetify'
 export default {
   SET_IMAGE: (state, value) => (state.image = value),
   SET_TITLE_KEY: (state, value) => (state.titleKey = value),
-  SET_SELECTED_THEME_OPTION (state, { value, $vuetify }) {
+  SET_SELECTED_THEME_OPTION (state, {
+    value,
+    $vuetify
+  }) {
     state.selectedThemeOption = value
     setSelectedThemeOption(value)
     updateTheme(value, $vuetify)
   },
-  SET_MENU_ITEMS: (state, value) => (state.menuItems = value)
+  SET_DASHBOARD_DRAWER_MODEL: (state, value) => {
+    state.dashboardDrawerModel = value
+  },
+  TOGGLE_DASHBOARD_DRAWER_MODEL: (state) => {
+    state.dashboardDrawerModel = !state.dashboardDrawerModel
+  },
+  SET_RIGHT_DRAWER_MODEL: (state, value) => {
+    state.rightDrawerModel = value
+  },
+  TOGGLE_RIGHT_DRAWER_MODEL: (state) => {
+    state.rightDrawerModel = !state.rightDrawerModel
+  }
 }

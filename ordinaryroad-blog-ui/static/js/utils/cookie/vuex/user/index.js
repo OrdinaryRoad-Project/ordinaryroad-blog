@@ -46,7 +46,8 @@ export function getTokenInfo () {
 }
 
 export function setTokenInfo (tokenInfo) {
-  Cookies.set(TOKEN_INFO_KEY, JSON.stringify(tokenInfo), { expires: null })
+  // Cookies.set(TOKEN_INFO_KEY, JSON.stringify(tokenInfo), { expires: new Date(tokenPayload.exp) })
+  Cookies.set(TOKEN_INFO_KEY, JSON.stringify(tokenInfo), { expires: 365 })
 }
 
 export function removeTokenInfo () {

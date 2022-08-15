@@ -25,9 +25,9 @@
 <template>
   <v-app>
     <v-main>
-      <v-container fluid class="pa-0 fill-height">
+      <v-fade-transition>
         <nuxt />
-      </v-container>
+      </v-fade-transition>
     </v-main>
   </v-app>
 </template>

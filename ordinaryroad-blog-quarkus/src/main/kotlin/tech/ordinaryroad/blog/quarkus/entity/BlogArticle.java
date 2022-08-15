@@ -24,15 +24,68 @@
 
 package tech.ordinaryroad.blog.quarkus.entity;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus;
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
+@RegisterForReflection
 public class BlogArticle extends BaseDO {
 
-    private static final long serialVersionUID = 3639769527700408443L;
+    private static final long serialVersionUID = 1620833145976758960L;
 
+    /**
+     * 标题
+     */
     private String title;
 
+    /**
+     * 封面地址
+     */
     private String coverImage;
+
+    /**
+     * 摘要
+     */
+    private String summary;
+
+    /**
+     * 内容
+     */
+    private String content;
+
+    /**
+     * 文章状态
+     */
+    private BlogArticleStatus status;
+
+    /**
+     * 是否允许打赏
+     */
+    private Boolean canReward;
+
+    /**
+     * 是否为原创，原创时加转载声明
+     */
+    private Boolean original;
+
+    /**
+     * 最开始的草稿Id
+     */
+    private String firstId;
+
+    public BlogArticle() {
+    }
+
+    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId) {
+        this.title = title;
+        this.coverImage = coverImage;
+        this.summary = summary;
+        this.content = content;
+        this.status = status;
+        this.canReward = canReward;
+        this.original = original;
+        this.firstId = firstId;
+    }
 
     public String getTitle() {
         return title;
@@ -48,5 +101,53 @@ public class BlogArticle extends BaseDO {
 
     public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public BlogArticleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BlogArticleStatus status) {
+        this.status = status;
+    }
+
+    public Boolean getCanReward() {
+        return canReward;
+    }
+
+    public void setCanReward(Boolean canReward) {
+        this.canReward = canReward;
+    }
+
+    public Boolean getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(Boolean original) {
+        this.original = original;
+    }
+
+    public String getFirstId() {
+        return firstId;
+    }
+
+    public void setFirstId(String firstId) {
+        this.firstId = firstId;
     }
 }

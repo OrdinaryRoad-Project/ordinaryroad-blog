@@ -38,7 +38,7 @@ class GreetingResourceTest {
             .`when`().get("/hello")
             .then()
             .statusCode(200)
-            .body(`is`("Hello RESTEasy"))
+            .body(`is`("Hello RESTEasy Reactive"))
     }
 
 }

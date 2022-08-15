@@ -23,40 +23,25 @@
  */
 
 export default {
-  login ({ commit }, { params, $apis, $access, $store }) {
-    // TODO 密码非对称加密
+  logout ({ commit }, {
+    $apis,
+    $router,
+    $route
+  }) {
     return new Promise((resolve, reject) => {
-      $apis.user.login(params)
-        .then(({ data }) => {
-          const tokenInfo = Object.assign({}, data)
-          delete tokenInfo.userInfo
-          commit('SET_TOKEN_INFO', tokenInfo)
-          commit('SET_USER_INFO', data.userInfo)
-          $store.commit('app/UPDATE_ACCESSIBLE_MENU_ITEMS', $access)
-          resolve()
-        }).catch((error) => {
-          reject(error)
-        })
-    })
-  },
-  logout ({ commit }, { $apis, $router, $route }) {
-    return new Promise((resolve, reject) => {
-      // TODO $apis.user.logout().then(() => {
-      /**
-      $apis.user.logout().then(() => {
+      $apis.blog.logout().then(() => {
         commit('REMOVE_TOKEN_INFO')
-        $router.push({ path: '/user/login' })
+        this.$router.go(0)
         resolve()
       }).catch((error) => {
         reject(error)
       })
-       **/
-      commit('REMOVE_TOKEN_INFO')
-      $router.push({ path: '/user/login' })
-      resolve()
     })
   },
-  updateAvatar ({ commit }, { avatar, $apis }) {
+  updateAvatar ({ commit }, {
+    avatar,
+    $apis
+  }) {
     return new Promise((resolve, reject) => {
       $apis.upms.user.updateAvatar(avatar).then(() => {
         commit('UPDATE_USER_INFO_AVATAR', avatar)
@@ -66,7 +51,10 @@ export default {
       })
     })
   },
-  updateUsername ({ commit }, { username, $apis }) {
+  updateUsername ({ commit }, {
+    username,
+    $apis
+  }) {
     return new Promise((resolve, reject) => {
       $apis.upms.user.updateUsername(username).then(() => {
         commit('UPDATE_USER_INFO_USERNAME', username)
@@ -76,7 +64,10 @@ export default {
       })
     })
   },
-  updateEmail ({ commit }, { email, $apis }) {
+  updateEmail ({ commit }, {
+    email,
+    $apis
+  }) {
     return new Promise((resolve, reject) => {
       $apis.upms.user.updateEmail(email).then(() => {
         commit('UPDATE_USER_INFO_EMAIL', email)
@@ -85,8 +76,5 @@ export default {
         reject(error)
       })
     })
-  },
-  setOAuth2State ({ commit }, oAuth2State) {
-    commit('SET_OAUTH2_STATE', oAuth2State)
   }
 }

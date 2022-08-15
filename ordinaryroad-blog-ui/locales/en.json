@@ -1,9 +1,42 @@
 {
-  "attention": "Attention",
-  "cancel": "Cancel",
-  "confirm": "Confirm",
-  "confirmLogout": "Confirm Logout?",
-  "loginFormTitle": "Login To OR Blog",
-  "login": "Login",
-  "ordinaryroad": "Ordinary Road"
+  "article": {
+    "title": "Title",
+    "coverImage": "Cover Image",
+    "summary": "Summary",
+    "content": "Content",
+    "status": "Status",
+    "canReward": "Can Reward",
+    "original": "Original"
+  },
+  "appName": "OR BLOG",
+  "dashboardMenuTitles": {
+    "dashboardTitle": "Dashboard",
+    "dashboard": {
+      "articleTitle": "Writing",
+      "article": {
+        "box": {
+          "draft": "Draft",
+          "publish": "Publish",
+          "trash": "Trash"
+        },
+        "boxTitle": "Article Management"
+      }
+    }
+  },
+  "loginFormTitle": "Login To OR BLOG",
+  "status": {
+    "article": {
+      "notFound": "Failed to get article information, please try again or return"
+    }
+  },
+  "themeTitles": {
+    "light": "Light",
+    "dark": "Dark",
+    "hunk": "Hunk",
+    "system": "Dark Hunk"
+  },
+  "userMenuTitles": {
+    "dashboard": "Dashboard",
+    "profile": "User Profile"
+  }
 }

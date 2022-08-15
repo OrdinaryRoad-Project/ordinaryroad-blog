@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <div>
+  <v-container fluid class="pa-0">
     <!-- 顶部栏 -->
     <v-app-bar
       clipped-left
@@ -32,7 +32,11 @@
       :elevation="showScrollToTopFab?4:0"
       :color="showScrollToTopFab?'primary':'transparent'"
     >
-      <v-tooltip right>
+      <!-- 开关目录按钮 -->
+      <v-tooltip
+        v-if="catalogue.length>0"
+        right
+      >
         <template #activator="{ on }">
           <v-btn
             :light="!$vuetify.theme.dark&&drawer&&!showScrollToTopFab"
@@ -50,17 +54,70 @@
         </template>
         <span>{{ drawer ? '关闭目录' : '目录' }}</span>
       </v-tooltip>
+
+      <!-- 标题 -->
       <v-toolbar-title>{{ showScrollToTopFab ? blogArticle.title : null }}</v-toolbar-title>
+
       <v-spacer />
+
+      <!-- 在其他设备上阅读 -->
+      <v-menu
+        v-if="$vuetify.breakpoint.smAndDown"
+        origin="top center"
+        offset-overflow
+        absolute
+        transition="scale-transition"
+      >
+        <template #activator="{ on }">
+          <v-btn icon dark v-on="on">
+            <v-icon>mdi-cellphone-link</v-icon>
+          </v-btn>
+        </template>
+        <div style="width: 150px;height: 150px">
+          <vue-qr
+            :margin="10"
+            :text="vueQrUrl"
+            style="width: 100%;height: 100%"
+          />
+        </div>
+      </v-menu>
+      <v-tooltip v-else bottom>
+        <template #activator="{ on }">
+          <v-menu
+            origin="top center"
+            offset-overflow
+            absolute
+            transition="scale-transition"
+            v-on="on"
+          >
+            <template #activator="{ on }">
+              <v-btn icon dark v-on="on">
+                <v-icon>mdi-cellphone-link</v-icon>
+              </v-btn>
+            </template>
+            <div style="width: 150px;height: 150px">
+              <vue-qr
+                :margin="10"
+                :text="vueQrUrl"
+                style="width: 100%;height: 100%"
+              />
+            </div>
+          </v-menu>
+        </template>
+        <span>在其他设备上继续阅读</span>
+      </v-tooltip>
+
+      <v-btn icon @click.stop="$store.dispatch('app/toggleRightDrawerModel')">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <!--目录-->
     <v-navigation-drawer
+      v-if="catalogue.length>0"
       v-model="drawer"
-      clipped
+      clippe
       app
-      left
-      mini-variant-width="200"
     >
       <div id="article-outline" />
       <v-treeview
@@ -74,15 +131,18 @@
         shaped
         :active="active"
         hoverable
-        class="me-3"
+        class="me-2"
       >
         <template #label="{item}">
-          <div :blog-toc-id="item.id">
+          <div :id="`label_blog-toc-id_${item.id}`" :blog-toc-id="item.id">
             {{ item.name }}
           </div>
         </template>
       </v-treeview>
     </v-navigation-drawer>
+
+    <!-- 设置 -->
+    <or-settings-drawer show-i18n-setting />
 
     <!-- 封面 -->
     <v-img
@@ -135,10 +195,15 @@
           <v-list-item-subtitle>世间种种平凡都不平凡</v-list-item-subtitle>
         </div>
 
-        <!-- 创建时间/更新时间 -->
-        <div class="ms-12">
-          <v-icon>mdi-calendar</v-icon>
-          <span class="ms-1">{{ blogArticle.createdTime }}</span>
+        <div class="ms-12 text-caption">
+          <!-- 创建时间 -->
+          <div>
+            <strong>创建于：</strong>{{ blogArticle.createdTime }}
+          </div>
+          <!-- 更新时间 -->
+          <div v-if="blogArticle.updateTime">
+            <strong>修改于：</strong>{{ blogArticle.updateTime }}
+          </div>
         </div>
 
         <!-- 浏览量 -->
@@ -158,15 +223,14 @@
       :max-width="$vuetify.breakpoint.smAndDown?`1000px`:`80%`"
       class="mx-auto"
       elevation="8"
-      style="margin-top: -60px"
+      style="margin-top: -60px; margin-bottom: 60px"
     >
       <v-card flat class="pt-1">
         <!-- 摘要 -->
         <div v-if="blogArticle.summary && blogArticle.summary !== ''">
           <or-md-vditor
             class="mt-2"
-            :dark-when-edit="$vuetify.theme.dark"
-            :dark-when-read-only="$vuetify.theme.dark"
+            :dark="$vuetify.theme.dark"
             :pre-set-content="blogArticle.summary"
           />
         </div>
@@ -188,12 +252,12 @@
 
         <!-- 内容 -->
         <or-md-vditor
-          :headings-offset-top="64"
+          :headings-offset-top="$vuetify.breakpoint.smAndDown?56:64"
           :preview-toc.sync="toc"
           :current-toc-index.sync="currentTocIndex"
-          :dark-when-edit="$vuetify.theme.dark"
-          :dark-when-read-only="$vuetify.theme.dark"
+          :dark="$vuetify.theme.dark"
           :pre-set-content="blogArticle.content"
+          @after="onVditorAfter"
         />
 
         <br>
@@ -224,25 +288,73 @@
             <div v-if="blogArticle.original">
               <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
             </div>
-            <strong>本文链接：</strong>{{ currentUrl }}<br>
+            <strong>本文链接：</strong><a :href="currentUrl" target="_blank">{{ currentUrl }}</a><br>
             <div v-if="blogArticle.original">
-              <strong>版权声明：</strong>本博客所有文章除特别声明外，均采用
-              <a
-                rel="noopener noreferrer"
+              <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循<a
                 target="_blank"
                 href="https://creativecommons.org/licenses/by-sa/4.0/"
-              >CC BY-SA 4.0</a>
-              许可协议，转载请附上本文链接及本声明。
+              >CC BY-SA 4.0</a>许可协议，转载请附上本文链接及本声明。
             </div>
           </v-alert>
         </div>
-        <!--分类-->
 
-        <!--标签-->
+        <!-- TODO 分类 -->
 
-        <!--评论-->
+        <!-- TODO 标签 -->
+
+        <!-- TODO 评论 -->
+        <v-card>
+          <v-card-title>评论（{{ articleComments.total }}）</v-card-title>
+          <div class="mx-2">
+            <div class="d-flex align-end">
+              <or-md-vditor
+                ref="commentVditor"
+                :transfer-content.sync="commentOptions.content"
+                placeholder="写一条友善的发言吧（支持Markdown）"
+                class="flex-grow-1 mx-2"
+                :dark="$vuetify.theme.dark"
+                pre-set-content=""
+                comment-mode
+                :read-only="false"
+              />
+              <v-btn
+                color="primary"
+                class="ml-auto"
+                :disabled="!commentContentValid"
+                :loading="commentOptions.posting"
+                @click="postComment"
+              >
+                发送
+              </v-btn>
+            </div>
+            <v-alert
+              v-model="commentOptions.showAlert"
+              class="mt-2 mx-2"
+              transition="slide-y-reverse-transition"
+              dense
+              dismissible
+              color="secondary"
+              colored-border
+              border="left"
+              elevation="2"
+            >
+              回复{{ commentOptions.parentComment ? commentOptions.parentComment.user.username : '' }}：
+            </v-alert>
+          </div>
+          <or-blog-comment-list
+            ref="commentList"
+            :article-id="blogArticle.uuid"
+            :article-comments="articleComments"
+            @clickReply="onClickReply"
+          />
+        </v-card>
+
+        <!-- TODO 上/下一篇 -->
       </v-card>
     </v-card>
+
+    <!-- Footer -->
+    <or-footer />
 
     <!-- 恢复阅读位置日夜间模式 -->
     <v-snackbar v-model="snackbar">
@@ -279,20 +391,27 @@
         </v-progress-circular>
       </v-btn>
     </v-fab-transition>
-  </div>
+  </v-container>
 </template>
 
 <script>
+import VueQr from 'vue-qr'
+
 export default {
   name: 'OrBlogArticleDetail',
+  components: { VueQr },
   props: {
     article: {
+      type: Object,
+      required: true
+    },
+    articleComments: {
       type: Object,
       required: true
     }
   },
   data: () => ({
-    drawer: true,
+    drawer: false,
     showScrollToTopFab: false,
     snackbar: false,
     percentOfRead: 0.0,
@@ -301,11 +420,25 @@ export default {
     blogArticle: {},
     toc: [],
     active: [],
-    currentTocIndex: null
+    currentTocIndex: null,
+
+    commentOptions: {
+      posting: false,
+
+      content: '',
+      parentId: '',
+      showAlert: false
+    }
   }),
   computed: {
+    commentContentValid () {
+      return this.commentOptions.content && this.commentOptions.content !== '' && this.commentOptions.content !== '\n'
+    },
+    vueQrUrl () {
+      return this.currentUrl + '?p=' + this.realPercentOfRead + '&t=' + this.$store.getters['app/getSelectedThemeOption']
+    },
     currentUrl () {
-      return this.$route.fullPath
+      return process.client ? window.location.href : ''
     },
     watchTimeString () {
       // 估算阅读时长
@@ -318,6 +451,12 @@ export default {
     /* 生成treeview目录 */
     toc (val) {
       // console.log('目录下标处理前', val)
+      if (!val || val.length === 0) {
+        this.catalogue = []
+        this.drawer = false
+        return
+      }
+      this.drawer = true
 
       // 处理连续的
       const tocIndexContinuously = []
@@ -430,41 +569,35 @@ export default {
         }
       }
 
-      // console.log('catalogues', catalogues)
-
-      this.drawer = catalogues.length !== 0 && this.$vuetify.breakpoint.mdAndUp
       this.catalogue = headCatalogue.children.concat()
 
-      if (this.catalogue.length !== 0) {
-        // console.log(catalogues)
-        /* 监听目录点击事件 */
-        this.$nextTick(function () {
-          // console.log(document.getElementById('treeViewOutline'));
-          document.getElementById('treeViewOutline').onclick = (event) => {
-            let elementTemp = event.target
-            if (elementTemp.classList.contains('v-treeview-node__root')) {
-              elementTemp = elementTemp.querySelector('.v-treeview-node__label')
-            }
-            // console.log(elementTemp)
-            const elementsByTagName = elementTemp.getElementsByTagName('div')
-            if (elementsByTagName[0]) {
-              elementTemp = elementsByTagName[0]
-              // console.log(elementsByTagName[0])
-            }
-            const headId = elementTemp.getAttribute('blog-toc-id')
-            // console.log(headId)
-            const headDivElement = document.getElementById('blog-toc-id-' + headId)
-            if (headDivElement) {
-              this.$vuetify.goTo(headDivElement)
-            }
+      /* 监听目录点击事件 */
+      this.$nextTick(function () {
+        document.getElementById('treeViewOutline').onclick = (event) => {
+          let elementTemp = event.target
+          if (elementTemp.classList.contains('v-treeview-node__root')) {
+            elementTemp = elementTemp.querySelector('.v-treeview-node__label')
           }
-        })
-      }
+          // console.log(elementTemp)
+          const elementsByTagName = elementTemp.getElementsByTagName('div')
+          if (elementsByTagName[0]) {
+            elementTemp = elementsByTagName[0]
+            // console.log(elementsByTagName[0])
+          }
+          const headId = elementTemp.getAttribute('blog-toc-id')
+          // console.log(headId)
+          const headDivElement = document.getElementById('blog-toc-id-' + headId)
+          if (headDivElement) {
+            this.$vuetify.goTo(headDivElement)
+          }
+        }
+      })
     },
     currentTocIndex (val) {
       // console.log('currentTocIndex', val)
       this.active = []
       this.active.push(val)
+      // const element = document.getElementById(`label_blog-toc-id_${val}`)
     }
   },
   created () {
@@ -479,20 +612,56 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    onClickReply ({
+      originalComment,
+      parentComment
+    }) {
+      this.commentOptions.parentComment = parentComment
+      this.commentOptions.parentId = parentComment.uuid
+      this.commentOptions.showAlert = true
+    },
+    postComment () {
+      if (!this.$access.checkLogin()) {
+        return
+      }
+      if (this.commentContentValid) {
+        this.commentOptions.posting = true
+        this.$apis.blog.comment.post({
+          ...this.commentOptions,
+          articleId: this.blogArticle.uuid
+        })
+          .then((data) => {
+            this.commentOptions.content = ''
+            this.commentOptions.parentId = ''
+            this.commentOptions.showAlert = false
+            this.$refs.commentVditor.setValue('')
+            this.$refs.commentList.addComment(data)
+            this.commentOptions.posting = false
+          })
+          .catch(() => {
+            this.commentOptions.posting = false
+          })
+      }
+    },
+    onVditorAfter () {
+      // 恢复主题和阅读位置
+      this.restoreLastReadProfile()
+    },
     handleScroll () {
       const totalHeight = document.body.scrollHeight
       // console.log("this.totalHeight", totalHeight)
       // 滚动条偏移量
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+
+      // 是否显示滑倒顶部的FAB
+      this.showScrollToTopFab = scrollTop > 0
+
       // 文章开始偏移量
       const cardOffsetTop = document.getElementById('card').offsetTop
       // 文章结束偏移量
       const likeFabOffsetTop = document.getElementById('likeFab').offsetTop
 
-      // 是否显示滑倒顶部的FAB
-      // this.showScrollToTopFab = scrollTop >= cardOffsetTop
-
-      // console.log("scrollTop", scrollTop, "cardOffsetTop", cardOffsetTop, "likeFabOffsetTop", likeFabOffsetTop, "totalHeight", totalHeight, "window.screen.height", window.screen.availHeight)
+      // console.log('document.body.scrollHeight', document.body.scrollHeight, 'document.body.clientHeight', document.body.clientHeight, 'innerHeight', window.innerHeight, 'scrollTop', scrollTop, 'cardOffsetTop', cardOffsetTop, 'likeFabOffsetTop', likeFabOffsetTop, 'totalHeight', totalHeight, 'window.screen.availHeight', window.screen.availHeight)
       // 计算实际阅读百分比
       if (scrollTop >= cardOffsetTop) {
         if (scrollTop + cardOffsetTop <= likeFabOffsetTop - cardOffsetTop) {
@@ -504,12 +673,43 @@ export default {
         this.percentOfRead = 0.0
       }
       // 计算网页百分比
-      this.realPercentOfRead = (scrollTop) / totalHeight
-
-      // 是否显示滑倒顶部的FAB
-      this.showScrollToTopFab = this.realPercentOfRead > 0
+      this.realPercentOfRead = scrollTop / (totalHeight - window.innerHeight)
 
       // console.log("this.percentOfRead", this.percentOfRead, "this.realPercentOfRead", this.realPercentOfRead)
+    },
+    /**
+     * 恢复上一次阅读参数
+     */
+    restoreLastReadProfile () {
+      setTimeout(() => {
+        // 恢复主题
+        const selectedThemeOption = this.$route.query.t
+        if (selectedThemeOption !== undefined) {
+          const tN = parseInt(selectedThemeOption)
+          if (tN >= 0 && tN < 4) {
+            this.$store.dispatch('app/setSelectedThemeOption', {
+              value: tN,
+              $vuetify: this.$vuetify
+            })
+            this.snackbar = true
+          }
+        }
+
+        // 恢复阅读位置
+        const realPercentOfRead = this.$route.query.p
+        if (realPercentOfRead !== undefined) {
+          const pN = parseFloat(realPercentOfRead)
+          if (pN >= 0 && pN <= 100) {
+            const totalHeight = document.body.scrollHeight
+            // console.log(pN, totalHeight, window.innerHeight, totalHeight - window.innerHeight)
+            // 获取准确位置
+            this.$vuetify.goTo(pN * (totalHeight - window.innerHeight))
+            if (!this.snackbar) {
+              this.snackbar = true
+            }
+          }
+        }
+      }, 2000)
     }
   }
 }

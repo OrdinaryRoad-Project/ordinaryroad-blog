@@ -1,0 +1,32 @@
+{
+  "attention": "Attention",
+  "back": "Back",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "confirmLogout": "Confirm Logout?",
+  "createBy": "Create By",
+  "createdTime": "Created Time",
+  "dataTable": {
+    "actions": "Actions"
+  },
+  "deleteDialog": {
+    "content": "Are you sure you want to delete the data with uuid {0}? Once deleted, it cannot be recovered."
+  },
+  "deleteSuccess": "Successfully deleted.",
+  "insert": "Insert",
+  "language": "Language",
+  "login": "Log in",
+  "logout": "Sign out",
+  "maxNChars": "Length cannot be greater than {0}",
+  "minNChars": "Length cannot be less than {0}",
+  "ordinaryroad": "Ordinary Road",
+  "refresh": "Refresh",
+  "required": "Required",
+  "reset": "Reset",
+  "retry": "Retry",
+  "search": "Search",
+  "settings": "Settings",
+  "theme": "Theme",
+  "updateBy": "Update By",
+  "updateTime": "Update Time"
+}

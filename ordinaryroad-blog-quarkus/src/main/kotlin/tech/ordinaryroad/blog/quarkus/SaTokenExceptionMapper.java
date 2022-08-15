@@ -53,6 +53,7 @@ public class SaTokenExceptionMapper implements ExceptionMapper<SaTokenException>
     @Override
     public Response toResponse(SaTokenException exception) {
         // TODO 解析SaTokenException
+        log.error("SaTokenException", exception);
         return Response.status(Response.Status.UNAUTHORIZED.getStatusCode(), exception.getMessage()).build();
     }
 

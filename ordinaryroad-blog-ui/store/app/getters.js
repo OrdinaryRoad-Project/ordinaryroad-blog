@@ -23,6 +23,10 @@
  */
 
 export default {
+  getDashboardMenuItems (state) {
+    return state.dashboardMenuItems
+  },
+
   getImage (state) {
     return state.image
   },
@@ -39,11 +43,15 @@ export default {
     return state.themeOptions
   },
 
-  getMenuItems (state) {
-    return state.menuItems
-  },
-
   getUserMenuItems (state) {
     return state.userMenuItems
+  },
+
+  getDashboardDrawerModel (state) {
+    return state.dashboardDrawerModel
+  },
+
+  getRightDrawerModel (state) {
+    return state.rightDrawerModel
   }
 }

@@ -23,9 +23,9 @@
  */
 package tech.ordinaryroad.blog.quarkus.dto
 
+import cn.hutool.core.util.StrUtil
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import tech.ordinaryroad.commons.core.quarkus.base.dto.BaseModelDTO
-import java.io.Serial
 
 /**
  * 博客用户DTO类
@@ -35,11 +35,10 @@ data class BlogUserDTO(
     var avatar: String
 ) : BaseModelDTO() {
     companion object {
-        @Serial
-        private const val serialVersionUID = -2894318943132532009L
+        private const val serialVersionUID: Long = -3412865025705755482L
 
         fun BlogUser.transfer(): BlogUserDTO {
-            return BlogUserDTO(username, avatar)
+            return BlogUserDTO(username, StrUtil.nullToEmpty(avatar))
         }
     }
 }

@@ -1,9 +1,42 @@
 {
-  "attention": "注意",
-  "cancel": "取消",
-  "confirm": "确认",
-  "confirmLogout": "确认退出登录？",
+  "article": {
+    "title": "标题",
+    "coverImage": "封面",
+    "summary": "摘要",
+    "content": "内容",
+    "status": "状态",
+    "canReward": "允许打赏",
+    "original": "是否原创"
+  },
+  "dashboardMenuTitles": {
+    "dashboardTitle": "首页",
+    "dashboard": {
+      "articleTitle": "写作",
+      "article": {
+        "boxTitle": "文章管理",
+        "box": {
+          "draft": "草稿箱",
+          "publish": "已发布",
+          "trash": "垃圾箱"
+        }
+      }
+    }
+  },
+  "appName": "OR博客",
   "loginFormTitle": "登录到OR博客",
-  "login": "登录",
-  "ordinaryroad": "Ordinary Road"
+  "status": {
+    "article": {
+      "notFound": "获取文章信息失败，请重试或返回"
+    }
+  },
+  "themeTitles": {
+    "light": "浅色主题",
+    "dark": "深色主题",
+    "hunk": "猛男配色",
+    "system": "深色猛男"
+  },
+  "userMenuTitles": {
+    "dashboard": "控制台",
+    "profile": "个人中心"
+  }
 }

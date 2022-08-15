@@ -24,11 +24,13 @@
 
 package tech.ordinaryroad.blog.quarkus.entity;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
 /**
  * 博客用户
  */
+@RegisterForReflection
 public class BlogUser extends BaseDO {
 
     private static final long serialVersionUID = -3226446166273034322L;

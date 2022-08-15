@@ -23,12 +23,14 @@
   -->
 
 <template>
-  <v-card class="mx-auto">
-    <v-card-text>
-      <v-progress-circular indeterminate color="primary" class="me-2" />
-      授权通过，正在获取用户信息...
-    </v-card-text>
-  </v-card>
+  <v-container fluid class="pa-0 fill-height">
+    <v-card class="mx-auto">
+      <v-card-text>
+        <v-progress-circular indeterminate color="primary" class="me-2" />
+        授权通过，正在获取用户信息...
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -41,47 +43,50 @@ export default {
     redirect
   }) {
     const oAuth2State = store.getters['user/getOAuth2State']
+    console.log(oAuth2State)
     if (oAuth2State == null) {
       // 返回登录页面
       redirect('/user/login')
     } else {
       const stateFromServer = route.query.state
-      const redirectFromLogin = decodeURIComponent(oAuth2State).split(',')[1]
+      const redirectFromLogin = decodeURIComponent(oAuth2State).split('_')[1]
+      const provider = decodeURIComponent(oAuth2State).split('_')[2]
       try {
         if (decodeURIComponent(stateFromServer) !== decodeURIComponent(oAuth2State)) {
           // state不一致
           throw new Error('state不一致')
         } else {
           const code = route.query.code
-          const tokenResponse = await $apis.oauth.token(code)
-          const tokenData = tokenResponse.data
-
+          const tokenData = await $apis.oauth.token(provider, code)
+          console.log('tokenData', tokenData)
+          // OrdinaryRoad Error
           if (tokenData.success !== undefined && !tokenData.success) {
             throw new Error(tokenData.msg)
           }
+          // GitHub Error
+          if (tokenData.error !== undefined && tokenData.error !== '') {
+            throw new Error(tokenData.error_description)
+          }
 
-          const openid = tokenData.openid
+          const openid = tokenData.openid || ''
           const accessToken = tokenData.access_token
           const tokenType = tokenData.token_type
 
           // 调用callback接口，换取用户信息和token
-          const callbackResponse = await $apis.blog.oauth2.callback('or', `${tokenType} ${accessToken}`, openid)
-          if (callbackResponse.status === 200) {
-            const { data } = callbackResponse
-            return {
-              success: true,
-              token: data.token,
-              userinfo: data.userinfo,
-              redirect: redirectFromLogin
-            }
-          } else {
-            throw new Error('失败')
+          const data = await $apis.blog.oauth2.callback(provider, `${tokenType} ${accessToken}`, openid)
+          return {
+            success: true,
+            token: data.token,
+            // userinfoDTO (user, ...)
+            userinfo: data.userinfo,
+            redirect: redirectFromLogin
           }
         }
       } catch (e) {
+        console.log(e)
         return {
           redirect: redirectFromLogin,
-          msg: e
+          msg: e.message
         }
       }
     }
@@ -100,16 +105,17 @@ export default {
       this.$store.commit('user/REMOVE_OAUTH2_STATE')
       this.$store.commit('user/SET_TOKEN_INFO', this.token)
       this.$store.commit('user/SET_USER_INFO', this.userinfo)
-      console.log(this.$store.getters['user/getTokenInfo'])
       this.$router.replace(this.redirect)
     } else {
       this.$dialog({
         persistent: true,
         title: '系统提示',
-        content: '失败，请重试<br>' + this.msg,
+        content: '失败，请重试。\n' + this.msg,
         confirmText: '确定'
-      }).then(() => {
-        this.$router.replace(`/user/login?redirect=${this.redirect}`)
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$router.replace(`/user/login?redirect=${this.redirect}`)
+        }
       })
     }
   }

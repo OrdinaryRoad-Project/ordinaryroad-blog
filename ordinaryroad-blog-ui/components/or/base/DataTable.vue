@@ -49,10 +49,10 @@
     @toggle-select-all="onToggleSelectAll"
   >
     <template #top>
-      <slot name="searchFormBefore" />
+      <slot name="searchFormBefore"/>
       <v-form ref="searchForm">
         <v-row align="center">
-          <slot name="searchFormBody" />
+          <slot name="searchFormBody"/>
           <v-col
             cols="6"
             lg="3"
@@ -106,10 +106,10 @@
             {{ $t('refresh') }}
           </v-btn>
 
-          <slot name="actionsTopAfter" />
+          <slot name="actionsTopAfter"/>
         </v-col>
       </v-row>
-      <v-divider class="mt-2" />
+      <v-divider class="mt-2"/>
     </template>
 
     <template
@@ -123,7 +123,7 @@
 
     <!-- 动态生成插槽 -->
     <template v-for="slot in itemSlotNames" #[slot]="{ item }">
-      <slot :name="slot" :item="item" />
+      <slot :name="slot" :item="item"/>
     </template>
 
     <template #[`item.createdTime`]="{ item }">
@@ -140,7 +140,7 @@
           :$vuetify.theme.dark ?'v-sheet theme--dark elevation-1 d-flex'
             :'v-sheet theme--light elevation-1 d-flex'"
       >
-        <slot name="actionsBefore" :item="item" />
+        <slot name="actionsBefore" :item="item"/>
 
         <slot name="actions" :item="item">
           <v-btn
@@ -162,7 +162,7 @@
           </v-btn>
         </slot>
 
-        <slot name="actionsAfter" :item="item" />
+        <slot name="actionsAfter" :item="item"/>
 
         <or-base-menu
           v-if="$scopedSlots.moreActions"
@@ -182,7 +182,7 @@
             </v-btn>
           </template>
           <v-list dense>
-            <slot name="moreActions" :item="item" />
+            <slot name="moreActions" :item="item"/>
           </v-list>
         </or-base-menu>
       </div>
@@ -210,6 +210,10 @@ export default {
       default: false
     },
     showActionsWhenSelecting: {
+      type: Boolean,
+      default: false
+    },
+    showBaseHeadersWhenSelecting: {
       type: Boolean,
       default: false
     },
@@ -275,25 +279,39 @@ export default {
     // 放在这为了支持国际化，如果放在data下切换语言不会更新
     headers () {
       const headers = []
-      if (this.showSelect) {
+
+      // 业务headers
+      headers.push(...this.tableHeaders)
+
+      // 基础headers
+      if (!this.showSelect || this.showBaseHeadersWhenSelecting) {
         headers.push(
-          ...this.tableHeaders,
           {
-            text: this.$t('dataTable.actions'),
-            value: 'actions',
-            sortable: false,
-            align: 'center',
-            class: 'sticky-right',
-            cellClass: 'sticky-right'
+            text: this.$t('createdTime'),
+            value: 'createdTime',
+            width: '220'
+          },
+          {
+            text: this.$t('createBy'),
+            value: 'createBy',
+            width: '100'
+          },
+          {
+            text: this.$t('updateTime'),
+            value: 'updateTime',
+            width: '220'
+          },
+          {
+            text: this.$t('updateBy'),
+            value: 'updateBy',
+            width: '100'
           }
         )
-      } else {
+      }
+
+      // 操作headers
+      if (!this.hideActions) {
         headers.push(
-          ...this.tableHeaders,
-          { text: this.$t('createdTime'), value: 'createdTime', width: '220' },
-          { text: this.$t('createBy'), value: 'createBy' },
-          { text: this.$t('updateTime'), value: 'updateTime', width: '220' },
-          { text: this.$t('updateBy'), value: 'updateBy' },
           {
             text: this.$t('dataTable.actions'),
             value: 'actions',
@@ -304,7 +322,8 @@ export default {
           }
         )
       }
-      return this.hideActions ? this.$util.remove(headers, 'value', 'actions') : headers
+
+      return headers
     },
     action () {
       return this.selectedIndex === -1 ? 'create' : 'update'
@@ -321,7 +340,11 @@ export default {
   },
   methods: {
     onClickRow (item, { isSelected }) {
-      this.showSelect && this.select({ item, value: !isSelected, emit: true })
+      this.showSelect && this.select({
+        item,
+        value: !isSelected,
+        emit: true
+      })
     },
     resetSearch () {
       this.$refs.searchForm.reset()
@@ -342,16 +365,20 @@ export default {
       }).then((dialog) => {
         this.deleteDialog = dialog
         // 删除
-        this.$emit('deleteItem', {
-          item: this.selectedItem, index: this.selectedIndex
-        })
+        if (dialog.isConfirm) {
+          this.$emit('deleteItem', {
+            item: this.selectedItem,
+            index: this.selectedIndex
+          })
+        }
       })
     },
     editItem (item) {
       this.selectedIndex = this.dataTableParams.items.indexOf(item)
       this.selectedItem = Object.assign({}, item)
       this.$emit('editItem', {
-        item: this.selectedItem, index: this.selectedIndex
+        item: this.selectedItem,
+        index: this.selectedIndex
       })
     },
     getItems () {
@@ -359,22 +386,18 @@ export default {
 
       const sortBy = this.options.sortBy
       const sortDesc = this.options.sortDesc
-      const orderBy = []
-      const orderByDesc = []
-      for (let i = 0; i < sortDesc.length; i++) {
-        const name = sortBy[i]
-        sortDesc[i] ? orderByDesc.push(name) : orderBy.push(name)
-      }
-
       this.$emit('getItems', {
         options: this.options,
         offset: (this.options.page - 1) * this.options.itemsPerPage,
         limit: this.options.itemsPerPage,
-        orderBy,
-        orderByDesc
+        sortBy,
+        sortDesc
       })
     },
-    onItemSelected ({ item, value }) {
+    onItemSelected ({
+      item,
+      value
+    }) {
       if (!item) {
         return
       }
@@ -388,7 +411,10 @@ export default {
       }
       this.$emit('itemsSelected', this.selectedItems)
     },
-    onToggleSelectAll ({ items, value }) {
+    onToggleSelectAll ({
+      items,
+      value
+    }) {
       // 考虑不在当前显示的items情况，items:1,2,3,4,5和selectedItems:1,3,5,7两个合并
       items.forEach((item) => {
         const searchElement = this.selectReturnObject ? Object.assign({}, item) : item.uuid
@@ -417,7 +443,11 @@ export default {
       this.dataTableParams.loading = loading
     },
 
-    select ({ item, value, emit }) {
+    select ({
+      item,
+      value,
+      emit
+    }) {
       this.$refs.table.select(item, value, emit)
     },
     /**
@@ -444,7 +474,11 @@ export default {
      * 加载完成后通过$refs手动调用
      */
     loadSuccessfully (items, totalItems) {
-      this.dataTableParams = { loading: false, items, totalItems }
+      this.dataTableParams = {
+        loading: false,
+        items,
+        totalItems
+      }
       if (this.showSelect) {
         // 每次加载完成需要设置选择的item
         this.setPresetSelectedItems()
@@ -487,7 +521,10 @@ export default {
         })
         // 剩余选中的，但是VDataTable还没有加载到
         this.presetSelectedItemsModel.forEach((item) => {
-          this.onItemSelected({ item, value: true })
+          this.onItemSelected({
+            item,
+            value: true
+          })
         })
       }, 200)
     }

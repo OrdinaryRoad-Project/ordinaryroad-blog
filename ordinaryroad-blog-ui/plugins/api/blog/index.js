@@ -23,6 +23,10 @@
  */
 
 import oauth2Apis from './oauth2'
+import oauthUserApis from './oauth_user'
+import articleApis from './article'
+import commentApis from './comment'
+import userApis from './user'
 
 let $axios = null
 
@@ -30,8 +34,43 @@ export default {
   initAxios (axios) {
     $axios = $axios || axios
     oauth2Apis.initAxios(axios)
+    oauthUserApis.initAxios(axios)
+    articleApis.initAxios(axios)
+    commentApis.initAxios(axios)
+    userApis.initAxios(axios)
   },
   apis: {
-    oauth2: oauth2Apis.apis
+    oauth2: oauth2Apis.apis,
+    oauth_user: oauthUserApis.apis,
+    article: articleApis.apis,
+    comment: commentApis.apis,
+    user: userApis.apis,
+    /**
+     * 获取文件全路径
+     * @param url
+     * @param defaultUrl 默认url
+     * @returns {string|*}
+     */
+    getFileUrl: (url, defaultUrl = '') => {
+      if (!url || url === '') {
+        return defaultUrl
+      } else if (url.startsWith('/ordinaryroad-')) {
+        return `https://api.ordinaryroad.tech/upms/file/download${url}`
+      } else {
+        return url
+      }
+    },
+    logout: () => {
+      return $axios.get('/api/blog/common/logout')
+    },
+    upload: (file) => {
+      const data = new FormData()
+      data.append('file', file)
+      return $axios({
+        url: '/api/blog/common/upload',
+        method: 'post',
+        data
+      })
+    }
   }
 }

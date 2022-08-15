@@ -39,11 +39,37 @@
         </footer>
       </blockquote>
     </v-col>
+    <v-row>
+      <v-col>
+        {{ testData }}
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        {{ oAuthUsers }}
+      </v-col>
+    </v-row>
   </v-row>
 </template>
 
 <script>
 export default {
-  name: 'InspirePage'
+  name: 'InspirePage',
+  data () {
+    return {
+      testData: null,
+      oAuthUsers: null
+    }
+  },
+  mounted () {
+    this.$axios.get('/api/blog/article/all').then((value) => {
+      this.testData = value
+      console.log(value)
+    })
+
+    this.$apis.blog.oauth_user.all().then((value) => {
+      this.oAuthUsers = value
+    })
+  }
 }
 </script>

@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
+import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
@@ -32,27 +33,26 @@ import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
 
 
 @Path("oauth_user")
-@Produces(MediaType.APPLICATION_JSON)
 class BlogOAuthUserResource {
 
     @Inject
-    private lateinit var userService: BlogUserService
+    protected lateinit var userService: BlogUserService
 
     @Inject
-    private lateinit var oAuthUserService: BlogOAuthUserService
+    protected lateinit var oAuthUserService: BlogOAuthUserService
 
     @GET
     @Path("all")
-    fun all(): Response {
+    @Produces(MediaType.APPLICATION_JSON)
+    fun all(): List<BlogOAuthUser> {
         val userId = StpUtil.getLoginIdAsString()
         val user = userService.findById(userId)
         val list = oAuthUserService.findAllByUserId(user.uuid)
 
-        return Response.ok(list).build()
+        return list
     }
 
 }

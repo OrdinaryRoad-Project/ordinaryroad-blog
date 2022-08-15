@@ -24,7 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.request;
 
-import org.jboss.resteasy.annotations.jaxrs.FormParam;
+import org.jboss.resteasy.reactive.RestForm;
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest;
 
 import javax.validation.constraints.NotBlank;
@@ -40,7 +40,7 @@ public class BlogArticleUpdateRequest extends BaseRequest {
     public String uuid;
 
     @NotBlank(message = "标题不能为空")
-    @FormParam
+    @RestForm
     public String title;
 
 }

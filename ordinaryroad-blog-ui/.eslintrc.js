@@ -37,7 +37,10 @@ module.exports = {
     'plugin:nuxt/recommended'
   ],
   plugins: [
+    'eslint-plugin-vue'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'vue/multi-word-component-names': 0
+  }
 }

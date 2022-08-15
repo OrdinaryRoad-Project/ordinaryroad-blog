@@ -45,7 +45,7 @@
         </v-icon>
         {{ params.title || i18n.messages[i18n.locale].attention }}
       </v-card-title>
-      <v-card-text class="text-subtitle-1">
+      <v-card-text class="text-subtitle-1" style="white-space: pre-line">
         {{ params.content }}
       </v-card-text>
       <v-card-actions v-show="!params.hideActions" class="pa-2">
@@ -95,6 +95,7 @@ export default {
     },
     confirm () {
       if (this.params.loading) {
+        this.isConfirm = true
         this.loading = true
       } else {
         this.dialog = false

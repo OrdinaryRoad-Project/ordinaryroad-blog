@@ -24,18 +24,22 @@
 
 package tech.ordinaryroad.blog.quarkus.request;
 
-import org.jboss.resteasy.annotations.jaxrs.FormParam;
+import org.jboss.resteasy.reactive.RestForm;
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest;
 
 import javax.validation.constraints.NotBlank;
 
 public class BlogArticleCreateRequest extends BaseRequest {
 
-    private static final long serialVersionUID = -4744396890494707023L;
+    private static final long serialVersionUID = 7619689248399991451L;
 
     @NotBlank(message = "标题不能为空")
-    @FormParam
+    @RestForm
     public String title;
+
+    @NotBlank(message = "内容不能为空")
+    @RestForm
+    public String content;
 
 }
 

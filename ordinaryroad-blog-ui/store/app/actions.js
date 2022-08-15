@@ -34,5 +34,17 @@ export default {
   },
   setMenuItems ({ commit }, menuItems) {
     commit('SET_MENU_ITEMS', menuItems)
+  },
+  setDashboardDrawerModel ({ commit }, value) {
+    commit('SET_DASHBOARD_DRAWER_MODEL', value)
+  },
+  toggleDashboardDrawerModel ({ commit }) {
+    commit('TOGGLE_DASHBOARD_DRAWER_MODEL')
+  },
+  setRightDrawerModel ({ commit }, value) {
+    commit('SET_RIGHT_DRAWER_MODEL', value)
+  },
+  toggleRightDrawerModel ({ commit }) {
+    commit('TOGGLE_RIGHT_DRAWER_MODEL')
   }
 }
