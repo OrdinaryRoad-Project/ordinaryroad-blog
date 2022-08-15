@@ -64,3 +64,8 @@ If you want to learn more about building native executables, please consult http
 Easily start your Reactive RESTful Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+
+```shell
+
+docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=root -e REDIS_HOST=192.168.5.127 -e REDIS_PORT=6379 ordinaryroad-blog-quarkus
+```
