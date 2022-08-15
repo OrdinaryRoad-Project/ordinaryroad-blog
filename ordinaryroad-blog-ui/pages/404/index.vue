@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <NotFound/>
+  <NotFound />
 </template>
 
 <script>

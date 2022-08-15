@@ -26,19 +26,19 @@
   <v-hover close-delay="100">
     <template #default="{ hover }">
       <v-card
-          dark
-          :elevation="hover?24:0"
-          class="transition-swing"
-          @click="onClickArticle(item)"
+        dark
+        :elevation="hover?24:0"
+        class="transition-swing"
+        @click="onClickArticle(item)"
       >
         <!-- 图片上层的信息 -->
         <div style="position: relative; overflow: hidden">
           <!-- 封面 -->
           <img
-              style="background-color: darkgrey"
-              alt=""
-              class="or-cover-image"
-              :src="$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')"
+            style="background-color: darkgrey"
+            alt=""
+            class="or-cover-image"
+            :src="$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')"
           >
 
           <!-- 是否原创 -->
@@ -65,35 +65,35 @@
             <template v-if="item.summary !== undefined && item.summary !== ''">
               <v-expand-transition>
                 <v-card-subtitle
-                    v-if="hover"
-                    class="py-0 my-0 text-justify font-weight-light four-lines-text transition-fast-in-fast-out"
+                  v-if="hover"
+                  class="py-0 my-0 text-justify font-weight-light four-lines-text transition-fast-in-fast-out"
                 >
                   {{ item.summary }}
                 </v-card-subtitle>
               </v-expand-transition>
             </template>
 
-            <v-divider class="mt-2"/>
+            <v-divider class="mt-2" />
 
             <!-- 作者信息和操作按钮栏 -->
             <v-list-item>
               <!-- 头像 -->
               <v-list-item-avatar>
                 <v-img
-                    style="border:1px solid;"
-                    alt=""
-                    :src="$apis.blog.getFileUrl(item.user.avatar)"
+                  style="border:1px solid;"
+                  alt=""
+                  :src="$apis.blog.getFileUrl(item.user.avatar)"
                 >
                   <template #placeholder>
-                    <v-skeleton-loader type="image"/>
+                    <v-skeleton-loader type="image" />
                   </template>
                 </v-img>
               </v-list-item-avatar>
               <!-- 用户名 -->
               <v-list-item-content>
                 <v-list-item-title
-                    class="font-weight-medium"
-                    @click="onClickUsername(item)"
+                  class="font-weight-medium"
+                  @click="onClickUsername(item)"
                 >
                   {{ item.user.username }}
                 </v-list-item-title>
@@ -103,9 +103,9 @@
 
               <v-list-item-action>
                 <v-row
-                    no-gutters
-                    align="center"
-                    justify="end"
+                  no-gutters
+                  align="center"
+                  justify="end"
                 >
                   <v-col v-if="false" class="d-inline-flex align-center">
                     <v-btn icon>
@@ -129,9 +129,9 @@
                     <v-menu>
                       <template #activator="{ on, attrs }">
                         <v-btn
-                            v-bind="attrs"
-                            icon
-                            v-on="on"
+                          v-bind="attrs"
+                          icon
+                          v-on="on"
                         >
                           <v-icon>
                             mdi-chevron-down

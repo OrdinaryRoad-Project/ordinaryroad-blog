@@ -30,7 +30,7 @@
       :avatar="$apis.blog.getFileUrl(blogComment.user.avatar)"
       :username="blogComment.user.username"
     />
-    <a :id="`comment-${blogComment.uuid}`" class="target-fix"/>
+    <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
     <v-sheet class="flex-grow-1 ms-2 mt-1 bottom-toolbar-controller">
       <div class="d-flex">
         <div class="d-flex align-center">
@@ -88,7 +88,7 @@
       <!-- 回复 -->
       <v-expansion-panels v-if="blogComment.replies&&blogComment.replies.total>0" flat tile>
         <v-expansion-panel>
-          <v-divider/>
+          <v-divider />
           <v-expansion-panel-header ripple>
             <div>
               共{{ blogComment.replies.total }}条回复
@@ -120,7 +120,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <v-fade-transition>
-        <v-divider v-if="showDivider"/>
+        <v-divider v-if="showDivider" />
       </v-fade-transition>
     </v-sheet>
   </v-sheet>
