@@ -144,14 +144,7 @@ export default {
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
 
     OAUTH2: {
-      // TODO REDIRECT_URI: 'https://blog.ordinaryroad.tech/authorized',
-      REDIRECT_URI: 'http://blog.ordinaryroad.tech:3000/user/authorized',
-      /*       ordinaryroad: {
-              CLIENT_ID: 'ordinaryroad-blog',
-              SCOPE: 'openid,userinfo',
-              AUTHORIZE_ENDPOINT: 'http://ordinaryroad-auth-server:9302/oauth2/authorize?response_type=code',
-              ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
-            }, */
+      REDIRECT_URI: `${process.env.DOMAIN}/user/authorized`,
       ordinaryroad: {
         CLIENT_ID: 'ordinaryroad-blog',
         SCOPE: 'openid,userinfo',
@@ -193,7 +186,7 @@ export default {
   // https://www.nuxtjs.cn/api/configuration-router
   router: {
     extendRoutes (routes, resolve) {
-      console.log('extendRoutes', routes)
+      // console.log('extendRoutes', routes)
     }
   }
 }
