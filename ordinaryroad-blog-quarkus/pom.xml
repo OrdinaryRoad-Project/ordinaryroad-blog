@@ -34,12 +34,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>ordinaryroad-blog-quarkus</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <description>OrdinaryRoad Blog Quarkus</description>
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.6.21</kotlin.version>
 
         <maven.compiler.parameters>false</maven.compiler.parameters>
         <maven.compiler.release>11</maven.compiler.release>
@@ -101,11 +100,6 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>kotlin-extensions</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
