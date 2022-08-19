@@ -26,8 +26,10 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.collection.CollUtil
+import cn.hutool.http.HttpStatus
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
+import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
@@ -482,7 +484,7 @@ class BlogArticleResource {
      */
     @GET
     @Path("pre_and_next/{id}")
-    fun getPreAndNextArticle(@RestPath id: String): Pair<JsonObject?, JsonObject?> {
+    fun getPreAndNextArticle(@RestPath id: String): JsonObject {
         return articleFacade.getPreAndNextArticle(id)
     }
     //endregion
@@ -498,6 +500,7 @@ class BlogArticleResource {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun autoDraft(@Valid @BeanParam request: BlogArticleCreateRequest): Response {
+        throwBadRequest()
         val blogArticle = articleService.create(
             BlogArticle().apply {
                 title = request.title
@@ -512,6 +515,7 @@ class BlogArticleResource {
     @Path("{id}/coverImage")
     @Produces(MediaType.APPLICATION_JSON)
     fun updateCoverImage(@Valid @BeanParam request: BlogArticleUpdateCoverImageRequest): Response {
+        throwBadRequest()
         val uuid = request.uuid
 
         val findById = articleService.findById(uuid)
@@ -541,6 +545,8 @@ class BlogArticleResource {
     @Path("admin/page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageAdmin(@BeanParam request: BlogArticleQueryRequest): Response {
+        throwBadRequest()
+
         val wrapper = ChainWrappers.queryChain(articleService.dao)
         val page = articleService.page(request, wrapper)
         return Response.ok()
@@ -551,6 +557,8 @@ class BlogArticleResource {
     @DELETE
     @Path("/delete/{id}")
     fun deleteById(@RestPath id: String): Response {
+        throwBadRequest()
+
         val success = articleService.delete(id)
         return Response.ok()
             .entity(success)
@@ -561,6 +569,8 @@ class BlogArticleResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     fun update(@Valid @BeanParam request: BlogArticleUpdateRequest): Response {
+        throwBadRequest()
+
         val uuid = request.uuid
 
         val findById = articleService.findById(uuid)
@@ -583,6 +593,8 @@ class BlogArticleResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     fun findById(@RestPath id: String): Response {
+        throwBadRequest()
+
         val blogArticle = articleService.findById(id)
 
         if (blogArticle == null) {
@@ -596,5 +608,10 @@ class BlogArticleResource {
     }
 
     //endregion
+
+
+    private fun throwBadRequest() {
+        throw HttpException(HttpStatus.HTTP_BAD_REQUEST, "暂不支持访问")
+    }
 
 }
