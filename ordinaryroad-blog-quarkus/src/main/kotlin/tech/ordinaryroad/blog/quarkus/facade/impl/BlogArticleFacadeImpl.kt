@@ -47,7 +47,7 @@ class BlogArticleFacadeImpl : BlogArticleFacade {
     @Inject
     protected lateinit var articleService: BlogArticleService
 
-    override fun getPublishCreatedTimeAndUpdateTimeById(id: String): Pair<LocalDateTime, LocalDateTime?> {
+    override fun getPublishCreatedTimeAndUpdateTimeById(id: String): JsonObject {
         val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
 
         if (blogArticle == null) {
@@ -73,8 +73,10 @@ class BlogArticleFacadeImpl : BlogArticleFacade {
                 updateTime = blogArticle.createdTime
             }
         }
-
-        return Pair(createdTime, updateTime)
+        val jsonObject = JsonObject()
+        jsonObject.put("createdTime", createdTime)
+        jsonObject.put("updateTime", updateTime)
+        return jsonObject
     }
 
     override fun moveToTrash(id: String) {
@@ -99,9 +101,9 @@ class BlogArticleFacadeImpl : BlogArticleFacade {
         }
     }
 
-    override fun getPreAndNextArticle(id: String): Pair<JsonObject?, JsonObject?> {
+    override fun getPreAndNextArticle(id: String): JsonObject {
         // TODO("Not yet implemented")
-        return Pair(null, null)
+        return JsonObject()
     }
 
     /**

@@ -42,7 +42,6 @@ import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
-import java.time.LocalDateTime
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -470,7 +469,7 @@ class BlogArticleResource {
     @GET
     @Path("publish/{id}/created_update_Time")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getPublishCreatedTimeAndUpdateTimeById(@RestPath id: String): Pair<LocalDateTime, LocalDateTime?> {
+    fun getPublishCreatedTimeAndUpdateTimeById(@RestPath id: String): JsonObject {
         return articleFacade.getPublishCreatedTimeAndUpdateTimeById(id)
     }
 

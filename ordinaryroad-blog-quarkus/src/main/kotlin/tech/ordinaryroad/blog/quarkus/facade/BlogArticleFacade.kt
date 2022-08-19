@@ -25,7 +25,6 @@
 package tech.ordinaryroad.blog.quarkus.facade
 
 import io.vertx.core.json.JsonObject
-import java.time.LocalDateTime
 
 interface BlogArticleFacade {
 
@@ -35,7 +34,7 @@ interface BlogArticleFacade {
      * (first: createdTime, second: updateTime)
      * }
      */
-    fun getPublishCreatedTimeAndUpdateTimeById(id: String): Pair<LocalDateTime, LocalDateTime?>
+    fun getPublishCreatedTimeAndUpdateTimeById(id: String): JsonObject
 
     /**
      * 移动至废纸篓
@@ -50,6 +49,6 @@ interface BlogArticleFacade {
     /**
      *
      */
-    fun getPreAndNextArticle(id: String): Pair<JsonObject?, JsonObject?>
+    fun getPreAndNextArticle(id: String): JsonObject
 
 }

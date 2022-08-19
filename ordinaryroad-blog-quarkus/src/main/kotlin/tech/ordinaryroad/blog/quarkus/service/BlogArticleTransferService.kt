@@ -30,6 +30,7 @@ import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
+import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -51,8 +52,8 @@ class BlogArticleTransferService {
     fun transferDetail(article: BlogArticle): BlogArticleDetailVO {
         return blogArticleMapStruct.do2DetailVo(article).apply {
             val times = articleFacade.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
-            createdTime = times.first
-            updateTime = times.second
+            createdTime = times.getValue("createdTime") as LocalDateTime
+            updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)
             user = blogUserMapStruct.do2Vo(blogUser)
         }
@@ -61,8 +62,8 @@ class BlogArticleTransferService {
     fun transferPreview(article: BlogArticle): BlogArticlePreviewVO {
         return blogArticleMapStruct.do2PreviewVo(article).apply {
             val times = articleFacade.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
-            createdTime = times.first
-            updateTime = times.second
+            createdTime = times.getValue("createdTime") as LocalDateTime
+            updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)
             user = blogUserMapStruct.do2Vo(blogUser)
         }
