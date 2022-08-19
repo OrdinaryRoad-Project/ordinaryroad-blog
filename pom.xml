@@ -42,6 +42,20 @@
         <module>ordinaryroad-blog-quarkus</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>ordinaryroad-ordinaryroad-maven-pro</id>
+            <name>maven-pro</name>
+            <url>https://ordinaryroad-maven.pkg.coding.net/repository/ordinaryroad/maven-pro/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <ordinaryroad-quarkus.version>1.3.1</ordinaryroad-quarkus.version>
         <mapstruct.version>1.5.1.Final</mapstruct.version>
