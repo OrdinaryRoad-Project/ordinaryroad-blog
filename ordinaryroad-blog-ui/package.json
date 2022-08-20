@@ -4,7 +4,7 @@
   "private": true,
   "config": {
     "nuxt": {
-      "host": "blog.ordinaryroad.tech"
+      "host": "0.0.0.0"
     }
   },
   "scripts": {

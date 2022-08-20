@@ -35,7 +35,7 @@ export default {
       return require('static/vuetify-logo.svg')
     }
     if (avatar.startsWith('/ordinaryroad-')) {
-      return `/upms/file/download${avatar}`
+      return `/api/upms/file/download${avatar}`
     }
     return avatar
   }
