@@ -207,7 +207,7 @@ export default {
         },
         upload: {
           max: 30 * 1024 * 1024,
-          url: '/api/blog/common/upload',
+          url: '/blog/common/upload',
           // 跨站点访问控制。默认值: false
           withCredentials: true,
           headers: {},
@@ -219,7 +219,7 @@ export default {
               or_blog_token: this.$store.getters['user/getTokenInfo']
             }
           },
-          // linkToImgUrl: '/api/blog/upload/{url}',
+          // linkToImgUrl: '/blog/upload/{url}',
           // linkToImgFormat: (responseText) => {
           //   const response = JSON.parse(responseText)
           //   response.code = 0

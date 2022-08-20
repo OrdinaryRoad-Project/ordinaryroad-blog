@@ -35,7 +35,7 @@ export default {
       parentId = ''
     }) => {
       return $axios({
-        url: '/api/blog/comment/post',
+        url: '/blog/comment/post',
         method: 'post',
         data: {
           articleId,
@@ -46,13 +46,13 @@ export default {
     },
     pageArticle: (articleId, page) => {
       return $axios({
-        url: `/api/blog/comment/page/article/${articleId}/${page}/20?sortBy=createdTime&sortDesc=true`,
+        url: `/blog/comment/page/article/${articleId}/${page}/20?sortBy=createdTime&sortDesc=true`,
         method: 'get'
       })
     },
     pageSub: (originalId, page) => {
       return $axios({
-        url: `/api/blog/comment/page/sub/${originalId}/${page}/5?sortBy=createdTime&sortDesc=true`,
+        url: `/blog/comment/page/sub/${originalId}/${page}/5?sortBy=createdTime&sortDesc=true`,
         method: 'get'
       })
     }

@@ -61,13 +61,13 @@ export default {
       }
     },
     logout: () => {
-      return $axios.get('/api/blog/common/logout')
+      return $axios.get('/blog/common/logout')
     },
     upload: (file) => {
       const data = new FormData()
       data.append('file', file)
       return $axios({
-        url: '/api/blog/common/upload',
+        url: '/blog/common/upload',
         method: 'post',
         data
       })

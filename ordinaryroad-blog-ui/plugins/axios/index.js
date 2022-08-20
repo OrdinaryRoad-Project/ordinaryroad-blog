@@ -44,10 +44,18 @@ export default function (context, inject) {
     if (tokenInfo && config.headers.common) {
       config.headers.common.or_blog_token = tokenInfo
     }
+    console.log('request ============================')
+    console.log(tokenInfo)
+    console.log(config.url)
+    console.log(config.headers)
+    console.log('request ============================')
   })
 
   // 响应拦截器
   $axios.interceptors.response.use((res) => {
+    console.log('response ============================')
+    console.log(res)
+    console.log('response ============================')
     // 未设置状态码则默认成功状态
     const code = res.status
     if (code === 200) {

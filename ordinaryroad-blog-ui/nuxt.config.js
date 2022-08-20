@@ -89,8 +89,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: process.env.DOMAIN,
-    // prefix: '/api',
+    // baseURL: process.env.DOMAIN,
+    prefix: '/api',
     // https://axios.nuxtjs.org/options/#proxy
     proxy: true // Can be also an object with default options
   },
@@ -149,7 +149,7 @@ export default {
         CLIENT_ID: 'ordinaryroad-blog',
         SCOPE: 'openid,userinfo',
         AUTHORIZE_ENDPOINT: `${process.env.AUTH_BASE_URL}/oauth2/authorize?response_type=code`,
-        ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
+        ACCESS_TOKEN_ENDPOINT: '/auth/oauth2/token'
       },
       github: {
         CLIENT_ID: 'c0615d2a28cfb7a20a84',
