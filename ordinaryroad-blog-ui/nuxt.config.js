@@ -89,7 +89,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    // baseURL: '/',
+    baseURL: process.env.DOMAIN,
     // prefix: '/api',
     // https://axios.nuxtjs.org/options/#proxy
     proxy: true // Can be also an object with default options
@@ -169,13 +169,13 @@ export default {
   privateRuntimeConfig: {
     OAUTH2: {
       ordinaryroad: {
-        CLIENT_SECRET: 'g8DxQweDHm4CAtda'
+        CLIENT_SECRET: process.env.CLIENT_SECRET_ORDINARYROAD
       },
       github: {
-        CLIENT_SECRET: 'ed77e156befab6fdd8bac32840b78b829ad89e1f'
+        CLIENT_SECRET: process.env.CLIENT_SECRET_GIHUB
       },
       gitee: {
-        CLIENT_SECRET: 'eef8d98731611f2af7fb638aee03020cc9812461deaeceb537e69315fac0b57f'
+        CLIENT_SECRET: process.env.CLIENT_SECRET_GITEE
       }
     }
   },
