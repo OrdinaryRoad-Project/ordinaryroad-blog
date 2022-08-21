@@ -31,7 +31,7 @@ export default {
   apis: {
     all: () => {
       return $axios({
-        url: '/api/auth/oauth_user/all',
+        url: '/auth/oauth_user/all',
         method: 'get'
       })
     }

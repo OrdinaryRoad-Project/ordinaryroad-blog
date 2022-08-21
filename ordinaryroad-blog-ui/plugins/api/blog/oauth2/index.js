@@ -35,7 +35,7 @@ export default {
         newAuthorization = `token ${authorization.split(' ')[1]}`
       }
       return $axios({
-        url: `/api/blog/oauth2/callback/${provider}?openid=${openid}&device=PC`,
+        url: `/blog/oauth2/callback/${provider}?openid=${openid}&device=PC`,
         method: 'post',
         headers: {
           Authorization: newAuthorization

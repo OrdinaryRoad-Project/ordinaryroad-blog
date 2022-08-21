@@ -55,19 +55,19 @@ export default {
       if (!url || url === '') {
         return defaultUrl
       } else if (url.startsWith('/ordinaryroad-')) {
-        return `https://api.ordinaryroad.tech/upms/file/download${url}`
+        return `${process.env.FILE_DOWNLOAD_BASE_URL}${url}`
       } else {
         return url
       }
     },
     logout: () => {
-      return $axios.get('/api/blog/common/logout')
+      return $axios.get('/blog/common/logout')
     },
     upload: (file) => {
       const data = new FormData()
       data.append('file', file)
       return $axios({
-        url: '/api/blog/common/upload',
+        url: '/blog/common/upload',
         method: 'post',
         data
       })

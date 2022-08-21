@@ -216,7 +216,7 @@ export default {
           fieldName: 'file',
           setHeaders: () => {
             return {
-              or_blog_token: this.$store.getters['user/getTokenInfo']
+              'or-blog-token': this.$store.getters['user/getTokenInfo']
             }
           },
           // linkToImgUrl: '/api/blog/upload/{url}',
@@ -335,16 +335,17 @@ export default {
               // 评论不需要目录
               return
             }
+
             // 无效
             // Vditor.outlineRender(
             //   previewElement,
             //   document.getElementById('outline')
             // )
-            const headingElements = []
-            const toc = []
             // console.log(previewElement.querySelectorAll('h1,h2,h3,h4,h5,h6'));
             const elementNodeListOf = previewElement.querySelectorAll('h1,h2,h3,h4,h5,h6')
-            if (elementNodeListOf.length) {
+            if (elementNodeListOf.length && elementNodeListOf.length > 0) {
+              const toc = []
+              const headingElements = []
               for (let i = 0; i < elementNodeListOf.length; i++) {
                 const element = elementNodeListOf[i]
                 headingElements.push(element)

@@ -42,7 +42,7 @@ export default function (context, inject) {
     const tokenInfo = store.getters['user/getTokenInfo']
     // 兼容userInfo方法
     if (tokenInfo && config.headers.common) {
-      config.headers.common.or_blog_token = tokenInfo
+      config.headers.common['or-blog-token'] = tokenInfo
     }
   })
 

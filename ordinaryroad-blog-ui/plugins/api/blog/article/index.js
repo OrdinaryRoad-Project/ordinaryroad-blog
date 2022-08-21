@@ -47,58 +47,58 @@ export default {
   apis: {
     saveDraft: (article) => {
       return $axios({
-        url: '/api/blog/article/draft',
+        url: '/blog/article/draft',
         method: 'post',
         data: article
       })
     },
     publish: (article) => {
       return $axios({
-        url: '/api/blog/article/publish',
+        url: '/blog/article/publish',
         method: 'post',
         data: article
       })
     },
     findPublishById: (id) => {
       return $axios({
-        url: `/api/blog/article/publish/${id}`,
+        url: `/blog/article/publish/${id}`,
         method: 'get'
       })
     },
     findOwnById: (id) => {
       return $axios({
-        url: `/api/blog/article/own/${id}`,
+        url: `/blog/article/own/${id}`,
         method: 'get'
       })
     },
     getDraft: () => {
       return $axios({
-        url: '/api/blog/article/draft',
+        url: '/blog/article/draft',
         method: 'get'
       })
     },
     pagePublish: (page, { createBy }) => {
       const data = { createBy }
       return $axios({
-        url: `/api/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
+        url: `/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
         method: 'get'
       })
     },
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
-        url: `/api/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        url: `/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },
     moveToTrash: (id) => {
       return $axios({
-        url: `/api/blog/article/move_to_trash/${id}`,
+        url: `/blog/article/move_to_trash/${id}`,
         method: 'post'
       })
     },
     recoverFromTrash: (id) => {
       return $axios({
-        url: `/api/blog/article/recover_from_trash/${id}`,
+        url: `/blog/article/recover_from_trash/${id}`,
         method: 'post'
       })
     }

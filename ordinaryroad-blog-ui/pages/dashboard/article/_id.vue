@@ -22,6 +22,8 @@
   - SOFTWARE.
   -->
 
+<!-- TODO 刷新页面无反应 -->
+
 <template>
   <div>
     <base-material-card
@@ -141,6 +143,7 @@
                 :error-messages="contentEmpty?['内容不能为空']:null"
               >
                 <or-md-vditor
+                  ref="vditor"
                   placeholder="开始写作吧"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
@@ -283,6 +286,7 @@ export default {
             this.articleInheritsMenuModel = false
             this.article = items[0]
             this.articleContent = this.article.content
+            this.$refs.vditor.setValue(this.articleContent)
           }
         })
       }

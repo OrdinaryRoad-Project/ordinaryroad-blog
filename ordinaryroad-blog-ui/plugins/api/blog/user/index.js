@@ -46,7 +46,7 @@ export default {
   apis: {
     findById: (id) => {
       return $axios({
-        url: `/api/blog/user/${id}`,
+        url: `/blog/user/${id}`,
         method: 'get'
       })
     }
