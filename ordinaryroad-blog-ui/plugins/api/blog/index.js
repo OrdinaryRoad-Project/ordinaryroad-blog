@@ -29,10 +29,12 @@ import commentApis from './comment'
 import userApis from './user'
 
 let $axios = null
+let $config = null
 
 export default {
-  initAxios (axios) {
+  initAxios (axios, config) {
     $axios = $axios || axios
+    $config = $config || config
     oauth2Apis.initAxios(axios)
     oauthUserApis.initAxios(axios)
     articleApis.initAxios(axios)
@@ -55,7 +57,7 @@ export default {
       if (!url || url === '') {
         return defaultUrl
       } else if (url.startsWith('/ordinaryroad-')) {
-        return `${process.env.FILE_DOWNLOAD_BASE_URL}${url}`
+        return `${$config.FILE_DOWNLOAD_BASE_URL}${url}`
       } else {
         return url
       }

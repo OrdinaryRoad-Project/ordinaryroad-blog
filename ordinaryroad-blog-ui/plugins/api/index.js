@@ -32,7 +32,7 @@ export default function ({
 }, inject) {
   // 初始化axios
   oauthApis.initAxios($axios, $config)
-  blogApis.initAxios($axios)
+  blogApis.initAxios($axios, $config)
   const $apis = {
     oauth: oauthApis.apis,
     blog: blogApis.apis
