@@ -234,7 +234,7 @@ export default {
   watch: {
     article: {
       handler (val) {
-        this.contentEmpty = val.content.length === 0 || val.content === '\n'
+        this.contentEmpty = !val || val.content || val.content.length === 0 || val.content === '\n'
       },
       deep: true,
       immediate: true
