@@ -38,14 +38,14 @@ export default function (context, inject) {
   } = app
   // 请求拦截器
   $axios.onRequest((config) => {
+    console.log('request ============================')
     // 将获取到token加入到请求头中
     const tokenInfo = store.getters['user/getTokenInfo']
+    console.log(tokenInfo)
     // 兼容userInfo方法
     if (tokenInfo && config.headers.common) {
       config.headers.common.or_blog_token = tokenInfo
     }
-    console.log('request ============================')
-    console.log(tokenInfo)
     console.log(config.url)
     console.log(config.headers)
     console.log('request ============================')
@@ -92,6 +92,8 @@ export default function (context, inject) {
     }
   },
   (error) => {
+    console.log('onReject ============================')
+    console.log(error)
     let { message } = error
     if (message === 'Network Error') {
       message = '后端接口连接异常'
@@ -101,6 +103,7 @@ export default function (context, inject) {
       message = '系统接口' + message.substr(message.length - 3) + '异常'
     }
     process.client && context.$snackbar.error(message)
+    console.log('onReject ============================')
     return Promise.reject(error)
   })
 }
