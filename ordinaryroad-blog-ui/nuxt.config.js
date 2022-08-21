@@ -99,18 +99,21 @@ export default {
   proxy: {
     '/api/blog': {
       target: process.env.BLOG_BASE_URL,
+      changeOrigin: true,
       pathRewrite: {
         '^/api/blog': '/'
       }
     },
     '/api/auth': {
       target: process.env.AUTH_BASE_URL,
+      changeOrigin: true,
       pathRewrite: {
         '^/api/auth': '/'
       }
     },
     '/api': {
       target: process.env.BASE_URL,
+      changeOrigin: true,
       pathRewrite: {
         '^/api': '/'
       }
