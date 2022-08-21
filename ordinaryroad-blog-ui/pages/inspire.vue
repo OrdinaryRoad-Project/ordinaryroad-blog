@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted () {
-    this.$axios.get('/api/blog/article/all').then((value) => {
+    this.$axios.get('/blog/article/all').then((value) => {
       this.testData = value
       console.log(value)
     })

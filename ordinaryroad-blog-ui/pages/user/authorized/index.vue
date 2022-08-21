@@ -43,7 +43,6 @@ export default {
     redirect
   }) {
     const oAuth2State = store.getters['user/getOAuth2State']
-    console.log(oAuth2State)
     if (oAuth2State == null) {
       // 返回登录页面
       redirect('/user/login')
@@ -58,7 +57,7 @@ export default {
         } else {
           const code = route.query.code
           const tokenData = await $apis.oauth.token(provider, code)
-          console.log('tokenData', tokenData)
+          // console.log('tokenData', tokenData)
           // OrdinaryRoad Error
           if (tokenData.success !== undefined && !tokenData.success) {
             throw new Error(tokenData.msg)
