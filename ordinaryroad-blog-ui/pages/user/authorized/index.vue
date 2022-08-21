@@ -43,7 +43,6 @@ export default {
     redirect
   }) {
     const oAuth2State = store.getters['user/getOAuth2State']
-    console.log(oAuth2State)
     if (oAuth2State == null) {
       // 返回登录页面
       redirect('/user/login')

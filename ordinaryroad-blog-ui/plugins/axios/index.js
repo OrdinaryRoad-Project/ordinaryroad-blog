@@ -38,23 +38,16 @@ export default function (context, inject) {
   } = app
   // 请求拦截器
   $axios.onRequest((config) => {
-    console.log('request ============================')
     // 将获取到token加入到请求头中
     const tokenInfo = store.getters['user/getTokenInfo']
-    console.log(tokenInfo)
     // 兼容userInfo方法
     if (tokenInfo && config.headers.common) {
       config.headers.common['or-blog-token'] = tokenInfo
     }
-    console.log(config)
-    console.log('request ============================')
   })
 
   // 响应拦截器
   $axios.interceptors.response.use((res) => {
-    console.log('response ============================')
-    console.log(res)
-    console.log('response ============================')
     // 未设置状态码则默认成功状态
     const code = res.status
     if (code === 200) {
@@ -91,8 +84,6 @@ export default function (context, inject) {
     }
   },
   (error) => {
-    console.log('onReject ============================')
-    console.log(error)
     let { message } = error
     if (message === 'Network Error') {
       message = '后端接口连接异常'
@@ -102,7 +93,6 @@ export default function (context, inject) {
       message = '系统接口' + message.substr(message.length - 3) + '异常'
     }
     process.client && context.$snackbar.error(message)
-    console.log('onReject ============================')
     return Promise.reject(error)
   })
 }
