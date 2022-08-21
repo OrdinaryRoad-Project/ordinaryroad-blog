@@ -44,10 +44,8 @@ export default function (context, inject) {
     console.log(tokenInfo)
     // 兼容userInfo方法
     if (tokenInfo && config.headers.common) {
-      config.headers.common.or_blog_token = tokenInfo
+      config.headers.common['or-blog-token'] = tokenInfo
     }
-    console.log(config.url)
-    console.log(config.headers)
     console.log(config)
     console.log('request ============================')
   })

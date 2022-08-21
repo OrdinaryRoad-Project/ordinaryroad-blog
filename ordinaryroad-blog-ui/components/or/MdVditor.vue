@@ -216,7 +216,7 @@ export default {
           fieldName: 'file',
           setHeaders: () => {
             return {
-              or_blog_token: this.$store.getters['user/getTokenInfo']
+              'or-blog-token': this.$store.getters['user/getTokenInfo']
             }
           },
           // linkToImgUrl: '/blog/upload/{url}',

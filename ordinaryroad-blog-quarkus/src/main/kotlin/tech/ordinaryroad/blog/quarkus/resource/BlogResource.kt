@@ -72,7 +72,7 @@ class BlogResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun upload(
         @MultipartForm request: FileUploadRequest,
-        @RestHeader("or_blog_token") token: String
+        @RestHeader("or-blog-token") token: String
     ): Response {
         // 报错
         // StpUtil.checkLogin()
