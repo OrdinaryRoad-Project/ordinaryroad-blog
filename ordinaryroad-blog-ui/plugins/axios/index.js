@@ -48,6 +48,7 @@ export default function (context, inject) {
     }
     console.log(config.url)
     console.log(config.headers)
+    console.log(config)
     console.log('request ============================')
   })
 

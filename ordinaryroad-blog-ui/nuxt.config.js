@@ -45,25 +45,25 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     // 权限插件
-    '~/plugins/access/index.js',
+    '~/plugins/access/index',
     // api插件
-    '@/plugins/api/index',
+    '~/plugins/api/index',
     // api插件 Server端
     {
-      src: '@/plugins/api/server/index',
+      src: '~/plugins/api/server/index',
       mode: 'server'
     },
     // axios拦截器等
-    '~/plugins/axios/index.js',
+    '~/plugins/axios/index',
     // dayjs
-    '~/plugins/dayjs/index.js',
+    '~/plugins/dayjs/index',
     // 国际化插件
-    '~/plugins/i18n/index.js',
+    '~/plugins/i18n/index',
     // 自定义常量 工具类等
-    '~/plugins/ordinaryroad/index.js',
+    '~/plugins/ordinaryroad/index',
     // vuetify client mode
     {
-      src: '~/plugins/vuetify/index.js',
+      src: '~/plugins/vuetify/index',
       mode: 'client'
     }
   ],
