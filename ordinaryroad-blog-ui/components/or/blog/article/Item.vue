@@ -198,7 +198,7 @@ export default {
     }
   },
   watch: {},
-  created: function () {
+  created () {
   },
   methods: {
     onClickUsername (item) {
