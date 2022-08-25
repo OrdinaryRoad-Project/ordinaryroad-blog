@@ -1,4 +1,5 @@
 {
+  "articleCount": "文章{0}",
   "article": {
     "title": "标题",
     "coverImage": "封面",
@@ -6,7 +7,18 @@
     "content": "内容",
     "status": "状态",
     "canReward": "允许打赏",
-    "original": "是否原创"
+    "original": "是否原创",
+    "originalOptions": {
+      "original": "原创",
+      "reprint": "转载"
+    },
+    "actions": {
+      "historicVersion": "历史版本",
+      "writing": "开始写作",
+      "saveDraft": "保存草稿",
+      "publish": "直接发布"
+    },
+    "startWritingHint": "开始写作吧"
   },
   "dashboardMenuTitles": {
     "dashboardTitle": "首页",

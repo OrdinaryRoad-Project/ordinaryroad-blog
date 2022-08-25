@@ -27,7 +27,7 @@
 <template>
   <div>
     <base-material-card
-      title="写作"
+      :title="$t('article.actions.writing')"
     >
       <template #after-heading>
         <v-toolbar flat>
@@ -45,7 +45,7 @@
                 v-on="on"
               >
                 <v-icon>mdi-history</v-icon>
-                历史版本
+                {{ $t('article.actions.historicVersion') }}
               </v-btn>
             </template>
             <v-card>
@@ -68,7 +68,7 @@
             depressed
             @click="saveDraft"
           >
-            保存草稿
+            {{ $t('article.actions.saveDraft') }}
           </v-btn>
           <v-btn
             class="ms-2"
@@ -76,7 +76,7 @@
             color="primary"
             @click="publish"
           >
-            直接发布
+            {{ $t('article.actions.publish') }}
           </v-btn>
         </v-toolbar>
       </template>
@@ -114,7 +114,7 @@
                 style="width: 100px;"
                 outlined
                 hide-details
-                :items="[{text:'原创',value:true},{text:'转载',value:false}]"
+                :items="[{text: $t('article.originalOptions.original'),value:true},{text:$t('article.originalOptions.reprint'),value:false}]"
               />
               <v-text-field
                 v-model="article.title"
@@ -140,11 +140,11 @@
               cols="12"
             >
               <v-input
-                :error-messages="contentEmpty?['内容不能为空']:null"
+                :error-messages="contentEmpty?[$t('rules.contentNotEmpty')]:null"
               >
                 <or-md-vditor
                   ref="vditor"
-                  placeholder="开始写作吧"
+                  :placeholder="$t('article.startWritingHint')"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
                   :pre-set-content="articleContent"

@@ -80,6 +80,12 @@ export default {
         }
       } catch (e) {
       }
+    },
+    placeholder (val) {
+      try {
+        this.setPlaceholder(val)
+      } catch (e) {
+      }
     }
   },
   created () {

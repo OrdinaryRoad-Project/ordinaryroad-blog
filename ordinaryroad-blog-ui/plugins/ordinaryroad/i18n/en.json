@@ -1,4 +1,5 @@
 {
+  "parentheses": "({0})",
   "attention": "Attention",
   "back": "Back",
   "cancel": "Cancel",
@@ -28,5 +29,8 @@
   "settings": "Settings",
   "theme": "Theme",
   "updateBy": "Update By",
-  "updateTime": "Update Time"
+  "updateTime": "Update Time",
+  "rules": {
+    "contentNotEmpty": "The content can not be blank."
+  }
 }

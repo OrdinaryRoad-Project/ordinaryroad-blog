@@ -24,7 +24,7 @@
 
 <template>
   <div>
-    <base-material-card title="文章管理">
+    <base-material-card :title="$t('dashboardMenuTitles.dashboard.article.boxTitle')">
       <or-blog-article-data-table :param-status="$route.params.status" />
     </base-material-card>
   </div>

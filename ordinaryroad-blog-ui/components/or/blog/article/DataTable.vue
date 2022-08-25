@@ -163,7 +163,7 @@
           dark
           @click="$refs.dataTable.insertItem()"
         >
-          开始写作
+          {{ $t('article.actions.writing') }}
         </v-btn>
       </template>
 

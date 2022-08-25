@@ -338,7 +338,9 @@
               border="left"
               elevation="2"
             >
-              回复{{ commentOptions.parentComment ? commentOptions.parentComment.user.username : '' }}：
+              回复{{
+                commentOptions.parentComment ? `${commentOptions.parentComment.user.username}：${commentOptions.parentComment.content}` : ''
+              }}
             </v-alert>
           </div>
           <or-blog-comment-list

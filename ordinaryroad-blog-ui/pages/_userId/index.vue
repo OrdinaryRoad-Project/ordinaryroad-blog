@@ -39,7 +39,7 @@
       </template>
     </base-material-card>
 
-    <base-material-card :title="`文章${totalArticle?`（${totalArticle}）`:''}`">
+    <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
       <or-blog-article-list
         :total.sync="totalArticle"
         :create-by="blogUser.uuid"
