@@ -24,14 +24,12 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import cn.hutool.core.io.FileUtil
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import java.nio.charset.StandardCharsets
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -81,7 +79,7 @@ class BlogPushService {
         val allOAuthUser = oauthUserService.findAllByUserId(notifier)
         val emailSet = allOAuthUser.stream().map(BlogOAuthUser::getEmail).collect(Collectors.toSet())
 
-        var contentTemplate = FileUtil.readString("templates/new-comment.html", StandardCharsets.UTF_8)
+        var contentTemplate = NEW_COMMENT_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)
         contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
         contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
@@ -99,5 +97,24 @@ class BlogPushService {
             }
         )
     }
+
+    private final val NEW_COMMENT_TEMPLATE = "<!DOCTYPE html>\n" +
+            "<html lang=\"zh\">\n" +
+            "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <title>{title}</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "<a href=\"https://blog.ordinaryroad.tech/{fromUserId}\">{fromUsername}</a>{actionString}\n" +
+            "<div>\n" +
+            "    {content}\n" +
+            "</div>\n" +
+            "<div>\n" +
+            "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/detail/{articleId}\">{articleTitle}</a>\n" +
+            "</div>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>"
 
 }
