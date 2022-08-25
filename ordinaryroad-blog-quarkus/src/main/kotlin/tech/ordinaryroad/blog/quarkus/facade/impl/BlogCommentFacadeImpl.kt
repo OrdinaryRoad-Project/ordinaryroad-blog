@@ -27,6 +27,7 @@ package tech.ordinaryroad.blog.quarkus.facade.impl
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
@@ -36,9 +37,7 @@ import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
-import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
-import tech.ordinaryroad.blog.quarkus.service.BlogCommentTransferService
+import tech.ordinaryroad.blog.quarkus.service.*
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import tech.ordinaryroad.commons.base.cons.StatusCode
@@ -61,15 +60,27 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
     @Inject
     protected lateinit var articleService: BlogArticleService
 
+    @Inject
+    protected lateinit var blogService: BlogService
+
+    @Inject
+    protected lateinit var pushService: BlogPushService
+
     override fun post(request: BlogCommentPostRequest): Response {
         // 校验登录
         StpUtil.checkLogin()
+        val user = blogService.currentUser()
 
         // 先转换，后面需要填充
         val comment = blogCommentMapStruct.request2do(request)
 
         // 传入parentId视为回复评论
         val isReply = !request.parentId.isNullOrBlank()
+
+        val who: String = user.username
+        val actionString: String
+        var content = request.content
+        val notifier: String
 
         if (isReply) {
             // 回复，直接使用parent的articleId
@@ -93,13 +104,26 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
             } else {
                 parentComment.originalId
             }
+
+            actionString = "回复了我的评论"
+            notifier = parentComment.createBy
+            content += " ${parentComment.content}"
         } else {
-            validateArticle(request.articleId)
+            val article = validateArticle(request.articleId)
 
             comment.originalId = ""
+
+            actionString = "对我的文章发表了评论"
+            notifier = article.createBy
+            content += " ${article.title}"
         }
 
         val create = commentService.create(comment)
+
+        val title = who + actionString
+
+        pushService.comment(title, content, notifier)
+
         return Response.ok(
             if (isReply) {
                 commentTransferService.transferSub(create)
@@ -144,13 +168,11 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
     /**
      * 校验文章是否存在
      */
-    private fun validateArticle(articleId: String?) {
+    private fun validateArticle(articleId: String?): BlogArticle {
         if (articleId.isNullOrBlank()) {
             throw BaseBlogException(StatusCode.PARAM_IS_BLANK)
         }
-        if (articleService.findById(articleId) == null) {
-            throw BlogArticleNotFoundException()
-        }
+        return articleService.findById(articleId) ?: throw BlogArticleNotFoundException()
     }
 
     /**

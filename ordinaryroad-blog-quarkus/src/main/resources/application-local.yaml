@@ -1,0 +1,51 @@
+quarkus:
+  application:
+    name: ordinaryroad-blog-quarkus
+  datasource:
+    jdbc:
+      driver: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/or_blog_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    password: Root123.
+    username: root
+  http:
+    access-log:
+      enabled: true
+    cors: true
+    cors.access-control-allow-credentials: true
+    port: 8081
+  live-reload:
+    instrumentation: true
+  mybatis:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  redisson:
+    codec: org.redisson.codec.JsonJacksonCodec
+    single-server-config:
+      address: redis://127.0.0.1:6379
+      database: 0
+  rest-client:
+    gitee-oauth2:
+      scope: javax.inject.Singleton
+      url: https://gitee.com/api/v5
+    github-oauth2:
+      scope: javax.inject.Singleton
+      url: https://api.github.com
+    ordinaryroad:
+      scope: javax.inject.Singleton
+      url: http://ordinaryroad-gateway:9090
+    ordinaryroad-auth:
+      scope: javax.inject.Singleton
+      url: http://ordinaryroad-auth-server:9302
+  resteasy-json:
+    default-json: false
+  # Mailer
+  mailer:
+    from: or-mjz@qq.com
+    host: smtp.qq.com
+    port: 465
+    ssl: true
+    username: or-mjz@qq.com
+    password: ${MAIL_QQ_PASSWORD}
+sa-token:
+  token-name: or-blog-token
