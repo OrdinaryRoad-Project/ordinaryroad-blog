@@ -47,5 +47,9 @@ quarkus:
     ssl: true
     username: or-mjz@qq.com
     password: ${MAIL_QQ_PASSWORD}
+    mock: false
+    start-tls: REQUIRED
+    auth-methods: DIGEST-MD5 CRAM-SHA256 CRAM-SHA1 CRAM-MD5 PLAIN LOGIN
+# Sa-Token
 sa-token:
   token-name: or-blog-token

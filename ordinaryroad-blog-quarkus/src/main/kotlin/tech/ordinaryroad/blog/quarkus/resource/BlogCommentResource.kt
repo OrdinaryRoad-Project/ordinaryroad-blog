@@ -48,7 +48,6 @@ class BlogCommentResource {
     protected lateinit var commentTransferService: BlogCommentTransferService
 
     //region 开发中
-
     /**
      * 用户发布评论
      */

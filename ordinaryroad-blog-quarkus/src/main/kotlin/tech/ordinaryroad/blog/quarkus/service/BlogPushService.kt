@@ -24,12 +24,18 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.hutool.core.io.FileUtil
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
+import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.entity.BlogUser
+import java.nio.charset.StandardCharsets
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+
 
 /**
  * Blog消息推送
@@ -49,15 +55,49 @@ class BlogPushService {
     @Inject
     protected lateinit var oauthUserService: BlogOAuthUserService
 
-    fun comment(title: String, content: String, notifier: String) {
+    fun comment(
+        fromUser: BlogUser,
+        content: String,
+        article: BlogArticle,
+        parentComment: BlogComment?
+    ) {
+        val toUser: BlogUser
+        val title: String
+        val notifier: String
+        val actionString: String
+        if (parentComment == null) {
+            title = "新评论提醒"
+            notifier = article.createBy
+            actionString = "对我的文章发表了评论"
+            toUser = userService.findById(article.createBy)
+        } else {
+            title = "新回复提醒"
+            notifier = parentComment.createBy
+            actionString = "回复了我的评论"
+            toUser = userService.findById(parentComment.createBy)
+        }
+
+
         val allOAuthUser = oauthUserService.findAllByUserId(notifier)
         val emailSet = allOAuthUser.stream().map(BlogOAuthUser::getEmail).collect(Collectors.toSet())
-        val mail = Mail().apply {
-            subject = title
-            text = content
-            to = emailSet.toList()
-        }
-        mailer.send(mail)
+
+        var contentTemplate = FileUtil.readString("templates/new-comment.html", StandardCharsets.UTF_8)
+        contentTemplate = contentTemplate.replace("{title}", title)
+        contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
+        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
+        contentTemplate = contentTemplate.replace("{actionString}", actionString)
+        contentTemplate = contentTemplate.replace("{content}", content)
+        contentTemplate = contentTemplate.replace("{articleId}", article.uuid)
+        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
+        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
+
+        mailer.send(
+            Mail().apply {
+                to = emailSet.toList()
+                subject = title
+                html = contentTemplate
+            }
+        )
     }
 
 }

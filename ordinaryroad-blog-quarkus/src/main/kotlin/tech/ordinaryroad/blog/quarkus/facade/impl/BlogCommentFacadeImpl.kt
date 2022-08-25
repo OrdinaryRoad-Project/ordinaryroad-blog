@@ -69,7 +69,7 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
     override fun post(request: BlogCommentPostRequest): Response {
         // 校验登录
         StpUtil.checkLogin()
-        val user = blogService.currentUser()
+        val fromUser = blogService.currentUser()
 
         // 先转换，后面需要填充
         val comment = blogCommentMapStruct.request2do(request)
@@ -77,24 +77,23 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
         // 传入parentId视为回复评论
         val isReply = !request.parentId.isNullOrBlank()
 
-        val who: String = user.username
-        val actionString: String
-        var content = request.content
-        val notifier: String
-
+        val content = request.content
+        val article: BlogArticle
+        var parentComment: BlogComment? = null
         if (isReply) {
             // 回复，直接使用parent的articleId
-            val parentComment = validateComment(request.parentId, true)!!
+            parentComment = validateComment(request.parentId, true)!!
 
             // 校验articleId
             if (request.articleId.isBlank()) {
                 request.articleId = parentComment.articleId
+                article = articleService.findById(request.articleId)
             } else {
                 if (request.articleId != parentComment.articleId) {
                     // 父评论文章和传入的不一致
                     throw BlogCommentNotValidException()
                 } else {
-                    validateArticle(request.articleId)
+                    article = validateArticle(request.articleId)
                 }
             }
 
@@ -104,25 +103,15 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
             } else {
                 parentComment.originalId
             }
-
-            actionString = "回复了我的评论"
-            notifier = parentComment.createBy
-            content += " ${parentComment.content}"
         } else {
-            val article = validateArticle(request.articleId)
+            article = validateArticle(request.articleId)
 
             comment.originalId = ""
-
-            actionString = "对我的文章发表了评论"
-            notifier = article.createBy
-            content += " ${article.title}"
         }
 
         val create = commentService.create(comment)
 
-        val title = who + actionString
-
-        pushService.comment(title, content, notifier)
+        pushService.comment(fromUser, content, article, parentComment)
 
         return Response.ok(
             if (isReply) {
