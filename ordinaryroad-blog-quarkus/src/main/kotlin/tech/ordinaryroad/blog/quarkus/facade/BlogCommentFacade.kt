@@ -48,4 +48,9 @@ interface BlogCommentFacade {
      */
     fun pageArticleComment(request: BlogCommentQueryRequest): Page<BlogArticleCommentVO>
 
+    /**
+     * 分页查询所有评论
+     */
+    fun page(request: BlogCommentQueryRequest): Page<Any>
+
 }

@@ -79,4 +79,13 @@ class BlogCommentResource {
     }
     //endregion
 
+    //region 管理员
+    @GET
+    @Path("page/{page}/{size}")
+    fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
+        BlogArticleResource.throwBadRequest()
+        // TODO admin
+        return commentFacade.page(request)
+    }
+    //endregion
 }

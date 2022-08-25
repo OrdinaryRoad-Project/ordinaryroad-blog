@@ -609,9 +609,10 @@ class BlogArticleResource {
 
     //endregion
 
-
-    private fun throwBadRequest() {
-        throw HttpException(HttpStatus.HTTP_BAD_REQUEST, "暂不支持访问")
+    companion object {
+        fun throwBadRequest() {
+            throw HttpException(HttpStatus.HTTP_BAD_REQUEST, "暂不支持访问")
+        }
     }
 
 }

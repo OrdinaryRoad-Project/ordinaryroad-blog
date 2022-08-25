@@ -165,6 +165,22 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
         return voPage
     }
 
+    override fun page(request: BlogCommentQueryRequest): Page<Any> {
+        val wrapper = ChainWrappers.queryChain(commentService.dao)
+
+        val page = commentService.page(request, wrapper)
+
+        val voPage = PageUtils.copyPage(page) {
+            if (it.originalId.isNullOrBlank()) {
+                return@copyPage commentTransferService.transferArticle(it)
+            } else {
+                return@copyPage commentTransferService.transferSub(it)
+            }
+        }
+
+        return voPage
+    }
+
     /**
      * 校验文章是否存在
      */

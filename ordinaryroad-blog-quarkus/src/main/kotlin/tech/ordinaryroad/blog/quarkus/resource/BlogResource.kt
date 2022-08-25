@@ -34,7 +34,6 @@ import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO.Companion.transfer
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserinfoDTO
 import tech.ordinaryroad.blog.quarkus.request.FileUploadRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.commons.base.exception.BaseException
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -74,11 +73,9 @@ class BlogResource {
         @MultipartForm request: FileUploadRequest,
         @RestHeader("or-blog-token") token: String
     ): Response {
-        // 报错
-        // StpUtil.checkLogin()
+        BlogArticleResource.throwBadRequest()
 
-        // TODO 统一异常处理
-        StpUtil.getLoginIdByToken(token) ?: throw BaseException("UserId 为空")
+        StpUtil.getLoginIdByToken(token)
 
         val fileUpload = request.file
 
