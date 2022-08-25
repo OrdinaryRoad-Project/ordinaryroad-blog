@@ -116,7 +116,7 @@
     <v-navigation-drawer
       v-if="catalogue.length>0"
       v-model="drawer"
-      clippe
+      clipped
       app
     >
       <div id="article-outline" />
