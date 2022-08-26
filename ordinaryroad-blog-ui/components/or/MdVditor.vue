@@ -391,6 +391,7 @@ export default {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         if (this.scrollingOptions.currentScrollTop === scrollTop) {
           // console.log("滚动结束")
+          let currentTocIndex = headingElements.length - 1
           for (let i = 0; i < headingElements.length; i++) {
             // 找到 屏幕上 离offset最近的 元素
             const offset = this.headingsOffsetTop
@@ -398,7 +399,7 @@ export default {
             const currentTop = element.getBoundingClientRect().top
             if (currentTop >= offset) {
               if (currentTop === offset) {
-                this.$emit('update:currentTocIndex', i)
+                currentTocIndex = i
                 // console.log('MdVditor 滑动后需要激活的目录', i)
               } else if (i > 1) {
                 const preElement = headingElements[i - 1]
@@ -406,24 +407,24 @@ export default {
                 const distance = currentTop - preTop
                 if (distance < offset) {
                   // 间距过小，直接设置当前的位置
-                  this.$emit('update:currentTocIndex', i)
+                  currentTocIndex = i
                   // console.log('MdVditor 滑动后需要激活的目录 distance < offset', i)
                 } else if (currentTop - offset < 3) {
                   // 当前紧靠offset位置
-                  this.$emit('update:currentTocIndex', i)
+                  currentTocIndex = i
                   // console.log('MdVditor 滑动后需要激活的目录 currentTop - offset < 3', i)
                 } else {
                   // 上一部分还没完全遮住
-                  this.$emit('update:currentTocIndex', i - 1)
+                  currentTocIndex = i - 1
                   // console.log('MdVditor 滑动后需要激活的目录', i - 1)
                 }
               } else {
-                this.$emit('update:currentTocIndex', 0)
-                // console.log('MdVditor 滑动后需要激活的目录', 0)
+                currentTocIndex = 0
               }
               break
             }
           }
+          this.$emit('update:currentTocIndex', currentTocIndex)
         }
       }, 100)
     }
