@@ -21,14 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.dto
 
-import tech.ordinaryroad.commons.base.dto.BaseDTO
+package tech.ordinaryroad.blog.quarkus.service
 
-data class BlogUserinfoDTO(
-    var user: BlogUserDTO
-) : BaseDTO() {
-    companion object {
-        private const val serialVersionUID: Long = 2028801912014094849L
+import tech.ordinaryroad.blog.quarkus.dao.BlogRoleDAO
+import tech.ordinaryroad.blog.quarkus.entity.BlogRole
+import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
+import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.stream.Collectors
+import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
+
+/**
+ * Service-Role
+ *
+ * @author mjz
+ * @date 2022/8/26
+ */
+@ApplicationScoped
+class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
+
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
+
+    /**
+     * 根据用户Id查询所有角色
+     */
+    fun findAllByUserId(userId: String): List<BlogRole> {
+        val userRoles = userRolesService.findAllByUserId(userId)
+        val roleIds = userRoles.stream().map(BlogUserRoles::getRoleId)
+            .collect(Collectors.toList())
+        return super.findIds(BlogRole::class.java, roleIds)
     }
+
 }

@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.service.transfer
 
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.facade.BlogArticleFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import java.time.LocalDateTime
@@ -49,13 +50,16 @@ class BlogArticleTransferService {
     @Inject
     protected lateinit var userService: BlogUserService
 
+    @Inject
+    protected lateinit var userTransferService: BlogUserTransferService
+
     fun transferDetail(article: BlogArticle): BlogArticleDetailVO {
         return blogArticleMapStruct.do2DetailVo(article).apply {
             val times = articleFacade.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
             createdTime = times.getValue("createdTime") as LocalDateTime
             updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)
-            user = blogUserMapStruct.do2Vo(blogUser)
+            user = userTransferService.transfer(blogUser)
         }
     }
 
@@ -65,7 +69,7 @@ class BlogArticleTransferService {
             createdTime = times.getValue("createdTime") as LocalDateTime
             updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)
-            user = blogUserMapStruct.do2Vo(blogUser)
+            user = userTransferService.transfer(blogUser)
         }
     }
 

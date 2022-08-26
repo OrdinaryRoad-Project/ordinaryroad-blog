@@ -22,31 +22,18 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
+import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+@Mapper
+public interface BlogRoleMapStruct {
 
-    private String content;
+    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
 
-    public BlogArticleDetailVO() {
-    }
+    BlogRoleVO do2Vo(BlogRole role);
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

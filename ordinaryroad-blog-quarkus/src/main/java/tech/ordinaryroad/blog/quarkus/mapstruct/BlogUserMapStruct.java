@@ -26,7 +26,6 @@ package tech.ordinaryroad.blog.quarkus.mapstruct;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO;
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
@@ -34,8 +33,6 @@ import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 public interface BlogUserMapStruct {
 
     BlogUserMapStruct INSTANCE = Mappers.getMapper(BlogUserMapStruct.class);
-
-    BlogUserDTO do2Dto(BlogUser user);
 
     BlogUserVO do2Vo(BlogUser user);
 

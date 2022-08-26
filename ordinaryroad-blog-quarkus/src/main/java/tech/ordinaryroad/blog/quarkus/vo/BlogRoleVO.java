@@ -24,40 +24,34 @@
 
 package tech.ordinaryroad.blog.quarkus.vo;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
-import java.time.LocalDateTime;
-
 /**
- * 文章评论VO类
+ * 角色VO类
+ *
+ * @author mjz
+ * @date 2022/8/26
  */
 @JsonInclude
 @JsonPropertyOrder
 @RegisterForReflection
-public class BlogArticleCommentVO {
+public class BlogRoleVO {
 
     private String uuid;
 
-    private String content;
+    private String roleName;
 
-    private Page<BlogSubCommentVO> replies;
+    private String roleCode;
 
-    private BlogUserVO user;
-
-    private LocalDateTime createdTime;
-
-    public BlogArticleCommentVO() {
+    public BlogRoleVO() {
     }
 
-    public BlogArticleCommentVO(String uuid, String content, Page<BlogSubCommentVO> replies, BlogUserVO user, LocalDateTime createdTime) {
+    public BlogRoleVO(String uuid, String roleName, String roleCode) {
         this.uuid = uuid;
-        this.content = content;
-        this.replies = replies;
-        this.user = user;
-        this.createdTime = createdTime;
+        this.roleName = roleName;
+        this.roleCode = roleCode;
     }
 
     public String getUuid() {
@@ -68,35 +62,19 @@ public class BlogArticleCommentVO {
         this.uuid = uuid;
     }
 
-    public String getContent() {
-        return content;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public Page<BlogSubCommentVO> getReplies() {
-        return replies;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setReplies(Page<BlogSubCommentVO> replies) {
-        this.replies = replies;
-    }
-
-    public BlogUserVO getUser() {
-        return user;
-    }
-
-    public void setUser(BlogUserVO user) {
-        this.user = user;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 }

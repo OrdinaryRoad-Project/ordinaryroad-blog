@@ -22,55 +22,36 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.resource
+package tech.ordinaryroad.blog.quarkus.service.transfer
 
-import cn.dev33.satoken.stp.StpUtil
-import org.jboss.resteasy.reactive.RestPath
-import org.jboss.resteasy.reactive.RestQuery
-import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
+import tech.ordinaryroad.blog.quarkus.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogRoleMapStruct
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
+import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
+import java.util.stream.Collectors
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.validation.Valid
-import javax.validation.constraints.NotBlank
-import javax.ws.rs.GET
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
+/**
+ * 用户转换服务类
+ */
+@ApplicationScoped
+class BlogUserTransferService {
 
-@Path("user")
-class BlogUserResource {
+    val blogUserMapStruct = BlogUserMapStruct.INSTANCE
+    val blogRoleMapStruct = BlogRoleMapStruct.INSTANCE
 
     @Inject
-    protected lateinit var userFacade: BlogUserFacade
+    protected lateinit var roleService: BlogRoleService
 
-    /**
-     * 查询用户
-     */
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findById(
-        @Valid @NotBlank(message = "Id不能为空")
-        @RestPath id: String
-    ): BlogUserVO {
-        return userFacade.findById(id)
+    fun transfer(user: BlogUser): BlogUserVO {
+        return blogUserMapStruct.do2Vo(user).apply {
+            this.roles = roleService.findAllByUserId(this.uuid)
+                .stream()
+                .map(blogRoleMapStruct::do2Vo)
+                .collect(Collectors.toList())
+        }
     }
-
-
-    //region 开发中（管理员）
-    @PUT
-    @Path("{id}")
-    fun updateRoles(
-        @Valid @NotBlank(message = "Id不能为空")
-        @RestPath id: String,
-        @RestQuery roleIds: List<String> = emptyList()
-    ) {
-        StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
-
-        userFacade.updateRoles(id, roleIds)
-    }
-    //endregion
 
 }

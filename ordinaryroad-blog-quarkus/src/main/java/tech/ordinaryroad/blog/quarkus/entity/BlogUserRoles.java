@@ -22,31 +22,36 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
-@JsonInclude
-@JsonPropertyOrder
+/**
+ * 博客用户角色关联关系
+ */
 @RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+public class BlogUserRoles extends BaseDO {
 
-    private String content;
+    private static final long serialVersionUID = -7283530400336022320L;
 
-    public BlogArticleDetailVO() {
+    private String userId;
+
+    private String roleId;
+
+    public String getUserId() {
+        return userId;
     }
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getContent() {
-        return content;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

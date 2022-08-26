@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.service.transfer
 
 import tech.ordinaryroad.blog.quarkus.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.facade.BlogArticleFacade
 import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
-import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import javax.enterprise.context.ApplicationScoped
@@ -42,13 +42,9 @@ import javax.inject.Inject
 class BlogCommentTransferService {
 
     val blogCommentMapStruct = BlogCommentMapStruct.INSTANCE
-    val blogUserMapStruct = BlogUserMapStruct.INSTANCE
 
     @Inject
     protected lateinit var commentFacade: BlogCommentFacade
-
-    @Inject
-    protected lateinit var articleFacade: BlogArticleFacade
 
     @Inject
     protected lateinit var commentService: BlogCommentService
@@ -56,10 +52,13 @@ class BlogCommentTransferService {
     @Inject
     protected lateinit var userService: BlogUserService
 
+    @Inject
+    protected lateinit var userTransferService: BlogUserTransferService
+
     fun transferArticle(comment: BlogComment): BlogArticleCommentVO {
         return blogCommentMapStruct.do2ArticleVo(comment).apply {
             val blogUser = userService.findById(comment.createBy)
-            user = blogUserMapStruct.do2Vo(blogUser)
+            user = userTransferService.transfer(blogUser)
 
             replies = commentFacade.pageSubComment(BlogCommentQueryRequest().apply {
                 articleId = comment.articleId
@@ -73,12 +72,12 @@ class BlogCommentTransferService {
 
     fun transferSub(comment: BlogComment): BlogSubCommentVO {
         return blogCommentMapStruct.do2SubVo(comment).apply {
-            user = blogUserMapStruct.do2Vo(userService.findById(comment.createBy))
+            user = userTransferService.transfer(userService.findById(comment.createBy))
 
             if (!comment.parentId.isNullOrBlank()) {
                 val parentComment = commentService.findById(comment.parentId)
                 parent = blogCommentMapStruct.do2SubVo(parentComment).apply {
-                    user = blogUserMapStruct.do2Vo(userService.findById(parentComment.createBy))
+                    user = userTransferService.transfer(userService.findById(parentComment.createBy))
                 }
             }
         }

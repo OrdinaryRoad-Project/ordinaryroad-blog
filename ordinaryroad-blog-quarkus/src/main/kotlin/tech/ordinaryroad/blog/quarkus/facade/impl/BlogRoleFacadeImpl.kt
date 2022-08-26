@@ -22,31 +22,41 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.facade.impl
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
+import tech.ordinaryroad.blog.quarkus.facade.BlogRoleFacade
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogRoleMapStruct
+import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
+import java.util.stream.Collectors
+import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+/**
+ *
+ *
+ * @author mjz
+ * @date 2022/8/26
+ */
+@ApplicationScoped
+class BlogRoleFacadeImpl : BlogRoleFacade {
 
-    private String content;
+    val roleMapStruct = BlogRoleMapStruct.INSTANCE
 
-    public BlogArticleDetailVO() {
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
+    override fun findAllByUserId(userId: String): List<BlogRoleDTO> {
+        return roleService.findAllByUserId(userId)
+            .stream()
+            .map {
+                return@map dtoService.transfer(it, BlogRoleDTO::class.java)
+            }
+            .collect(Collectors.toList())
     }
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

@@ -28,7 +28,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.service.BlogCommentTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import javax.inject.Inject
@@ -43,9 +42,6 @@ class BlogCommentResource {
 
     @Inject
     protected lateinit var commentFacade: BlogCommentFacade
-
-    @Inject
-    protected lateinit var commentTransferService: BlogCommentTransferService
 
     //region 开发中
     /**

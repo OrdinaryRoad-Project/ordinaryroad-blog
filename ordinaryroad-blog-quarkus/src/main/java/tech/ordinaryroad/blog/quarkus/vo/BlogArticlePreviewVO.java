@@ -56,6 +56,21 @@ public class BlogArticlePreviewVO {
 
     private Integer pv;
 
+    public BlogArticlePreviewVO() {
+    }
+
+    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, Integer pv) {
+        this.uuid = uuid;
+        this.coverImage = coverImage;
+        this.title = title;
+        this.summary = summary;
+        this.original = original;
+        this.user = user;
+        this.createdTime = createdTime;
+        this.updateTime = updateTime;
+        this.pv = pv;
+    }
+
     public String getUuid() {
         return uuid;
     }

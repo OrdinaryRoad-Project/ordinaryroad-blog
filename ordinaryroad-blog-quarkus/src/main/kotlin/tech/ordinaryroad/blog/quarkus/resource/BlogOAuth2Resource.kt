@@ -26,18 +26,22 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.SaLoginModel
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.IdUtil
 import io.vertx.core.json.JsonObject
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import tech.ordinaryroad.blog.quarkus.client.gitee.oauth2.GiteeOAuth2Service
 import tech.ordinaryroad.blog.quarkus.client.github.oauth2.GithubOAuth2Service
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.auth.AuthService
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO.Companion.transfer
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserinfoDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.facade.BlogRoleFacade
+import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
 import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
 import javax.inject.Inject
 import javax.ws.rs.BeanParam
 import javax.ws.rs.POST
@@ -64,6 +68,15 @@ class BlogOAuth2Resource {
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var roleFacade: BlogRoleFacade
+
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
+    @Inject
+    protected lateinit var userFacade: BlogUserFacade
 
     /**
      * OAuth授权成功后的回调
@@ -105,7 +118,7 @@ class BlogOAuth2Resource {
                     val jsonObject = userinfo.getJsonObject("data")
                     responseOAuthUser.apply {
                         setOpenid(openid)
-                        username = jsonObject.getString("username")
+                        username = jsonObject.getString("username") ?: IdUtil.fastSimpleUUID()
                         avatar = jsonObject.getString("avatar")
                         email = jsonObject.getString("email")
                     }
@@ -185,12 +198,22 @@ class BlogOAuth2Resource {
                 }
             }
 
-            StpUtil.login(user.uuid, SaLoginModel().apply {
+            val userId = user.uuid
+
+            if (provider == "ordinaryroad") {
+                userFacade.updateRoles(userId, arrayListOf("SSSSSSVIP"))
+            }
+
+            StpUtil.login(userId, SaLoginModel().apply {
                 setDevice(device)
                 setIsLastingCookie(true)
             })
 
-            responseObject.put("userinfo", BlogUserinfoDTO(user.transfer()))
+            val roleDtoList = roleFacade.findAllByUserId(userId)
+
+            val userDto = dtoService.transfer(user, BlogUserDTO::class.java)
+
+            responseObject.put("userinfo", BlogUserInfoDTO(userDto, roleDtoList))
 
             val tokenValue = StpUtil.getTokenValue()
             responseObject.put("token", tokenValue)

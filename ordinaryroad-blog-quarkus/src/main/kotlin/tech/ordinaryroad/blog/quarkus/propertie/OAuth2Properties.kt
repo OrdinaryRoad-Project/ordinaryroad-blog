@@ -22,31 +22,21 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.propertie
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.smallrye.config.ConfigMapping
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+/**
+ *
+ *
+ * @author mjz
+ * @date 2022/8/26
+ */
+@ConfigMapping(prefix = "ordinaryroad.oauth2")
+interface OAuth2Properties {
 
-    private String content;
+    fun clientId(): String
 
-    public BlogArticleDetailVO() {
-    }
+    fun clientSecret(): String
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

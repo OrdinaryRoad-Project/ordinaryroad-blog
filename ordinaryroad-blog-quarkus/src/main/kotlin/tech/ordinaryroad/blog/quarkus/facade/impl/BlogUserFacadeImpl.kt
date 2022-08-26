@@ -24,11 +24,14 @@
 
 package tech.ordinaryroad.blog.quarkus.facade.impl
 
+import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
+import tech.ordinaryroad.blog.quarkus.service.BlogUserRolesService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.service.BlogUserTransferService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogUserTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -37,6 +40,9 @@ class BlogUserFacadeImpl : BlogUserFacade {
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
 
     @Inject
     protected lateinit var userTransferService: BlogUserTransferService
@@ -48,6 +54,36 @@ class BlogUserFacadeImpl : BlogUserFacade {
             throw BlogUserNotFoundException()
         } else {
             return userTransferService.transfer(blogUser)
+        }
+    }
+
+    override fun updateRoles(id: String, roleIdList: List<String>) {
+        val oldRoleIdSet = userRolesService.findAllByUserId(id)
+            .stream()
+            .map(BlogUserRoles::getRoleId)
+            .collect(Collectors.toSet())
+
+        val intersectRoleIdSet = roleIdList.intersect(oldRoleIdSet)
+
+        val roleIdListToAdd = arrayListOf<String>()
+        val roleIdListToDelete = arrayListOf<String>()
+        oldRoleIdSet.forEach {
+            if (!intersectRoleIdSet.contains(it)) {
+                roleIdListToDelete.add(it)
+            }
+        }
+        roleIdList.forEach {
+            if (!intersectRoleIdSet.contains(it)) {
+                roleIdListToAdd.add(it)
+            }
+        }
+
+        userRolesService.deleteByIdList(roleIdListToDelete)
+        roleIdListToAdd.forEach {
+            userRolesService.create(BlogUserRoles().apply {
+                userId = id
+                roleId = it
+            })
         }
     }
 

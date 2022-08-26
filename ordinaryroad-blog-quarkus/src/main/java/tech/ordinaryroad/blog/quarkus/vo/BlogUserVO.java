@@ -24,40 +24,39 @@
 
 package tech.ordinaryroad.blog.quarkus.vo;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * 文章评论VO类
+ * 用户VO类
+ *
+ * @author mjz
+ * @date 2022/8/26
  */
 @JsonInclude
 @JsonPropertyOrder
 @RegisterForReflection
-public class BlogArticleCommentVO {
+public class BlogUserVO {
 
     private String uuid;
 
-    private String content;
+    private String username;
 
-    private Page<BlogSubCommentVO> replies;
+    private String avatar;
 
-    private BlogUserVO user;
+    private List<BlogRoleVO> roles;
 
-    private LocalDateTime createdTime;
-
-    public BlogArticleCommentVO() {
+    public BlogUserVO() {
     }
 
-    public BlogArticleCommentVO(String uuid, String content, Page<BlogSubCommentVO> replies, BlogUserVO user, LocalDateTime createdTime) {
+    public BlogUserVO(String uuid, String username, String avatar, List<BlogRoleVO> roles) {
         this.uuid = uuid;
-        this.content = content;
-        this.replies = replies;
-        this.user = user;
-        this.createdTime = createdTime;
+        this.username = username;
+        this.avatar = avatar;
+        this.roles = roles;
     }
 
     public String getUuid() {
@@ -68,35 +67,27 @@ public class BlogArticleCommentVO {
         this.uuid = uuid;
     }
 
-    public String getContent() {
-        return content;
+    public String getUsername() {
+        return username;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Page<BlogSubCommentVO> getReplies() {
-        return replies;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setReplies(Page<BlogSubCommentVO> replies) {
-        this.replies = replies;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public BlogUserVO getUser() {
-        return user;
+    public List<BlogRoleVO> getRoles() {
+        return roles;
     }
 
-    public void setUser(BlogUserVO user) {
-        this.user = user;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setRoles(List<BlogRoleVO> roles) {
+        this.roles = roles;
     }
 }

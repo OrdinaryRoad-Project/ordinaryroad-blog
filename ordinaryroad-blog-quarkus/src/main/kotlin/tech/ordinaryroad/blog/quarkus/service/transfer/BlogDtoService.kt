@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.service.transfer
 
 import cn.hutool.core.util.ReflectUtil
 import tech.ordinaryroad.blog.quarkus.dto.BaseBlogModelDTO
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

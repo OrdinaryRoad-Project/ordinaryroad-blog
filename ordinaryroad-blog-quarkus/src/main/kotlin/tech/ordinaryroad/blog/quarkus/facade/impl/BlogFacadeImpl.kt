@@ -22,27 +22,46 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.facade.impl
 
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
-import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
+import cn.dev33.satoken.stp.StpUtil
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
+import tech.ordinaryroad.blog.quarkus.facade.BlogFacade
+import tech.ordinaryroad.blog.quarkus.facade.BlogRoleFacade
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 /**
- * 用户转换服务类
+ *
+ *
+ * @author mjz
+ * @date 2022/8/26
  */
 @ApplicationScoped
-class BlogUserTransferService {
-
-    val blogUserMapStruct = BlogUserMapStruct.INSTANCE
+class BlogFacadeImpl : BlogFacade {
 
     @Inject
     protected lateinit var userService: BlogUserService
 
-    fun transfer(user: BlogUser): BlogUserVO {
-        return blogUserMapStruct.do2Vo(user)
+    @Inject
+    protected lateinit var roleFacade: BlogRoleFacade
+
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
+    override fun userInfo(): BlogUserInfoDTO {
+        val userId = StpUtil.getLoginIdAsString()
+
+        val user = userService.findById(userId)
+
+        val roleDtoList = roleFacade.findAllByUserId(userId)
+
+        val userDto = dtoService.transfer(user, BlogUserDTO::class.java)
+
+        return BlogUserInfoDTO(userDto, roleDtoList)
     }
 
 }

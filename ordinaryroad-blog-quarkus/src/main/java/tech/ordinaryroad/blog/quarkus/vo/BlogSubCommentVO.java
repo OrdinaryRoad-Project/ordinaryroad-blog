@@ -50,6 +50,18 @@ public class BlogSubCommentVO {
 
     private String originalId;
 
+    public BlogSubCommentVO() {
+    }
+
+    public BlogSubCommentVO(String uuid, String content, BlogSubCommentVO parent, BlogUserVO user, LocalDateTime createdTime, String originalId) {
+        this.uuid = uuid;
+        this.content = content;
+        this.parent = parent;
+        this.user = user;
+        this.createdTime = createdTime;
+        this.originalId = originalId;
+    }
+
     public String getUuid() {
         return uuid;
     }

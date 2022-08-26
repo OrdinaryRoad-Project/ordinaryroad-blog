@@ -30,4 +30,6 @@ interface BlogUserFacade {
 
     fun findById(id: String): BlogUserVO
 
+    fun updateRoles(id: String, roleIdList: List<String>)
+
 }

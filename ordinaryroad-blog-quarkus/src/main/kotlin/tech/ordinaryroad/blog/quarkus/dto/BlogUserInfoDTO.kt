@@ -21,32 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.dto
 
-package tech.ordinaryroad.blog.quarkus.vo;
+import tech.ordinaryroad.commons.base.dto.BaseDTO
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
-
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
-
-    private String content;
-
-    public BlogArticleDetailVO() {
-    }
-
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+data class BlogUserInfoDTO(
+    var user: BlogUserDTO,
+    var roles: List<BlogRoleDTO> = emptyList()
+) : BaseDTO() {
+    companion object {
+        private const val serialVersionUID: Long = 5219040323913986047L
     }
 }

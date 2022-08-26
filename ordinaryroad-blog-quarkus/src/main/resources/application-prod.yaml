@@ -51,3 +51,8 @@ quarkus:
     auth-methods: DIGEST-MD5 CRAM-SHA256 CRAM-SHA1 CRAM-MD5 PLAIN LOGIN
 sa-token:
   token-name: or-blog-token
+# OrdinaryRoad
+ordinaryroad:
+  oauth2:
+    client-id: xxxxxxx
+    client-secret: xxxxxx

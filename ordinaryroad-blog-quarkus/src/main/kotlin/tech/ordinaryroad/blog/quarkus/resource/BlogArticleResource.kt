@@ -39,9 +39,9 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.blog.quarkus.facade.BlogArticleFacade
 import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
-import tech.ordinaryroad.blog.quarkus.service.BlogArticleTransferService
-import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogArticleTransferService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.util.stream.Collectors

@@ -22,31 +22,22 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.facade
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+/**
+ *
+ * Blog Facade
+ *
+ * @author mjz
+ * @date 2022/8/26
+ */
+interface BlogFacade {
 
-    private String content;
+    /**
+     * 当前登录用户的UserInfo
+     */
+    fun userInfo(): BlogUserInfoDTO
 
-    public BlogArticleDetailVO() {
-    }
-
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

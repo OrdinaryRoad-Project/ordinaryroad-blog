@@ -95,9 +95,9 @@ export const actions = {
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
       if (tokenInfo) {
         try {
-          const userinfo = await $apisServer.blog.userinfo(tokenInfo.value)
+          const userInfo = await $apisServer.blog.userInfo(tokenInfo.value)
           commit('user/SET_TOKEN_INFO', tokenInfo.value)
-          commit('user/SET_USER_INFO', userinfo)
+          commit('user/SET_USER_INFO', userInfo)
         } catch (e) {
           // Token无效或其他异常，不做任何操作
         }

@@ -22,31 +22,24 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.vo;
+package tech.ordinaryroad.blog.quarkus.service
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import tech.ordinaryroad.blog.quarkus.dao.BlogUserRolesDAO
+import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
+import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import javax.enterprise.context.ApplicationScoped
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+@ApplicationScoped
+class BlogUserRolesService : BaseService<BlogUserRolesDAO, BlogUserRoles>() {
 
-    private String content;
-
-    public BlogArticleDetailVO() {
+    /**
+     * 根据用户Id查询所有关联关系
+     */
+    fun findAllByUserId(userId: String): List<BlogUserRoles> {
+        val wrapper = Wrappers.query<BlogUserRoles>()
+        wrapper.eq("user_id", userId)
+        return super.dao.selectList(wrapper)
     }
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

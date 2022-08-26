@@ -21,32 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.dto
 
-package tech.ordinaryroad.blog.quarkus.vo;
+import cn.hutool.core.util.StrUtil
+import tech.ordinaryroad.blog.quarkus.entity.BlogRole
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+/**
+ * 博客角色DTO类
+ */
+data class BlogRoleDTO(
+    var roleName: String = StrUtil.EMPTY,
+    var roleCode: String = StrUtil.EMPTY
+) : BaseBlogModelDTO<BlogRole>() {
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
-
-    private String content;
-
-    public BlogArticleDetailVO() {
+    override fun parse(baseDo: BlogRole) {
+        roleName = baseDo.roleName
+        roleName = baseDo.roleCode
     }
 
-    public BlogArticleDetailVO(String content) {
-        this.content = content;
+    companion object {
+        private const val serialVersionUID: Long = 8986328668809035932L
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

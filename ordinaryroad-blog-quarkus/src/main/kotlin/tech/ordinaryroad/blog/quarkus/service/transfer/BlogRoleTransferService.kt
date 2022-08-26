@@ -21,23 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.vo
 
-import cn.hutool.core.util.StrUtil
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import io.quarkus.runtime.annotations.RegisterForReflection
+package tech.ordinaryroad.blog.quarkus.service.transfer
+
+import tech.ordinaryroad.blog.quarkus.entity.BlogRole
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogRoleMapStruct
+import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO
+import javax.enterprise.context.ApplicationScoped
 
 /**
- * 博客用户VO类
+ * 角色转换服务类
  */
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-data class BlogUserVO(
-    var uuid: String,
-    var username: String,
-    var avatar: String = StrUtil.EMPTY
-) {
+@ApplicationScoped
+class BlogRoleTransferService {
+
+    val blogRoleMapStruct = BlogRoleMapStruct.INSTANCE
+
+    fun transfer(role: BlogRole): BlogRoleVO {
+        return blogRoleMapStruct.do2Vo(role)
+    }
 
 }

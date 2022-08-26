@@ -38,6 +38,9 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
     @Inject
     protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
+
     /**
      * 创建主账号，并关联OAuth用户
      */

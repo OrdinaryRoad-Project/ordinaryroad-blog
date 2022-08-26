@@ -159,3 +159,81 @@ CREATE TABLE `blog_comment`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_as_ci COMMENT = '博客评论表'
   ROW_FORMAT = Dynamic;
+
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 苗锦洲
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+-- ----------------------------
+-- Table structure for blog_role
+-- ----------------------------
+# DROP TABLE if exists `blog_role`;
+CREATE TABLE `blog_role`
+(
+    `id`           bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                      NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                      NULL DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '更新者ID',
+
+    `role_name`    varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '角色名',
+    `role_code`    varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '角色Code',
+    `enabled`      bit(1)                                                        NULL DEFAULT b'1' COMMENT '角色是否启用',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `blog_role_uuid_uindex` (`uuid`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_as_ci COMMENT = '博客角色表'
+  ROW_FORMAT = Dynamic;
+
+INSERT INTO `blog_role`
+VALUES (1, '1', null, null, null, null, '站长', 'DEVELOPER', b'1');
+INSERT INTO `blog_role`
+VALUES (2, '2', null, null, null, null, '管理员', 'ADMIN', b'1');
+INSERT INTO `blog_role`
+VALUES (10, 'SSSSSSVIP', null, null, null, null, 'SSSSSSVIP', 'SSSSSSVIP', b'1');
+
+-- ----------------------------
+-- Table structure for blog_user_roles
+-- ----------------------------
+# DROP TABLE if exists `blog_user_roles`;
+CREATE TABLE `blog_user_roles`
+(
+    `id`           bigint(20)                                                   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                     NULL DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '更新者ID',
+
+    `user_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '用户ID',
+    `role_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '角色ID',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `blog_user_roles_uuid_uindex` (`uuid`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_as_ci COMMENT = '博客用户角色关联关系表'
+  ROW_FORMAT = Dynamic;

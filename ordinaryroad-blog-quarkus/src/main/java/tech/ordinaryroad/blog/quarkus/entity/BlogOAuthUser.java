@@ -46,7 +46,7 @@ public class BlogOAuthUser extends BaseDO {
     private String openid;
 
     /**
-     * OAuth平台：or, qq, github
+     * OAuth平台：ordinaryroad, qq, github
      */
     private String provider;
 

@@ -37,7 +37,11 @@ import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.service.*
+import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
+import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
+import tech.ordinaryroad.blog.quarkus.service.BlogPushService
+import tech.ordinaryroad.blog.quarkus.service.BlogService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogCommentTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import tech.ordinaryroad.commons.base.cons.StatusCode
@@ -131,7 +135,7 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
 
         val page = commentService.page(request, wrapper)
 
-        val voPage = PageUtils.copyPage<BlogComment, BlogSubCommentVO>(page) {
+        val voPage = PageUtils.copyPage(page) {
             return@copyPage commentTransferService.transferSub(it)
         }
 
@@ -147,7 +151,7 @@ class BlogCommentFacadeImpl : BlogCommentFacade {
 
         val page = commentService.page(request, wrapper)
 
-        val voPage = PageUtils.copyPage<BlogComment, BlogArticleCommentVO>(page) {
+        val voPage = PageUtils.copyPage(page) {
             return@copyPage commentTransferService.transferArticle(it)
         }
 
