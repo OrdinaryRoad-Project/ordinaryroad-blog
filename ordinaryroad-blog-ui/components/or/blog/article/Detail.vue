@@ -458,7 +458,7 @@ export default {
         this.drawer = false
         return
       }
-      this.drawer = true
+      this.drawer = !this.$vuetify.breakpoint.smAndDown
 
       // 处理连续的
       const tocIndexContinuously = []
