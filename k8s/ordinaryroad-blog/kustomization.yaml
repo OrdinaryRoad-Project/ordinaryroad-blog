@@ -4,6 +4,10 @@ secretGenerator:
     namespace: or-pro
     literals:
       - password=%*v^YD%hYedkXkM8
+  - name: blog-mail-qq
+    namespace: or-pro
+    literals:
+      - password=xxx
 resources:
   - deployment.yaml
   - service.yaml

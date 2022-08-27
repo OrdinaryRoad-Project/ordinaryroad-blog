@@ -41,3 +41,8 @@ spec:
               value: "redis.or-pro"
             - name: REDIS_PORT
               value: "6379"
+            - name: MAIL_QQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mail-qq
+                  key: password

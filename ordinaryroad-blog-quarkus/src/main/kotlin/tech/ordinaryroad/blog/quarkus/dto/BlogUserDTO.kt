@@ -36,7 +36,7 @@ data class BlogUserDTO(
 
     override fun parse(baseDo: BlogUser) {
         username = baseDo.username
-        avatar = baseDo.avatar
+        avatar = StrUtil.nullToEmpty(baseDo.avatar)
     }
 
     companion object {

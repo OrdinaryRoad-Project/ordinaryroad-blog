@@ -36,7 +36,7 @@ data class BlogRoleDTO(
 
     override fun parse(baseDo: BlogRole) {
         roleName = baseDo.roleName
-        roleName = baseDo.roleCode
+        roleCode = baseDo.roleCode
     }
 
     companion object {

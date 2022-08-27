@@ -1,7 +1,6 @@
 quarkus:
   application:
     name: ordinaryroad-blog-quarkus
-  # MySQL
   datasource:
     jdbc:
       driver: com.mysql.cj.jdbc.Driver
@@ -11,27 +10,20 @@ quarkus:
   http:
     access-log:
       enabled: true
-      pattern: long
     cors: true
     cors.access-control-allow-credentials: true
     port: 8081
   live-reload:
     instrumentation: true
-  # MyBatis https://quarkiverse.github.io/quarkiverse-docs/quarkus-mybatis/dev/index.html
   mybatis:
-    # https://baomidou.com/pages/8390a4/#???-????-defaultenumtypehandler
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  native:
-    additional-build-args: --report-unsupported-elements-at-runtime,--initialize-at-run-time=com.baomidou.mybatisplus.core.toolkit.support.IdeaProxyLambdaMeta
-  # Redis
   redisson:
     codec: org.redisson.codec.JsonJacksonCodec
     single-server-config:
       address: redis://127.0.0.1:6379
       database: 0
-  # Rest Client https://quarkus.io/guides/rest-client-reactive
   rest-client:
     gitee-oauth2:
       scope: javax.inject.Singleton
@@ -45,7 +37,6 @@ quarkus:
     ordinaryroad-auth:
       scope: javax.inject.Singleton
       url: https://auth.ordinaryroad.tech
-  # Resteasy
   resteasy-json:
     default-json: false
   # Mailer
@@ -55,10 +46,14 @@ quarkus:
     port: 465
     ssl: true
     username: or-mjz@qq.com
-    password: XXXXXX
-    mock: false
+    mock: true
     start-tls: REQUIRED
     auth-methods: DIGEST-MD5 CRAM-SHA256 CRAM-SHA1 CRAM-MD5 PLAIN LOGIN
 # Sa-Token
 sa-token:
   token-name: or-blog-token
+# OrdinaryRoad
+ordinaryroad:
+  oauth2:
+    client-id: xxxxxxx
+    client-secret: xxxxxx

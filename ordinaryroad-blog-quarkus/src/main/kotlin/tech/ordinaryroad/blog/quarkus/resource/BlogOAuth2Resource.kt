@@ -118,7 +118,7 @@ class BlogOAuth2Resource {
                     val jsonObject = userinfo.getJsonObject("data")
                     responseOAuthUser.apply {
                         setOpenid(openid)
-                        username = jsonObject.getString("username") ?: IdUtil.fastSimpleUUID()
+                        username = jsonObject.getString("username")
                         avatar = jsonObject.getString("avatar")
                         email = jsonObject.getString("email")
                     }
@@ -191,7 +191,7 @@ class BlogOAuth2Resource {
                 user = userService.findByOAuthUserId(oAuthUser.uuid)
                 if (user == null) {
                     user = userService.create(BlogUser().apply {
-                        username = oAuthUser.username
+                        username = oAuthUser.username ?: "U_${IdUtil.fastSimpleUUID()}"
                         avatar = oAuthUser.avatar
                         email = oAuthUser.email
                     }, oAuthUser)
