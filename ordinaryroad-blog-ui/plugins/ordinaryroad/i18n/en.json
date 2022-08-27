@@ -1,4 +1,8 @@
 {
+  "username": "Username",
+  "update": "Update",
+  "add": "Add",
+  "remove": "Remove",
   "parentheses": "({0})",
   "attention": "Attention",
   "back": "Back",

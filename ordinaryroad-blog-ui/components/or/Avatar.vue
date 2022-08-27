@@ -23,22 +23,71 @@
   -->
 
 <template>
-  <v-avatar
-    color="primary"
-    :size="size"
-  >
-    <v-img
-      v-if="avatar"
-      :src="avatar"
-    />
-    <span v-else class="white--text">{{ username.slice(0, 1) }}</span>
-  </v-avatar>
+  <v-hover :disabled="!editable">
+    <template #default="{ hover }">
+      <v-avatar
+        style="border:1px solid;"
+        :size="size"
+        :class="avatarClass"
+        color="grey"
+      >
+        <v-img v-if="avatar" :src="avatar">
+          <template #default>
+            <v-fade-transition>
+              <v-overlay
+                v-if="avatarOptions.uploading"
+                absolute
+              >
+                <v-progress-circular indeterminate />
+              </v-overlay>
+            </v-fade-transition>
+          </template>
+          <template #placeholder>
+            <v-skeleton-loader type="image" />
+          </template>
+        </v-img>
+        <span v-else class="white--text">{{ username.slice(0, 1) }}</span>
+
+        <v-fade-transition>
+          <v-overlay
+            v-if="!avatarOptions.uploading&&hover"
+            v-ripple
+            absolute
+            style="cursor: pointer"
+            @click="$refs.fileInput.$refs.input.click()"
+          >
+            <v-file-input
+              v-show="false"
+              ref="fileInput"
+              accept="image/*"
+              @change="onChange"
+            />
+            <v-row
+              class="fill-height ma-0"
+              align="center"
+              justify="center"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-row>
+          </v-overlay>
+        </v-fade-transition>
+      </v-avatar>
+    </template>
+  </v-hover>
 </template>
 
 <script>
 export default {
   name: 'OrAvatar',
   props: {
+    avatarClass: {
+      type: String,
+      default: ''
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    },
     username: {
       type: String,
       default: null
@@ -50,6 +99,20 @@ export default {
     size: {
       type: [Number, String],
       default: 48
+    }
+  },
+  data: () => ({
+    avatarOptions: {
+      uploading: false
+    }
+  }),
+  methods: {
+    onChange (e) {
+      this.avatarOptions.uploading = true
+      this.$emit('selectAvatar', e)
+    },
+    finishUpload () {
+      this.avatarOptions.uploading = false
     }
   }
 }

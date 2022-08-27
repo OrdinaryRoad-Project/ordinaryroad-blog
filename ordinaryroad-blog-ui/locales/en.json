@@ -22,8 +22,10 @@
   },
   "appName": "OR BLOG",
   "dashboardMenuTitles": {
-    "dashboardTitle": "Dashboard",
     "dashboard": {
+      "title": "Dashboard",
+      "userProfileTitle": "User Profile",
+      "userSpaceTitle": "User Space",
       "articleTitle": "Writing",
       "article": {
         "box": {
@@ -48,7 +50,9 @@
     "system": "Dark Hunk"
   },
   "userMenuTitles": {
+    "space": "User Space",
     "dashboard": "Dashboard",
-    "profile": "User Profile"
+    "profile": "User Profile",
+    "article": "Articles"
   }
 }

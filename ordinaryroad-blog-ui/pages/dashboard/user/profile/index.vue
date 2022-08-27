@@ -24,21 +24,67 @@
 
 <template>
   <base-material-card title="个人中心">
-    <v-card flat>
+    <v-card flat outlined>
+      <v-card-title>基本信息</v-card-title>
+      <v-form ref="usernameForm" class="mx-4">
+        <div class="d-flex align-center">
+          <v-text-field
+            v-model="usernameTextField.input"
+            :rules="[$rules.notBlank,$rules.max10Chars]"
+            :loading="usernameTextField.loading"
+            :disabled="usernameTextField.disabled"
+            type="text"
+            :label="$t('username')"
+          />
+          <v-btn class="ms-3" icon @click="usernameClick">
+            <v-icon>
+              mdi-{{
+                usernameTextField.disabled ? 'pencil'
+                : usernameTextField.input === usernameTextField.value ? 'close'
+                  : 'check'
+              }}
+            </v-icon>
+          </v-btn>
+        </div>
+      </v-form>
+    </v-card>
+    <v-card flat outlined class="mt-2">
       <v-card-title>所有账号</v-card-title>
       <v-list>
-        <v-list-item v-for="(item) in oauthUsers" :key="item.provider">
-          <v-list-item-avatar>
-            {{ item.provider }}
-          </v-list-item-avatar>
+        <v-list-item
+          v-for="(provider) in $config.OAUTH2.PROVIDERS"
+          :key="provider"
+        >
+          <span class="me-5">{{ provider }}</span>
 
-          <v-avatar class="my-2 me-4">
-            <v-img :src="$apis.blog.getFileUrl(item.avatar)" />
-          </v-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.username }}</v-list-item-title>
-            <v-list-item-subtitle>{{ item.createdTime }}</v-list-item-subtitle>
-          </v-list-item-content>
+          <template v-if="oAuthUser(provider)">
+            <v-avatar class="my-2 me-4">
+              <v-img :src="$apis.blog.getFileUrl(oAuthUser(provider).avatar)" />
+            </v-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{ oAuthUser(provider).username }}</v-list-item-title>
+              <v-list-item-subtitle>
+                添加时间：{{ oAuthUser(provider).createdTime }}
+                <span v-if="oAuthUser(provider).updateTime">
+                  <br>
+                  更新时间：{{ oAuthUser(provider).updateTime }}
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+
+          <span class="ml-auto">
+            <v-btn
+              text
+              :color="oAuthUser(provider)?null:'warning'"
+              @click.stop="onClickRemoveOrAdd(oAuthUser(provider))"
+            >
+              {{ oAuthUser(provider) ? $t('remove') : $t('add') }}
+            </v-btn>
+            <v-btn v-if="oAuthUser(provider)" text color="success" @click.stop="onClickUpdate(provider)">
+              {{ $t('update') }}
+            </v-btn>
+          </span>
         </v-list-item>
       </v-list>
     </v-card>
@@ -46,6 +92,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   asyncData ({ $apis }) {
     return $apis.blog.oauth_user.all()
@@ -58,8 +106,66 @@ export default {
       })
   },
   data: () => ({
+    usernameTextField: {
+      value: '',
+      input: '',
+      disabled: true,
+      loading: false
+    },
     oauthUsers: []
-  })
+  }),
+  computed: {
+    oAuthUser () {
+      return (provider) => {
+        const query = this.$util.query(this.oauthUsers, 'provider', provider)
+        return query[0]
+      }
+    },
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    })
+  },
+  created () {
+    this.usernameTextField.value = this.userInfo.user.username
+    this.usernameTextField.input = this.userInfo.user.username
+  },
+  methods: {
+    onClickRemoveOrAdd (oAuthUser) {
+      this.$snackbar.info('开发中...')
+      if (oAuthUser) {
+        // remove
+      } else {
+        // TODO add
+      }
+    },
+    onClickUpdate (provider) {
+      this.$snackbar.info('开发中...')
+    },
+    usernameClick () {
+      if (this.usernameTextField.disabled) {
+        this.usernameTextField.disabled = false
+      } else if (this.usernameTextField.input === this.usernameTextField.value) {
+        this.usernameTextField.disabled = true
+      } else if (this.$refs.usernameForm.validate()) {
+        this.usernameTextField.loading = true
+
+        this.$snackbar.info('开发中...')
+        this.usernameTextField.loading = false
+
+        /* TODO this.updateUsername({
+           username: this.usernameTextField.input,
+           $apis: this.$apis
+         }).then(() => {
+           this.usernameTextField.loading = false
+           this.$snackbar.success(this.$t('whatUpdateSuccessfully', [this.$t('username')]))
+           this.usernameTextField.value = this.usernameTextField.input
+           this.usernameTextField.disabled = true
+         }).catch(() => {
+           this.usernameTextField.loading = false
+         }) */
+      }
+    }
+  }
 }
 </script>
 

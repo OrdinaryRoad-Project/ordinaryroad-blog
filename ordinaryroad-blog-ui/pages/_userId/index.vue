@@ -24,31 +24,59 @@
 
 <template>
   <div>
-    <div>用户首页</div>
-    <base-material-card avatar="true">
-      <template #avatar>
-        <or-avatar
-          class="v-card--material__avatar elevation-6"
-          size="128"
-          :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
-          :username="blogUser.username"
-        />
-        <div class="text-center font-weight-bold">
-          {{ blogUser.username }}
-        </div>
-      </template>
-    </base-material-card>
+    <v-row>
+      <v-col
+        md="8"
+        cols="12"
+        order="2"
+        order-md="1"
+      >
+        <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
+          <or-blog-article-list
+            :total.sync="totalArticle"
+            :create-by="blogUser.uuid"
+          />
+        </base-material-card>
+      </v-col>
 
-    <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
-      <or-blog-article-list
-        :total.sync="totalArticle"
-        :create-by="blogUser.uuid"
-      />
-    </base-material-card>
+      <v-col
+        md="4"
+        cols="12"
+        order="1"
+        order-md="2"
+      >
+        <base-material-card
+          :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
+        >
+          <template #avatar>
+            <or-avatar
+              :username="blogUser.username"
+              avatar-class="v-card--material__avatar elevation-6"
+              size="128"
+              :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
+              editable
+              @selectAvatar="onAvatarSelect"
+            />
+          </template>
+          <v-list>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span class="font-weight-bold">{{ blogUser.username }}</span>
+                  <or-user-roles v-if="blogUser.roles.length>0" class="ms-2" :roles="blogUser.roles" />
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <!--          <v-divider inset />-->
+        </base-material-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+
 export default {
   asyncData ({
     route,
@@ -73,6 +101,11 @@ export default {
     }
   },
   mounted () {
+  },
+  methods: {
+    onAvatarSelect (e) {
+      console.log(e)
+    }
   }
 }
 </script>

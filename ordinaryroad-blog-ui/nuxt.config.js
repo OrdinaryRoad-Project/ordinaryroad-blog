@@ -145,6 +145,7 @@ export default {
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
 
     OAUTH2: {
+      PROVIDERS: ['ordinaryroad', 'github', 'gitee'],
       REDIRECT_URI: `${process.env.DOMAIN}/user/authorized`,
       ordinaryroad: {
         CLIENT_ID: 'ordinaryroad-blog',

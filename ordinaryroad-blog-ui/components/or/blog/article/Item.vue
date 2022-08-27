@@ -78,17 +78,11 @@
             <!-- 作者信息和操作按钮栏 -->
             <v-list-item>
               <!-- 头像 -->
-              <v-list-item-avatar>
-                <v-img
-                  style="border:1px solid;"
-                  alt=""
-                  :src="$apis.blog.getFileUrl(item.user.avatar)"
-                >
-                  <template #placeholder>
-                    <v-skeleton-loader type="image" />
-                  </template>
-                </v-img>
-              </v-list-item-avatar>
+              <or-avatar
+                :username="item.user.username"
+                :avatar="$apis.blog.getFileUrl(item.user.avatar)"
+                avatar-class="v-list-item__avatar"
+              />
               <!-- 用户名 -->
               <v-list-item-content>
                 <v-list-item-title

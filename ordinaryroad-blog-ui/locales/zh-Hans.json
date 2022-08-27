@@ -21,8 +21,10 @@
     "startWritingHint": "开始写作吧"
   },
   "dashboardMenuTitles": {
-    "dashboardTitle": "首页",
     "dashboard": {
+      "title": "控制台",
+      "userProfileTitle": "个人中心",
+      "userSpaceTitle": "个人空间",
       "articleTitle": "写作",
       "article": {
         "boxTitle": "文章管理",
@@ -48,7 +50,9 @@
     "system": "深色猛男"
   },
   "userMenuTitles": {
+    "space": "个人空间",
     "dashboard": "控制台",
-    "profile": "个人中心"
+    "profile": "个人中心",
+    "article": "文章管理"
   }
 }

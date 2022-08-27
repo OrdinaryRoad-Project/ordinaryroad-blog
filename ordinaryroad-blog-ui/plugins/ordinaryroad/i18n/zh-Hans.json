@@ -1,4 +1,8 @@
 {
+  "username": "用户名",
+  "update": "更新",
+  "add": "添加",
+  "remove": "移除",
   "parentheses": "（{0}）",
   "attention": "注意",
   "back": "返回",

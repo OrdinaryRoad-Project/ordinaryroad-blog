@@ -45,14 +45,7 @@
 
           <!-- 角色 -->
           <span v-if="blogComment.user.roles.length>0" class="me-2">
-            <v-chip
-              v-for="role in blogComment.user.roles"
-              :key="role.roleCode"
-              small
-              :color="!(role.roleCode.indexOf('DEVELOPER') > 0 || role.roleCode.indexOf('ADMIN') > 0 || role.roleCode.indexOf('VIP') > 0) ? null : 'primary'"
-              :outlined="!(role.roleCode.indexOf('DEVELOPER') > 0 || role.roleCode.indexOf('ADMIN') > 0 || role.roleCode.indexOf('VIP') > 0)"
-              label
-            >{{ role.roleName }}</v-chip>
+            <or-user-roles :roles="blogComment.user.roles" />
           </span>
 
           <!-- 时间 -->

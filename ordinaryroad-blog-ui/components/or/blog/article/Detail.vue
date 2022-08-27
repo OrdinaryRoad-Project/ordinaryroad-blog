@@ -152,8 +152,8 @@
     >
       <!-- 封面占位符 -->
       <template #placeholder>
-        <v-skeleton-loader type="image" />
-        <v-skeleton-loader type="image" />
+        <v-skeleton-loader type="image" tile />
+        <v-skeleton-loader type="image" tile />
       </template>
 
       <!-- 文章标题 -->
@@ -171,17 +171,11 @@
         style="position: absolute; left: 0; right: 0; bottom: 100px"
       >
         <!-- 头像 -->
-        <v-list-item-avatar>
-          <v-img
-            style="border:1px solid;"
-            alt=""
-            :src="$apis.blog.getFileUrl(blogArticle.user.avatar)"
-          >
-            <template #placeholder>
-              <v-skeleton-loader type="image" />
-            </template>
-          </v-img>
-        </v-list-item-avatar>
+        <or-avatar
+          :username="blogArticle.user.username"
+          avatar-class="v-list-item__avatar"
+          :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
+        />
 
         <div>
           <!-- 用户名 -->

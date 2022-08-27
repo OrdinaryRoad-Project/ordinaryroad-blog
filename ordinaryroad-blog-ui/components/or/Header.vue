@@ -40,13 +40,12 @@
             v-bind="attrs"
             v-on="on"
           >
-            <v-list-item-avatar>
-              <v-img :src="avatarPath" style="border: 1px solid">
-                <template #placeholder>
-                  <v-skeleton-loader type="image" />
-                </template>
-              </v-img>
-            </v-list-item-avatar>
+            <or-avatar
+              size="38"
+              avatar-class="v-list-item__avatar"
+              :username="userInfo.user.username"
+              :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
+            />
             <v-list-item-title>
               {{ username }}
             </v-list-item-title>
@@ -91,8 +90,7 @@ export default {
     }),
     ...mapGetters('user', {
       userInfo: 'getUserInfo',
-      username: 'getUsername',
-      avatarPath: 'getAvatarPath'
+      username: 'getUsername'
     }),
     selectedThemeOptionModel: {
       get () {
@@ -109,20 +107,24 @@ export default {
       setSelectedThemeOption: 'setSelectedThemeOption'
     }),
 
-    logout () {
-      this.$dialog({
-        persistent: false,
-        content: this.$i18n.t('confirmLogout'),
-        loading: true
-      }).then((dialog) => {
-        if (dialog.isConfirm) {
-          this.$store.dispatch('user/logout', {
-            $apis: this.$apis,
-            $router: this.$router,
-            $route: this.$route
-          }).then(() => dialog.cancel())
-        }
-      })
+    logout ({ titleKey }) {
+      if (titleKey === 'userMenuTitles.space') {
+        window.open(`/${this.userInfo.user.uuid}`, '_blank')
+      } else {
+        this.$dialog({
+          persistent: false,
+          content: this.$i18n.t('confirmLogout'),
+          loading: true
+        }).then((dialog) => {
+          if (dialog.isConfirm) {
+            this.$store.dispatch('user/logout', {
+              $apis: this.$apis,
+              $router: this.$router,
+              $route: this.$route
+            }).then(() => dialog.cancel())
+          }
+        })
+      }
     },
 
     click (index) {
