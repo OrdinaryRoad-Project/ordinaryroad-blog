@@ -25,9 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.service.transfer
 
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.facade.BlogArticleFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
+import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
@@ -45,7 +45,7 @@ class BlogArticleTransferService {
     val blogUserMapStruct = BlogUserMapStruct.INSTANCE
 
     @Inject
-    protected lateinit var articleFacade: BlogArticleFacade
+    protected lateinit var articleService: BlogArticleService
 
     @Inject
     protected lateinit var userService: BlogUserService
@@ -55,7 +55,7 @@ class BlogArticleTransferService {
 
     fun transferDetail(article: BlogArticle): BlogArticleDetailVO {
         return blogArticleMapStruct.do2DetailVo(article).apply {
-            val times = articleFacade.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
+            val times = articleService.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
             createdTime = times.getValue("createdTime") as LocalDateTime
             updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)
@@ -65,7 +65,7 @@ class BlogArticleTransferService {
 
     fun transferPreview(article: BlogArticle): BlogArticlePreviewVO {
         return blogArticleMapStruct.do2PreviewVo(article).apply {
-            val times = articleFacade.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
+            val times = articleService.getPublishCreatedTimeAndUpdateTimeById(article.uuid)
             createdTime = times.getValue("createdTime") as LocalDateTime
             updateTime = times.getValue("updateTime") as LocalDateTime?
             val blogUser = userService.findById(article.createBy)

@@ -32,16 +32,17 @@ import org.eclipse.microprofile.rest.client.inject.RestClient
 import tech.ordinaryroad.blog.quarkus.client.gitee.oauth2.GiteeOAuth2Service
 import tech.ordinaryroad.blog.quarkus.client.github.oauth2.GithubOAuth2Service
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.auth.AuthService
+import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.facade.BlogRoleFacade
-import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
 import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
+import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
+import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.ws.rs.BeanParam
 import javax.ws.rs.POST
@@ -70,13 +71,10 @@ class BlogOAuth2Resource {
     protected lateinit var userService: BlogUserService
 
     @Inject
-    protected lateinit var roleFacade: BlogRoleFacade
+    protected lateinit var roleService: BlogRoleService
 
     @Inject
     protected lateinit var dtoService: BlogDtoService
-
-    @Inject
-    protected lateinit var userFacade: BlogUserFacade
 
     /**
      * OAuth授权成功后的回调
@@ -201,7 +199,7 @@ class BlogOAuth2Resource {
             val userId = user.uuid
 
             if (provider == "ordinaryroad") {
-                userFacade.updateRoles(userId, arrayListOf("SSSSSSVIP"))
+                userService.updateRoles(userId, arrayListOf("SSSSSSVIP"))
             }
 
             StpUtil.login(userId, SaLoginModel().apply {
@@ -209,7 +207,12 @@ class BlogOAuth2Resource {
                 setIsLastingCookie(true)
             })
 
-            val roleDtoList = roleFacade.findAllByUserId(userId)
+            val roleDtoList = roleService.findAllByUserId(userId)
+                .stream()
+                .map {
+                    return@map dtoService.transfer(it, BlogRoleDTO::class.java)
+                }
+                .collect(Collectors.toList())
 
             val userDto = dtoService.transfer(user, BlogUserDTO::class.java)
 

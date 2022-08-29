@@ -28,7 +28,6 @@ import cn.dev33.satoken.stp.StpInterface
 import io.quarkus.arc.DefaultBean
 import io.quarkus.arc.Unremovable
 import tech.ordinaryroad.blog.quarkus.entity.BlogRole
-import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
 import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import java.util.stream.Collectors
@@ -56,9 +55,6 @@ class StpInterfaceImpl : StpInterface {
 
     @Inject
     protected lateinit var userService: BlogUserService
-
-    @Inject
-    protected lateinit var userFacade: BlogUserFacade
 
     @Inject
     protected lateinit var roleService: BlogRoleService

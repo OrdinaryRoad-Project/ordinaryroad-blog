@@ -25,7 +25,6 @@
 package tech.ordinaryroad.blog.quarkus.service.transfer
 
 import tech.ordinaryroad.blog.quarkus.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
@@ -44,9 +43,6 @@ class BlogCommentTransferService {
     val blogCommentMapStruct = BlogCommentMapStruct.INSTANCE
 
     @Inject
-    protected lateinit var commentFacade: BlogCommentFacade
-
-    @Inject
     protected lateinit var commentService: BlogCommentService
 
     @Inject
@@ -60,7 +56,7 @@ class BlogCommentTransferService {
             val blogUser = userService.findById(comment.createBy)
             user = userTransferService.transfer(blogUser)
 
-            replies = commentFacade.pageSubComment(BlogCommentQueryRequest().apply {
+            replies = commentService.pageSubComment(BlogCommentQueryRequest().apply {
                 articleId = comment.articleId
                 originalId = comment.uuid
                 size = 5

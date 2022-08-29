@@ -28,7 +28,9 @@ import tech.ordinaryroad.blog.quarkus.dao.BlogUserDAO
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -41,6 +43,40 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
     @Inject
     protected lateinit var userRolesService: BlogUserRolesService
 
+    //region 业务相关
+    fun updateRoles(id: String, roleIdList: List<String>) {
+        val oldRoleIdSet = userRolesService.findAllByUserId(id)
+            .stream()
+            .map(BlogUserRoles::getRoleId)
+            .collect(Collectors.toSet())
+
+        val intersectRoleIdSet = roleIdList.intersect(oldRoleIdSet)
+
+        val roleIdListToAdd = arrayListOf<String>()
+        val roleIdListToDelete = arrayListOf<String>()
+        oldRoleIdSet.forEach {
+            if (!intersectRoleIdSet.contains(it)) {
+                roleIdListToDelete.add(it)
+            }
+        }
+        roleIdList.forEach {
+            if (!intersectRoleIdSet.contains(it)) {
+                roleIdListToAdd.add(it)
+            }
+        }
+
+        userRolesService.deleteByIdList(roleIdListToDelete)
+        roleIdListToAdd.forEach {
+            userRolesService.create(BlogUserRoles().apply {
+                userId = id
+                roleId = it
+            })
+        }
+    }
+    //endregion
+
+
+    //region SQL相关
     /**
      * 创建主账号，并关联OAuth用户
      */
@@ -61,5 +97,6 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
         userId == null && return null
         return super.findById(userId)
     }
+    //endregion
 
 }

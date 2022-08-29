@@ -31,9 +31,9 @@ import org.jboss.resteasy.reactive.MultipartForm
 import org.jboss.resteasy.reactive.RestHeader
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.OrUpmsApi
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
-import tech.ordinaryroad.blog.quarkus.facade.BlogFacade
 import tech.ordinaryroad.blog.quarkus.propertie.OAuth2Properties
 import tech.ordinaryroad.blog.quarkus.request.FileUploadRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
 import javax.ws.rs.*
@@ -54,7 +54,7 @@ class BlogResource {
     protected lateinit var userService: BlogUserService
 
     @Inject
-    protected lateinit var blogFacade: BlogFacade
+    protected lateinit var blogService: BlogService
 
     /**
      * 获取用户信息 username avatar email
@@ -63,7 +63,7 @@ class BlogResource {
     @Path("user_info")
     @Produces(MediaType.APPLICATION_JSON)
     fun userinfo(): BlogUserInfoDTO {
-        return blogFacade.userInfo()
+        return blogService.userInfo()
     }
 
     @POST

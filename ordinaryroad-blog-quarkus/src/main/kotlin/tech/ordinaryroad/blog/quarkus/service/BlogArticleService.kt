@@ -24,18 +24,123 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import io.vertx.core.json.JsonObject
 import tech.ordinaryroad.blog.quarkus.dao.BlogArticleDAO
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canMoveToTrash
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecoverFromTrash
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
+import tech.ordinaryroad.commons.base.cons.StatusCode
+import tech.ordinaryroad.commons.base.exception.BaseException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
 
+    //region 业务相关
+    /**
+     * 根据Id获取已发布文章的创建时间和更新时间
+     * @return
+     * (first: createdTime, second: updateTime)
+     * }
+     */
+    fun getPublishCreatedTimeAndUpdateTimeById(id: String): JsonObject {
+        val blogArticle = findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
+
+        if (blogArticle == null) {
+            throw BaseException(StatusCode.DATA_NOT_EXIST)
+        } else {
+            if (blogArticle.status != BlogArticleStatus.PUBLISH) {
+                // 必须是已发布的文章
+                throw BaseException(StatusCode.PARAM_NOT_VALID)
+            }
+        }
+
+        var createdTime: LocalDateTime = blogArticle.createdTime
+        var updateTime: LocalDateTime? = null
+
+        if (blogArticle.firstId != blogArticle.uuid) {
+            // 查询第一个 PUBLISH_INHERIT 版本
+            val byPreIdAndStatus = findFirstOrLastByFirstIdAndStatus(
+                blogArticle.firstId,
+                BlogArticleStatus.PUBLISH_INHERIT
+            )
+            if (byPreIdAndStatus != null) {
+                createdTime = byPreIdAndStatus.createdTime
+                updateTime = blogArticle.createdTime
+            }
+        }
+        val jsonObject = JsonObject()
+        jsonObject.put("createdTime", createdTime)
+        jsonObject.put("updateTime", updateTime)
+        return jsonObject
+    }
+
+    /**
+     * 移动至废纸篓
+     */
+    fun moveToTrash(id: String) {
+        val blogArticle = validateOwn(id)
+
+        // 只能删除草稿和已发布文章
+        if (blogArticle.status.canMoveToTrash()) {
+            updateStatusById(id, BlogArticleStatus.TRASH)
+        } else {
+            BlogArticleNotValidException().throws()
+        }
+    }
+
+    /**
+     * 从废纸篓恢复
+     */
+    fun recoverFromTrash(id: String) {
+        val blogArticle = validateOwn(id)
+
+        // 只能从垃圾箱中恢复
+        if (blogArticle.status.canRecoverFromTrash()) {
+            updateStatusById(id, BlogArticleStatus.DRAFT)
+        } else {
+            BlogArticleNotValidException().throws()
+        }
+    }
+
+    /**
+     *
+     */
+    fun getPreAndNextArticle(id: String): JsonObject {
+        // TODO("Not yet implemented")
+        return JsonObject()
+    }
+
+    /**
+     * 校验文章是否属于自己
+     *
+     * @param id 文章Id
+     * @return BlogArticle 文章
+     */
+    private fun validateOwn(id: String): BlogArticle {
+        val userId = StpUtil.getLoginIdAsString()
+        if (id.isBlank()) {
+            throw BlogArticleNotFoundException()
+        }
+        val blogArticle = findById(id) ?: throw BlogArticleNotFoundException()
+        if (blogArticle.createBy != userId) {
+            BlogArticleNotValidException().throws()
+        }
+        return blogArticle
+    }
+    //endregion
+
+    //region SQL相关
     /**
      * 根据状态查询所有最初版本的文章
      */
@@ -146,5 +251,5 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
             this.status = newStatus
         }, wrapper)
     }
-
+    //endregion
 }

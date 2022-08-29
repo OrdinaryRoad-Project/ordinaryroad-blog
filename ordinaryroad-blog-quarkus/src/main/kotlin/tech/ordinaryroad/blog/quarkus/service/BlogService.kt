@@ -25,7 +25,12 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
+import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -40,6 +45,32 @@ class BlogService {
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
+    /**
+     * 获取用户信息 username avatar email
+     */
+    fun userInfo(): BlogUserInfoDTO {
+        val userId = StpUtil.getLoginIdAsString()
+
+        val user = userService.findById(userId)
+
+        val roleDtoList = roleService.findAllByUserId(userId)
+            .stream()
+            .map {
+                return@map dtoService.transfer(it, BlogRoleDTO::class.java)
+            }
+            .collect(Collectors.toList())
+
+        val userDto = dtoService.transfer(user, BlogUserDTO::class.java)
+
+        return BlogUserInfoDTO(userDto, roleDtoList)
+    }
 
     fun currentUser(): BlogUser {
         val userId = StpUtil.getLoginIdAsString()

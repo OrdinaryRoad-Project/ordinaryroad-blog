@@ -27,7 +27,9 @@ package tech.ordinaryroad.blog.quarkus.resource
 import cn.dev33.satoken.stp.StpUtil
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
-import tech.ordinaryroad.blog.quarkus.facade.BlogUserFacade
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.transfer.BlogUserTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
 import javax.inject.Inject
 import javax.validation.Valid
@@ -43,7 +45,10 @@ import javax.ws.rs.core.MediaType
 class BlogUserResource {
 
     @Inject
-    protected lateinit var userFacade: BlogUserFacade
+    protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var userTransferService: BlogUserTransferService
 
     /**
      * 查询用户
@@ -55,7 +60,13 @@ class BlogUserResource {
         @Valid @NotBlank(message = "Id不能为空")
         @RestPath id: String
     ): BlogUserVO {
-        return userFacade.findById(id)
+        val blogUser = userService.findById(id)
+
+        if (blogUser == null) {
+            throw BlogUserNotFoundException()
+        } else {
+            return userTransferService.transfer(blogUser)
+        }
     }
 
 
@@ -69,7 +80,7 @@ class BlogUserResource {
     ) {
         StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
 
-        userFacade.updateRoles(id, roleIds)
+        userService.updateRoles(id, roleIds)
     }
     //endregion
 

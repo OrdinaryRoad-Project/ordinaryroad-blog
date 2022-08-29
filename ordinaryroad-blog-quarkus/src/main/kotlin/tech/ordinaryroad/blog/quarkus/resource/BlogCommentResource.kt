@@ -25,9 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
-import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import javax.inject.Inject
@@ -41,7 +41,7 @@ import javax.ws.rs.core.Response
 class BlogCommentResource {
 
     @Inject
-    protected lateinit var commentFacade: BlogCommentFacade
+    protected lateinit var commentService: BlogCommentService
 
     //region 开发中
     /**
@@ -52,7 +52,7 @@ class BlogCommentResource {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun post(@Valid request: BlogCommentPostRequest): Response {
-        return commentFacade.post(request)
+        return commentService.post(request)
     }
 
     /**
@@ -61,7 +61,7 @@ class BlogCommentResource {
     @GET
     @Path("page/sub/{originalId}/{page}/{size}")
     fun pageSubComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogSubCommentVO> {
-        return commentFacade.pageSubComment(request)
+        return commentService.pageSubComment(request)
     }
 
     /**
@@ -70,7 +70,7 @@ class BlogCommentResource {
     @GET
     @Path("page/article/{articleId}/{page}/{size}")
     fun pageArticleComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
-        return commentFacade.pageArticleComment(request)
+        return commentService.pageArticleComment(request)
     }
     //endregion
 
@@ -80,7 +80,7 @@ class BlogCommentResource {
     fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
         BlogArticleResource.throwBadRequest()
         // TODO admin
-        return commentFacade.page(request)
+        return commentService.page(request)
     }
     //endregion
 }

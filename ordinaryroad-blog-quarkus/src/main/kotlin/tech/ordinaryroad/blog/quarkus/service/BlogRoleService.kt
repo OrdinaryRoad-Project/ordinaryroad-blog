@@ -26,11 +26,8 @@ package tech.ordinaryroad.blog.quarkus.service
 
 import tech.ordinaryroad.blog.quarkus.dao.BlogRoleDAO
 import tech.ordinaryroad.blog.quarkus.entity.BlogRole
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 /**
  * Service-Role
@@ -41,17 +38,13 @@ import javax.inject.Inject
 @ApplicationScoped
 class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
 
-    @Inject
-    protected lateinit var userRolesService: BlogUserRolesService
-
+    //region 业务相关
     /**
      * 根据用户Id查询所有角色
      */
     fun findAllByUserId(userId: String): List<BlogRole> {
-        val userRoles = userRolesService.findAllByUserId(userId)
-        val roleIds = userRoles.stream().map(BlogUserRoles::getRoleId)
-            .collect(Collectors.toList())
-        return super.findIds(BlogRole::class.java, roleIds)
+        return super.dao.selectAllByUserId(userId)
     }
+    //endregion
 
 }

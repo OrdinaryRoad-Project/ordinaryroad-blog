@@ -36,7 +36,6 @@ import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
-import tech.ordinaryroad.blog.quarkus.facade.BlogArticleFacade
 import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
@@ -66,9 +65,6 @@ class BlogArticleResource {
     protected lateinit var dtoService: BlogDtoService
 
     @Inject
-    protected lateinit var articleFacade: BlogArticleFacade
-
-    @Inject
     protected lateinit var articleTransferService: BlogArticleTransferService
 
     //region 已测试方法
@@ -83,7 +79,7 @@ class BlogArticleResource {
         /* 登录校验 */
         StpUtil.checkLogin()
 
-        articleFacade.moveToTrash(id)
+        articleService.moveToTrash(id)
     }
 
     /**
@@ -96,7 +92,7 @@ class BlogArticleResource {
         /* 登录校验 */
         StpUtil.checkLogin()
 
-        articleFacade.recoverFromTrash(id)
+        articleService.recoverFromTrash(id)
     }
 
     /**
@@ -472,7 +468,7 @@ class BlogArticleResource {
     @Path("publish/{id}/created_update_Time")
     @Produces(MediaType.APPLICATION_JSON)
     fun getPublishCreatedTimeAndUpdateTimeById(@RestPath id: String): JsonObject {
-        return articleFacade.getPublishCreatedTimeAndUpdateTimeById(id)
+        return articleService.getPublishCreatedTimeAndUpdateTimeById(id)
     }
 
     //endregion
@@ -485,7 +481,7 @@ class BlogArticleResource {
     @GET
     @Path("pre_and_next/{id}")
     fun getPreAndNextArticle(@RestPath id: String): JsonObject {
-        return articleFacade.getPreAndNextArticle(id)
+        return articleService.getPreAndNextArticle(id)
     }
     //endregion
 

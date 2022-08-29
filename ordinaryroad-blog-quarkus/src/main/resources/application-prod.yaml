@@ -18,6 +18,7 @@ quarkus:
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     map-underscore-to-camel-case: true
+    mapper-locations: mapper
   redisson:
     codec: org.redisson.codec.JsonJacksonCodec
     single-server-config:
