@@ -106,3 +106,47 @@ docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_
 
 ## 评论
 
+# 使用容器进行Maven构建
+
+```shell
+
+docker run -it --rm --name ordinaryroad-blog \
+-v /Users/ordinaryroad/Environment/maven/repo:/root/.m2/repository \
+-v "$(pwd)":/usr/src/mymaven \
+-w /usr/src/mymaven \
+maven:3.8.6-jdk-11 \
+mvn install
+
+```
+
+# 构建镜像
+
+> jvm
+
+```shell
+
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/ordinaryroad-blog-quarkus-jvm .
+
+```
+
+> 运行测试
+
+```shell
+
+docker run -i --rm -p 8080:8080 -e ORDINARYROAD_OAUTH2_CLIENT_ID=xxx -e ORDINARYROAD_OAUTH2_CLIENT_SECRET=xxx -e MAIL_QQ_PASSWORD=xxxxxx -e MYSQL_HOST=192.168.6.231 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=Root123. -e REDIS_HOST=192.168.6.231 -e REDIS_PORT=6379 quarkus/ordinaryroad-blog-quarkus-jvm
+
+```
+
+> 修改tag并push
+
+```shell
+
+docker tag quarkus/ordinaryroad-blog-quarkus-jvm ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220831_3
+
+```
+
+```shell
+
+docker push ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220831_3
+
+```

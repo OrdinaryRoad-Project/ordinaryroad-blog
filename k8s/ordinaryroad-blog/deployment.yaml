@@ -35,8 +35,8 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: blog-mysql-pass
-                  key: password
+                  name: blog-secrets
+                  key: MYSQL_PASSOWRD
             - name: REDIS_HOST
               value: "redis.or-pro"
             - name: REDIS_PORT
@@ -44,5 +44,15 @@ spec:
             - name: MAIL_QQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: blog-mail-qq
-                  key: password
+                  name: blog-secrets
+                  key: MAIL_QQ_PASSWORD
+            - name: ORDINARYROAD_OAUTH2_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: OAUTH2_CLIENT_ID
+            - name: ORDINARYROAD_OAUTH2_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: OAUTH2_CLIENT_SECRET

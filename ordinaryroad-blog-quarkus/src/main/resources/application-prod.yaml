@@ -55,5 +55,5 @@ sa-token:
 # OrdinaryRoad
 ordinaryroad:
   oauth2:
-    client-id: xxxxxxx
-    client-secret: xxxxxx
+    client-id: ${ORDINARYROAD_OAUTH2_CLIENT_ID}
+    client-secret: ${ORDINARYROAD_OAUTH2_CLIENT_SECRET}
