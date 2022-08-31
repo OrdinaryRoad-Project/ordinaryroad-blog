@@ -24,16 +24,33 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.service.BlogRoleService;
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
+import javax.enterprise.inject.spi.CDI;
+import java.util.stream.Collectors;
+
 @Mapper
-public interface BlogUserMapStruct {
+public interface BlogUserMapStruct extends BaseBlogMapStruct {
 
     BlogUserMapStruct INSTANCE = Mappers.getMapper(BlogUserMapStruct.class);
 
-    BlogUserVO do2Vo(BlogUser user);
+    BlogUserVO transfer(BlogUser user);
+
+    @AfterMapping
+    default void fillRoles(BlogUser user, @MappingTarget BlogUserVO vo) {
+        BlogRoleService roleService = CDI.current().select(BlogRoleService.class).get();
+        BlogRoleMapStruct blogRoleMapStruct = BlogRoleMapStruct.INSTANCE;
+        vo.setRoles(roleService.findAllByUserId(user.getUuid())
+                .stream()
+                .map(blogRoleMapStruct::transfer)
+                .collect(Collectors.toList())
+        );
+    }
 
 }

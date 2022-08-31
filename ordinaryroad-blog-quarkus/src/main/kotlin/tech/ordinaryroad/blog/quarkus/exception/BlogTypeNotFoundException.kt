@@ -22,36 +22,10 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service.transfer
+package tech.ordinaryroad.blog.quarkus.exception
 
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.mapstruct.BlogRoleMapStruct
-import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
-import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
-import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
-import java.util.stream.Collectors
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
-
-/**
- * 用户转换服务类
- */
-@ApplicationScoped
-class BlogUserTransferService {
-
-    val blogUserMapStruct = BlogUserMapStruct.INSTANCE
-    val blogRoleMapStruct = BlogRoleMapStruct.INSTANCE
-
-    @Inject
-    protected lateinit var roleService: BlogRoleService
-
-    fun transfer(user: BlogUser): BlogUserVO {
-        return blogUserMapStruct.do2Vo(user).apply {
-            this.roles = roleService.findAllByUserId(this.uuid)
-                .stream()
-                .map(blogRoleMapStruct::do2Vo)
-                .collect(Collectors.toList())
-        }
+class BlogTypeNotFoundException : BaseBlogException(StatusCode.BLOG_TYPE_NOT_FOUND) {
+    companion object {
+        private const val serialVersionUID: Long = -2174358916084025139L
     }
-
 }

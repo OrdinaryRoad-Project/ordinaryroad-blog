@@ -23,52 +23,28 @@
  */
 package tech.ordinaryroad.blog.quarkus.dto
 
-import cn.hutool.core.util.BooleanUtil
 import cn.hutool.core.util.StrUtil
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
-import javax.enterprise.inject.spi.CDI
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag
 
 /**
- * 博客文章DTO类
+ * 博客标签DTO类
  */
 @JsonInclude
 @JsonPropertyOrder
 @RegisterForReflection
-data class BlogArticleDTO(
-    var coverImage: String = StrUtil.EMPTY,
-    var title: String = StrUtil.EMPTY,
-    var summary: String = StrUtil.EMPTY,
-    var content: String = StrUtil.EMPTY,
-    var original: Boolean = false,
-    var canReward: Boolean = false,
-    var status: String = StrUtil.EMPTY,
-    var firstId: String = StrUtil.EMPTY,
-    var typeName: String = StrUtil.EMPTY
-) : BaseBlogModelDTO<BlogArticle>() {
-    override fun parse(baseDo: BlogArticle) {
-        coverImage = StrUtil.nullToEmpty(baseDo.coverImage)
-        title = StrUtil.nullToEmpty(baseDo.title)
-        summary = StrUtil.nullToEmpty(baseDo.summary)
-        content = StrUtil.nullToEmpty(baseDo.content)
-        original = BooleanUtil.isTrue(baseDo.original)
-        canReward = BooleanUtil.isTrue(baseDo.canReward)
-        status = baseDo.status.name
-        firstId = StrUtil.nullToEmpty(baseDo.firstId)
+data class BlogTagDTO(
+    var name: String = StrUtil.EMPTY
+) : BaseBlogModelDTO<BlogTag>() {
 
-        val typeId = baseDo.typeId
-        if (!typeId.isNullOrBlank()) {
-            val typeService = CDI.current().select(BlogTypeService::class.java).get()
-            typeService.findById(typeId)?.let {
-                typeName = it.name
-            }
-        }
+    override fun parse(baseDo: BlogTag) {
+        name = baseDo.name
     }
 
     companion object {
-        private const val serialVersionUID: Long = 6234078987620089180L
+        private const val serialVersionUID: Long = 2324633993633413987L
     }
+
 }

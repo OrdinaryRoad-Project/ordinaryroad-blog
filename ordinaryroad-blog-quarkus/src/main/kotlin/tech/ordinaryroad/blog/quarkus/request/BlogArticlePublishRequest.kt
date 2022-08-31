@@ -49,6 +49,9 @@ class BlogArticlePublishRequest : BaseRequest() {
     @Size(max = 32, message = "First Id长度不能超过32")
     var firstId: String? = null
 
+    @Size(max = 100, message = "分类名称长度不能超过100")
+    var typeName: String? = null
+
     companion object {
         private const val serialVersionUID: Long = -5049376490242456074L
     }

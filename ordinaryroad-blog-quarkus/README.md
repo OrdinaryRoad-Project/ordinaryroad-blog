@@ -74,3 +74,35 @@ docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_
 
 docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=root -e REDIS_HOST=192.168.5.127 -e REDIS_PORT=6379 ordinaryroad-blog-quarkus
 ```
+
+# OrdinaryRoad博客设计
+
+## 导航
+
+## 用户
+
+支持多用户
+
+主账号：OrdinaryRoad账号
+
+[//]: # (第三方账号：)
+
+## 文章
+
+- [x] MarkDown格式
+- [ ] 文章归档
+
+## 分类
+
+每个文章对应一个分类
+
+分类为每个用户私有的
+
+## 标签
+
+每个文章对应多个标签
+
+标签为每个用户公有的
+
+## 评论
+

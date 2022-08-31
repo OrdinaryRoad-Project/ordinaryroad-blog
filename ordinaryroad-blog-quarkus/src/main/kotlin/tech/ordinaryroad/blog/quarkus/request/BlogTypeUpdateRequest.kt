@@ -21,19 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+import org.jboss.resteasy.reactive.RestForm
+import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
+import javax.validation.constraints.NotBlank
+import javax.ws.rs.PathParam
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+class BlogTypeUpdateRequest : BaseRequest() {
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+    @PathParam("id")
+    @NotBlank(message = "ID不能为空")
+    var uuid: String = ""
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+    @RestForm
+    @NotBlank(message = "名称不能为空")
+    var name: String = ""
 
-    BlogRoleVO transfer(BlogRole role);
+    companion object {
+        private const val serialVersionUID: Long = 4539543105962765395L
+    }
 
 }

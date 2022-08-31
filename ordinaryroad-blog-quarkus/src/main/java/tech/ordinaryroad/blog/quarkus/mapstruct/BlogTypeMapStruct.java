@@ -26,14 +26,14 @@ package tech.ordinaryroad.blog.quarkus.mapstruct;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import tech.ordinaryroad.blog.quarkus.entity.BlogType;
+import tech.ordinaryroad.blog.quarkus.vo.BlogTypeVO;
 
 @Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+public interface BlogTypeMapStruct extends BaseBlogMapStruct {
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+    BlogTypeMapStruct INSTANCE = Mappers.getMapper(BlogTypeMapStruct.class);
 
-    BlogRoleVO transfer(BlogRole role);
+    BlogTypeVO transfer(BlogType type);
 
 }

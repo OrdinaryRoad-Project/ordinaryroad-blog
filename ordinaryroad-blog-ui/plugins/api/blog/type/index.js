@@ -22,59 +22,53 @@
  * SOFTWARE.
  */
 
-import oauth2Apis from './oauth2'
-import oauthUserApis from './oauth_user'
-import articleApis from './article'
-import commentApis from './comment'
-import userApis from './user'
-import typeApis from './type'
+import { urlEncode } from '~/plugins/ordinaryroad/utils'
 
 let $axios = null
-let $config = null
 
 export default {
-  initAxios (axios, config) {
+  initAxios (axios) {
     $axios = $axios || axios
-    $config = $config || config
-    oauth2Apis.initAxios(axios)
-    oauthUserApis.initAxios(axios)
-    articleApis.initAxios(axios)
-    commentApis.initAxios(axios)
-    userApis.initAxios(axios)
-    typeApis.initAxios(axios)
   },
   apis: {
-    oauth2: oauth2Apis.apis,
-    oauth_user: oauthUserApis.apis,
-    article: articleApis.apis,
-    comment: commentApis.apis,
-    user: userApis.apis,
-    type: typeApis.apis,
-    /**
-     * 获取文件全路径
-     * @param url
-     * @param defaultUrl 默认url
-     * @returns {string|*}
-     */
-    getFileUrl: (url, defaultUrl = '') => {
-      if (!url || url === '') {
-        return defaultUrl
-      } else if (url.startsWith('/ordinaryroad-')) {
-        return `${$config.FILE_DOWNLOAD_BASE_URL}${url}`
-      } else {
-        return url
-      }
-    },
-    logout: () => {
-      return $axios.get('/blog/common/logout')
-    },
-    upload: (file) => {
-      const data = new FormData()
-      data.append('file', file)
+    create: ({ name }) => {
+      const data = { name }
       return $axios({
-        url: '/blog/common/upload',
+        url: '/blog/type/create',
         method: 'post',
         data
+      })
+    },
+    deleteOwn: (id) => {
+      return $axios({
+        url: `/blog/type/delete/own/${id}`,
+        method: 'delete'
+      })
+    },
+    restoreOwn: (id) => {
+      return $axios({
+        url: `/blog/type/restore/own/${id}`,
+        method: 'post'
+      })
+    },
+    updateOwn: ({ uuid, name }) => {
+      const data = { uuid, name }
+      return $axios({
+        url: '/blog/type/update/own',
+        method: 'post',
+        data
+      })
+    },
+    findAllOwn () {
+      return $axios({
+        url: '/blog/type/find/all/own',
+        method: 'get'
+      })
+    },
+    pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/type/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
       })
     }
   }

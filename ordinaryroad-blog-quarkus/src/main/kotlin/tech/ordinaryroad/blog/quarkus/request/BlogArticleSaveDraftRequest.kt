@@ -49,8 +49,11 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @Size(max = 32, message = "First Id长度不能超过32")
     var firstId: String? = null
 
+    @Size(max = 100, message = "分类名称长度不能超过100")
+    var typeName: String? = null
+
     companion object {
-        private const val serialVersionUID: Long = 2658640234458110403L
+        private const val serialVersionUID: Long = 3671782962027525940L
     }
 
 }

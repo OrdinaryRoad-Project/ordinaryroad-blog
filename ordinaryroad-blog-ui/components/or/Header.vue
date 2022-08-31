@@ -32,6 +32,16 @@
 
     <!-- 用户信息 -->
     <div v-if="userInfo">
+      <v-btn
+        v-if="$vuetify.breakpoint.mdAndUp"
+        to="/dashboard/article"
+        color="primary"
+      >
+        <v-icon left>
+          mdi-pencil
+        </v-icon>
+        {{ $t('article.actions.writing') }}
+      </v-btn>
       <v-menu offset-y open-on-hover>
         <template #activator="{ on, attrs }">
           <v-btn

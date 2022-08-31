@@ -22,18 +22,49 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.vo;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+/**
+ * 分类VO类
+ *
+ * @author mjz
+ * @date 2022/8/30
+ */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+public class BlogTypeVO {
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+    private String uuid;
 
-    BlogRoleVO transfer(BlogRole role);
+    private String name;
+
+    public BlogTypeVO() {
+    }
+
+    public BlogTypeVO(String uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

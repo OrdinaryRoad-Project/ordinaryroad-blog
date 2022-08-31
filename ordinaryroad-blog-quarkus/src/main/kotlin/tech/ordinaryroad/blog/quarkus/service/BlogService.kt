@@ -29,7 +29,6 @@ import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

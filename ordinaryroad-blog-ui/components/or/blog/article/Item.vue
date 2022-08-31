@@ -49,11 +49,18 @@
           <!-- 封面上层 -->
           <div class="or-title px-4 pb-1">
             <!-- 创建时间 -->
-            <v-card-subtitle class="pt-0 pb-1 text-justify">
-              <v-icon dark small>
+            <v-card-subtitle class="d-flex pt-0 pb-1 align-center">
+              <v-icon dark small class="me-1">
                 mdi-calendar
               </v-icon>
               {{ item.createdTime }}
+
+              <template v-if="item.type">
+                <v-icon dark small class="me-1 ms-2">
+                  mdi-view-list
+                </v-icon>
+                {{ item.type.name }}
+              </template>
             </v-card-subtitle>
 
             <!-- 标题 -->

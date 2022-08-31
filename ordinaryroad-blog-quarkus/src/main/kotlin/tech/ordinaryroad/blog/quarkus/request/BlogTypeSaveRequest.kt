@@ -21,19 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+class BlogTypeSaveRequest : BaseRequest() {
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+    @NotBlank(message = "名称不能为空")
+    @Size(max = 100, message = "名称长度不能超过100")
+    var name: String = ""
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
-
-    BlogRoleVO transfer(BlogRole role);
+    companion object {
+        private const val serialVersionUID: Long = -7929568184671894864L
+    }
 
 }

@@ -37,7 +37,6 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogCommentTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import tech.ordinaryroad.commons.base.cons.StatusCode
@@ -50,10 +49,7 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
-    val blogCommentMapStruct: BlogCommentMapStruct = BlogCommentMapStruct.INSTANCE
-
-    @Inject
-    protected lateinit var commentTransferService: BlogCommentTransferService
+    val commentMapStruct: BlogCommentMapStruct = BlogCommentMapStruct.INSTANCE
 
     @Inject
     protected lateinit var articleService: BlogArticleService
@@ -71,7 +67,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         val fromUser = blogService.currentUser()
 
         // 先转换，后面需要填充
-        val comment = blogCommentMapStruct.request2do(request)
+        val comment = commentMapStruct.transfer(request)
 
         // 传入parentId视为回复评论
         val isReply = !request.parentId.isNullOrBlank()
@@ -114,9 +110,9 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
         return Response.ok(
             if (isReply) {
-                commentTransferService.transferSub(create)
+                commentMapStruct.transferSub(create)
             } else {
-                commentTransferService.transferArticle(create)
+                commentMapStruct.transferArticle(create)
             }
         ).build()
     }
@@ -131,7 +127,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         val page = page(request, wrapper)
 
         val voPage = PageUtils.copyPage(page) {
-            return@copyPage commentTransferService.transferSub(it)
+            return@copyPage commentMapStruct.transferSub(it)
         }
 
         return voPage
@@ -147,7 +143,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         val page = page(request, wrapper)
 
         val voPage = PageUtils.copyPage(page) {
-            return@copyPage commentTransferService.transferArticle(it)
+            return@copyPage commentMapStruct.transferArticle(it)
         }
 
         return voPage
@@ -160,9 +156,9 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
         val voPage = PageUtils.copyPage(page) {
             if (it.originalId.isNullOrBlank()) {
-                return@copyPage commentTransferService.transferArticle(it)
+                return@copyPage commentMapStruct.transferArticle(it)
             } else {
-                return@copyPage commentTransferService.transferSub(it)
+                return@copyPage commentMapStruct.transferSub(it)
             }
         }
 

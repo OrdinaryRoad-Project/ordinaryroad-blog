@@ -1,9 +1,6 @@
 {
-  "username": "Username",
-  "update": "Update",
   "add": "Add",
-  "remove": "Remove",
-  "parentheses": "({0})",
+  "areYouSureToDoWhat": "Are you sure to {0} ?",
   "attention": "Attention",
   "back": "Back",
   "cancel": "Cancel",
@@ -14,6 +11,7 @@
   "dataTable": {
     "actions": "Actions"
   },
+  "delete": "Delete",
   "deleteDialog": {
     "content": "Are you sure you want to delete the data with uuid {0}? Once deleted, it cannot be recovered."
   },
@@ -25,16 +23,23 @@
   "maxNChars": "Length cannot be greater than {0}",
   "minNChars": "Length cannot be less than {0}",
   "ordinaryroad": "Ordinary Road",
+  "parentheses": "({0})",
   "refresh": "Refresh",
+  "remove": "Remove",
   "required": "Required",
   "reset": "Reset",
   "retry": "Retry",
+  "restore": "Restore",
+  "rules": {
+    "contentNotEmpty": "The content can not be blank."
+  },
   "search": "Search",
   "settings": "Settings",
   "theme": "Theme",
+  "update": "Update",
   "updateBy": "Update By",
   "updateTime": "Update Time",
-  "rules": {
-    "contentNotEmpty": "The content can not be blank."
-  }
+  "username": "Username",
+  "whatSuccessfully": "{0} successfully.",
+  "whatUpdateSuccessfully": "{0} updated successfully."
 }

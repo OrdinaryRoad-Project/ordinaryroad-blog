@@ -26,6 +26,7 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.collection.CollUtil
+import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpStatus
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
@@ -33,16 +34,21 @@ import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
+import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
+import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogArticleTransferService
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
+import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -55,6 +61,8 @@ import javax.ws.rs.core.Response
 @Path("article")
 class BlogArticleResource {
 
+    val articleMapStruct = BlogArticleMapStruct.INSTANCE
+
     @Inject
     protected lateinit var articleService: BlogArticleService
 
@@ -65,7 +73,7 @@ class BlogArticleResource {
     protected lateinit var dtoService: BlogDtoService
 
     @Inject
-    protected lateinit var articleTransferService: BlogArticleTransferService
+    protected lateinit var typeService: BlogTypeService
 
     //region 已测试方法
 
@@ -133,6 +141,19 @@ class BlogArticleResource {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
 
+        var typeId = StrUtil.EMPTY
+        val typeName = request.typeName
+        if (!typeName.isNullOrBlank()) {
+            var type = typeService.findByNameAndCreateBy(typeName, userId)
+            if (Objects.isNull(type)) {
+                // 创建
+                type = typeService.create(BlogType().apply {
+                    name = typeName
+                })
+            }
+            typeId = type!!.uuid
+        }
+
         if (firstId.isNullOrBlank()) {
             val allFirstArticleByStatusAndCreatedBy =
                 articleService.findAllFirstArticleByStatusAndCreateBy(BlogArticleStatus.DRAFT, userId)
@@ -148,7 +169,8 @@ class BlogArticleResource {
                         BlogArticleStatus.DRAFT,
                         request.canReward,
                         request.original,
-                        ""
+                        "",
+                        typeId
                     )
                 )
                 // 将FirstId更新为当前Id
@@ -209,7 +231,8 @@ class BlogArticleResource {
                         BlogArticleStatus.DRAFT,
                         request.canReward,
                         request.original,
-                        firstId
+                        firstId,
+                        typeId
                     )
                 )
                 val dto = dtoService.transfer(draft, BlogArticleDTO::class.java)
@@ -237,6 +260,19 @@ class BlogArticleResource {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
 
+        var typeId = StrUtil.EMPTY
+        val typeName = request.typeName
+        if (!typeName.isNullOrBlank()) {
+            var type = typeService.findByNameAndCreateBy(typeName, userId)
+            if (Objects.isNull(type)) {
+                // 创建
+                type = typeService.create(BlogType().apply {
+                    name = typeName
+                })
+            }
+            typeId = type!!.uuid
+        }
+
         // 代表没有草稿直接发布
         if (firstId.isNullOrBlank()) {
             /* 判断是否存在草稿 */
@@ -255,7 +291,8 @@ class BlogArticleResource {
                         BlogArticleStatus.PUBLISH,
                         request.canReward,
                         request.original,
-                        ""
+                        "",
+                        typeId
                     )
                 )
                 val publishUpdate = articleService.update(BlogArticle().apply {
@@ -317,7 +354,8 @@ class BlogArticleResource {
                         BlogArticleStatus.PUBLISH,
                         request.canReward,
                         request.original,
-                        firstId
+                        firstId,
+                        typeId
                     )
                 )
 
@@ -409,7 +447,7 @@ class BlogArticleResource {
         val page = articleService.page(request, wrapper)
 
         val voPage = PageUtils.copyPage<BlogArticle, BlogArticlePreviewVO>(page).apply {
-            records = page.records.stream().map(articleTransferService::transferPreview)
+            records = page.records.stream().map(articleMapStruct::transferPreview)
                 .collect(Collectors.toList())
         }
         return Response.ok().entity(voPage).build()
@@ -446,18 +484,19 @@ class BlogArticleResource {
 
     /**
      * 根据Id查询已发布的文章
+     *
+     * 会保存浏览记录
      */
     @GET
     @Path("publish/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun findPublishById(@RestPath id: String): Response {
+    fun findPublishById(@RestPath id: String): BlogArticleDetailVO {
         val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
 
         if (blogArticle == null) {
-            return Response.status(Response.Status.NOT_FOUND).build()
+            throw BlogArticleNotFoundException()
         } else {
-            val articleVO = articleTransferService.transferDetail(blogArticle)
-            return Response.ok().entity(articleVO).build()
+            return articleMapStruct.transferDetail(blogArticle)
         }
     }
 

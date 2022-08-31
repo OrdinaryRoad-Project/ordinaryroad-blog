@@ -1,5 +1,5 @@
 {
-  "articleCount": "Articles {0}",
+  "appName": "OR BLOG",
   "article": {
     "title": "Title",
     "coverImage": "Cover Image",
@@ -20,7 +20,8 @@
     },
     "startWritingHint": "Start Writing Now"
   },
-  "appName": "OR BLOG",
+  "articleCount": "Articles {0}",
+  "createWhat": "Create {0}",
   "dashboardMenuTitles": {
     "dashboard": {
       "title": "Dashboard",
@@ -43,16 +44,30 @@
       "notFound": "Failed to get article information, please try again or return"
     }
   },
+  "tag": {
+    "name": "Tag Name"
+  },
   "themeTitles": {
     "light": "Light",
     "dark": "Dark",
     "hunk": "Hunk",
     "system": "Dark Hunk"
   },
+  "titles": {
+    "form": {
+      "type": "Type",
+      "tag": "Tag"
+    }
+  },
+  "type": {
+    "name": "Type Name"
+  },
+  "updateWhat": "Update {0}",
   "userMenuTitles": {
     "space": "User Space",
     "dashboard": "Dashboard",
     "profile": "User Profile",
-    "article": "Articles"
+    "article": "Articles",
+    "type": "Types"
   }
 }

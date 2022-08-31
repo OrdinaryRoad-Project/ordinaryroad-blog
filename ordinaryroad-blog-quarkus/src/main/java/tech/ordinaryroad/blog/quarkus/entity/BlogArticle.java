@@ -31,7 +31,7 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 @RegisterForReflection
 public class BlogArticle extends BaseDO {
 
-    private static final long serialVersionUID = 1620833145976758960L;
+    private static final long serialVersionUID = 4578259816319506914L;
 
     /**
      * 标题
@@ -73,10 +73,15 @@ public class BlogArticle extends BaseDO {
      */
     private String firstId;
 
+    /**
+     * 分类Id
+     */
+    private String typeId;
+
     public BlogArticle() {
     }
 
-    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId) {
+    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId, String typeId) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
@@ -85,6 +90,7 @@ public class BlogArticle extends BaseDO {
         this.canReward = canReward;
         this.original = original;
         this.firstId = firstId;
+        this.typeId = typeId;
     }
 
     public String getTitle() {
@@ -149,5 +155,13 @@ public class BlogArticle extends BaseDO {
 
     public void setFirstId(String firstId) {
         this.firstId = firstId;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 }

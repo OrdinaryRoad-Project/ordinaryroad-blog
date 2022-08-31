@@ -26,7 +26,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.ordinaryroad.blog.quarkus.dao.BlogRoleDAO">
 
-    <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.blog.quarkus.entity.BlogRole">
+    <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO">
         <id column="id" property="id"/>
         <result column="uuid" property="uuid"/>
         <result column="create_by" property="createBy"/>

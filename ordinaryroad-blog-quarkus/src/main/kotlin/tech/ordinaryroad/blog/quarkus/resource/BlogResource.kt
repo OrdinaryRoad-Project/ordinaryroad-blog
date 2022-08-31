@@ -31,7 +31,7 @@ import org.jboss.resteasy.reactive.MultipartForm
 import org.jboss.resteasy.reactive.RestHeader
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.OrUpmsApi
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
-import tech.ordinaryroad.blog.quarkus.propertie.OAuth2Properties
+import tech.ordinaryroad.blog.quarkus.properties.OAuth2Properties
 import tech.ordinaryroad.blog.quarkus.request.FileUploadRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService

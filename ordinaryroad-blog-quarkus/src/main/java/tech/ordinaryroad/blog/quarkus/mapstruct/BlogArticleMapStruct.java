@@ -24,19 +24,44 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
+import io.vertx.core.json.JsonObject;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle;
+import tech.ordinaryroad.blog.quarkus.service.BlogArticleService;
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO;
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO;
 
+import javax.enterprise.inject.spi.CDI;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Mapper
-public interface BlogArticleMapStruct {
+public interface BlogArticleMapStruct extends BaseBlogMapStruct {
 
     BlogArticleMapStruct INSTANCE = Mappers.getMapper(BlogArticleMapStruct.class);
 
-    BlogArticlePreviewVO do2PreviewVo(BlogArticle article);
+    @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "createBy", target = "user")
+    BlogArticlePreviewVO transferPreview(BlogArticle article);
 
-    BlogArticleDetailVO do2DetailVo(BlogArticle article);
+    @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "createBy", target = "user")
+    BlogArticleDetailVO transferDetail(BlogArticle article);
+
+    @AfterMapping
+    default void fillTimes(BlogArticle article, @MappingTarget Object object) {
+        BlogArticlePreviewVO vo = (BlogArticlePreviewVO) object;
+        BlogArticleService articleService = CDI.current().select(BlogArticleService.class).get();
+        JsonObject times = articleService.getPublishCreatedTimeAndUpdateTimeById(article.getUuid());
+        vo.setCreatedTime((LocalDateTime) times.getValue("createdTime"));
+        Object updateTime = times.getValue("updateTime");
+        if (Objects.nonNull(updateTime)) {
+            vo.setUpdateTime((LocalDateTime) updateTime);
+        }
+    }
 
 }

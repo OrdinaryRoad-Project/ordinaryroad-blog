@@ -28,8 +28,8 @@ import cn.dev33.satoken.stp.StpUtil
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
+import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogUserTransferService
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
 import javax.inject.Inject
 import javax.validation.Valid
@@ -44,11 +44,10 @@ import javax.ws.rs.core.MediaType
 @Path("user")
 class BlogUserResource {
 
-    @Inject
-    protected lateinit var userService: BlogUserService
+    val userMapStruct = BlogUserMapStruct.INSTANCE
 
     @Inject
-    protected lateinit var userTransferService: BlogUserTransferService
+    protected lateinit var userService: BlogUserService
 
     /**
      * 查询用户
@@ -65,7 +64,7 @@ class BlogUserResource {
         if (blogUser == null) {
             throw BlogUserNotFoundException()
         } else {
-            return userTransferService.transfer(blogUser)
+            return userMapStruct.transfer(blogUser)
         }
     }
 

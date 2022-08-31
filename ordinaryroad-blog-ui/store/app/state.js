@@ -30,15 +30,18 @@ export default () => ({
     {
       to: '/dashboard',
       titleKey: 'dashboardMenuTitles.dashboard.title',
+      icon: 'mdi-view-dashboard',
       children: []
     },
     {
       to: '/dashboard/user/profile',
       titleKey: 'dashboardMenuTitles.dashboard.userProfileTitle',
+      icon: 'mdi-account',
       children: []
     },
     {
       titleKey: 'dashboardMenuTitles.dashboard.article.boxTitle',
+      icon: 'mdi-file-document-multiple',
       children: [
         {
           titleKey: 'dashboardMenuTitles.dashboard.article.box.draft',
@@ -56,6 +59,12 @@ export default () => ({
           children: []
         }
       ]
+    },
+    {
+      to: '/dashboard/type',
+      titleKey: 'dashboardMenuTitles.dashboard.type.title',
+      icon: 'mdi-view-list',
+      children: []
     }
   ],
   userMenuItems: [
@@ -77,6 +86,11 @@ export default () => ({
       titleKey: 'userMenuTitles.article',
       to: '/dashboard/article/box',
       icon: 'mdi-file-document-multiple'
+    },
+    {
+      titleKey: 'userMenuTitles.type',
+      to: '/dashboard/type',
+      icon: 'mdi-view-list'
     },
     {
       titleKey: 'logout',

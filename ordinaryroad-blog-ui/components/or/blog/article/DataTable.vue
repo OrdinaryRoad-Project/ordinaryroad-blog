@@ -163,6 +163,9 @@
           dark
           @click="$refs.dataTable.insertItem()"
         >
+          <v-icon left>
+            mdi-pencil
+          </v-icon>
           {{ $t('article.actions.writing') }}
         </v-btn>
       </template>

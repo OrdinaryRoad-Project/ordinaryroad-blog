@@ -22,8 +22,6 @@
   - SOFTWARE.
   -->
 
-<!-- TODO 刷新页面无反应 -->
-
 <template>
   <div>
     <base-material-card
@@ -44,7 +42,9 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                <v-icon>mdi-history</v-icon>
+                <v-icon left>
+                  mdi-history
+                </v-icon>
                 {{ $t('article.actions.historicVersion') }}
               </v-btn>
             </template>
@@ -152,6 +152,65 @@
                 />
               </v-input>
             </v-col>
+            <v-row>
+              <v-col sm="12" md="6" class="mt-2 mb-2">
+                <v-combobox
+                  v-model="article.typeName"
+                  outlined
+                  :disabled="typeOptions.loading"
+                  :loading="typeOptions.loading"
+                  flat
+                  :items="typeOptions.items"
+                  chips
+                  clearable
+                  :label="$t('titles.form.type')"
+                  prepend-inner-icon="mdi-view-list"
+                  solo
+                  hide-details
+                >
+                  <template #selection="{ attrs, item, select, selected }">
+                    <v-chip
+                      v-bind="attrs"
+                      :input-value="selected"
+                      close
+                      @click="select"
+                      @click:close="removeType"
+                    >
+                      <strong>{{ item }}</strong>
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-col>
+              <v-col sm="12" md="6" class="mt-2 mb-2">
+                <v-combobox
+                  v-model="article.tagNames"
+                  outlined
+                  :disabled="tagOptions.loading"
+                  :loading="tagOptions.loading"
+                  flat
+                  :items="tagOptions.items"
+                  chips
+                  multiple
+                  solo
+                  clearable
+                  :label="$t('titles.form.tag')"
+                  prepend-inner-icon="mdi-tag-multiple"
+                  hide-details
+                >
+                  <template #selection="{ attrs, item, select, selected }">
+                    <v-chip
+                      v-bind="attrs"
+                      :input-value="selected"
+                      close
+                      @click="select"
+                      @click:close="removeTag(item)"
+                    >
+                      <strong>{{ item }}</strong>
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-col>
+            </v-row>
             <v-col cols="12">
               <v-checkbox
                 v-model="article.canReward"
@@ -204,7 +263,9 @@ export default {
                 summary: '',
                 content: '',
                 canReward: false,
-                original: false
+                original: false,
+                typeName: '',
+                tagNames: []
               }
             }
           }
@@ -224,7 +285,15 @@ export default {
     /**
      * 仅用于设置Vditor
      */
-    articleContent: ''
+    articleContent: '',
+    typeOptions: {
+      loading: true,
+      items: []
+    },
+    tagOptions: {
+      loading: true,
+      items: []
+    }
   }),
   computed: {
     articleValid () {
@@ -271,16 +340,33 @@ export default {
         }
       }
        **/
+      this.$apis.blog.type.findAllOwn()
+        .then((data) => {
+          this.typeOptions.items = data.map(item => item.name)
+          this.typeOptions.loading = false
+        }, () => {
+          this.typeOptions.loading = false
+        })
+      // TODO 加载标签
+      this.tagOptions.items = ['1', '2', '3']
+      this.tagOptions.loading = false
     }
   },
   methods: {
+    removeType () {
+      this.article.typeName = ''
+    },
+    removeTag (item) {
+      this.article.tagNames.splice(this.article.tagNames.indexOf(item), 1)
+      this.article.tagNames = [...this.article.tagNames]
+    },
     /**
      * 选中历史版本
      */
     onSelectArticleInherit (items) {
       if (items.length === 1) {
         this.$dialog({
-          content: '确定使用改历史版本，本地编辑器将内容将会丢失'
+          content: '确定使用该历史版本，本地编辑器将内容将会丢失'
         }).then((dialog) => {
           if (dialog.isConfirm) {
             this.articleInheritsMenuModel = false

@@ -38,10 +38,10 @@ import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
 import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.service.transfer.BlogDtoService
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.ws.rs.BeanParam

@@ -1,9 +1,6 @@
 {
-  "username": "用户名",
-  "update": "更新",
   "add": "添加",
-  "remove": "移除",
-  "parentheses": "（{0}）",
+  "areYouSureToDoWhat": "确定{0}？",
   "attention": "注意",
   "back": "返回",
   "cancel": "取消",
@@ -14,6 +11,7 @@
   "dataTable": {
     "actions": "操作"
   },
+  "delete": "删除",
   "deleteDialog": {
     "content": "确定删除uuid为 {0} 的数据？删除后无法恢复。"
   },
@@ -25,16 +23,23 @@
   "maxNChars": "长度不能大于{0}",
   "minNChars": "长度不能小于{0}",
   "ordinaryroad": "Ordinary Road",
+  "parentheses": "（{0}）",
   "refresh": "刷新",
+  "remove": "移除",
   "required": "必填",
   "reset": "重置",
   "retry": "重试",
+  "restore": "恢复",
+  "rules": {
+    "contentNotEmpty": "内容不能为空"
+  },
   "search": "搜索",
   "settings": "设置",
   "theme": "主题",
+  "update": "更新",
   "updateBy": "更新者",
   "updateTime": "更新时间",
-  "rules": {
-    "contentNotEmpty": "内容不能为空"
-  }
+  "username": "用户名",
+  "whatSuccessfully": "{0}成功",
+  "whatUpdateSuccessfully": "{0}更新成功"
 }

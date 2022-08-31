@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 博客文章预览VO类
@@ -54,12 +55,16 @@ public class BlogArticlePreviewVO {
 
     private LocalDateTime updateTime;
 
+    private BlogTypeVO type;
+
+    private List<BlogTagVO> tags;
+
     private Integer pv;
 
     public BlogArticlePreviewVO() {
     }
 
-    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, Integer pv) {
+    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, BlogTypeVO type, List<BlogTagVO> tags, Integer pv) {
         this.uuid = uuid;
         this.coverImage = coverImage;
         this.title = title;
@@ -68,6 +73,8 @@ public class BlogArticlePreviewVO {
         this.user = user;
         this.createdTime = createdTime;
         this.updateTime = updateTime;
+        this.type = type;
+        this.tags = tags;
         this.pv = pv;
     }
 
@@ -133,6 +140,22 @@ public class BlogArticlePreviewVO {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BlogTypeVO getType() {
+        return type;
+    }
+
+    public void setType(BlogTypeVO type) {
+        this.type = type;
+    }
+
+    public List<BlogTagVO> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<BlogTagVO> tags) {
+        this.tags = tags;
     }
 
     public Integer getPv() {

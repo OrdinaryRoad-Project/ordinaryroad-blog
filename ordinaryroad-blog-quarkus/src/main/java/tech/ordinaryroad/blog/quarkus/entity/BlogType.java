@@ -22,18 +22,52 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.entity;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+/**
+ * 博客分类
+ */
+@RegisterForReflection
+public class BlogType extends BaseDO {
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+    private static final long serialVersionUID = 1485890516308123915L;
 
-    BlogRoleVO transfer(BlogRole role);
+    /**
+     * 分类名称
+     */
+    private String name;
 
+    /**
+     * 是否删除
+     */
+    @TableLogic(value = "false", delval = "true")
+    private Boolean deleted;
+
+    public BlogType() {
+    }
+
+    public BlogType(String name, Boolean deleted) {
+        this.name = name;
+        this.deleted = deleted;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.dao
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Update
+import tech.ordinaryroad.blog.quarkus.entity.BlogType
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 
 @Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+interface BlogTypeDAO : IBaseMapper<BlogType> {
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
-
-    BlogRoleVO transfer(BlogRole role);
+    @Update("UPDATE `blog_type` SET `deleted` = 0 WHERE `uuid` = #{uuid}")
+    fun restore(uuid: String): Int
 
 }

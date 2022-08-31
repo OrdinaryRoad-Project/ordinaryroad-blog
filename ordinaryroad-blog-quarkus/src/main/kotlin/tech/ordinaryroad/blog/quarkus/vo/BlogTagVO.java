@@ -22,23 +22,48 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service.transfer
+package tech.ordinaryroad.blog.quarkus.vo;
 
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole
-import tech.ordinaryroad.blog.quarkus.mapstruct.BlogRoleMapStruct
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO
-import javax.enterprise.context.ApplicationScoped
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
- * 角色转换服务类
+ * 标签VO类
+ *
+ * @author mjz
+ * @date 2022/8/30
  */
-@ApplicationScoped
-class BlogRoleTransferService {
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+public class BlogTagVO {
+    private String uuid;
 
-    val blogRoleMapStruct = BlogRoleMapStruct.INSTANCE
+    private String name;
 
-    fun transfer(role: BlogRole): BlogRoleVO {
-        return blogRoleMapStruct.do2Vo(role)
+    public BlogTagVO() {
+    }
+
+    public BlogTagVO(String uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

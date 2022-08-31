@@ -130,7 +130,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     private fun validateOwn(id: String): BlogArticle {
         val userId = StpUtil.getLoginIdAsString()
         if (id.isBlank()) {
-            throw BlogArticleNotFoundException()
+            BlogArticleNotFoundException().throws()
         }
         val blogArticle = findById(id) ?: throw BlogArticleNotFoundException()
         if (blogArticle.createBy != userId) {

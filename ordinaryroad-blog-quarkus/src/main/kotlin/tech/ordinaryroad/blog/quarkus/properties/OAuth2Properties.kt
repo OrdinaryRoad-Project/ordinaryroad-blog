@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.propertie
+package tech.ordinaryroad.blog.quarkus.properties
 
 import io.smallrye.config.ConfigMapping
 

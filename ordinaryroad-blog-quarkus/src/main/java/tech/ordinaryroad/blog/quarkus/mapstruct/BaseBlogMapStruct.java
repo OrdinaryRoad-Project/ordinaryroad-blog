@@ -24,16 +24,38 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import cn.hutool.core.util.StrUtil;
+import tech.ordinaryroad.blog.quarkus.entity.BlogType;
+import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.service.BlogTypeService;
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService;
+import tech.ordinaryroad.blog.quarkus.vo.BlogTypeVO;
+import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+import javax.enterprise.inject.spi.CDI;
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+/**
+ * @author mjz
+ * @date 2022/8/30
+ */
+public interface BaseBlogMapStruct {
 
-    BlogRoleVO transfer(BlogRole role);
+    default BlogTypeVO string2TypeVO(String type) {
+        if (StrUtil.isBlank(type)) {
+            return null;
+        }
+        BlogTypeService typeService = CDI.current().select(BlogTypeService.class).get();
+        BlogType blogType = typeService.findById(type);
+        if (blogType.getDeleted()) {
+            return null;
+        }
+        return BlogTypeMapStruct.INSTANCE.transfer(blogType);
+    }
+
+    default BlogUserVO string2UserVO(String createBy) {
+        BlogUserService userService = CDI.current().select(BlogUserService.class).get();
+        BlogUser user = userService.findById(createBy);
+        return BlogUserMapStruct.INSTANCE.transfer(user);
+    }
 
 }

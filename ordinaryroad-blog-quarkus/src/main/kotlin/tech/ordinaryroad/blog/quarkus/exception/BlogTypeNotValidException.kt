@@ -22,18 +22,10 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.exception
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
-
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
-
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
-
-    BlogRoleVO transfer(BlogRole role);
-
+class BlogTypeNotValidException : BaseBlogException(StatusCode.BLOG_TYPE_NOT_VALID) {
+    companion object {
+        private const val serialVersionUID: Long = -808189938896073643L
+    }
 }

@@ -22,18 +22,44 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.entity;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+/**
+ * 博客标签
+ */
+@RegisterForReflection
+public class BlogTag extends BaseDO {
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
+    private static final long serialVersionUID = 2941266741059665799L;
 
-    BlogRoleVO transfer(BlogRole role);
+    private String name;
 
+    private Boolean enabled;
+
+    public BlogTag() {
+    }
+
+    public BlogTag(String name, Boolean enabled) {
+        this.name = name;
+        this.enabled = enabled;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 }

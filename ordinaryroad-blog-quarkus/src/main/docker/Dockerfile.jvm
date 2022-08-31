@@ -12,6 +12,10 @@
 # Then run the container using:
 #
 # docker run -i --rm -p 8080:8080 quarkus/ordinaryroad-blog-quarkus-jvm
+# docker run -i --rm -p 8080:8080 -e MYSQL_HOST=192.168.5.239 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=Root123. -e REDIS_HOST=192.168.5.239 -e REDIS_PORT=6379 quarkus/ordinaryroad-blog-quarkus-jvm
+# docker run -i --rm -p 8080:8080 -e MYSQL_HOST=192.168.43.112 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=Root123. -e REDIS_HOST=192.168.43.112 -e REDIS_PORT=6379 quarkus/ordinaryroad-blog-quarkus-jvm
+#
+# podman run -i --rm -p 8080:8080 -e MAIL_QQ_PASSWORD=fniiikjirbvecjdg -e MYSQL_HOST=mysql.or-pro -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=Root123. -e REDIS_HOST=10.0.12.3 -e REDIS_PORT=6379 10.0.12.13:5000/ordinaryroad-blog:20220825_1
 #
 # If you want to include the debug port into your docker image
 # you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5005

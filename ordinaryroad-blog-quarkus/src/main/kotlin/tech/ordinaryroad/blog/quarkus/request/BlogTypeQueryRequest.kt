@@ -21,19 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole;
-import tech.ordinaryroad.blog.quarkus.vo.BlogRoleVO;
+class BlogTypeQueryRequest : BaseQueryRequest() {
 
-@Mapper
-public interface BlogRoleMapStruct extends BaseBlogMapStruct {
+    @RestQuery
+    var name: String? = null
 
-    BlogRoleMapStruct INSTANCE = Mappers.getMapper(BlogRoleMapStruct.class);
-
-    BlogRoleVO transfer(BlogRole role);
+    companion object {
+        private const val serialVersionUID: Long = 1729845016558027553L
+    }
 
 }

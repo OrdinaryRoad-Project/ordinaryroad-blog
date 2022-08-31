@@ -24,11 +24,17 @@
 package tech.ordinaryroad.blog.quarkus.dto
 
 import cn.hutool.core.util.StrUtil
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
+import io.quarkus.runtime.annotations.RegisterForReflection
 import tech.ordinaryroad.blog.quarkus.entity.BlogRole
 
 /**
  * 博客角色DTO类
  */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
 data class BlogRoleDTO(
     var roleName: String = StrUtil.EMPTY,
     var roleCode: String = StrUtil.EMPTY
