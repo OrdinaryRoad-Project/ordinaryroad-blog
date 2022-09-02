@@ -152,87 +152,87 @@
                 />
               </v-input>
             </v-col>
-            <v-row>
-              <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
-                <v-combobox
-                  v-model="article.typeName"
-                  outlined
-                  :disabled="typeOptions.loading"
-                  :loading="typeOptions.loading"
-                  flat
-                  :items="typeOptions.items"
-                  chips
-                  clearable
-                  :label="$t('titles.form.type')"
-                  prepend-inner-icon="mdi-view-list"
-                  solo
-                  hide-details
-                >
-                  <template #selection="{ attrs, item, select, selected }">
-                    <v-chip
-                      v-bind="attrs"
-                      :input-value="selected"
-                      close
-                      @click="select"
-                      @click:close="removeType"
-                    >
-                      <strong>{{ item }}</strong>
-                    </v-chip>
-                  </template>
-                </v-combobox>
-              </v-col>
-              <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
-                <or-base-menu
-                  offset-y
-                  min-width="40%"
-                  eager
-                  :close-on-content-click="false"
-                >
-                  <template #activator="{ on, attrs }">
-                    <v-combobox
-                      v-model="tagOptions.selectedItems"
-                      outlined
-                      :disabled="tagOptions.loading"
-                      flat
-                      chips
-                      v-bind="attrs"
-                      return-object
-                      clearable
-                      :items="tagOptions.items"
-                      :label="$t('titles.form.tag')"
-                      prepend-inner-icon="mdi-tag-multiple"
-                      solo
-                      multiple
-                      hide-details
-                      @input="onSelectedItemsInput"
-                      v-on="on"
-                    >
-                      <template #selection="{ attrs, item, select, selected }">
-                        <v-chip
-                          v-bind="attrs"
-                          :input-value="selected"
-                          close
-                          @click="select"
-                          @click:close="removeTag(item)"
-                        >
-                          <strong>{{ typeof item === 'string' ? item : item.name }}</strong>
-                        </v-chip>
-                      </template>
-                    </v-combobox>
-                  </template>
-                  <v-sheet class="pa-2">
-                    <or-blog-tag-data-table
-                      ref="tagDataTable"
-                      select-return-object
-                      show-select
-                      @itemsSelected="onTagNamesSelected"
-                      @currentItems="onCurrentItems"
-                    />
-                  </v-sheet>
-                </or-base-menu>
-              </v-col>
-            </v-row>
-            <v-col>
+
+            <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
+              <v-combobox
+                v-model="article.typeName"
+                outlined
+                :disabled="typeOptions.loading"
+                :loading="typeOptions.loading"
+                flat
+                :items="typeOptions.items"
+                chips
+                clearable
+                :label="$t('titles.form.type')"
+                prepend-inner-icon="mdi-view-list"
+                solo
+                hide-details
+              >
+                <template #selection="{ attrs, item, select, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    @click="select"
+                    @click:close="removeType"
+                  >
+                    <strong>{{ item }}</strong>
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-col>
+            <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
+              <or-base-menu
+                offset-y
+                min-width="40%"
+                eager
+                :close-on-content-click="false"
+              >
+                <template #activator="{ on, attrs }">
+                  <v-combobox
+                    v-model="tagOptions.selectedItems"
+                    outlined
+                    :disabled="tagOptions.loading"
+                    flat
+                    chips
+                    v-bind="attrs"
+                    return-object
+                    clearable
+                    :items="tagOptions.items"
+                    :label="$t('titles.form.tag')"
+                    prepend-inner-icon="mdi-tag-multiple"
+                    solo
+                    multiple
+                    hide-details
+                    @input="onSelectedItemsInput"
+                    v-on="on"
+                  >
+                    <template #selection="{ attrs, item, select, selected }">
+                      <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        @click="select"
+                        @click:close="removeTag(item)"
+                      >
+                        <strong>{{ typeof item === 'string' ? item : item.name }}</strong>
+                      </v-chip>
+                    </template>
+                  </v-combobox>
+                </template>
+                <v-sheet class="pa-2">
+                  <or-blog-tag-data-table
+                    ref="tagDataTable"
+                    select-return-object
+                    show-select
+                    @itemsSelected="onTagNamesSelected"
+                    @currentItems="onCurrentItems"
+                  />
+                </v-sheet>
+              </or-base-menu>
+            </v-col>
+
+            <v-col cols="12">
               <v-checkbox
                 v-model="article.canReward"
                 :label="$t('article.canReward')"
@@ -388,7 +388,7 @@ export default {
   methods: {
     onCurrentItems (items) {
       try {
-        this.onSelectedItemsInputWithEmit(this.tagOptions.selectedItems, false)
+        this.onSelectedItemsInputWithEmit(this.tagOptions.selectedItems)
       } catch (ignore) {
         // ignore
       }
@@ -398,9 +398,9 @@ export default {
      * @param tags
      */
     onSelectedItemsInput (tags) {
-      this.onSelectedItemsInputWithEmit(tags, true)
+      this.onSelectedItemsInputWithEmit(tags)
     },
-    onSelectedItemsInputWithEmit (tags, emit) {
+    onSelectedItemsInputWithEmit (tags) {
       const dataTableTags = this.$refs.tagDataTable.$refs.dataTable.$data.dataTableParams.items
       dataTableTags.forEach((tag) => {
         let founded = false
@@ -416,7 +416,7 @@ export default {
             break
           }
         }
-        this.$refs.tagDataTable.$refs.dataTable.select({ item: tag, value: founded, emit })
+        this.$refs.tagDataTable.$refs.dataTable.select({ item: tag, value: founded, emit: true })
       })
     },
     removeType () {
