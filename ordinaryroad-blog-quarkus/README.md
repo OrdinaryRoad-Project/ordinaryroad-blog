@@ -111,6 +111,7 @@ docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_
 ```shell
 
 docker run -it --rm --name ordinaryroad-blog \
+--platform=linux/amd64 \
 -v /Users/ordinaryroad/Environment/maven/repo:/root/.m2/repository \
 -v "$(pwd)":/usr/src/mymaven \
 -w /usr/src/mymaven \
