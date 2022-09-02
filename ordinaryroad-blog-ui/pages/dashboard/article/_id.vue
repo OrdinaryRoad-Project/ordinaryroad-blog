@@ -387,11 +387,7 @@ export default {
   },
   methods: {
     onCurrentItems (items) {
-      try {
-        this.onSelectedItemsInputWithEmit(this.tagOptions.selectedItems)
-      } catch (ignore) {
-        // ignore
-      }
+      this.onSelectedItemsInput(this.tagOptions.selectedItems)
     },
     /**
      * 退格删除选择项或者会车添加选择项时更新DataTable的UI
@@ -400,24 +396,28 @@ export default {
     onSelectedItemsInput (tags) {
       this.onSelectedItemsInputWithEmit(tags)
     },
-    onSelectedItemsInputWithEmit (tags) {
-      const dataTableTags = this.$refs.tagDataTable.$refs.dataTable.$data.dataTableParams.items
-      dataTableTags.forEach((tag) => {
-        let founded = false
-        for (let i = 0; i < tags.length; i++) {
-          const selectedTag = tags[i]
-          if (typeof selectedTag === 'string') {
-            if (selectedTag === tag.name) {
+    onSelectedItemsInputWithEmit (tags, emit = true) {
+      try {
+        const dataTableTags = this.$refs.tagDataTable.$refs.dataTable.$data.dataTableParams.items
+        dataTableTags.forEach((tag) => {
+          let founded = false
+          for (let i = 0; i < tags.length; i++) {
+            const selectedTag = tags[i]
+            if (typeof selectedTag === 'string') {
+              if (selectedTag === tag.name) {
+                founded = true
+                break
+              }
+            } else if (selectedTag.uuid === tag.uuid) {
               founded = true
               break
             }
-          } else if (selectedTag.uuid === tag.uuid) {
-            founded = true
-            break
           }
-        }
-        this.$refs.tagDataTable.$refs.dataTable.select({ item: tag, value: founded, emit: true })
-      })
+          this.$refs.tagDataTable.$refs.dataTable.select({ item: tag, value: founded, emit })
+        })
+      } catch (ignore) {
+        // ignore
+      }
     },
     removeType () {
       this.article.typeName = ''
