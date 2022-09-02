@@ -22,31 +22,41 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.exception
+package tech.ordinaryroad.blog.quarkus.utils
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+/**
+ *
+ *
+ * @author mjz
+ * @date 2022/9/1
+ */
+object Utils {
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
+    /**
+     * 解析两个List的差异
+     *
+     * @return list[0]: 需要删除的
+     * list[1]: 需要添加的
+     */
+    fun <E> List<E>.differ(newList: List<E>): List<List<E>> {
+        val oldList = this
 
-    override fun getCode(): Int {
-        return this.code
+        val intersectSet = newList.intersect(oldList.toSet())
+
+        val listToAdd = arrayListOf<E>()
+        val listToDelete = arrayListOf<E>()
+        oldList.forEach {
+            if (!intersectSet.contains(it)) {
+                listToDelete.add(it)
+            }
+        }
+        newList.forEach {
+            if (!intersectSet.contains(it)) {
+                listToAdd.add(it)
+            }
+        }
+
+        return arrayListOf(listToDelete, listToAdd)
     }
 
-    override fun getMessage(): String {
-        return this.message
-    }
 }

@@ -52,8 +52,11 @@ class BlogArticlePublishRequest : BaseRequest() {
     @Size(max = 100, message = "分类名称长度不能超过100")
     var typeName: String? = null
 
+    @Size(max = 10, message = "标签个数不能超过10")
+    var tagNames: List<String> = emptyList()
+
     companion object {
-        private const val serialVersionUID: Long = -5049376490242456074L
+        private const val serialVersionUID: Long = 6243199611696895400L
     }
 
 }

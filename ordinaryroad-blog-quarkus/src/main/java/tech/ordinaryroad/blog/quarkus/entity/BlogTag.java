@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
@@ -33,18 +34,23 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 @RegisterForReflection
 public class BlogTag extends BaseDO {
 
-    private static final long serialVersionUID = 2941266741059665799L;
+    private static final long serialVersionUID = 9039858284866922460L;
 
     private String name;
 
-    private Boolean enabled;
+    /**
+     * 是否删除
+     */
+    @TableLogic(value = "false", delval = "true")
+    private Boolean deleted;
+
 
     public BlogTag() {
     }
 
-    public BlogTag(String name, Boolean enabled) {
+    public BlogTag(String name, Boolean deleted) {
         this.name = name;
-        this.enabled = enabled;
+        this.deleted = deleted;
     }
 
     public String getName() {
@@ -55,11 +61,11 @@ public class BlogTag extends BaseDO {
         this.name = name;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public Boolean getDeleted() {
+        return deleted;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

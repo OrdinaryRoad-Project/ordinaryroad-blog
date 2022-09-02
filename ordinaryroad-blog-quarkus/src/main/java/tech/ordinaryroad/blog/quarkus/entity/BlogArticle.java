@@ -24,14 +24,21 @@
 
 package tech.ordinaryroad.blog.quarkus.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import org.apache.ibatis.type.JdbcType;
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus;
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
+import tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler;
 
+import java.util.List;
+
+@TableName(value = "blog_article", autoResultMap = true)
 @RegisterForReflection
 public class BlogArticle extends BaseDO {
 
-    private static final long serialVersionUID = 4578259816319506914L;
+    private static final long serialVersionUID = -6337366196886010571L;
 
     /**
      * 标题
@@ -78,10 +85,19 @@ public class BlogArticle extends BaseDO {
      */
     private String typeId;
 
+    /**
+     * 标签Id列表
+     */
+    @TableField(
+            jdbcType = JdbcType.BLOB,
+            typeHandler = StringListTypeHandler.class
+    )
+    private List<String> tagIds;
+
     public BlogArticle() {
     }
 
-    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId, String typeId) {
+    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId, String typeId, List<String> tagIds) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
@@ -91,6 +107,7 @@ public class BlogArticle extends BaseDO {
         this.original = original;
         this.firstId = firstId;
         this.typeId = typeId;
+        this.tagIds = tagIds;
     }
 
     public String getTitle() {
@@ -163,5 +180,13 @@ public class BlogArticle extends BaseDO {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    public List<String> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(List<String> tagIds) {
+        this.tagIds = tagIds;
     }
 }

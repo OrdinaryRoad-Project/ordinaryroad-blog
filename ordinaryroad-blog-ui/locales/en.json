@@ -29,12 +29,18 @@
       "userSpaceTitle": "User Space",
       "articleTitle": "Writing",
       "article": {
+        "boxTitle": "Article Management",
         "box": {
           "draft": "Draft",
           "publish": "Publish",
           "trash": "Trash"
-        },
-        "boxTitle": "Article Management"
+        }
+      },
+      "type": {
+        "title": "分类管理"
+      },
+      "tag": {
+        "title": "标签管理"
       }
     }
   },
@@ -68,6 +74,7 @@
     "dashboard": "Dashboard",
     "profile": "User Profile",
     "article": "Articles",
-    "type": "Types"
+    "type": "Types",
+    "tag": "Tags"
   }
 }

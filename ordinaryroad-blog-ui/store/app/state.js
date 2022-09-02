@@ -65,6 +65,12 @@ export default () => ({
       titleKey: 'dashboardMenuTitles.dashboard.type.title',
       icon: 'mdi-view-list',
       children: []
+    },
+    {
+      to: '/dashboard/tag',
+      titleKey: 'dashboardMenuTitles.dashboard.tag.title',
+      icon: 'mdi-tag-multiple',
+      children: []
     }
   ],
   userMenuItems: [
@@ -91,6 +97,11 @@ export default () => ({
       titleKey: 'userMenuTitles.type',
       to: '/dashboard/type',
       icon: 'mdi-view-list'
+    },
+    {
+      titleKey: 'userMenuTitles.tag',
+      to: '/dashboard/tag',
+      icon: 'mdi-tag-multiple'
     },
     {
       titleKey: 'logout',

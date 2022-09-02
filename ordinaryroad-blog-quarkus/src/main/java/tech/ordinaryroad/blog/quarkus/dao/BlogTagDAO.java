@@ -22,31 +22,33 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.exception
+package tech.ordinaryroad.blog.quarkus.dao;
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag;
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper;
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
+import java.util.Collection;
+import java.util.List;
 
-    override fun getCode(): Int {
-        return this.code
-    }
+/**
+ * 标签DAO
+ *
+ * @author mjz
+ * @date 2022/9/1
+ */
+@Mapper
+public interface BlogTagDAO extends IBaseMapper<BlogTag> {
 
-    override fun getMessage(): String {
-        return this.message
-    }
+    @Update("UPDATE `blog_tag` SET `deleted` = 0 WHERE `uuid` = #{uuid}")
+    int restore(String uuid);
+
+    List<String> selectIdByNameIn(@Param("nameList") Collection<String> nameList);
+
+    int countByName(@Param("name") String name);
+
+    List<String> selectNameListByUuidIn(@Param("uuidList") Collection<String> uuidList);
+
 }

@@ -22,31 +22,18 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.exception
+package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag;
+import tech.ordinaryroad.blog.quarkus.vo.BlogTagVO;
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
+@Mapper
+public interface BlogTagMapStruct extends BaseBlogMapStruct {
 
-    override fun getCode(): Int {
-        return this.code
-    }
+    BlogTagMapStruct INSTANCE = Mappers.getMapper(BlogTagMapStruct.class);
 
-    override fun getMessage(): String {
-        return this.message
-    }
+    BlogTagVO transfer(BlogTag tag);
+
 }

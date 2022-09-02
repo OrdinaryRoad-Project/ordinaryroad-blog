@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.quarkus.runtime.annotations.RegisterForReflection
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.service.BlogTagService
 import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
 import javax.enterprise.inject.spi.CDI
 
@@ -47,7 +48,8 @@ data class BlogArticleDTO(
     var canReward: Boolean = false,
     var status: String = StrUtil.EMPTY,
     var firstId: String = StrUtil.EMPTY,
-    var typeName: String = StrUtil.EMPTY
+    var typeName: String = StrUtil.EMPTY,
+    var tagNames: List<String> = emptyList(),
 ) : BaseBlogModelDTO<BlogArticle>() {
     override fun parse(baseDo: BlogArticle) {
         coverImage = StrUtil.nullToEmpty(baseDo.coverImage)
@@ -66,9 +68,14 @@ data class BlogArticleDTO(
                 typeName = it.name
             }
         }
+        val tagIds = baseDo.tagIds
+        if (!tagIds.isNullOrEmpty()) {
+            val tagService = CDI.current().select(BlogTagService::class.java).get()
+            tagNames = tagService.dao.selectNameListByUuidIn(tagIds)
+        }
     }
 
     companion object {
-        private const val serialVersionUID: Long = 6234078987620089180L
+        private const val serialVersionUID: Long = -3055244788429081461L
     }
 }

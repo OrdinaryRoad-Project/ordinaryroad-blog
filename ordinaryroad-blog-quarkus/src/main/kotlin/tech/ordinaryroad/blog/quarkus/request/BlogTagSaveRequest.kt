@@ -21,32 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-package tech.ordinaryroad.blog.quarkus.exception
+import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+class BlogTagSaveRequest : BaseRequest() {
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
+    @NotBlank(message = "名称不能为空")
+    @Size(max = 100, message = "名称长度不能超过100")
+    var name: String = ""
 
-    override fun getCode(): Int {
-        return this.code
+    companion object {
+        private const val serialVersionUID: Long = 8495868919341733919L
     }
 
-    override fun getMessage(): String {
-        return this.message
-    }
 }

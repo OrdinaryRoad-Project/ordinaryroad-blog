@@ -52,8 +52,11 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @Size(max = 100, message = "分类名称长度不能超过100")
     var typeName: String? = null
 
+    @Size(max = 10, message = "标签个数不能超过10")
+    var tagNames: List<String> = emptyList()
+
     companion object {
-        private const val serialVersionUID: Long = 3671782962027525940L
+        private const val serialVersionUID: Long = 534468300453589323L
     }
 
 }

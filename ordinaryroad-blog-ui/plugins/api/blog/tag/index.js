@@ -22,31 +22,28 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.exception
+import { urlEncode } from '~/plugins/ordinaryroad/utils'
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+let $axios = null
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
-
-    override fun getCode(): Int {
-        return this.code
+export default {
+  initAxios (axios) {
+    $axios = $axios || axios
+  },
+  apis: {
+    create: ({ name }) => {
+      const data = { name }
+      return $axios({
+        url: '/blog/tag/create',
+        method: 'post',
+        data
+      })
+    },
+    page: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/tag/page/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
     }
-
-    override fun getMessage(): String {
-        return this.message
-    }
+  }
 }

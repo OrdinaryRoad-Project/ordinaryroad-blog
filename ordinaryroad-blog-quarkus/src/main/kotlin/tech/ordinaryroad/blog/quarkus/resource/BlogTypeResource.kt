@@ -61,6 +61,13 @@ class BlogTypeResource {
     protected lateinit var dtoService: BlogDtoService
 
     /**
+     * 获取分类导航
+     */
+    fun getTypeNavigation() {
+
+    }
+
+    /**
      * 用户创建分类
      */
     @POST

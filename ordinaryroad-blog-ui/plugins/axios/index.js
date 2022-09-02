@@ -53,7 +53,7 @@ export default function (context, inject) {
     if (code === 200) {
       return res.data
     } else if (code === 204) {
-      return res
+      return null
     } else {
       // 获取错误信息
       const msg = errorCode[code] || res.statusText || errorCode.default

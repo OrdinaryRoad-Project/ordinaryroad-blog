@@ -52,6 +52,7 @@ CREATE TABLE `blog_article`
     `first_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '最开始版本的UUID',
 
     `type_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '分类ID',
+    `tag_ids`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci          NULL DEFAULT NULL COMMENT '标签ID列表',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_article_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
@@ -271,12 +272,13 @@ CREATE TABLE `blog_tag`
 (
     `id`           bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '主键UUID',
-    `created_time` datetime                                                      NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '创建者ID',
-    `update_time`  datetime                                                      NULL DEFAULT NULL COMMENT '更新时间',
-    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '更新者ID',
+    `created_time` datetime                                                      NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                      NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '更新者ID',
 
     `name`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '名称',
+    `deleted`      bit(1)                                                        NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_tag_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB

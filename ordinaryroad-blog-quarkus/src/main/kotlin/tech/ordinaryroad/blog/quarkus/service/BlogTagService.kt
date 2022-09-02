@@ -22,31 +22,40 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.exception
+package tech.ordinaryroad.blog.quarkus.service
 
-import tech.ordinaryroad.commons.base.cons.IStatusCode
+import tech.ordinaryroad.blog.quarkus.dao.BlogTagDAO
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotValidException
+import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import javax.enterprise.context.ApplicationScoped
 
-enum class StatusCode(
-    private val code: Int,
-    private val message: String
-) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_TYPE_NOT_FOUND(404, "BLOG_TYPE_NOT_FOUND"),
-    BLOG_TYPE_NOT_VALID(400, "BLOG_TYPE_NOT_VALID"),
-    BLOG_TAG_NOT_FOUND(404, "BLOG_TAG_NOT_FOUND"),
-    BLOG_TAG_NOT_VALID(400, "BLOG_TAG_NOT_VALID"),
-    ;
+/**
+ * Service-Tag
+ *
+ * @author mjz
+ * @date 2022/9/1
+ */
+@ApplicationScoped
+class BlogTagService : BaseService<BlogTagDAO, BlogTag>() {
 
-    override fun getCode(): Int {
-        return this.code
+    //region 业务相关
+    /**
+     * 管理员恢复分类
+     */
+    fun restore(id: String) {
+        // 只能恢复已经删除的
+        if (super.dao.restore(id) <= 0) {
+            BlogTypeNotValidException().throws()
+        }
     }
+    //endregion
 
-    override fun getMessage(): String {
-        return this.message
+    //region SQL相关
+    fun existByName(name: String): Boolean {
+        return super.dao.countByName(name) > 0
     }
+    //endregion
+
 }

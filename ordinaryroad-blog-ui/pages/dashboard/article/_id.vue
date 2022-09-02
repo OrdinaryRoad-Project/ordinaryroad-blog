@@ -153,7 +153,7 @@
               </v-input>
             </v-col>
             <v-row>
-              <v-col sm="12" md="6" class="mt-2 mb-2">
+              <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
                 <v-combobox
                   v-model="article.typeName"
                   outlined
@@ -181,37 +181,58 @@
                   </template>
                 </v-combobox>
               </v-col>
-              <v-col sm="12" md="6" class="mt-2 mb-2">
-                <v-combobox
-                  v-model="article.tagNames"
-                  outlined
-                  :disabled="tagOptions.loading"
-                  :loading="tagOptions.loading"
-                  flat
-                  :items="tagOptions.items"
-                  chips
-                  multiple
-                  solo
-                  clearable
-                  :label="$t('titles.form.tag')"
-                  prepend-inner-icon="mdi-tag-multiple"
-                  hide-details
+              <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
+                <or-base-menu
+                  offset-y
+                  min-width="40%"
+                  eager
+                  :close-on-content-click="false"
                 >
-                  <template #selection="{ attrs, item, select, selected }">
-                    <v-chip
+                  <template #activator="{ on, attrs }">
+                    <v-combobox
+                      v-model="tagOptions.selectedItems"
+                      outlined
+                      :disabled="tagOptions.loading"
+                      flat
+                      chips
                       v-bind="attrs"
-                      :input-value="selected"
-                      close
-                      @click="select"
-                      @click:close="removeTag(item)"
+                      return-object
+                      clearable
+                      :items="tagOptions.items"
+                      :label="$t('titles.form.tag')"
+                      prepend-inner-icon="mdi-tag-multiple"
+                      solo
+                      multiple
+                      hide-details
+                      @input="onSelectedItemsInput"
+                      v-on="on"
                     >
-                      <strong>{{ item }}</strong>
-                    </v-chip>
+                      <template #selection="{ attrs, item, select, selected }">
+                        <v-chip
+                          v-bind="attrs"
+                          :input-value="selected"
+                          close
+                          @click="select"
+                          @click:close="removeTag(item)"
+                        >
+                          <strong>{{ typeof item === 'string' ? item : item.name }}</strong>
+                        </v-chip>
+                      </template>
+                    </v-combobox>
                   </template>
-                </v-combobox>
+                  <v-sheet class="pa-2">
+                    <or-blog-tag-data-table
+                      ref="tagDataTable"
+                      select-return-object
+                      show-select
+                      @itemsSelected="onTagNamesSelected"
+                      @currentItems="onCurrentItems"
+                    />
+                  </v-sheet>
+                </or-base-menu>
               </v-col>
             </v-row>
-            <v-col cols="12">
+            <v-col>
               <v-checkbox
                 v-model="article.canReward"
                 :label="$t('article.canReward')"
@@ -238,13 +259,15 @@ export default {
         .then((data) => {
           return {
             article: data,
-            articleContent: data.content
+            articleContent: data.content,
+            tagOptions: {
+              loading: true,
+              items: [],
+              selectedItems: data.tagNames
+            }
           }
-        })
-        .catch(() => {
-          return {
-            article: undefined
-          }
+        }, () => {
+          redirect('/404')
         })
     } else {
       // 查询是否存在未发布的草稿，存在返回，不存在返回默认
@@ -253,7 +276,12 @@ export default {
           if (data) {
             return {
               article: data,
-              articleContent: data.content
+              articleContent: data.content,
+              tagOptions: {
+                loading: true,
+                items: [],
+                selectedItems: data.tagNames
+              }
             }
           } else {
             return {
@@ -292,11 +320,16 @@ export default {
     },
     tagOptions: {
       loading: true,
-      items: []
+      items: [],
+      selectedItems: []
     }
   }),
   computed: {
     articleValid () {
+      const selectedItems = this.tagOptions.selectedItems
+      if (selectedItems.length > 10) {
+        return false
+      }
       return !this.contentEmpty && this.formValid && this.fileFormValid
     }
   },
@@ -347,18 +380,70 @@ export default {
         }, () => {
           this.typeOptions.loading = false
         })
-      // TODO 加载标签
-      this.tagOptions.items = ['1', '2', '3']
+      // TODO 加载最火的标签
+      this.tagOptions.items = []
       this.tagOptions.loading = false
     }
   },
   methods: {
+    onCurrentItems (items) {
+      try {
+        this.onSelectedItemsInputWithEmit(this.tagOptions.selectedItems, false)
+      } catch (ignore) {
+        // ignore
+      }
+    },
+    /**
+     * 退格删除选择项或者会车添加选择项时更新DataTable的UI
+     * @param tags
+     */
+    onSelectedItemsInput (tags) {
+      this.onSelectedItemsInputWithEmit(tags, true)
+    },
+    onSelectedItemsInputWithEmit (tags, emit) {
+      const dataTableTags = this.$refs.tagDataTable.$refs.dataTable.$data.dataTableParams.items
+      dataTableTags.forEach((tag) => {
+        let founded = false
+        for (let i = 0; i < tags.length; i++) {
+          const selectedTag = tags[i]
+          if (typeof selectedTag === 'string') {
+            if (selectedTag === tag.name) {
+              founded = true
+              break
+            }
+          } else if (selectedTag.uuid === tag.uuid) {
+            founded = true
+            break
+          }
+        }
+        this.$refs.tagDataTable.$refs.dataTable.select({ item: tag, value: founded, emit })
+      })
+    },
     removeType () {
       this.article.typeName = ''
     },
+    /**
+     * 更新selectedItems
+     * @param tags DataTable选中的项目
+     */
+    onTagNamesSelected (tags) {
+      const tagNames = tags.map(tag => tag.name)
+      const items = [...tags]
+      this.tagOptions.selectedItems.forEach((item) => {
+        if (typeof item === 'string' && !tagNames.includes(item)) {
+          items.push(item)
+        }
+      })
+      this.tagOptions.selectedItems = items
+    },
+    /**
+     * 点击Chip删除按钮，更新SelectedItem和DataTable选中的项目
+     * @param item 点击删除按钮删除的Item String | Object
+     */
     removeTag (item) {
-      this.article.tagNames.splice(this.article.tagNames.indexOf(item), 1)
-      this.article.tagNames = [...this.article.tagNames]
+      this.tagOptions.selectedItems.splice(this.tagOptions.selectedItems.indexOf(item), 1)
+      this.tagOptions.selectedItems = [...this.tagOptions.selectedItems]
+      this.onSelectedItemsInput(this.tagOptions.selectedItems)
     },
     /**
      * 选中历史版本
@@ -373,6 +458,8 @@ export default {
             this.article = items[0]
             this.articleContent = this.article.content
             this.$refs.vditor.setValue(this.articleContent)
+            this.tagOptions.selectedItems = this.article.tagNames
+            this.onCurrentItems(null)
           }
         })
       }
@@ -397,8 +484,19 @@ export default {
           })
       }
     },
+    updateArticleTagNames () {
+      this.article.tagNames = []
+      this.tagOptions.selectedItems.forEach((item) => {
+        if (typeof item === 'string') {
+          this.article.tagNames.push(item)
+        } else {
+          this.article.tagNames.push(item.name)
+        }
+      })
+    },
     publish () {
       if (this.formValid && !this.contentEmpty) {
+        this.updateArticleTagNames()
         this.$dialog({
           persistent: false,
           loading: true,
@@ -426,6 +524,7 @@ export default {
     },
     saveDraft () {
       if (this.formValid && !this.contentEmpty) {
+        this.updateArticleTagNames()
         this.draftSaving = true
         this.$apis.blog.article.saveDraft(this.article)
           .then((data) => {

@@ -292,11 +292,42 @@
           </v-alert>
         </div>
 
-        <!-- TODO 分类 -->
+        <!-- 分类 -->
+        <div
+          v-if="blogArticle.type && blogArticle.type !== ''"
+        >
+          <v-divider />
+          <div class="d-inline-flex align-center">
+            <v-icon class="pa-2">
+              mdi-view-list
+            </v-icon>
+            <v-btn text @click="$router.push({name:'home-type',params:{paramType: blogArticle.type.name}})">
+              {{ blogArticle.type.name }}
+            </v-btn>
+          </div>
+        </div>
 
-        <!-- TODO 标签 -->
+        <!-- 标签 -->
+        <div
+          v-if="blogArticle.tags && blogArticle.tags.length && blogArticle.tags.length > 0"
+        >
+          <v-divider />
+          <div class="d-inline-flex align-center">
+            <v-icon class="pa-2">
+              mdi-tag-multiple
+            </v-icon>
+            <v-chip-group>
+              <v-chip v-for="tag in blogArticle.tags" :key="tag.uuid">
+                <router-link v-slot="{ navigate }" :to="{name:'home-tag',params:{paramTag:tag.name}}" custom>
+                  <span role="link" @click="navigate" @keypress.enter="navigate">{{ tag.name }}</span>
+                </router-link>
+              </v-chip>
+            </v-chip-group>
+          </div>
+        </div>
 
-        <!-- TODO 评论 -->
+        <!-- 评论 -->
+        <v-divider />
         <v-card>
           <v-card-title>评论（{{ articleComments.total }}）</v-card-title>
           <div class="mx-2">

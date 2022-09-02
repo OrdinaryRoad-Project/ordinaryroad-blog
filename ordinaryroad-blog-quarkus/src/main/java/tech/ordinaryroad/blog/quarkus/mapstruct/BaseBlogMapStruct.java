@@ -24,12 +24,8 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-import cn.hutool.core.util.StrUtil;
-import tech.ordinaryroad.blog.quarkus.entity.BlogType;
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
-import tech.ordinaryroad.blog.quarkus.service.BlogTypeService;
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService;
-import tech.ordinaryroad.blog.quarkus.vo.BlogTypeVO;
 import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
 import javax.enterprise.inject.spi.CDI;
@@ -39,18 +35,6 @@ import javax.enterprise.inject.spi.CDI;
  * @date 2022/8/30
  */
 public interface BaseBlogMapStruct {
-
-    default BlogTypeVO string2TypeVO(String type) {
-        if (StrUtil.isBlank(type)) {
-            return null;
-        }
-        BlogTypeService typeService = CDI.current().select(BlogTypeService.class).get();
-        BlogType blogType = typeService.findById(type);
-        if (blogType.getDeleted()) {
-            return null;
-        }
-        return BlogTypeMapStruct.INSTANCE.transfer(blogType);
-    }
 
     default BlogUserVO string2UserVO(String createBy) {
         BlogUserService userService = CDI.current().select(BlogUserService.class).get();

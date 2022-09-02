@@ -48,19 +48,37 @@
 
           <!-- 封面上层 -->
           <div class="or-title px-4 pb-1">
-            <!-- 创建时间 -->
             <v-card-subtitle class="d-flex pt-0 pb-1 align-center">
+              <!-- 创建时间 -->
               <v-icon dark small class="me-1">
                 mdi-calendar
               </v-icon>
               {{ item.createdTime }}
 
-              <template v-if="item.type">
-                <v-icon dark small class="me-1 ms-2">
+              <!-- 分类 -->
+              <span v-if="item.type" class="d-inline-flex ms-2">
+                <v-icon dark small class="me-1">
                   mdi-view-list
                 </v-icon>
                 {{ item.type.name }}
-              </template>
+              </span>
+
+              <!-- 标签 -->
+              <span
+                v-if="item.tags && item.tags.length && item.tags.length > 0"
+                class="d-inline-flex ms-1"
+              >
+                <span
+                  v-for="tag in item.tags"
+                  :key="tag.uuid"
+                  class="d-inline-flex ms-2"
+                >
+                  <v-icon dark small class="me-1">
+                    mdi-tag
+                  </v-icon>
+                  {{ tag.name }}
+                </span>
+              </span>
             </v-card-subtitle>
 
             <!-- 标题 -->
@@ -68,17 +86,21 @@
               {{ item.title }}
             </v-card-title>
 
-            <!-- 摘要 -->
-            <template v-if="item.summary !== undefined && item.summary !== ''">
-              <v-expand-transition>
+            <!-- 悬浮显示 -->
+            <v-expand-transition>
+              <div
+                v-if="hover"
+                class="transition-fast-in-fast-out"
+              >
+                <!-- 摘要 -->
                 <v-card-subtitle
-                  v-if="hover"
-                  class="py-0 my-0 text-justify font-weight-light four-lines-text transition-fast-in-fast-out"
+                  v-if="item.summary !== undefined && item.summary !== ''"
+                  class="py-0 my-0 text-justify font-weight-light four-lines-text"
                 >
                   {{ item.summary }}
                 </v-card-subtitle>
-              </v-expand-transition>
-            </template>
+              </div>
+            </v-expand-transition>
 
             <v-divider class="mt-2" />
 

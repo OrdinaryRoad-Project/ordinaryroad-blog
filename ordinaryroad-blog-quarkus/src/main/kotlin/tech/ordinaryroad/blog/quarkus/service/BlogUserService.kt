@@ -29,6 +29,7 @@ import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
+import tech.ordinaryroad.blog.quarkus.utils.Utils.differ
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
@@ -45,25 +46,15 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
 
     //region 业务相关
     fun updateRoles(id: String, roleIdList: List<String>) {
-        val oldRoleIdSet = userRolesService.findAllByUserId(id)
+        val oldRoleIdList = userRolesService.findAllByUserId(id)
             .stream()
             .map(BlogUserRoles::getRoleId)
-            .collect(Collectors.toSet())
+            .collect(Collectors.toList())
 
-        val intersectRoleIdSet = roleIdList.intersect(oldRoleIdSet)
+        val lists = oldRoleIdList.differ(roleIdList)
 
-        val roleIdListToAdd = arrayListOf<String>()
-        val roleIdListToDelete = arrayListOf<String>()
-        oldRoleIdSet.forEach {
-            if (!intersectRoleIdSet.contains(it)) {
-                roleIdListToDelete.add(it)
-            }
-        }
-        roleIdList.forEach {
-            if (!intersectRoleIdSet.contains(it)) {
-                roleIdListToAdd.add(it)
-            }
-        }
+        val roleIdListToDelete = lists[0]
+        val roleIdListToAdd = lists[1]
 
         userRolesService.deleteByIdList(roleIdListToDelete)
         roleIdListToAdd.forEach {

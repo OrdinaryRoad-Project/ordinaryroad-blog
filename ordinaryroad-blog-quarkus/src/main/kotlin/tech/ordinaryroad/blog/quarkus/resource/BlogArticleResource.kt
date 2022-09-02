@@ -28,12 +28,15 @@ import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.collection.CollUtil
 import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpStatus
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
@@ -41,10 +44,7 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.request.*
-import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
-import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
-import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
-import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.*
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
@@ -74,6 +74,10 @@ class BlogArticleResource {
 
     @Inject
     protected lateinit var typeService: BlogTypeService
+
+
+    @Inject
+    protected lateinit var tagService: BlogTagService
 
     //region 已测试方法
 
@@ -108,7 +112,7 @@ class BlogArticleResource {
      */
     @GET
     @Path("draft")
-    fun getDraft(): Response {
+    fun getDraft(): BlogArticleDTO? {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -117,9 +121,12 @@ class BlogArticleResource {
         val allByStatusAndCreateBy = articleService.findAllByStatusAndCreatedBy(BlogArticleStatus.DRAFT, userId)
 
         if (CollUtil.isEmpty(allByStatusAndCreateBy)) {
-            return Response.ok().build()
+            return null
         } else {
-            return Response.ok(allByStatusAndCreateBy.first()).build()
+            val firstArticle = allByStatusAndCreateBy.first()
+            val dto = dtoService.transfer(firstArticle, BlogArticleDTO::class.java)
+
+            return dto
         }
     }
 
@@ -154,6 +161,26 @@ class BlogArticleResource {
             typeId = type!!.uuid
         }
 
+        val tagIds: List<String>
+        val tagNames = request.tagNames
+        tagIds = if (CollUtil.isEmpty(tagNames)) {
+            arrayListOf()
+        } else {
+            val ids = arrayListOf<String>()
+            tagNames.forEach {
+                val wrapper = Wrappers.query<BlogTag>()
+                    .eq("name", it)
+                var tag = tagService.dao.selectOne(wrapper)
+                if (Objects.isNull(tag)) {
+                    tag = tagService.create(BlogTag().apply {
+                        name = it
+                    })
+                }
+                ids.add(tag.uuid)
+            }
+            ids
+        }
+
         if (firstId.isNullOrBlank()) {
             val allFirstArticleByStatusAndCreatedBy =
                 articleService.findAllFirstArticleByStatusAndCreateBy(BlogArticleStatus.DRAFT, userId)
@@ -170,7 +197,8 @@ class BlogArticleResource {
                         request.canReward,
                         request.original,
                         "",
-                        typeId
+                        typeId,
+                        tagIds
                     )
                 )
                 // 将FirstId更新为当前Id
@@ -232,7 +260,8 @@ class BlogArticleResource {
                         request.canReward,
                         request.original,
                         firstId,
-                        typeId
+                        typeId,
+                        tagIds
                     )
                 )
                 val dto = dtoService.transfer(draft, BlogArticleDTO::class.java)
@@ -273,6 +302,26 @@ class BlogArticleResource {
             typeId = type!!.uuid
         }
 
+        val tagIds: List<String>
+        val tagNames = request.tagNames
+        tagIds = if (CollUtil.isEmpty(tagNames)) {
+            arrayListOf()
+        } else {
+            val ids = arrayListOf<String>()
+            tagNames.forEach {
+                val wrapper = Wrappers.query<BlogTag>()
+                    .eq("name", it)
+                var tag = tagService.dao.selectOne(wrapper)
+                if (Objects.isNull(tag)) {
+                    tag = tagService.create(BlogTag().apply {
+                        name = it
+                    })
+                }
+                ids.add(tag.uuid)
+            }
+            ids
+        }
+
         // 代表没有草稿直接发布
         if (firstId.isNullOrBlank()) {
             /* 判断是否存在草稿 */
@@ -292,7 +341,8 @@ class BlogArticleResource {
                         request.canReward,
                         request.original,
                         "",
-                        typeId
+                        typeId,
+                        tagIds
                     )
                 )
                 val publishUpdate = articleService.update(BlogArticle().apply {
@@ -355,7 +405,8 @@ class BlogArticleResource {
                         request.canReward,
                         request.original,
                         firstId,
-                        typeId
+                        typeId,
+                        tagIds
                     )
                 )
 
@@ -372,7 +423,7 @@ class BlogArticleResource {
     @GET
     @Path("page/own/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwn(@BeanParam request: BlogArticleQueryRequest): Response {
+    fun pageOwn(@BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -394,9 +445,7 @@ class BlogArticleResource {
             dtoService.transfer(item, BlogArticleDTO::class.java)
         }
 
-        return Response.ok()
-            .entity(dtoPage)
-            .build()
+        return dtoPage
     }
 
     /**
@@ -462,7 +511,7 @@ class BlogArticleResource {
     fun findOwnById(
         @Valid @NotBlank(message = "Id不能为空")
         @RestPath id: String
-    ): Response {
+    ): BlogArticleDTO {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -471,14 +520,11 @@ class BlogArticleResource {
         val blogArticle = articleService.findByIdAndCreatedBy(id, userId)
 
         if (blogArticle == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                .build()
+            throw BlogArticleNotFoundException()
         } else {
             val dto = dtoService.transfer(blogArticle, BlogArticleDTO::class.java)
 
-            return Response.ok()
-                .entity(dto)
-                .build()
+            return dto
         }
     }
 

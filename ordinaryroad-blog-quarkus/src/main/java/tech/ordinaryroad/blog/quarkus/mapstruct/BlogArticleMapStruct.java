@@ -24,6 +24,8 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import io.vertx.core.json.JsonObject;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -31,13 +33,21 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle;
+import tech.ordinaryroad.blog.quarkus.entity.BlogTag;
+import tech.ordinaryroad.blog.quarkus.entity.BlogType;
 import tech.ordinaryroad.blog.quarkus.service.BlogArticleService;
+import tech.ordinaryroad.blog.quarkus.service.BlogTagService;
+import tech.ordinaryroad.blog.quarkus.service.BlogTypeService;
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO;
 import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO;
+import tech.ordinaryroad.blog.quarkus.vo.BlogTagVO;
+import tech.ordinaryroad.blog.quarkus.vo.BlogTypeVO;
 
 import javax.enterprise.inject.spi.CDI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Mapper
 public interface BlogArticleMapStruct extends BaseBlogMapStruct {
@@ -45,10 +55,12 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
     BlogArticleMapStruct INSTANCE = Mappers.getMapper(BlogArticleMapStruct.class);
 
     @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "tagIds", target = "tags")
     @Mapping(source = "createBy", target = "user")
     BlogArticlePreviewVO transferPreview(BlogArticle article);
 
     @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "tagIds", target = "tags")
     @Mapping(source = "createBy", target = "user")
     BlogArticleDetailVO transferDetail(BlogArticle article);
 
@@ -62,6 +74,32 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
         if (Objects.nonNull(updateTime)) {
             vo.setUpdateTime((LocalDateTime) updateTime);
         }
+    }
+
+    default BlogTypeVO string2TypeVO(String type) {
+        if (StrUtil.isBlank(type)) {
+            return null;
+        }
+        BlogTypeService typeService = CDI.current().select(BlogTypeService.class).get();
+        BlogType blogType = typeService.findById(type);
+        if (blogType.getDeleted()) {
+            return null;
+        }
+        return BlogTypeMapStruct.INSTANCE.transfer(blogType);
+    }
+
+    default List<BlogTagVO> stringList2TypeVOList(List<String> tagIdList) {
+        if (CollUtil.isEmpty(tagIdList)) {
+            return null;
+        }
+        BlogTagService tagService = CDI.current().select(BlogTagService.class).get();
+        List<BlogTag> tagList = tagService.findIds(BlogTag.class, tagIdList);
+
+        List<BlogTagVO> tagVOList = tagList.stream()
+                .map(BlogTagMapStruct.INSTANCE::transfer)
+                .collect(Collectors.toList());
+
+        return tagVOList;
     }
 
 }
