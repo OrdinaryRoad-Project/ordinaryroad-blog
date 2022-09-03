@@ -261,7 +261,8 @@ export default {
               selectedItems: data.tagNames
             }
           }
-        }, () => {
+        })
+        .catch(() => {
           redirect('/404')
         })
     } else {
@@ -372,7 +373,8 @@ export default {
         .then((data) => {
           this.typeOptions.items = data.map(item => item.name)
           this.typeOptions.loading = false
-        }, () => {
+        })
+        .catch(() => {
           this.typeOptions.loading = false
         })
       // TODO 加载最火的标签
