@@ -87,24 +87,19 @@
         <v-container>
           <v-row no-gutters>
             <v-col cols="12">
-              <v-form
-                ref="fileForm"
-                v-model="fileFormValid"
-              >
-                <v-file-input
-                  :loading="fileUploading"
-                  truncate-length="100"
-                  accept="image/*"
-                  prepend-icon=""
-                  :rules="[$rules.maxFileSize10MB]"
-                  outlined
-                  show-size
-                  append-outer-icon="mdi-eye"
-                  :label="$t('article.coverImage')"
-                  @change="onPictureSelected"
-                  @click:append-outer="onPictureClicked"
-                />
-              </v-form>
+              <v-file-input
+                :loading="fileUploading"
+                truncate-length="100"
+                accept="image/*"
+                prepend-icon=""
+                :rules="[$rules.maxFileSize10MB]"
+                outlined
+                show-size
+                append-outer-icon="mdi-eye"
+                :label="$t('article.coverImage')"
+                @change="onPictureSelected"
+                @click:append-outer="onPictureClicked"
+              />
             </v-col>
             <v-row no-gutters>
               <v-select
@@ -469,7 +464,6 @@ export default {
      * @param file File
      */
     onPictureSelected (file) {
-      // console.log(this.fileFormValid, this.$refs.fileForm.validate())
       if (file == null) {
         this.article.coverImage = ''
       } else if (this.fileFormValid) {
