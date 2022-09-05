@@ -37,10 +37,10 @@
         }
       },
       "type": {
-        "title": "分类管理"
+        "title": "Type Management"
       },
       "tag": {
-        "title": "标签管理"
+        "title": "Tag Management"
       }
     }
   },

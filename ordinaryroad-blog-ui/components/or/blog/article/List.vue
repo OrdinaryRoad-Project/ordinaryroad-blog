@@ -37,9 +37,7 @@
       @append="autoLoadMore&&appendArticles()"
     >
       <template #default="{item}">
-        <v-lazy>
-          <or-blog-article-item :item="item" />
-        </v-lazy>
+        <or-blog-article-item :item="item" />
       </template>
     </vue-masonry-wall>
 
