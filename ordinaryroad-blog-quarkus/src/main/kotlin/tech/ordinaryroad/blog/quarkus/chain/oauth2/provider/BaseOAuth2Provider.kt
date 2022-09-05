@@ -22,13 +22,27 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.dao
+package tech.ordinaryroad.blog.quarkus.chain.oauth2.provider
 
-import org.apache.ibatis.annotations.Mapper
-import tech.ordinaryroad.blog.quarkus.entity.BlogComment
-import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
+import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
 
-@Mapper
-interface BlogCommentDAO : IBaseMapper<BlogComment> {
+/**
+ *
+ *
+ * @author mjz
+ * @date 2022/9/5
+ */
+abstract class BaseOAuth2Provider(
+    /**
+     * Provider名称
+     */
+    val name: String
+) {
+
+    /**
+     * 获取用户信息
+     */
+    abstract fun userInfo(request: OAuth2CallbackRequest): BlogOAuthUser?
 
 }
