@@ -44,7 +44,7 @@
     <or-header />
 
     <v-main>
-      <v-container>
+      <v-container :fluid="$route.name==='index'" :class="$route.name==='index'?'pa-0':null">
         <nuxt />
       </v-container>
     </v-main>

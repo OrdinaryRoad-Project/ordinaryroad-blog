@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row
       v-if="articlePageItems==null"
     >
@@ -33,7 +33,7 @@
       v-else-if="articlePageItems.records.length > 0"
       :items="articlePageItems.records"
       :options="options"
-      :ssr="{columns: 2}"
+      :ssr="{columns: 1}"
       @append="autoLoadMore&&appendArticles()"
     >
       <template #default="{item}">
@@ -76,16 +76,28 @@ export default {
     articlePageItems: {
       records: [],
       current: 1
-    },
-
-    options: {
-      width: 500,
-      padding: {
-        // 1: 1,
-        default: 1
-      }
     }
   }),
+  computed: {
+    options () {
+      let width = 500
+      const padding = {
+        default: 1
+      }
+      if (this.$vuetify.breakpoint.xs) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.smAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.mdAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.lgAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.xl) {
+        width = 500
+      }
+      return { width, padding }
+    }
+  },
   watch: {
     'articlePageItems.total' () {
       this.$emit('update:total', this.articlePageItems.total)
