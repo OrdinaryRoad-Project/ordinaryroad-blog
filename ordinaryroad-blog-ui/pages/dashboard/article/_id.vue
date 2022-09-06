@@ -248,7 +248,6 @@ export default {
     draftSaving: false,
     fileUploading: false,
     formValid: false,
-    fileFormValid: false,
 
     articleInheritsMenuModel: false,
 
@@ -277,6 +276,9 @@ export default {
     }
   }),
   computed: {
+    fileFormValid () {
+      return true
+    },
     articleValid () {
       const selectedItems = this.tagOptions.selectedItems
       if (selectedItems.length > 10) {
@@ -301,14 +303,21 @@ export default {
         .then((data) => {
           this.article = data
           this.articleContent = data.content
-          this.tagOptions = {
-            loading: true,
-            items: [],
-            selectedItems: data.tagNames
-          }
+          this.tagOptions.selectedItems = data.tagNames
         })
         .catch(() => {
-          this.$router.replace('/404')
+          this.$dialog({
+            persistent: true,
+            content: this.$i18n.t('status.article.notFound'),
+            confirmText: this.$i18n.t('retry'),
+            cancelText: this.$i18n.t('back')
+          }).then(({ isConfirm }) => {
+            if (isConfirm) {
+              this.$router.go(0)
+            } else {
+              this.$router.back()
+            }
+          })
         })
     } else {
       // 查询是否存在未发布的草稿，存在返回，不存在返回默认
@@ -317,33 +326,15 @@ export default {
           if (data) {
             this.article = data
             this.articleContent = data.content
-            this.tagOptions = {
-              loading: true,
-              items: [],
-              selectedItems: data.tagNames
-            }
+            this.tagOptions.selectedItems = data.tagNames
           }
         })
     }
   },
   mounted () {
-    if (this.article === undefined) {
-      this.$dialog({
-        persistent: true,
-        content: this.$i18n.t('status.article.notFound'),
-        confirmText: this.$i18n.t('retry'),
-        cancelText: this.$i18n.t('back')
-      }).then(({ isConfirm }) => {
-        if (isConfirm) {
-          this.$router.go(0)
-        } else {
-          this.$router.back()
-        }
-      })
-    } else {
-      /**
-       const _this = this
-       window.onbeforeunload = function (e) {
+    /**
+     const _this = this
+     window.onbeforeunload = function (e) {
         if (_this.$route.name === 'dashboard-article-id') {
           e = e || window.event
           // 兼容IE8和Firefox 4之前的版本
@@ -356,19 +347,18 @@ export default {
           window.onbeforeunload = null
         }
       }
-       **/
-      this.$apis.blog.type.findAllOwn()
-        .then((data) => {
-          this.typeOptions.items = data.map(item => item.name)
-          this.typeOptions.loading = false
-        })
-        .catch(() => {
-          this.typeOptions.loading = false
-        })
-      // TODO 加载最火的标签
-      this.tagOptions.items = []
-      this.tagOptions.loading = false
-    }
+     **/
+    this.$apis.blog.type.findAllOwn()
+      .then((data) => {
+        this.typeOptions.items = data.map(item => item.name)
+        this.typeOptions.loading = false
+      })
+      .catch(() => {
+        this.typeOptions.loading = false
+      })
+    // TODO 加载最火的标签
+    this.tagOptions.items = []
+    this.tagOptions.loading = false
   },
   methods: {
     onCurrentItems (items) {
