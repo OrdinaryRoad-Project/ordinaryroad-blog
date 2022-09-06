@@ -46,13 +46,18 @@ spec:
                 secretKeyRef:
                   name: blog-secrets
                   key: MAIL_QQ_PASSWORD
-            - name: ORDINARYROAD_OAUTH2_CLIENT_ID
+            - name: CLIENT_SECRET_ORDINARYROAD
               valueFrom:
                 secretKeyRef:
                   name: blog-secrets
-                  key: OAUTH2_CLIENT_ID
-            - name: ORDINARYROAD_OAUTH2_CLIENT_SECRET
+                  key: CLIENT_SECRET_ORDINARYROAD
+            - name: CLIENT_SECRET_GITHUB
               valueFrom:
                 secretKeyRef:
                   name: blog-secrets
-                  key: OAUTH2_CLIENT_SECRET
+                  key: CLIENT_SECRET_GITHUB
+            - name: CLIENT_SECRET_GITEE
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: CLIENT_SECRET_GITEE
