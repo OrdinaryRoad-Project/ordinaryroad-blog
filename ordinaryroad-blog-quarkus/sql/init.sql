@@ -120,9 +120,9 @@ CREATE TABLE `blog_user_oauth_users`
     `id`            bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `uuid`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '主键UUID',
     `created_time`  datetime                                                      NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`     varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '创建者ID',
+    `create_by`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '创建者ID',
     `update_time`   datetime                                                      NULL DEFAULT NULL COMMENT '更新时间',
-    `update_by`     varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '更新者ID',
+    `update_by`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '更新者ID',
 
     `user_id`       varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '用户ID',
     `oauth_user_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT 'OAuth用户ID',
