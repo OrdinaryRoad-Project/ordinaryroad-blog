@@ -31,8 +31,6 @@
 <script>
 export default {
   components: {},
-  asyncData ({ $apis }) {
-  },
   data: () => ({}),
   mounted () {
     const key = 'notification_0'

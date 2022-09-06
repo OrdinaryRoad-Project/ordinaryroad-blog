@@ -95,16 +95,6 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  asyncData ({ $apis }) {
-    return $apis.blog.oauth_user.all()
-      .then((data) => {
-        return {
-          oauthUsers: data
-        }
-      })
-      .catch(() => {
-      })
-  },
   data: () => ({
     usernameTextField: {
       value: '',
@@ -126,6 +116,10 @@ export default {
     })
   },
   created () {
+    this.$apis.blog.oauth_user.all()
+      .then((data) => {
+        this.oauthUsers = data
+      })
     this.usernameTextField.value = this.userInfo.user.username
     this.usernameTextField.input = this.userInfo.user.username
   },

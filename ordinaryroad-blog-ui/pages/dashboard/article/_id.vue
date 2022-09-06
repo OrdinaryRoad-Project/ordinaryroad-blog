@@ -243,59 +243,6 @@
 <script>
 
 export default {
-  asyncData ({
-    route,
-    $apis,
-    redirect
-  }) {
-    const id = (route.params.id || '').trim()
-    if (id !== '') {
-      return $apis.blog.article.findOwnById(id)
-        .then((data) => {
-          return {
-            article: data,
-            articleContent: data.content,
-            tagOptions: {
-              loading: true,
-              items: [],
-              selectedItems: data.tagNames
-            }
-          }
-        })
-        .catch(() => {
-          redirect('/404')
-        })
-    } else {
-      // 查询是否存在未发布的草稿，存在返回，不存在返回默认
-      return $apis.blog.article.getDraft()
-        .then((data) => {
-          if (data) {
-            return {
-              article: data,
-              articleContent: data.content,
-              tagOptions: {
-                loading: true,
-                items: [],
-                selectedItems: data.tagNames
-              }
-            }
-          } else {
-            return {
-              article: {
-                coverImage: '',
-                title: '',
-                summary: '',
-                content: '',
-                canReward: false,
-                original: false,
-                typeName: '',
-                tagNames: []
-              }
-            }
-          }
-        })
-    }
-  },
   data: () => ({
     contentEmpty: true,
     draftSaving: false,
@@ -305,7 +252,16 @@ export default {
 
     articleInheritsMenuModel: false,
 
-    article: null,
+    article: {
+      coverImage: '',
+      title: '',
+      summary: '',
+      content: '',
+      canReward: false,
+      original: false,
+      typeName: '',
+      tagNames: []
+    },
     /**
      * 仅用于设置Vditor
      */
@@ -336,6 +292,38 @@ export default {
       },
       deep: true,
       immediate: true
+    }
+  },
+  created () {
+    const id = (this.$route.params.id || '').trim()
+    if (id !== '') {
+      this.$apis.blog.article.findOwnById(id)
+        .then((data) => {
+          this.article = data
+          this.articleContent = data.content
+          this.tagOptions = {
+            loading: true,
+            items: [],
+            selectedItems: data.tagNames
+          }
+        })
+        .catch(() => {
+          this.$router.replace('/404')
+        })
+    } else {
+      // 查询是否存在未发布的草稿，存在返回，不存在返回默认
+      this.$apis.blog.article.getDraft()
+        .then((data) => {
+          if (data) {
+            this.article = data
+            this.articleContent = data.content
+            this.tagOptions = {
+              loading: true,
+              items: [],
+              selectedItems: data.tagNames
+            }
+          }
+        })
     }
   },
   mounted () {
