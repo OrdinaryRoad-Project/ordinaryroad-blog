@@ -25,7 +25,6 @@
 package tech.ordinaryroad.blog.quarkus.chain.oauth2.provider
 
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
 
 /**
  *
@@ -41,8 +40,13 @@ abstract class BaseOAuth2Provider(
 ) {
 
     /**
+     * 获取认证链接
+     */
+    abstract fun authorize(provider: String, state: String): String
+
+    /**
      * 获取用户信息
      */
-    abstract fun userInfo(request: OAuth2CallbackRequest): BlogOAuthUser?
+    abstract fun userInfo(provider: String, code: String, state: String): BlogOAuthUser
 
 }

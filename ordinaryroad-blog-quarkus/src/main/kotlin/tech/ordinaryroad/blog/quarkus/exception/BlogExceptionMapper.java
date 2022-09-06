@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus;
+package tech.ordinaryroad.blog.quarkus.exception;
 
-import cn.dev33.satoken.exception.SaTokenException;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import org.jboss.logging.Logger;
+import tech.ordinaryroad.commons.base.cons.IStatusCode;
 
 import javax.annotation.Priority;
 import javax.enterprise.inject.spi.CDI;
@@ -36,10 +36,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-@Priority(Priorities.USER + 1000)
-public class SaTokenExceptionMapper implements ExceptionMapper<SaTokenException> {
+@Priority(Priorities.USER + 1001)
+public class BlogExceptionMapper implements ExceptionMapper<BaseBlogException> {
 
-    private static final Logger log = Logger.getLogger(SaTokenExceptionMapper.class.getName());
+    private static final Logger log = Logger.getLogger(BlogExceptionMapper.class.getName());
 
     private volatile CurrentVertxRequest currentVertxRequest;
 
@@ -51,10 +51,12 @@ public class SaTokenExceptionMapper implements ExceptionMapper<SaTokenException>
     }
 
     @Override
-    public Response toResponse(SaTokenException exception) {
-        // TODO 解析SaTokenException
-        log.error("SaTokenException", exception);
-        return Response.status(Response.Status.UNAUTHORIZED.getStatusCode(), exception.getMessage()).build();
+    public Response toResponse(BaseBlogException exception) {
+        log.error("BaseBlogException", exception);
+        IStatusCode statusCode = exception.getStatusCode();
+        return Response.status(statusCode.getCode(), statusCode.getMessage())
+                .entity(statusCode.getMessage())
+                .build();
     }
 
 }

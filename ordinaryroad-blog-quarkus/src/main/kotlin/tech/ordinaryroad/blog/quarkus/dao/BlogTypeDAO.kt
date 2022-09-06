@@ -32,7 +32,7 @@ import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 @Mapper
 interface BlogTypeDAO : IBaseMapper<BlogType> {
 
-    @Update("UPDATE `blog_type` SET `deleted` = 0 WHERE `uuid` = #{uuid}")
+    @Update("UPDATE blog_type SET `deleted` = 0 WHERE `uuid` = #{uuid}")
     fun restore(uuid: String): Int
 
 }

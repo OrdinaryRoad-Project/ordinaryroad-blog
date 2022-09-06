@@ -42,7 +42,7 @@ import java.util.List;
 @Mapper
 public interface BlogTagDAO extends IBaseMapper<BlogTag> {
 
-    @Update("UPDATE `blog_tag` SET `deleted` = 0 WHERE `uuid` = #{uuid}")
+    @Update("UPDATE blog_tag SET `deleted` = 0 WHERE `uuid` = #{uuid}")
     int restore(String uuid);
 
     List<String> selectIdByNameIn(@Param("nameList") Collection<String> nameList);

@@ -45,5 +45,11 @@ public class OAuth2CallbackRequest {
     @RestPath
     public String provider;
 
+    @RestQuery
+    public String code;
+
+    @RestQuery
+    public String state;
+
 }
 

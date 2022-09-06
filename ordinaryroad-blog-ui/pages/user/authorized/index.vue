@@ -38,55 +38,28 @@ export default {
   layout: 'empty',
   async asyncData ({
     $apis,
-    store,
     route,
     redirect
   }) {
-    const oAuth2State = store.getters['user/getOAuth2State']
-    if (oAuth2State == null) {
-      // 返回登录页面
-      redirect('/user/login')
-    } else {
-      const stateFromServer = route.query.state
-      const redirectFromLogin = decodeURIComponent(oAuth2State).split('_')[1]
-      const provider = decodeURIComponent(oAuth2State).split('_')[2]
-      try {
-        if (decodeURIComponent(stateFromServer) !== decodeURIComponent(oAuth2State)) {
-          // state不一致
-          throw new Error('state不一致')
-        } else {
-          const code = route.query.code
-          const tokenData = await $apis.oauth.token(provider, code)
-          // console.log('tokenData', tokenData)
-          // OrdinaryRoad Error
-          if (tokenData.success !== undefined && !tokenData.success) {
-            throw new Error(tokenData.msg)
-          }
-          // GitHub Error
-          if (tokenData.error !== undefined && tokenData.error !== '') {
-            throw new Error(tokenData.error_description)
-          }
+    const stateFromServer = route.query.state
+    const redirectFromLogin = decodeURIComponent(stateFromServer).split('_')[1]
+    const provider = decodeURIComponent(stateFromServer).split('_')[2]
 
-          const openid = tokenData.openid || ''
-          const accessToken = tokenData.access_token
-          const tokenType = tokenData.token_type
+    try {
+      const code = route.query.code
 
-          // 调用callback接口，换取用户信息和token
-          const data = await $apis.blog.oauth2.callback(provider, `${tokenType} ${accessToken}`, openid)
-          return {
-            success: true,
-            token: data.token,
-            // userinfoDTO (user, ...)
-            userinfo: data.userinfo,
-            redirect: redirectFromLogin
-          }
-        }
-      } catch (e) {
-        console.log(e)
-        return {
-          redirect: redirectFromLogin,
-          msg: e.message
-        }
+      // 调用callback接口，换取用户信息和token
+      const data = await $apis.blog.oauth2.callback(provider, code, stateFromServer)
+      return {
+        success: true,
+        token: data.token,
+        userInfo: data.userInfo,
+        redirect: redirectFromLogin
+      }
+    } catch (e) {
+      return {
+        redirect: redirectFromLogin,
+        msg: e
       }
     }
   },
@@ -96,14 +69,13 @@ export default {
       redirect: '',
       msg: '失败',
       token: null,
-      userinfo: null
+      userInfo: null
     }
   },
   mounted () {
     if (this.success) {
-      this.$store.commit('user/REMOVE_OAUTH2_STATE')
       this.$store.commit('user/SET_TOKEN_INFO', this.token)
-      this.$store.commit('user/SET_USER_INFO', this.userinfo)
+      this.$store.commit('user/SET_USER_INFO', this.userInfo)
       this.$router.replace(this.redirect)
     } else {
       this.$dialog({

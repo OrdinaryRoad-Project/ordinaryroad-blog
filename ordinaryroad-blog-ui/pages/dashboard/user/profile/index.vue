@@ -77,7 +77,7 @@
             <v-btn
               text
               :color="oAuthUser(provider)?null:'warning'"
-              @click.stop="onClickRemoveOrAdd(oAuthUser(provider))"
+              @click.stop="onClickRemoveOrAdd(provider,oAuthUser(provider))"
             >
               {{ oAuthUser(provider) ? $t('remove') : $t('add') }}
             </v-btn>
@@ -130,12 +130,17 @@ export default {
     this.usernameTextField.input = this.userInfo.user.username
   },
   methods: {
-    onClickRemoveOrAdd (oAuthUser) {
-      this.$snackbar.info('开发中...')
+    onClickRemoveOrAdd (provider, oAuthUser) {
       if (oAuthUser) {
         // remove
+        this.$snackbar.info('开发中...')
       } else {
         // TODO add
+        const state = `${this.$dayjs().valueOf()}_${this.$route.path}_${provider}_add`
+        this.$apis.blog.oauth2.authorize(provider, state)
+          .then((data) => {
+            window.open(data, '_self')
+          })
       }
     },
     onClickUpdate (provider) {

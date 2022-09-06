@@ -23,7 +23,7 @@
  */
 
 import { SELECTED_THEME_OPTION_KEY } from 'static/js/utils/cookie/vuex/app'
-import { OAUTH2_STATE_KEY, TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
+import { TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
 import { SELECTED_LANG_OPTION_KEY } from 'static/js/utils/cookie/vuex/i18n'
 
 function parseCookieString (string) {
@@ -90,7 +90,6 @@ export const actions = {
         $vuetify,
         $dayjs
       })
-      commit('user/SET_OAUTH2_STATE', getStringFromCookie(cookieString, OAUTH2_STATE_KEY, store.getters['user/getOAuth2State']))
 
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
       if (tokenInfo) {

@@ -36,7 +36,7 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
     /**
      * 根据状态查询所有最初版本的草稿
      */
-    @Select("SELECT * FROM `blog_article` AS BA WHERE BA.first_id = BA.uuid AND `status` = #{status} AND `create_by` = #{createBy}")
+    @Select("SELECT * FROM blog_article AS BA WHERE BA.first_id = BA.uuid AND `status` = #{status} AND `create_by` = #{createBy}")
     fun selectAllFirstArticleByStateAndCreateBy(status: BlogArticleStatus, createBy: String): List<BlogArticle>
 
 }

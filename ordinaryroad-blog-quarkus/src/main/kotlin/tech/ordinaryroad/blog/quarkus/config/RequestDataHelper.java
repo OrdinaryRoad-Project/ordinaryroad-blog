@@ -22,44 +22,50 @@
  * SOFTWARE.
  */
 
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
+package tech.ordinaryroad.blog.quarkus.config;
 
-let $axios = null
-let $config = null
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 
-export default {
-  initAxios (axios, config) {
-    $axios = $axios || axios
-    $config = $config || config
-  },
-  apis: {
-    token: (provider, code) => {
-      const data = {
-        client_id: $config.OAUTH2[provider].CLIENT_ID,
-        client_secret: $config.OAUTH2[provider].CLIENT_SECRET,
-        code
-      }
-      const accessTokenEndpoint = `${$config.OAUTH2[provider].ACCESS_TOKEN_ENDPOINT}`
-      if (provider === 'ordinaryroad') {
-        return $axios({
-          url: `${accessTokenEndpoint}?grant_type=authorization_code${urlEncode(data)}`,
-          method: 'get'
-        })
-      } else if (provider === 'github') {
-        return $axios({
-          url: `${accessTokenEndpoint}?1=1${urlEncode(data)}`,
-          headers: {
-            Accept: 'application/json'
-          },
-          method: 'post'
-        })
-      } else {
-        return $axios({
-          url: `${accessTokenEndpoint}&redirect_uri=${$config.OAUTH2.REDIRECT_URI}`,
-          method: 'post',
-          data
-        })
-      }
+import java.util.Map;
+
+/**
+ * 请求参数传递辅助类
+ */
+public class RequestDataHelper {
+    /**
+     * 请求参数存取
+     */
+    private static final ThreadLocal<Map<String, Object>> REQUEST_DATA = new ThreadLocal<>();
+
+    /**
+     * 设置请求参数
+     *
+     * @param requestData 请求参数 MAP 对象
+     */
+    public static void setRequestData(Map<String, Object> requestData) {
+        REQUEST_DATA.set(requestData);
     }
-  }
+
+    /**
+     * 获取请求参数
+     *
+     * @param param 请求参数
+     * @return 请求参数 MAP 对象
+     */
+    public static <T> T getRequestData(String param) {
+        Map<String, Object> dataMap = getRequestData();
+        if (CollectionUtils.isNotEmpty(dataMap)) {
+            return (T) dataMap.get(param);
+        }
+        return null;
+    }
+
+    /**
+     * 获取请求参数
+     *
+     * @return 请求参数 MAP 对象
+     */
+    public static Map<String, Object> getRequestData() {
+        return REQUEST_DATA.get();
+    }
 }

@@ -25,6 +25,8 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import mybatis.mate.annotation.DataColumn
+import mybatis.mate.annotation.DataScope
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
@@ -43,7 +45,7 @@ class BlogCommentResource {
     @Inject
     protected lateinit var commentService: BlogCommentService
 
-    //region 开发中
+    //region 已测试
     /**
      * 用户发布评论
      */
@@ -72,15 +74,22 @@ class BlogCommentResource {
     fun pageArticleComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
         return commentService.pageArticleComment(request)
     }
-    //endregion
 
-    //region 管理员
+    /**
+     * 用户分页查询所有评论
+     */
     @GET
     @Path("page/{page}/{size}")
+    @DataScope(
+        value = [
+            DataColumn(alias = "a", name = "n")
+        ],
+        type = "TYPE"
+    )
     fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
-        BlogArticleResource.throwBadRequest()
-        // TODO admin
         return commentService.page(request)
     }
+
+    //region 开发中
     //endregion
 }

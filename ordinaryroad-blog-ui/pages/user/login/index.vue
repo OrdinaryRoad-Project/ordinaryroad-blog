@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
 
 export default {
   layout: 'empty',
@@ -91,20 +90,11 @@ export default {
   },
   methods: {
     login (provider) {
-      const { OAUTH2 } = this.$config
-      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}`
-      this.$store.commit('user/SET_OAUTH2_STATE', state)
-
-      const oauth2Query = {
-        client_id: OAUTH2[provider].CLIENT_ID,
-        scope: OAUTH2[provider].SCOPE,
-        redirect_uri: OAUTH2.REDIRECT_URI,
-        state
-      }
-      // https://github.com/login/oauth/authorize?client_id=c0615d2a28cfb7a20a84&scope=read:user&state=1,1,github&redirect_uri=http://blog.ordinaryroad.tech:3000/user/authorized
-      const loginUrl = `${OAUTH2[provider].AUTHORIZE_ENDPOINT}${urlEncode(oauth2Query)}`
-
-      window.open(loginUrl, '_self')
+      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
+      this.$apis.blog.oauth2.authorize(provider, state)
+        .then((data) => {
+          window.open(data, '_self')
+        })
     }
   }
 }

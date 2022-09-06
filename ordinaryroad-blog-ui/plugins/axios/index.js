@@ -55,6 +55,7 @@ export default function (context, inject) {
     } else if (code === 204) {
       return null
     } else {
+      console.log('code !== 2xx', res)
       // 获取错误信息
       const msg = errorCode[code] || res.statusText || errorCode.default
       if (code === 2001) {
@@ -84,7 +85,12 @@ export default function (context, inject) {
     }
   },
   (error) => {
-    let { message } = error
+    let message
+    if (typeof error === 'string') {
+      message = error
+    } else {
+      message = error.response.statusText
+    }
     if (message === 'Network Error') {
       message = '后端接口连接异常'
     } else if (message.includes('timeout')) {
@@ -93,6 +99,6 @@ export default function (context, inject) {
       message = '系统接口' + message.substr(message.length - 3) + '异常'
     }
     process.client && context.$snackbar.error(message)
-    return Promise.reject(error)
+    return Promise.reject(message)
   })
 }

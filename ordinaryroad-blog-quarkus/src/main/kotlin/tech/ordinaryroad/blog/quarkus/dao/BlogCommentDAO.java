@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.properties
+package tech.ordinaryroad.blog.quarkus.dao;
 
-import io.smallrye.config.ConfigMapping
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import tech.ordinaryroad.blog.quarkus.entity.BlogComment;
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper;
 
 /**
- *
- *
  * @author mjz
- * @date 2022/8/26
+ * @date 2022/9/3
  */
-@ConfigMapping(prefix = "ordinaryroad.oauth2")
-interface OAuth2Properties {
+@Mapper
+public interface BlogCommentDAO extends IBaseMapper<BlogComment> {
 
-    fun redirectUri(): String
-
-    /**
-     * provider: xxx:xxx, xxx:xxx
-     */
-    fun providers(): Map<String, Map<String, String>>
+    @Select("SELECT bc.* FROM blog_comment bc")
+    Page<BlogComment> selectAllWithDataScope(IPage<BlogComment> page);
 
 }

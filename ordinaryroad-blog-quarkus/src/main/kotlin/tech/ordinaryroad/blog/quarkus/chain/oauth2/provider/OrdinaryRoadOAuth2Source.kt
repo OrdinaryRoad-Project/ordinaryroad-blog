@@ -24,43 +24,46 @@
 
 package tech.ordinaryroad.blog.quarkus.chain.oauth2.provider
 
-import io.vertx.core.json.JsonObject
-import org.eclipse.microprofile.rest.client.inject.RestClient
-import tech.ordinaryroad.blog.quarkus.client.gitee.oauth2.GiteeOAuth2Service
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
+import me.zhyd.oauth.config.AuthSource
+import me.zhyd.oauth.request.AuthDefaultRequest
+import tech.ordinaryroad.blog.quarkus.properties.OAuth2Properties
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
+import javax.inject.Inject
 
 /**
- * GiteeOAuth2Provider
+ * OrdinaryRoadOAuth2Provider
  *
  * @author mjz
  * @date 2022/9/5
  */
 @ApplicationScoped
-class GiteeOAuth2Provider : BaseOAuth2Provider(NAME) {
+class OrdinaryRoadOAuth2Source : AuthSource {
 
-    @RestClient
-    protected lateinit var giteeOAuth2Service: GiteeOAuth2Service
+    @Inject
+    protected lateinit var oAuth2Properties: OAuth2Properties
 
-    override fun userInfo(request: OAuth2CallbackRequest): BlogOAuthUser? {
-        val response = giteeOAuth2Service.user(request.authorization)
-        if (response.status != Response.Status.OK.statusCode) {
-            return null
-        }
-        // username avatar email
-        val userinfo = response.readEntity(JsonObject::class.java)
-        return BlogOAuthUser().apply {
-            openid = userinfo.getNumber("id").toString()
-            username = userinfo.getString("name")
-            avatar = userinfo.getString("avatar_url")
-            email = userinfo.getString("email")
-        }
+    override fun authorize(): String {
+        return oAuth2Properties.providers()["ordinaryroad"]!!["authorize-endpoint"]!!
+    }
+
+    override fun accessToken(): String {
+        return oAuth2Properties.providers()["ordinaryroad"]!!["access-token-endpoint"]!!
+    }
+
+    override fun userInfo(): String {
+        return oAuth2Properties.providers()["ordinaryroad"]!!["user-info-endpoint"]!!
+    }
+
+    override fun getTargetClass(): Class<out AuthDefaultRequest> {
+        return OrdinaryRoadOAuth2Request::class.java
+    }
+
+    override fun getName(): String {
+        return NAME
     }
 
     companion object {
-        const val NAME = "gitee"
+        const val NAME = "ordinaryroad"
     }
 
 }

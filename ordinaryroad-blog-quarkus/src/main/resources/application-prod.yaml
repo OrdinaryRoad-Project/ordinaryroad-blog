@@ -15,6 +15,7 @@ quarkus:
     cors.access-control-allow-credentials: true
     port: 8080
   mybatis:
+    configuration-factory: tech.ordinaryroad.blog.quarkus.config.BlogMyBatisPlusConfigurationFactory
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     map-underscore-to-camel-case: true
@@ -55,5 +56,21 @@ sa-token:
 # OrdinaryRoad
 ordinaryroad:
   oauth2:
-    client-id: ${ORDINARYROAD_OAUTH2_CLIENT_ID}
-    client-secret: ${ORDINARYROAD_OAUTH2_CLIENT_SECRET}
+    redirect-uri: https://blog.ordinaryroad.tech/user/authorized
+    providers:
+      ordinaryroad:
+        client-id: ordinaryroad-blog
+        client-secret: ${CLIENT_SECRET_ORDINARYROAD}
+        scopes: openid,userinfo
+        base-url: ${quarkus.rest-client.ordinaryroad-auth.url}
+        authorize-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/authorize
+        access-token-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/token
+        user-info-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/userinfo/wrapped
+      github:
+        client-id: c0615d2a28cfb7a20a84
+        client-secret: ${CLIENT_SECRET_GITHUB}
+        scopes: read:user
+      gitee:
+        client-id: f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882
+        client-secret: ${CLIENT_SECRET_GITEE}
+        scopes: user_info

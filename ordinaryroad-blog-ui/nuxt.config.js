@@ -145,42 +145,11 @@ export default {
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
 
     OAUTH2: {
-      PROVIDERS: ['ordinaryroad', 'github', 'gitee'],
-      REDIRECT_URI: `${process.env.DOMAIN}/user/authorized`,
-      ordinaryroad: {
-        CLIENT_ID: 'ordinaryroad-blog',
-        SCOPE: 'openid,userinfo',
-        AUTHORIZE_ENDPOINT: `${process.env.AUTH_BASE_URL}/oauth2/authorize?response_type=code`,
-        ACCESS_TOKEN_ENDPOINT: '/auth/oauth2/token'
-      },
-      github: {
-        CLIENT_ID: 'c0615d2a28cfb7a20a84',
-        SCOPE: 'read:user',
-        AUTHORIZE_ENDPOINT: 'https://github.com/login/oauth/authorize?1=1',
-        ACCESS_TOKEN_ENDPOINT: 'https://github.com/login/oauth/access_token'
-      },
-      gitee: {
-        CLIENT_ID: 'f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882',
-        SCOPE: 'user_info',
-        AUTHORIZE_ENDPOINT: 'https://gitee.com/oauth/authorize?response_type=code',
-        ACCESS_TOKEN_ENDPOINT: 'https://gitee.com/oauth/token?grant_type=authorization_code'
-      }
+      PROVIDERS: ['ordinaryroad', 'github', 'gitee']
     }
 
   },
-  privateRuntimeConfig: {
-    OAUTH2: {
-      ordinaryroad: {
-        CLIENT_SECRET: process.env.CLIENT_SECRET_ORDINARYROAD
-      },
-      github: {
-        CLIENT_SECRET: process.env.CLIENT_SECRET_GIHUB
-      },
-      gitee: {
-        CLIENT_SECRET: process.env.CLIENT_SECRET_GITEE
-      }
-    }
-  },
+  privateRuntimeConfig: {},
 
   // https://www.nuxtjs.cn/api/configuration-env
   env: {},

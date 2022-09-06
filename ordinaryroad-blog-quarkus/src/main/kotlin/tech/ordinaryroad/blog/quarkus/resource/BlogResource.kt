@@ -87,10 +87,12 @@ class BlogResource {
 
         val renamedFile = FileUtil.rename(srcFile, fileName, true)
 
+        val ordinaryroadOAuth2Property = oAuth2Properties.providers()["ordinaryroad"]!!
+
         val jsonObject =
             orUpmsApi.upload(tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.FileUploadRequest().apply {
-                clientId = oAuth2Properties.clientId()
-                clientSecret = oAuth2Properties.clientSecret()
+                clientId = ordinaryroadOAuth2Property["client-id"]!! as String
+                clientSecret = ordinaryroadOAuth2Property["client-secret"]!! as String
                 file = renamedFile
             })
 

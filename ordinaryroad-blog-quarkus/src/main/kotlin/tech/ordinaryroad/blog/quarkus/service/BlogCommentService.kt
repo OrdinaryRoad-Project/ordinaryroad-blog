@@ -25,8 +25,14 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor
+import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler
+import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import org.apache.ibatis.session.SqlSessionFactory
+import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
 import tech.ordinaryroad.blog.quarkus.dao.BlogCommentDAO
 import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.entity.BlogComment
@@ -42,6 +48,7 @@ import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import tech.ordinaryroad.commons.base.cons.StatusCode
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
@@ -59,6 +66,9 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
     @Inject
     protected lateinit var pushService: BlogPushService
+
+    @Inject
+    protected lateinit var sqlSessionFactory: SqlSessionFactory
 
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
@@ -150,6 +160,38 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     fun page(request: BlogCommentQueryRequest): Page<Any> {
+        val configuration = sqlSessionFactory.configuration
+        if (configuration.interceptors.size == 1) {
+            val interceptor = MybatisPlusInterceptor()
+            val dynamicTableNameInnerInterceptor = DynamicTableNameInnerInterceptor()
+            dynamicTableNameInnerInterceptor.tableNameHandler = TableNameHandler { sql: String?, tableName: String ->
+                // 获取参数方法
+                val paramMap: Map<String, Any> = RequestDataHelper.getRequestData()
+                paramMap.forEach { (k: String, v: Any) ->
+                    System.err.println(
+                        "$k----$v"
+                    )
+                }
+                var year = "_2018"
+                val random = Random().nextInt(10)
+                if (random % 2 == 1) {
+                    year = "_2019"
+                }
+                tableName + year
+            }
+            interceptor.addInnerInterceptor(dynamicTableNameInnerInterceptor)
+
+            configuration.addInterceptor(interceptor)
+        }
+        RequestDataHelper.setRequestData(HashMap<String, Any>().apply {
+            put("id", 123)
+            put("hello", "tomcat")
+            put("name", "汤姆凯特")
+        })
+
+        val commentPageDTO = PageDTO.of<BlogComment>(1, 10)
+        val selectAllWithDataScope = super.dao.selectAllWithDataScope(commentPageDTO)
+
         val wrapper = ChainWrappers.queryChain(dao)
 
         val page = page(request, wrapper)
