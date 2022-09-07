@@ -32,6 +32,7 @@ import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 标签DAO
@@ -50,5 +51,13 @@ public interface BlogTagDAO extends IBaseMapper<BlogTag> {
     int countByName(@Param("name") String name);
 
     List<String> selectNameListByUuidIn(@Param("uuidList") Collection<String> uuidList);
+
+    /**
+     * 查询文章数前十的标签
+     *
+     * @param n      N
+     * @param userId 用户Id
+     */
+    List<Map<String, String>> getTopNByUserId(@Param("n") Integer n, @Param("userId") String userId);
 
 }

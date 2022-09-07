@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.dao
 
 import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Update
 import tech.ordinaryroad.blog.quarkus.entity.BlogType
 import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
@@ -34,5 +35,12 @@ interface BlogTypeDAO : IBaseMapper<BlogType> {
 
     @Update("UPDATE blog_type SET `deleted` = 0 WHERE `uuid` = #{uuid}")
     fun restore(uuid: String): Int
+
+    /**
+     * 查询文章数前十的分类
+     * @param n N
+     * @param userId 用户Id
+     */
+    fun getTopNByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
 
 }

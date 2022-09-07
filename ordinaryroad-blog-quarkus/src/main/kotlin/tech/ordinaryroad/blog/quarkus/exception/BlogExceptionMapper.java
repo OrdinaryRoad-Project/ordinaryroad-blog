@@ -31,6 +31,7 @@ import tech.ordinaryroad.commons.base.cons.IStatusCode;
 import javax.annotation.Priority;
 import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -55,7 +56,8 @@ public class BlogExceptionMapper implements ExceptionMapper<BaseBlogException> {
         log.error("BaseBlogException", exception);
         IStatusCode statusCode = exception.getStatusCode();
         return Response.status(statusCode.getCode(), statusCode.getMessage())
-                .entity(statusCode.getMessage())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(exception)
                 .build();
     }
 

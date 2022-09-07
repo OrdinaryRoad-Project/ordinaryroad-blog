@@ -24,7 +24,7 @@
   -->
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="tech.ordinaryroad.blog.quarkus.dao.BlogTagDAO">
+<mapper namespace="tech.ordinaryroad.blog.quarkus.dao.BlogTypeDAO">
 
     <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO">
         <id column="id" property="id"/>
@@ -35,45 +35,19 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <resultMap id="BaseResultMap" type="tech.ordinaryroad.blog.quarkus.entity.BlogTag" extends="BaseDOResultMap">
+    <resultMap id="BaseResultMap" type="tech.ordinaryroad.blog.quarkus.entity.BlogType" extends="BaseDOResultMap">
         <result column="name" property="name"/>
         <result column="deleted" property="deleted"/>
     </resultMap>
 
-    <select id="selectIdByNameIn" resultType="string">
-        select bt.uuid
-        from blog_tag bt
-        where
-        bt.name in
-        <foreach collection="nameList" item="item" open="(" close=")" separator=",">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-    </select>
-
-    <select id="countByName" resultType="int">
-        select count(*)
-        from blog_tag bt
-        where bt.name = #{name,jdbcType=VARCHAR}
-    </select>
-
-    <select id="selectNameListByUuidIn" resultType="string">
-        select bt.name
-        from blog_tag bt
-        where
-        bt.uuid in
-        <foreach collection="uuidList" item="item" open="(" close=")" separator=",">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-    </select>
-
     <select id="getTopNByUserId" resultType="map">
-        SELECT bt.uuid, bt.name, COUNT(ba.uuid) article_count
-        FROM blog_tag bt
-        INNER JOIN (SELECT uuid, tag_ids FROM blog_article WHERE status = 'PUBLISH'
+        SELECT bt.uuid, bt.name, COUNT(ba.uuid) article_count, bt.create_by
+        FROM blog_type bt
+        INNER JOIN (SELECT uuid, type_id FROM blog_article WHERE status = 'PUBLISH'
         <if test="userId != null and userId != ''">
             AND create_by = #{userId}
         </if>
-        ) ba ON ba.tag_ids LIKE CONCAT('%', bt.uuid, '%')
+        ) ba ON bt.uuid = ba.type_id
         WHERE bt.deleted = 0
         GROUP BY bt.uuid
         ORDER BY article_count DESC

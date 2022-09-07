@@ -89,7 +89,7 @@ export default function (context, inject) {
     if (typeof error === 'string') {
       message = error
     } else {
-      message = error.response.statusText
+      message = error.response.data.message
     }
     if (message === 'Network Error') {
       message = '后端接口连接异常'

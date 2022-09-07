@@ -107,6 +107,11 @@ export default {
       }
     }
   },
+  created () {
+    if (this.$vuetify.breakpoint.mdAndDown) {
+      this.localDashboardDrawerModel = false
+    }
+  },
   mounted () {
     this.$nextTick(() => {
       updateTheme(this.$store.getters['app/getSelectedThemeOption'], this.$vuetify)

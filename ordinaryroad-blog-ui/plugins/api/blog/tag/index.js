@@ -44,6 +44,12 @@ export default {
         url: `/blog/tag/page/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
+    },
+    getTopN (params = { n: 10, userId: null }) {
+      return $axios({
+        url: `/blog/tag/top?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
     }
   }
 }

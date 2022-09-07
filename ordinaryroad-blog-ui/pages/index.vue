@@ -24,14 +24,45 @@
 
 <template>
   <div>
-    <or-blog-article-list auto-load-more />
+    <v-tabs v-model="tabModel" @change="onTabChange">
+      <v-tab>
+        全部 {{ articleTotal ? $t('parentheses', [articleTotal]) : '' }}
+      </v-tab>
+      <v-tab v-for="tag in tags" :key="tag.uuid">
+        {{ tag.name }} {{ $t('parentheses', [tag.article_count]) }}
+      </v-tab>
+    </v-tabs>
+    <or-blog-article-list ref="list" auto-load-more :total.sync="localArticleTotal" />
   </div>
 </template>
 
 <script>
 export default {
   components: {},
-  data: () => ({}),
+  async asyncData ({ $apis }) {
+    const tags = await $apis.blog.tag.getTopN()
+    return {
+      tags
+    }
+  },
+  data: () => ({
+    tabFirstChange: true,
+    tabModel: null,
+    articleTotal: null,
+    tags: []
+  }),
+  computed: {
+    localArticleTotal: {
+      get () {
+        return this.articleTotal
+      },
+      set (val) {
+        if (this.tabModel === 0) {
+          this.articleTotal = val
+        }
+      }
+    }
+  },
   mounted () {
     const key = 'notification_0'
     const hideNotification0 = localStorage.getItem(key) === 'true'
@@ -58,7 +89,21 @@ export default {
   },
   created () {
   },
-  methods: {}
+  methods: {
+    onTabChange (e) {
+      let tagName = ''
+      if (e !== 0) {
+        const tag = this.tags[e - 1]
+        tagName = tag.name
+      }
+      if (this.tabFirstChange) {
+        this.tabFirstChange = false
+      } else {
+        this.$refs.list.tagName = tagName
+        this.$refs.list.getArticles(false)
+      }
+    }
+  }
 }
 </script>
 

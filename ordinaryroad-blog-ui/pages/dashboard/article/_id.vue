@@ -142,8 +142,9 @@
                   :placeholder="$t('article.startWritingHint')"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
-                  :pre-set-content="articleContent"
+                  pre-set-content=""
                   :transfer-content.sync="article.content"
+                  @after="onVditorAfter"
                 />
               </v-input>
             </v-col>
@@ -185,6 +186,7 @@
               >
                 <template #activator="{ on, attrs }">
                   <v-combobox
+                    ref="tagCombobox"
                     v-model="tagOptions.selectedItems"
                     outlined
                     :disabled="tagOptions.loading"
@@ -304,9 +306,10 @@ export default {
           this.article = data
           this.articleContent = data.content
           this.tagOptions.selectedItems = data.tagNames
+          this.$refs.vditor && this.$refs.vditor.setValue(data.content)
         })
         .catch(() => {
-          this.$dialog({
+          process.client && this.$dialog({
             persistent: true,
             content: this.$i18n.t('status.article.notFound'),
             confirmText: this.$i18n.t('retry'),
@@ -359,8 +362,21 @@ export default {
     // TODO 加载最火的标签
     this.tagOptions.items = []
     this.tagOptions.loading = false
+    const inputs = this.$refs.tagCombobox.$el.getElementsByTagName('input')
+    if (inputs && inputs[0]) {
+      const input = inputs[0]
+      input.addEventListener('input', () => {
+        const inputValue = input.value
+        // TODO 搜索标签
+        console.log('onInput', inputValue)
+      })
+    }
   },
   methods: {
+    onVditorAfter () {
+      // 防止数据比编辑器先加载出来
+      this.$refs.vditor.setValue(this.articleContent)
+    },
     onCurrentItems (items) {
       this.onSelectedItemsInput(this.tagOptions.selectedItems)
     },

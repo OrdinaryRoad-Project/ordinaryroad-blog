@@ -27,18 +27,23 @@ package tech.ordinaryroad.blog.quarkus.resource
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dto.BlogTagDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogTagNotValidException
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogTagQueryRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogTagSaveRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogTagService
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.Max
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -52,16 +57,29 @@ import javax.ws.rs.core.MediaType
 class BlogTagResource {
 
     @Inject
+    protected lateinit var userService: BlogUserService
+
+    @Inject
     protected lateinit var tagService: BlogTagService
 
     @Inject
     protected lateinit var dtoService: BlogDtoService
 
     /**
-     * 获取分类导航
+     * 获取文章数前N的标签
      */
-    fun getTagNavigation() {
-
+    @GET
+    @Path("top")
+    fun getTopN(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        return tagService.dao.getTopNByUserId(n, userId)
     }
 
     /**

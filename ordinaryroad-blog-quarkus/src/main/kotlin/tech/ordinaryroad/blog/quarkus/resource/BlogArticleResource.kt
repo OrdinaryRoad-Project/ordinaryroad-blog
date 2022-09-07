@@ -489,9 +489,18 @@ class BlogArticleResource {
         // TODO
         val status = BlogArticleStatus.PUBLISH
 
+        val tagName = request.tagName
+        var tagId = ""
+        var tagIds = emptyList<String>()
+        if (!tagName.isNullOrEmpty()) {
+            tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
+            tagId = tagIds.first()
+        }
+
         val wrapper = ChainWrappers.queryChain(articleService.dao)
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
+            .like(tagIds.isNotEmpty(), "tag_ids", "%${tagId}%")
 
         val page = articleService.page(request, wrapper)
 

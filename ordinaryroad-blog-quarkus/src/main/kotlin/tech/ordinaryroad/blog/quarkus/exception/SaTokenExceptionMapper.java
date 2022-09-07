@@ -31,6 +31,7 @@ import org.jboss.logging.Logger;
 import javax.annotation.Priority;
 import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -55,7 +56,8 @@ public class SaTokenExceptionMapper implements ExceptionMapper<SaTokenException>
         // TODO 解析SaTokenException
         log.error("SaTokenException", exception);
         return Response.status(Response.Status.UNAUTHORIZED.getStatusCode(), exception.getMessage())
-                .entity(exception.getMessage())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(exception)
                 .build();
     }
 

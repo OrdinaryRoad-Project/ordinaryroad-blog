@@ -70,6 +70,13 @@ export default {
         url: `/blog/type/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
+    },
+    getTopN ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/type/top?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
     }
   }
 }

@@ -34,10 +34,12 @@
       :items="articlePageItems.records"
       :options="options"
       :ssr="{columns: 1}"
-      @append="autoLoadMore&&appendArticles()"
+      @append="autoLoadMore&&getArticles()"
     >
       <template #default="{item}">
-        <or-blog-article-item :item="item" />
+        <template v-if="item">
+          <or-blog-article-item :item="item" />
+        </template>
       </template>
     </vue-masonry-wall>
 
@@ -45,7 +47,7 @@
       ref="loadMoreFooter"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
-      @loadMore="!autoLoadMore&&appendArticles()"
+      @loadMore="!autoLoadMore&&getArticles()"
     />
   </v-container>
 </template>
@@ -76,7 +78,8 @@ export default {
     articlePageItems: {
       records: [],
       current: 1
-    }
+    },
+    tagName: ''
   }),
   computed: {
     options () {
@@ -106,51 +109,60 @@ export default {
   mounted () {
   },
   created () {
-    this.$apis.blog.article.pagePublish(1, { createBy: this.createBy })
-      .then((data) => {
-        this.articlePageItems = data
-        this.loadMoreOptions = {
-          loading: false,
-          noMoreData: data.pages === 0 || data.current === data.pages
-        }
-      })
+    this.getArticles(false)
   },
   methods: {
-    appendArticles () {
-      if (this.loadMoreOptions.noMoreData) {
-        console.log('没有更多数据啦')
-        return
+    getArticles (loadMore = true) {
+      if (loadMore) {
+        if (this.loadMoreOptions.noMoreData) {
+          // console.log('没有更多数据啦')
+          return
+        }
+        if (this.loadMoreOptions.loading) {
+          // console.log('正在加载，请等待')
+          return
+        }
+        // 加载更多
+        this.$refs.loadMoreFooter.startLoading(true)
+        this.loadMoreOptions.loading = true
       }
-      if (this.loadMoreOptions.loading) {
-        console.log('正在加载，请等待')
-        return
-      }
-      // TODO 加载更多
-      this.$refs.loadMoreFooter.startLoading(true)
-      this.loadMoreOptions.loading = true
-      console.log('开始加载', this.articlePageItems.current + 1)
-      this.$apis.blog.article.pagePublish(this.articlePageItems.current + 1, { createBy: this.createBy })
+      // console.log('开始加载', this.articlePageItems.current + 1)
+      const page = loadMore ? this.articlePageItems.current + 1 : 1
+      this.$apis.blog.article.pagePublish(page, {
+        createBy: this.createBy,
+        tagName: this.tagName
+      })
         .then((data) => {
-          this.$refs.loadMoreFooter.finishLoad()
-          console.log('加载完成', data.current)
-          const newRecords = this.articlePageItems.records.concat(data.records)
-          this.articlePageItems = {
-            ...data,
-            records: newRecords
+          if (loadMore) {
+            this.$refs.loadMoreFooter.finishLoad()
+            // console.log('加载完成', data.current)
+            const newRecords = this.articlePageItems.records.concat(data.records)
+            this.articlePageItems = {
+              ...data,
+              records: newRecords
+            }
+            if (this.articlePageItems.current === this.articlePageItems.pages) {
+              this.loadMoreOptions.noMoreData = true
+              // console.log('没有更多数据啦')
+            }
+            setTimeout(() => {
+              this.loadMoreOptions.loading = false
+            }, 1000)
+          } else {
+            this.articlePageItems = data
+            this.loadMoreOptions = {
+              loading: false,
+              noMoreData: data.pages === 0 || data.current === data.pages
+            }
           }
-          if (this.articlePageItems.current === this.articlePageItems.pages) {
-            this.loadMoreOptions.noMoreData = true
-            console.log('没有更多数据啦')
-          }
-          setTimeout(() => {
-            this.loadMoreOptions.loading = false
-          }, 1000)
         })
         .catch(() => {
-          this.$refs.loadMoreFooter.finishLoad()
-          setTimeout(() => {
-            this.loadMoreOptions.loading = false
-          }, 1000)
+          if (loadMore) {
+            this.$refs.loadMoreFooter.finishLoad()
+            setTimeout(() => {
+              this.loadMoreOptions.loading = false
+            }, 1000)
+          }
         })
     }
   }
