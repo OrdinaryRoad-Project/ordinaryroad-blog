@@ -46,6 +46,11 @@ spec:
                 secretKeyRef:
                   name: blog-secrets
                   key: MAIL_QQ_PASSWORD
+            - name: OAUTH2_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: OAUTH2_REDIRECT_URI
             - name: CLIENT_SECRET_ORDINARYROAD
               valueFrom:
                 secretKeyRef:
