@@ -56,7 +56,7 @@ sa-token:
 # OrdinaryRoad
 ordinaryroad:
   oauth2:
-    redirect-uri: https://blog.ordinaryroad.tech/user/authorized
+    redirect-uri: ${OAUTH2_REDIRECT_URI}
     providers:
       ordinaryroad:
         client-id: ordinaryroad-blog
