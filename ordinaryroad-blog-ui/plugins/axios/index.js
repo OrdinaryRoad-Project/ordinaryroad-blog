@@ -89,7 +89,8 @@ export default function (context, inject) {
     if (typeof error === 'string') {
       message = error
     } else {
-      message = error.response.data.message
+      const data = error.response.data
+      message = typeof data === 'string' ? data : data.message
     }
     if (message === 'Network Error') {
       message = '后端接口连接异常'
