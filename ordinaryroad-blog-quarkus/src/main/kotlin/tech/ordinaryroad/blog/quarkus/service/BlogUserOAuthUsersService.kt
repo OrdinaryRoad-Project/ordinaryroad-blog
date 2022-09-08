@@ -34,6 +34,15 @@ import javax.enterprise.context.ApplicationScoped
 class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAuthUsers>() {
 
     /**
+     * 查询用户关联的OAuth用户
+     */
+    fun selectCountByUserId(userId: String): Long {
+        val wrapper = Wrappers.query<BlogUserOAuthUsers>()
+        wrapper.eq("user_id", userId)
+        return super.dao.selectCount(wrapper)
+    }
+
+    /**
      * 根据用户Id查询所有关联关系
      */
     fun findAllByUserId(userId: String): List<BlogUserOAuthUsers> {

@@ -34,11 +34,16 @@
 </template>
 
 <script>
+import { TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
+import { getObjectFromCookie } from '@/store'
+
 export default {
   layout: 'empty',
   async asyncData ({
     $apis,
     route,
+    store,
+    req,
     redirect
   }) {
     const stateFromServer = route.query.state
@@ -48,8 +53,12 @@ export default {
     try {
       const code = route.query.code
 
+      let tokenValue = ''
+      const cookieString = req.headers.cookie
+      const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
+      tokenValue = tokenInfo && tokenInfo.value
       // 调用callback接口，换取用户信息和token
-      const data = await $apis.blog.oauth2.callback(provider, code, stateFromServer)
+      const data = await $apis.blog.oauth2.callback(tokenValue, provider, code, stateFromServer)
       return {
         success: true,
         token: data.token,

@@ -56,7 +56,7 @@ function getStringFromCookie (string, key, defaultValue) {
   return fromCookie ? String(fromCookie) : defaultValue
 }
 
-function getObjectFromCookie (string, key, defaultValue) {
+export function getObjectFromCookie (string, key, defaultValue) {
   const fromCookie = getFromCookie(string, key)
   return fromCookie ? JSON.parse(decodeURIComponent(fromCookie)) : defaultValue
 }

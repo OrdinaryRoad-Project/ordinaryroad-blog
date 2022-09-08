@@ -1,5 +1,12 @@
 {
   "appName": "OR博客",
+  "oAuthUser": {
+    "actions": {
+      "update": "更新",
+      "add": "绑定",
+      "remove": "解绑"
+    }
+  },
   "article": {
     "title": "标题",
     "coverImage": "封面",

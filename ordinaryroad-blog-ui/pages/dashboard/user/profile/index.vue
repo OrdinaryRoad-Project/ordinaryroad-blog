@@ -75,14 +75,15 @@
 
           <span class="ml-auto">
             <v-btn
+              :disabled="oAuthUser(provider)&&oAuthUsers.length<=1"
               text
               :color="oAuthUser(provider)?null:'warning'"
-              @click.stop="onClickRemoveOrAdd(provider,oAuthUser(provider))"
+              @click.stop="onClickProvider(provider,oAuthUser(provider)?'remove':'add')"
             >
-              {{ oAuthUser(provider) ? $t('remove') : $t('add') }}
+              {{ oAuthUser(provider) ? $t('oAuthUser.actions.remove') : $t('oAuthUser.actions.add') }}
             </v-btn>
-            <v-btn v-if="oAuthUser(provider)" text color="success" @click.stop="onClickUpdate(provider)">
-              {{ $t('update') }}
+            <v-btn v-if="oAuthUser(provider)" text color="success" @click.stop="onClickProvider(provider,'update')">
+              {{ $t('oAuthUser.actions.update') }}
             </v-btn>
           </span>
         </v-list-item>
@@ -102,12 +103,12 @@ export default {
       disabled: true,
       loading: false
     },
-    oauthUsers: []
+    oAuthUsers: []
   }),
   computed: {
     oAuthUser () {
       return (provider) => {
-        const query = this.$util.query(this.oauthUsers, 'provider', provider)
+        const query = this.$util.query(this.oAuthUsers, 'provider', provider)
         return query[0]
       }
     },
@@ -116,29 +117,49 @@ export default {
     })
   },
   created () {
-    this.$apis.blog.oauth_user.all()
-      .then((data) => {
-        this.oauthUsers = data
-      })
+    this.getAllOAuthUser()
     this.usernameTextField.value = this.userInfo.user.username
     this.usernameTextField.input = this.userInfo.user.username
   },
   methods: {
-    onClickRemoveOrAdd (provider, oAuthUser) {
-      if (oAuthUser) {
-        // remove
-        this.$snackbar.info('开发中...')
+    getAllOAuthUser () {
+      this.$apis.blog.oauth_user.all()
+        .then((data) => {
+          this.oAuthUsers = data
+        })
+    },
+    /**
+     * OAuth2账号相关操作
+     * @param provider ordinaryroad|github|gitee
+     * @param action add|remove|update
+     */
+    onClickProvider (provider, action) {
+      if (action === 'remove') {
+        this.$dialog({
+          content: this.$t('areYouSureToDoWhat', [this.$t('oAuthUser.actions.remove')]),
+          loading: true
+        }).then((dialog) => {
+          if (dialog.isConfirm) {
+            this.$apis.blog.oauth_user.delete(provider)
+              .then(() => {
+                this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('oAuthUser.actions.remove')]))
+                this.getAllOAuthUser()
+                dialog.cancel()
+              })
+              .catch(() => {
+                dialog.cancel()
+              })
+          } else {
+            dialog.cancel()
+          }
+        })
       } else {
-        // TODO add
-        const state = `${this.$dayjs().valueOf()}_${this.$route.path}_${provider}_add`
+        const state = `${this.$dayjs().valueOf()}_${this.$route.path}_${provider}_${action}`
         this.$apis.blog.oauth2.authorize(provider, state)
           .then((data) => {
             window.open(data, '_self')
           })
       }
-    },
-    onClickUpdate (provider) {
-      this.$snackbar.info('开发中...')
     },
     usernameClick () {
       if (this.usernameTextField.disabled) {

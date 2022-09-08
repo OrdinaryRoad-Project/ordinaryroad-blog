@@ -1,5 +1,12 @@
 {
   "appName": "OR BLOG",
+  "oAuthUser": {
+    "actions": {
+      "update": "Update",
+      "add": "Bind",
+      "remove": "Unbind"
+    }
+  },
   "article": {
     "title": "Title",
     "coverImage": "Cover Image",

@@ -25,10 +25,16 @@
 package tech.ordinaryroad.blog.quarkus.dao
 
 import org.apache.ibatis.annotations.Mapper
-import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
+import org.apache.ibatis.annotations.Param
 import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 
 @Mapper
 interface BlogOAuthUserDAO : IBaseMapper<BlogOAuthUser> {
+
+    /**
+     * 根据用户Id和Provider查询OAuth账号
+     */
+    fun selectByUserIdAndProvider(@Param("userId") userId: String, @Param("provider") provider: String): BlogOAuthUser?
 
 }

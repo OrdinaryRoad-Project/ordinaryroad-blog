@@ -48,16 +48,19 @@ export default {
     /**
      * 回掉后端服务
      *
+     * @param token 回掉时的token
      * @param provider {String} ordinaryroad|github|gitee
      * @param code {String} Authorization Code
      * @param state {String} State
      * @returns {Promise} {token,userInfo}
      */
-    callback: (provider, code, state) => {
+    callback: (token, provider, code, state) => {
       const data = { code, state }
       return $axios({
         url: `/blog/oauth2/callback/${provider}?1=1${urlEncode(data)}`,
-        method: 'get'
+        method: 'get',
+        // 在server端调用的方法必须手动设置header，因为获取不到client的cookie
+        headers: { 'or-blog-token': token }
       })
     }
   }

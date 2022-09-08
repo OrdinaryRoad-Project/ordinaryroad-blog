@@ -38,6 +38,7 @@ import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.service.*
 import java.time.LocalDate
 import java.util.stream.Collectors
@@ -89,7 +90,7 @@ class BlogOAuth2Resource {
     @Path("callback/{provider}")
     @Produces(MediaType.APPLICATION_JSON)
     fun callback(@RestPath provider: String, @RestQuery code: String, @RestQuery state: String): JsonObject {
-        // 回掉方式 login|add
+        // 回掉方式 login|add|update
         val type = state.split("_")[3]
         when (type) {
             "login" -> {
@@ -99,8 +100,8 @@ class BlogOAuth2Resource {
                 }
             }
 
-            "add" -> {
-                // 已经登录则需要退出登录
+            "add", "update" -> {
+                // 未登录则需要登录
                 if (!StpUtil.isLogin()) {
                     throw BaseBlogException("请先登录")
                 }
@@ -121,33 +122,62 @@ class BlogOAuth2Resource {
         val openid = responseOAuthUser.openid
         // openid和provider确定唯一用户
         var oAuthUser = oAuthUserService.findByOpenidAndProvider(openid, provider)
-        if (oAuthUser == null) {
-            // 不存在则创建，用于创建关联关系
-            oAuthUser = oAuthUserService.create(responseOAuthUser)!!
-        }
 
         // 主账号
         var user: BlogUser? = null
-        if (type == "login") {
-            // 根据OAuth2用户Id查询Blog主账号
-            user = userService.findByOAuthUserId(oAuthUser.uuid)
-            if (user == null) {
-                // 不存在则创建
-                user = userService.create(BlogUser().apply {
-                    username = oAuthUser.username ?: "U_${IdUtil.fastSimpleUUID()}"
-                    avatar = oAuthUser.avatar
-                    email = oAuthUser.email
-                }, oAuthUser)
+        when (type) {
+            "login" -> {
+                if (oAuthUser == null) {
+                    // 不存在则创建，用于创建关联关系
+                    oAuthUser = oAuthUserService.create(responseOAuthUser)!!
+                }
+
+                // 根据OAuth2用户Id查询Blog主账号
+                user = userService.findByOAuthUserId(oAuthUser.uuid)
+                if (user == null) {
+                    // 不存在则创建
+                    user = userService.create(BlogUser().apply {
+                        username = oAuthUser!!.username ?: "U_${IdUtil.fastSimpleUUID()}"
+                        avatar = oAuthUser!!.avatar
+                        email = oAuthUser!!.email
+                    }, oAuthUser)
+                }
             }
-        } else if (type == "add") {
-            user = userService.findById(StpUtil.getLoginIdAsString())
-            userService.findByOAuthUserId(oAuthUser.uuid)?.let {
-                throw BaseBlogException("该账号已注册，请先注销账号（开发中...）")
+
+            "add" -> {
+                if (oAuthUser == null) {
+                    // 不存在则创建，用于创建关联关系
+                    oAuthUser = oAuthUserService.create(responseOAuthUser)!!
+                }
+
+                user = userService.findById(StpUtil.getLoginIdAsString())
+                userService.findByOAuthUserId(oAuthUser.uuid)?.let {
+                    throw BaseBlogException("该账号已注册，请先注销账号（开发中...）")
+                }
+                userOAuthUsersService.create(BlogUserOAuthUsers().apply {
+                    userId = user!!.uuid
+                    oAuthUserId = oAuthUser.uuid
+                })
             }
-            userOAuthUsersService.create(BlogUserOAuthUsers().apply {
-                userId = user.uuid
-                oAuthUserId = oAuthUser.uuid
-            })
+
+            "update" -> {
+                if (oAuthUser == null) {
+                    BaseBlogException("参数无效").throws()
+                }
+                responseOAuthUser.uuid = oAuthUser!!.uuid
+
+                // 根据OAuth2用户Id查询Blog主账号
+                user = userService.findByOAuthUserId(oAuthUser.uuid)
+                if (user == null || user.uuid != StpUtil.getLoginIdAsString()) {
+                    // 更新时需要有正确的关联关系
+                    BaseBlogException("参数无效").throws()
+                }
+                oAuthUserService.update(responseOAuthUser)
+            }
+
+            else -> {
+                BaseBlogException("不支持的操作").throws()
+            }
         }
         val userId = user!!.uuid
 

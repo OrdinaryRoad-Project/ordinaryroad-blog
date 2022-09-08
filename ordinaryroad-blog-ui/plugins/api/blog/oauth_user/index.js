@@ -34,6 +34,12 @@ export default {
         url: '/blog/oauth_user/all',
         method: 'get'
       })
+    },
+    delete: (provider) => {
+      return $axios({
+        url: `/blog/oauth_user?provider=${provider}`,
+        method: 'delete'
+      })
     }
   }
 }
