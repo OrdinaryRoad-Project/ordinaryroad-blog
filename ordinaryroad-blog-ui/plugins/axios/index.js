@@ -92,6 +92,9 @@ export default function (context, inject) {
       const data = error.response.data
       message = typeof data === 'string' ? data : data.message
     }
+    if (!message) {
+      message = '失败'
+    }
     if (message === 'Network Error') {
       message = '后端接口连接异常'
     } else if (message.includes('timeout')) {
