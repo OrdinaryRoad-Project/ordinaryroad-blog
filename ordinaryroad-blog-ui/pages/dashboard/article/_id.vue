@@ -306,7 +306,12 @@ export default {
           this.article = data
           this.articleContent = data.content
           this.tagOptions.selectedItems = data.tagNames
-          this.$refs.vditor && this.$refs.vditor.setValue(data.content)
+          this.$nextTick(() => {
+            try {
+              this.$refs.vditor && this.$refs.vditor.setValue(data.content)
+            } catch (ignore) {
+            }
+          })
         })
         .catch(() => {
           process.client && this.$dialog({
@@ -436,6 +441,13 @@ export default {
       this.tagOptions.selectedItems = [...this.tagOptions.selectedItems]
       this.onSelectedItemsInput(this.tagOptions.selectedItems)
     },
+    changeCurrentArticle (newArticle) {
+      this.article = newArticle
+      this.articleContent = this.article.content
+      this.$refs.vditor.setValue(this.articleContent)
+      this.tagOptions.selectedItems = this.article.tagNames
+      this.onCurrentItems(null)
+    },
     /**
      * 选中历史版本
      */
@@ -446,11 +458,8 @@ export default {
         }).then((dialog) => {
           if (dialog.isConfirm) {
             this.articleInheritsMenuModel = false
-            this.article = items[0]
-            this.articleContent = this.article.content
-            this.$refs.vditor.setValue(this.articleContent)
-            this.tagOptions.selectedItems = this.article.tagNames
-            this.onCurrentItems(null)
+            const newArticle = items[0]
+            this.changeCurrentArticle(newArticle)
           }
         })
       }
@@ -495,13 +504,13 @@ export default {
           if (dialog.isConfirm) {
             this.$apis.blog.article.publish(this.article)
               .then((data) => {
-                dialog.cancel()
                 this.$snackbar.success('文章发布成功')
                 setTimeout(() => {
                   this.$router.replace(`/dashboard/article/${data.uuid}`, () => {
                     this.$router.go(0)
                   })
-                }, 500)
+                  dialog.cancel()
+                }, 300)
               })
               .catch(() => {
                 dialog.cancel()

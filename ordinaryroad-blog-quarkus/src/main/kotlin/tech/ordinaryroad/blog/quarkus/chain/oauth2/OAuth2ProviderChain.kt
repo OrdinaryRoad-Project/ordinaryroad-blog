@@ -35,7 +35,7 @@ import me.zhyd.oauth.model.AuthResponse
 import me.zhyd.oauth.model.AuthUser
 import tech.ordinaryroad.blog.quarkus.chain.oauth2.provider.BaseOAuth2Provider
 import tech.ordinaryroad.blog.quarkus.chain.oauth2.provider.OrdinaryRoadOAuth2Source
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.properties.OAuth2Properties
 import java.util.*
 import javax.enterprise.context.ApplicationScoped

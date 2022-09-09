@@ -32,11 +32,11 @@ import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.chain.oauth2.OAuth2ProviderChain
 import tech.ordinaryroad.blog.quarkus.chain.oauth2.provider.OrdinaryRoadOAuth2Source
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.service.*
@@ -136,11 +136,13 @@ class BlogOAuth2Resource {
                 user = userService.findByOAuthUserId(oAuthUser.uuid)
                 if (user == null) {
                     // 不存在则创建
-                    user = userService.create(BlogUser().apply {
-                        username = oAuthUser!!.username ?: "U_${IdUtil.fastSimpleUUID()}"
-                        avatar = oAuthUser!!.avatar
-                        email = oAuthUser!!.email
-                    }, oAuthUser)
+                    user = userService.create(
+                        BlogUser().apply {
+                            username = oAuthUser!!.username ?: "U_${IdUtil.fastSimpleUUID()}"
+                            avatar = oAuthUser!!.avatar
+                            email = oAuthUser!!.email
+                        }, oAuthUser
+                    )
                 }
             }
 
@@ -154,10 +156,11 @@ class BlogOAuth2Resource {
                 userService.findByOAuthUserId(oAuthUser.uuid)?.let {
                     throw BaseBlogException("该账号已注册，请先注销账号（开发中...）")
                 }
-                userOAuthUsersService.create(BlogUserOAuthUsers().apply {
-                    userId = user!!.uuid
-                    oAuthUserId = oAuthUser.uuid
-                })
+                userOAuthUsersService.create(
+                    BlogUserOAuthUsers().apply {
+                        userId = user!!.uuid
+                        oAuthUserId = oAuthUser.uuid
+                    })
             }
 
             "update" -> {

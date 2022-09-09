@@ -31,12 +31,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogComment;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment;
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest;
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO;
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService;
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO;
-import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO;
 
 import javax.enterprise.inject.spi.CDI;
 import java.util.Collections;

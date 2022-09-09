@@ -26,10 +26,10 @@ package tech.ordinaryroad.blog.quarkus.service
 
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

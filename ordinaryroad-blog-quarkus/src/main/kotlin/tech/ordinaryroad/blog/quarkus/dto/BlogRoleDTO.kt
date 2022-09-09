@@ -27,7 +27,7 @@ import cn.hutool.core.util.StrUtil
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.entity.BlogRole
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
 
 /**
  * 博客角色DTO类

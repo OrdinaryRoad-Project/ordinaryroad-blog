@@ -29,8 +29,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
-import tech.ordinaryroad.blog.quarkus.dao.BlogArticleDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogArticleDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canMoveToTrash
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecoverFromTrash

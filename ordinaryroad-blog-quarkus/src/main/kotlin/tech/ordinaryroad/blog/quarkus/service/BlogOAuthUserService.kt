@@ -25,9 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dao.BlogOAuthUserDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogOAuthUserDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped

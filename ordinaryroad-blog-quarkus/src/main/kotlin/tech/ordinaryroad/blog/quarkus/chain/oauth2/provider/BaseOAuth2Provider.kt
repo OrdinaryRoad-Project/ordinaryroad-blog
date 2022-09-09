@@ -24,7 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.chain.oauth2.provider
 
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 
 /**
  *

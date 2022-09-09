@@ -170,6 +170,11 @@
         </v-btn>
       </template>
 
+      <template #[`item.title`]="{ item }">
+        <or-blog-link :href="`/${userInfo.user.uuid}/article/detail/${item.uuid}`">
+          {{ item.title }}
+        </or-blog-link>
+      </template>
       <template #[`item.status`]="{ item }">
         <v-chip
           label
@@ -240,8 +245,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import OrBlogLink from '@/components/or/Link'
+
 export default {
   name: 'OrBlogArticleDataTable',
+  components: { OrBlogLink },
   props: {
     /**
      * 选中返回完整Object数组，默认只返回uuid数组
@@ -332,6 +341,10 @@ export default {
     }
   }),
   computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    }),
+
     // 放在这为了支持国际化，如果放在data下切换语言不会更新
     headers () {
       const statusHeader = {

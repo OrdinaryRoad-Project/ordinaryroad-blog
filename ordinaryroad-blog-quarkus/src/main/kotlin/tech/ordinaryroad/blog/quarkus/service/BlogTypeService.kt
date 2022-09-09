@@ -26,8 +26,8 @@ package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dao.BlogTypeDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogType
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogTypeDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotValidException

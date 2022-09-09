@@ -44,6 +44,18 @@ export default {
     $axios = $axios || axios
   },
   apis: {
+    updateAvatar (avatar) {
+      return $axios({
+        url: `/blog/user/avatar?avatar=${avatar}`,
+        method: 'put'
+      })
+    },
+    updateUsername (username) {
+      return $axios({
+        url: `/blog/user/username?username=${username}`,
+        method: 'put'
+      })
+    },
     findById: (id) => {
       return $axios({
         url: `/blog/user/${id}`,

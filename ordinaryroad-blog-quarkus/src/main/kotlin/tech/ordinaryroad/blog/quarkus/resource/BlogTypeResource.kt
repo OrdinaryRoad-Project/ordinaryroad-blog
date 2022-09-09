@@ -29,8 +29,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.dto.BlogTypeDTO
-import tech.ordinaryroad.blog.quarkus.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogTypeMapStruct

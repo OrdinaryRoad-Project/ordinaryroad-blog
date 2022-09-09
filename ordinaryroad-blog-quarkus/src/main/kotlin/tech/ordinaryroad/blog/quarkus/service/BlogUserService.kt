@@ -24,12 +24,12 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import tech.ordinaryroad.blog.quarkus.dao.BlogUserDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserRoles
-import tech.ordinaryroad.blog.quarkus.utils.Utils.differ
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserRoles
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.differ
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
@@ -73,10 +73,11 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
      */
     fun create(user: BlogUser, oAuthUser: BlogOAuthUser): BlogUser {
         val create = super.create(user)
-        userOAuthUsersService.create(BlogUserOAuthUsers().apply {
-            userId = create.uuid
-            oAuthUserId = oAuthUser.uuid
-        })
+        userOAuthUsersService.create(
+            BlogUserOAuthUsers().apply {
+                userId = create.uuid
+                oAuthUserId = oAuthUser.uuid
+            })
         return create
     }
 

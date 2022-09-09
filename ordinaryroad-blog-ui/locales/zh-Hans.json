@@ -1,12 +1,5 @@
 {
   "appName": "OR博客",
-  "oAuthUser": {
-    "actions": {
-      "update": "更新",
-      "add": "绑定",
-      "remove": "解绑"
-    }
-  },
   "article": {
     "title": "标题",
     "coverImage": "封面",
@@ -28,6 +21,7 @@
     "startWritingHint": "开始写作吧"
   },
   "articleCount": "文章{0}",
+  "avatar": "头像",
   "createWhat": "创建{0}",
   "dashboardMenuTitles": {
     "dashboard": {
@@ -52,6 +46,13 @@
     }
   },
   "loginFormTitle": "登录到OR博客",
+  "oAuthUser": {
+    "actions": {
+      "update": "更新",
+      "add": "绑定",
+      "remove": "解绑"
+    }
+  },
   "status": {
     "article": {
       "notFound": "获取文章信息失败，请重试或返回"

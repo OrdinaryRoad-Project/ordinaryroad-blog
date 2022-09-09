@@ -26,11 +26,40 @@
   <base-material-card title="个人中心">
     <v-card flat outlined>
       <v-card-title>基本信息</v-card-title>
+      <v-form ref="avatarForm" class="mx-4">
+        <div class="d-flex align-center">
+          <v-file-input
+            :loading="avatarForm.loading"
+            truncate-length="100"
+            accept="image/*"
+            prepend-icon=""
+            :rules="[$rules.maxFileSize10MB]"
+            show-size
+            :label="$t('avatar')"
+            :clearable="false"
+            @change="onPictureSelected"
+          />
+          <or-avatar
+            :size="40"
+            class="ms-2"
+            :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
+            :username="userInfo.user.username"
+          />
+          <v-btn
+            v-if="userInfo.user.avatar"
+            class="ms-3"
+            icon
+            @click="onPictureSelected(null)"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
+      </v-form>
       <v-form ref="usernameForm" class="mx-4">
         <div class="d-flex align-center">
           <v-text-field
             v-model="usernameTextField.input"
-            :rules="[$rules.notBlank,$rules.max10Chars]"
+            :rules="[$rules.notBlank,$rules.max20Chars]"
             :loading="usernameTextField.loading"
             :disabled="usernameTextField.disabled"
             type="text"
@@ -93,10 +122,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
+    avatarForm: {
+      value: '',
+      input: '',
+      disabled: true,
+      loading: false
+    },
     usernameTextField: {
       value: '',
       input: '',
@@ -122,6 +157,54 @@ export default {
     this.usernameTextField.input = this.userInfo.user.username
   },
   methods: {
+    ...mapActions('user', {
+      updateAvatar: 'updateAvatar',
+      updateUsername: 'updateUsername'
+    }),
+
+    onPictureSelected (file) {
+      if (file == null) {
+        if (this.userInfo.user.avatar) {
+          this.$dialog({
+            content: this.$t('areYouSureToDoWhat', ['清空头像']),
+            loading: true
+          })
+            .then((dialog) => {
+              if (dialog.isConfirm) {
+                this.avatarForm.loading = true
+                this.updateAvatar({ avatar: '', $apis: this.$apis })
+                  .then(() => {
+                    this.$snackbar.success(this.$t('whatSuccessfully', ['头像清空']))
+                    this.avatarForm.loading = false
+                    dialog.cancel()
+                  })
+                  .catch(() => {
+                    this.avatarForm.loading = false
+                    dialog.cancel()
+                  })
+              }
+            })
+        } else {
+          this.$snackbar.info('没有头像可以清空...')
+        }
+      } else if (this.$refs.avatarForm.validate()) {
+        this.avatarForm.loading = true
+        this.$apis.blog.upload(file)
+          .then((data) => {
+            this.updateAvatar({ avatar: data, $apis: this.$apis })
+              .then(() => {
+                this.$snackbar.success(this.$t('whatUpdateSuccessfully', ['头像']))
+                this.avatarForm.loading = false
+              })
+              .catch(() => {
+                this.avatarForm.loading = false
+              })
+          })
+          .catch(() => {
+            this.avatarForm.loading = false
+          })
+      }
+    },
     getAllOAuthUser () {
       this.$apis.blog.oauth_user.all()
         .then((data) => {
@@ -168,21 +251,17 @@ export default {
         this.usernameTextField.disabled = true
       } else if (this.$refs.usernameForm.validate()) {
         this.usernameTextField.loading = true
-
-        this.$snackbar.info('开发中...')
-        this.usernameTextField.loading = false
-
-        /* TODO this.updateUsername({
-           username: this.usernameTextField.input,
-           $apis: this.$apis
-         }).then(() => {
-           this.usernameTextField.loading = false
-           this.$snackbar.success(this.$t('whatUpdateSuccessfully', [this.$t('username')]))
-           this.usernameTextField.value = this.usernameTextField.input
-           this.usernameTextField.disabled = true
-         }).catch(() => {
-           this.usernameTextField.loading = false
-         }) */
+        this.updateUsername({
+          username: this.usernameTextField.input,
+          $apis: this.$apis
+        }).then(() => {
+          this.usernameTextField.loading = false
+          this.$snackbar.success(this.$t('whatUpdateSuccessfully', [this.$t('username')]))
+          this.usernameTextField.value = this.usernameTextField.input
+          this.usernameTextField.disabled = true
+        }).catch(() => {
+          this.usernameTextField.loading = false
+        })
       }
     }
   }

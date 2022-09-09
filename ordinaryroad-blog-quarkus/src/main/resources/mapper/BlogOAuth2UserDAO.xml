@@ -24,7 +24,7 @@
   -->
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="tech.ordinaryroad.blog.quarkus.dao.BlogOAuthUserDAO">
+<mapper namespace="tech.ordinaryroad.blog.quarkus.dal.dao.BlogOAuthUserDAO">
 
     <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO">
         <id column="id" property="id"/>
@@ -35,7 +35,7 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <resultMap id="BaseResultMap" type="tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser"
+    <resultMap id="BaseResultMap" type="tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser"
                extends="BaseDOResultMap">
         <result column="username" property="username"/>
         <result column="avatar" property="avatar"/>

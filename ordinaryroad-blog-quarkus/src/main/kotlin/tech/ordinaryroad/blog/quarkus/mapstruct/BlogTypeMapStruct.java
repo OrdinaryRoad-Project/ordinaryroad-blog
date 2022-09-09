@@ -26,8 +26,8 @@ package tech.ordinaryroad.blog.quarkus.mapstruct;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogType;
-import tech.ordinaryroad.blog.quarkus.vo.BlogTypeVO;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeVO;
 
 @Mapper
 public interface BlogTypeMapStruct extends BaseBlogMapStruct {

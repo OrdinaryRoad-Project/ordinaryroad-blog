@@ -68,6 +68,10 @@ export default {
     autoLoadMore: {
       type: Boolean,
       default: false
+    },
+    itemWidth: {
+      type: Number,
+      default: 500
     }
   },
   data: () => ({
@@ -83,11 +87,10 @@ export default {
   }),
   computed: {
     options () {
-      let width = 500
       const padding = {
         default: 1
       }
-      if (this.$vuetify.breakpoint.xs) {
+      /* if (this.$vuetify.breakpoint.xs) {
         width = 500
       } else if (this.$vuetify.breakpoint.smAndDown) {
         width = 500
@@ -97,8 +100,8 @@ export default {
         width = 500
       } else if (this.$vuetify.breakpoint.xl) {
         width = 500
-      }
-      return { width, padding }
+      } */
+      return { width: this.itemWidth, padding }
     }
   },
   watch: {

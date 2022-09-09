@@ -33,9 +33,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.apache.ibatis.session.SqlSessionFactory
 import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
-import tech.ordinaryroad.blog.quarkus.dao.BlogCommentDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogCommentDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
@@ -43,8 +43,8 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
-import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
 import tech.ordinaryroad.commons.base.cons.StatusCode
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils

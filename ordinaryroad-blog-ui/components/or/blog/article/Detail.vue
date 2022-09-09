@@ -282,12 +282,17 @@
             <div v-if="blogArticle.original">
               <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
             </div>
-            <strong>本文链接：</strong><a :href="currentUrl" target="_blank">{{ currentUrl }}</a><br>
+            <strong>本文链接：</strong>
+            <or-blog-link :href="currentUrl" target="_self">
+              {{ currentUrl }}
+            </or-blog-link>
+            <br>
             <div v-if="blogArticle.original">
-              <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循<a
-                target="_blank"
-                href="https://creativecommons.org/licenses/by-sa/4.0/"
-              >CC BY-SA 4.0</a>许可协议，转载请附上本文链接及本声明。
+              <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循
+              <or-blog-link href="https://creativecommons.org/licenses/by-sa/4.0/">
+                CC BY-SA 4.0
+              </or-blog-link>
+              许可协议，转载请附上本文链接及本声明。
             </div>
           </v-alert>
         </div>
@@ -423,10 +428,11 @@
 
 <script>
 import VueQr from 'vue-qr'
+import OrBlogLink from '@/components/or/Link'
 
 export default {
   name: 'OrBlogArticleDetail',
-  components: { VueQr },
+  components: { OrBlogLink, VueQr },
   props: {
     article: {
       type: Object,

@@ -25,10 +25,10 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

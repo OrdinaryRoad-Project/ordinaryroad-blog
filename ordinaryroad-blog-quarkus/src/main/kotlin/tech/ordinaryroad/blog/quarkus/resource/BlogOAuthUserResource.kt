@@ -26,7 +26,7 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
 import org.jboss.resteasy.reactive.RestQuery
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService

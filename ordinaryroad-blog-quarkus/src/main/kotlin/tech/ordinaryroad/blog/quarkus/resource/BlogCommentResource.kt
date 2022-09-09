@@ -29,9 +29,9 @@ import mybatis.mate.annotation.DataColumn
 import mybatis.mate.annotation.DataScope
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
-import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid

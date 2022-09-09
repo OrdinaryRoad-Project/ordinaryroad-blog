@@ -34,19 +34,19 @@ import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.entity.BlogTag
-import tech.ordinaryroad.blog.quarkus.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.request.*
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleDetailVO
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.util.*
 import java.util.stream.Collectors
@@ -202,10 +202,11 @@ class BlogArticleResource {
                     )
                 )
                 // 将FirstId更新为当前Id
-                val draftUpdate = articleService.update(BlogArticle().apply {
-                    this.uuid = draft.uuid
-                    this.firstId = draft.uuid
-                })
+                val draftUpdate = articleService.update(
+                    BlogArticle().apply {
+                        this.uuid = draft.uuid
+                        this.firstId = draft.uuid
+                    })
 
                 val dto = dtoService.transfer(draftUpdate, BlogArticleDTO::class.java)
 
@@ -345,10 +346,11 @@ class BlogArticleResource {
                         tagIds
                     )
                 )
-                val publishUpdate = articleService.update(BlogArticle().apply {
-                    this.uuid = publish.uuid
-                    this.firstId = publish.uuid
-                })
+                val publishUpdate = articleService.update(
+                    BlogArticle().apply {
+                        this.uuid = publish.uuid
+                        this.firstId = publish.uuid
+                    })
 
                 val dto = dtoService.transfer(publishUpdate, BlogArticleDTO::class.java)
 
@@ -615,10 +617,11 @@ class BlogArticleResource {
         }
 
         val coverImage = request.coverImage
-        val article = articleService.update(BlogArticle().apply {
-            this.uuid = uuid
-            this.coverImage = coverImage
-        })
+        val article = articleService.update(
+            BlogArticle().apply {
+                this.uuid = uuid
+                this.coverImage = coverImage
+            })
         return Response.ok()
             .entity(article)
             .build()
@@ -670,10 +673,11 @@ class BlogArticleResource {
         }
 
         val title = request.title
-        val article = articleService.update(BlogArticle().apply {
-            this.uuid = uuid
-            this.title = title
-        })
+        val article = articleService.update(
+            BlogArticle().apply {
+                this.uuid = uuid
+                this.title = title
+            })
         return Response.ok()
             .entity(article)
             .build()

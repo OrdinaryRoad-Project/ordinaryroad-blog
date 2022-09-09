@@ -24,8 +24,8 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import tech.ordinaryroad.blog.quarkus.dao.BlogTagDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogTag
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogTagDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotValidException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService

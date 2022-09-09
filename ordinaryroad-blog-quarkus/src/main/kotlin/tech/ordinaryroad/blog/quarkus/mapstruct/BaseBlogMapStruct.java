@@ -24,9 +24,9 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO;
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService;
-import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
 import javax.enterprise.inject.spi.CDI;
 

@@ -43,7 +43,7 @@ export default {
     $apis
   }) {
     return new Promise((resolve, reject) => {
-      $apis.upms.user.updateAvatar(avatar).then(() => {
+      $apis.blog.user.updateAvatar(avatar).then(() => {
         commit('UPDATE_USER_INFO_AVATAR', avatar)
         resolve()
       }).catch((error) => {
@@ -56,12 +56,14 @@ export default {
     $apis
   }) {
     return new Promise((resolve, reject) => {
-      $apis.upms.user.updateUsername(username).then(() => {
-        commit('UPDATE_USER_INFO_USERNAME', username)
-        resolve()
-      }).catch((error) => {
-        reject(error)
-      })
+      $apis.blog.user.updateUsername(username)
+        .then(() => {
+          commit('UPDATE_USER_INFO_USERNAME', username)
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   },
   updateEmail ({ commit }, {

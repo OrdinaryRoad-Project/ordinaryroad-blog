@@ -28,9 +28,9 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO;
 import tech.ordinaryroad.blog.quarkus.service.BlogRoleService;
-import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO;
 
 import javax.enterprise.inject.spi.CDI;
 import java.util.stream.Collectors;

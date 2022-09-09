@@ -1,12 +1,5 @@
 {
   "appName": "OR BLOG",
-  "oAuthUser": {
-    "actions": {
-      "update": "Update",
-      "add": "Bind",
-      "remove": "Unbind"
-    }
-  },
   "article": {
     "title": "Title",
     "coverImage": "Cover Image",
@@ -28,6 +21,7 @@
     "startWritingHint": "Start Writing Now"
   },
   "articleCount": "Articles {0}",
+  "avatar": "Avatar",
   "createWhat": "Create {0}",
   "dashboardMenuTitles": {
     "dashboard": {
@@ -52,6 +46,13 @@
     }
   },
   "loginFormTitle": "Login To OR BLOG",
+  "oAuthUser": {
+    "actions": {
+      "update": "Update",
+      "add": "Bind",
+      "remove": "Unbind"
+    }
+  },
   "status": {
     "article": {
       "notFound": "Failed to get article information, please try again or return"

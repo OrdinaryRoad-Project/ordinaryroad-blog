@@ -46,6 +46,8 @@
         order-md="2"
       >
         <base-material-card
+          class="sticky-top"
+          style="top: 108px !important;"
           :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
         >
           <template #avatar>
@@ -54,8 +56,6 @@
               avatar-class="v-card--material__avatar elevation-6"
               size="128"
               :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
-              editable
-              @selectAvatar="onAvatarSelect"
             />
           </template>
           <v-list>
@@ -102,11 +102,7 @@ export default {
   },
   mounted () {
   },
-  methods: {
-    onAvatarSelect (e) {
-      console.log(e)
-    }
-  }
+  methods: {}
 }
 </script>
 

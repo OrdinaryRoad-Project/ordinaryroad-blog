@@ -25,15 +25,21 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.vo.BlogUserVO
 import javax.inject.Inject
+import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 import javax.ws.rs.GET
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
@@ -68,6 +74,44 @@ class BlogUserResource {
         }
     }
 
+    @PUT
+    @Path("avatar")
+    @Transactional
+    fun updateAvatar(
+        @Valid
+        @Size(max = 1000, message = "头像长度不能大于50")
+        @RestQuery avatar: String
+    ) {
+        val userId = StpUtil.getLoginIdAsString()
+
+        userService.update(BlogUser().apply {
+            uuid = userId
+            this.avatar = avatar
+        })
+    }
+
+    @PUT
+    @Path("username")
+    @Transactional
+    fun updateUsername(
+        @Valid
+        @NotBlank(message = "用户名不能为空")
+        @Size(max = 50, message = "用户名长度不能大于50")
+        @RestQuery username: String
+    ) {
+        val userId = StpUtil.getLoginIdAsString()
+
+        val wrapper = Wrappers.query<BlogUser>()
+            .eq("username", username)
+        if (userService.dao.exists(wrapper)) {
+            BaseBlogException("用户名已存在").throws()
+        }
+
+        userService.update(BlogUser().apply {
+            uuid = userId
+            this.username = username
+        })
+    }
 
     //region 开发中（管理员）
     @PUT

@@ -74,7 +74,7 @@ class BlogResource {
         @MultipartForm request: FileUploadRequest,
         @RestHeader("or-blog-token") token: String
     ): Response {
-        BlogArticleResource.throwBadRequest()
+        // BlogArticleResource.throwBadRequest()
 
         StpUtil.getLoginIdByToken(token)
 
