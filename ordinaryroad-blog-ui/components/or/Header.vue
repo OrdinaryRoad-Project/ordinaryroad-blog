@@ -30,6 +30,52 @@
 
     <v-spacer />
 
+    <!-- 搜索 -->
+    <span
+      v-if="$route.name!=='search-input'"
+      style="position: relative;"
+      class="ms-2 me-4 d-inline-flex align-center"
+    >
+      <v-fade-transition>
+        <v-form
+          v-if="$vuetify.breakpoint.mdAndUp||searchInputFocused"
+          style="position: absolute; right: 0; width: 100%; max-width: 400px"
+          :style="{'width':$vuetify.breakpoint.smAndDown&&!searchInputFocused?'100px':'200px'}"
+          @submit="onSearchFormSubmit"
+          @submit.n.native.prevent
+        >
+          <v-text-field
+            v-model.trim="searchInput"
+            dense
+            :autofocus="!$vuetify.breakpoint.mdAndUp"
+            class="transition-fast-in-fast-out"
+            :class="searchInputFocused?'elevation-6':null"
+            hide-details
+            :placeholder="$t('search')"
+            solo
+            clearable
+            maxlength="10"
+            :rules="[$rules.max100Chars]"
+            append-icon="mdi-magnify"
+            @click:append="onClickSearchInputAppend"
+            @focusin="searchInputFocused=true"
+            @focusout="searchInputFocused=false"
+          />
+        </v-form>
+      </v-fade-transition>
+      <v-fade-transition>
+        <v-btn
+          v-if="$vuetify.breakpoint.smAndDown&&!searchInputFocused"
+          small
+          style="position: absolute; top: -14px; right: 0; margin-right: 10px"
+          icon
+          @click="searchInputFocused=true"
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </v-fade-transition>
+    </span>
+
     <!-- 用户信息 -->
     <div v-if="userInfo">
       <v-btn
@@ -56,7 +102,7 @@
               :username="userInfo.user.username"
               :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
             />
-            <v-list-item-title>
+            <v-list-item-title :style="{'max-width':$vuetify.breakpoint.mdAndUp?null:'50px' }">
               {{ username }}
             </v-list-item-title>
             <v-icon>mdi-chevron-down</v-icon>
@@ -90,6 +136,10 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'OrHeader',
+  data: () => ({
+    searchInput: '',
+    searchInputFocused: false
+  }),
   computed: {
     ...mapGetters('app', {
       selectedThemeOption: 'getSelectedThemeOption',
@@ -109,6 +159,10 @@ export default {
       set (val) {
         // ignore
       }
+    },
+
+    showSearch () {
+      return this.$vuetify.breakpoint.mdAndUp
     }
 
   },
@@ -116,6 +170,21 @@ export default {
     ...mapActions('app', {
       setSelectedThemeOption: 'setSelectedThemeOption'
     }),
+
+    onClickSearchInputAppend () {
+      if (this.searchInputFocused) {
+        this.onSearchFormSubmit()
+      } else {
+        this.searchInputFocused = true
+      }
+    },
+
+    onSearchFormSubmit () {
+      if (this.searchInput === '') {
+        return
+      }
+      window.open(`/search/${this.searchInput}`, '_blank')
+    },
 
     logout ({ titleKey }) {
       if (titleKey === 'userMenuTitles.space') {

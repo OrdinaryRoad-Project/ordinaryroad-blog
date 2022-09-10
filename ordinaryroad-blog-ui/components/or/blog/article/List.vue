@@ -83,7 +83,11 @@ export default {
       records: [],
       current: 1
     },
-    tagName: ''
+
+    tagName: '',
+    title: '',
+    summary: '',
+    content: ''
   }),
   computed: {
     options () {
@@ -112,7 +116,7 @@ export default {
   mounted () {
   },
   created () {
-    this.getArticles(false)
+    this.autoLoadMore && this.getArticles(false)
   },
   methods: {
     getArticles (loadMore = true) {
@@ -133,7 +137,10 @@ export default {
       const page = loadMore ? this.articlePageItems.current + 1 : 1
       this.$apis.blog.article.pagePublish(page, {
         createBy: this.createBy,
-        tagName: this.tagName
+        tagName: this.tagName,
+        title: this.title,
+        summary: this.summary,
+        content: this.content
       })
         .then((data) => {
           if (loadMore) {
@@ -157,6 +164,7 @@ export default {
               loading: false,
               noMoreData: data.pages === 0 || data.current === data.pages
             }
+            this.$emit('loadFinish')
           }
         })
         .catch(() => {

@@ -33,6 +33,7 @@
       >
         <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
           <or-blog-article-list
+            auto-load-more
             :total.sync="totalArticle"
             :create-by="blogUser.uuid"
           />

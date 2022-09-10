@@ -77,8 +77,16 @@ export default {
         method: 'get'
       })
     },
-    pagePublish: (page, { createBy, tagName = '', sortBy = ['first_id'], sortDesc = [true] }) => {
-      const data = { createBy, tagName, sortBy, sortDesc }
+    pagePublish: (page, {
+      createBy,
+      tagName = '',
+      title = '',
+      summary = '',
+      content = '',
+      sortBy = ['first_id'],
+      sortDesc = [true]
+    }) => {
+      const data = { createBy, tagName, title, summary, content, sortBy, sortDesc }
       return $axios({
         url: `/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
         method: 'get'

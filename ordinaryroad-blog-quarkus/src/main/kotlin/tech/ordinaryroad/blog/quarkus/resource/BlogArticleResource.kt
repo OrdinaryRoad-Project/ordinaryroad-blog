@@ -500,6 +500,9 @@ class BlogArticleResource {
         }
 
         val wrapper = ChainWrappers.queryChain(articleService.dao)
+            .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
+            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
+            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
             .like(tagIds.isNotEmpty(), "tag_ids", "%${tagId}%")

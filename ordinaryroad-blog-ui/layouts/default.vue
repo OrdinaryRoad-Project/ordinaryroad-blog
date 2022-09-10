@@ -108,9 +108,7 @@ export default {
     }
   },
   created () {
-    if (this.$vuetify.breakpoint.mdAndDown) {
-      this.localDashboardDrawerModel = false
-    }
+    this.localDashboardDrawerModel = !this.$vuetify.breakpoint.smAndDown
   },
   mounted () {
     this.$nextTick(() => {
