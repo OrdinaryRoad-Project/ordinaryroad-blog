@@ -49,11 +49,12 @@
             dense
             :autofocus="!$vuetify.breakpoint.mdAndUp"
             class="transition-fast-in-fast-out"
-            :class="searchInputFocused?'elevation-6':null"
+            :class="searchInputFocused?'elevation-2':null"
             hide-details
             :placeholder="$t('search')"
             solo
             clearable
+            flat
             maxlength="10"
             :rules="[$rules.max100Chars]"
             append-icon="mdi-magnify"
