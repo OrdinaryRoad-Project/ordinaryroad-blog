@@ -71,6 +71,17 @@ export default () => ({
       titleKey: 'dashboardMenuTitles.dashboard.tag.title',
       icon: 'mdi-tag-multiple',
       children: []
+    },
+    {
+      to: '/dashboard/log',
+      titleKey: 'dashboardMenuTitles.dashboard.log.title',
+      icon: 'mdi-text-box-multiple',
+      children: [],
+      meta: {
+        roles: {
+          or: ['ADMIN', 'DEVELOPER']
+        }
+      }
     }
   ],
   userMenuItems: [
@@ -104,10 +115,22 @@ export default () => ({
       icon: 'mdi-tag-multiple'
     },
     {
+      titleKey: 'userMenuTitles.log',
+      to: '/dashboard/log',
+      icon: 'mdi-text-box-multiple',
+      meta: {
+        roles: {
+          or: ['ADMIN', 'DEVELOPER']
+        }
+      }
+    },
+    {
       titleKey: 'logout',
       icon: 'mdi-logout'
     }
   ],
+  accessibleDashboardMenuItems: [],
+  accessibleUserMenuItems: [],
   titleKey: null,
   image: 'http://rekryt.ru/files/sidebar-2.32103624.jpg',
   themeOptions: [

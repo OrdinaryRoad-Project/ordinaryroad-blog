@@ -154,7 +154,7 @@ export default {
         codeTheme = 'dracula'
       }
       Vditor.setCodeTheme(codeTheme)
-      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.15/dist/css/content-theme')
+      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.17/dist/css/content-theme')
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
@@ -293,6 +293,9 @@ export default {
       Vditor.preview(previewElement, content,
         {
           markdown: {
+            autoSpace: true,
+            paragraphBeginningSpace: true,
+            toc: false,
             fixTermTypo: true
           },
           mode,
@@ -300,9 +303,11 @@ export default {
             style: codeTheme,
             lineNumber: true
           },
+          anchor: 0,
           theme: {
             current: theme
           },
+          icon: 'material',
           speech: {
             enable: true
           },
@@ -333,7 +338,7 @@ export default {
             this.updatePreviewerTheme(this.dark)
             previewElement.addEventListener('click', (event) => {
               if (event.target.tagName === 'IMG') {
-                Vditor.previewImage(event.target, null, this.$vuetify.theme.dark ? 'dark' : 'light')
+                Vditor.previewImage(event.target, this.$i18n.locale === 'en' ? 'en_US' : 'zh_CN', this.$vuetify.theme.dark ? 'dark' : 'light')
               }
             })
 

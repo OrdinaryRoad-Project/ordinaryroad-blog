@@ -22,39 +22,60 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.resource.vo;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
- * Service-Role
+ * 博客日志分类VO类
  *
  * @author mjz
- * @date 2022/8/26
+ * @date 2022/9/15
  */
-@ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+public class BlogLogTypeEnumVO {
 
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
+    private String description;
+
+    private int code;
+
+    private String method;
+
+    public BlogLogTypeEnumVO() {
     }
-    //endregion
 
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
-
-        return super.dao.selectOne(wrapper)
+    public BlogLogTypeEnumVO(String description, int code, String method) {
+        this.description = description;
+        this.code = code;
+        this.method = method;
     }
-    //endregion
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
 }

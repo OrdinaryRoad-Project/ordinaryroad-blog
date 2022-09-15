@@ -47,5 +47,47 @@ export default {
   },
   TOGGLE_RIGHT_DRAWER_MODEL: (state) => {
     state.rightDrawerModel = !state.rightDrawerModel
+  },
+  UPDATE_ACCESSIBLE_USER_MENU_ITEMS: (state, $access) => {
+    const menuItems = state.userMenuItems
+    const accessibleUserMenuItems = []
+    menuItems.forEach((item) => {
+      if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.checkRoleOr(item.meta.roles.or)) {
+        accessibleUserMenuItems.push(item)
+      }
+    })
+    state.accessibleUserMenuItems = accessibleUserMenuItems
+  },
+  UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS: (state, $access) => {
+    const dashboardMenuItems = state.dashboardMenuItems
+    const accessibleDashboardMenuItems = []
+    dashboardMenuItems.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        const dashboardMenuItems1 = []
+        item.children.forEach((item1) => {
+          if (item1.children && item1.children.length > 0) {
+            const dashboardMenuItems2 = []
+            item1.children.forEach((item2) => {
+              if (!item2.meta || !item2.meta.roles || !item2.meta.roles.or || $access.checkRoleOr(item2.meta.roles.or)) {
+                dashboardMenuItems2.push(item2)
+              }
+            })
+            if (dashboardMenuItems2.length > 0) {
+              item1.children = dashboardMenuItems2
+              dashboardMenuItems1.push(item1)
+            }
+          } else if (!item1.meta || !item1.meta.roles || !item1.meta.roles.or || $access.checkRoleOr(item1.meta.roles.or)) {
+            dashboardMenuItems1.push(item1)
+          }
+        })
+        if (dashboardMenuItems1.length > 0) {
+          item.children = dashboardMenuItems1
+          accessibleDashboardMenuItems.push(item)
+        }
+      } else if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.checkRoleOr(item.meta.roles.or)) {
+        accessibleDashboardMenuItems.push(item)
+      }
+    })
+    state.accessibleDashboardMenuItems = accessibleDashboardMenuItems
   }
 }

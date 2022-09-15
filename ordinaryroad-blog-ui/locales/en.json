@@ -22,6 +22,8 @@
   },
   "articleCount": "Articles {0}",
   "avatar": "Avatar",
+  "copied": "Copied",
+  "copy": "Copy",
   "createWhat": "Create {0}",
   "dashboardMenuTitles": {
     "dashboard": {
@@ -42,8 +44,27 @@
       },
       "tag": {
         "title": "Tag Management"
+      },
+      "log": {
+        "title": "Operation Log"
       }
     }
+  },
+  "log": {
+    "ip": "Ip",
+    "path": "Path",
+    "method": "Method",
+    "headers": "Headers",
+    "cookies": "Cookies",
+    "pathParams": "PathParams",
+    "queryParams": "QueryParams",
+    "request": "Request",
+    "status": "Status",
+    "responseHeaders": "ResponseHeaders",
+    "responseCookies": "ResponseCookies",
+    "response": "Response",
+    "consumedTime": "ConsumedTime",
+    "type": "Type"
   },
   "loginFormTitle": "Login To OR BLOG",
   "oAuthUser": {
@@ -83,6 +104,7 @@
     "profile": "User Profile",
     "article": "Articles",
     "type": "Types",
-    "tag": "Tags"
+    "tag": "Tags",
+    "log": "Operation Logs"
   }
 }

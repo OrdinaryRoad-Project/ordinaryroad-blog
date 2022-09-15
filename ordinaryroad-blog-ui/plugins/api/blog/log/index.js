@@ -22,39 +22,46 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+import { urlEncode } from '~/plugins/ordinaryroad/utils'
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
+let $axios = null
 
-/**
- * Service-Role
- *
- * @author mjz
- * @date 2022/8/26
- */
-@ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
-
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
+export default {
+  initAxios (axios) {
+    $axios = $axios || axios
+  },
+  apis: {
+    page: (page, size = 20, {
+      type = '',
+      method = '',
+      status = '',
+      createBy = '',
+      sortBy = ['created_time'],
+      sortDesc = [true]
+    }) => {
+      const data = { type, method, status, createBy, sortBy, sortDesc }
+      return $axios({
+        url: `/blog/log/page/${page}/${size}?1=1${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    delete (id) {
+      return $axios({
+        url: `/blog/log/delete/${id}`,
+        method: 'delete'
+      })
+    },
+    findAllTypes () {
+      return $axios({
+        url: '/blog/log/all/types',
+        method: 'get'
+      })
+    },
+    findAllStatus () {
+      return $axios({
+        url: '/blog/log/all/status',
+        method: 'get'
+      })
     }
-    //endregion
-
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
-
-        return super.dao.selectOne(wrapper)
-    }
-    //endregion
-
+  }
 }

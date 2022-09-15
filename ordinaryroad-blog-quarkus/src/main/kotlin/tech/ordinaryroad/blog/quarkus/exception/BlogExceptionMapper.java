@@ -27,6 +27,7 @@ package tech.ordinaryroad.blog.quarkus.exception;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import org.jboss.logging.Logger;
 import tech.ordinaryroad.commons.base.cons.IStatusCode;
+import tech.ordinaryroad.commons.base.cons.StatusCode;
 
 import javax.annotation.Priority;
 import javax.enterprise.inject.spi.CDI;
@@ -55,7 +56,11 @@ public class BlogExceptionMapper implements ExceptionMapper<BaseBlogException> {
     public Response toResponse(BaseBlogException exception) {
         log.error("BaseBlogException", exception);
         IStatusCode statusCode = exception.getStatusCode();
-        return Response.status(statusCode.getCode(), statusCode.getMessage())
+        int status = statusCode.getCode();
+        if (statusCode.getCode() == StatusCode.COMMON_EXCEPTION.getCode()) {
+            status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+        }
+        return Response.status(status, statusCode.getMessage())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(exception)
                 .build();

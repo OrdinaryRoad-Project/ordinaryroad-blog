@@ -97,6 +97,10 @@ export const actions = {
           const userInfo = await $apisServer.blog.userInfo(tokenInfo.value)
           commit('user/SET_TOKEN_INFO', tokenInfo.value)
           commit('user/SET_USER_INFO', userInfo)
+
+          // 更新本地可以访问的MenuItems
+          commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', $access)
+          commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', $access)
         } catch (e) {
           // Token无效或其他异常，不做任何操作
         }

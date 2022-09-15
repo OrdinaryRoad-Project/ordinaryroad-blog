@@ -24,6 +24,8 @@
 
 package tech.ordinaryroad.blog.quarkus.util
 
+import cn.dev33.satoken.stp.StpUtil
+
 /**
  *
  *
@@ -57,6 +59,10 @@ object BlogUtils {
         }
 
         return arrayListOf(listToDelete, listToAdd)
+    }
+
+    fun checkAdminOrDeveloper() {
+        StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
     }
 
 }

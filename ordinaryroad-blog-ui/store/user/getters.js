@@ -26,6 +26,12 @@ export default {
   getOAuth2State: state => state.oAuth2State,
   getTokenInfo: state => state.tokenInfo,
   getUserInfo: state => state.userInfo,
+  getRoles: (state) => {
+    return state.userInfo.roles
+  },
+  getRoleCodes: (state) => {
+    return state.userInfo.roles.map(role => role.roleCode)
+  },
   getUsername: (state) => {
     return state.userInfo.user.username
   }

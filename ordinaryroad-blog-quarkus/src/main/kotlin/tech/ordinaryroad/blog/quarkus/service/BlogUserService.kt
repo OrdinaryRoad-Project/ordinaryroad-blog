@@ -29,6 +29,9 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserRoles
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogRoleNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogRoleNotValidException
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils.differ
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.util.stream.Collectors
@@ -44,6 +47,9 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
     @Inject
     protected lateinit var userRolesService: BlogUserRolesService
 
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
     //region 业务相关
     fun updateRoles(id: String, roleIdList: List<String>) {
         val oldRoleIdList = userRolesService.findAllByUserId(id)
@@ -58,6 +64,13 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
 
         userRolesService.deleteByIdList(roleIdListToDelete)
         roleIdListToAdd.forEach {
+            val role = roleService.findById(it)
+            if (role == null) {
+                BlogRoleNotFoundException().throws()
+            }
+            if (!role.enabled) {
+                BlogRoleNotValidException().throws()
+            }
             userRolesService.create(BlogUserRoles().apply {
                 userId = id
                 roleId = it

@@ -21,40 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package tech.ordinaryroad.blog.quarkus.service
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+import io.quarkus.arc.Unremovable
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogLogDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogLog
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import javax.enterprise.context.ApplicationScoped
 
 /**
- * Service-Role
+ * Service-Log
  *
  * @author mjz
- * @date 2022/8/26
+ * @date 2022/9/13
  */
+@Unremovable
 @ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
-
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
-    }
-    //endregion
-
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
-
-        return super.dao.selectOne(wrapper)
-    }
-    //endregion
+class BlogLogService : BaseService<BlogLogDAO, BlogLog>() {
 
 }

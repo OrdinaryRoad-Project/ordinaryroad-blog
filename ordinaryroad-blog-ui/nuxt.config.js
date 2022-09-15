@@ -36,9 +36,8 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '@/assets/css/ordinaryroad.css'
-  ],
-  less: [
+    '@/assets/css/ordinaryroad.css',
+    '@/assets/jv-viewer.scss',
     '@/assets/vditor-custom.less'
   ],
 
@@ -61,6 +60,9 @@ export default {
     '~/plugins/i18n/index.js',
     // 自定义常量 工具类等
     '~/plugins/ordinaryroad/index.js',
+    // 路由插件
+    '~/plugins/router/statistics/index.js',
+    { src: '~/plugins/router/access.js', mode: 'client' },
     // vuetify client mode
     {
       src: '~/plugins/vuetify/index.js',

@@ -27,6 +27,10 @@ export default {
     return state.dashboardMenuItems
   },
 
+  getAccessibleDashboardMenuItems (state) {
+    return state.accessibleDashboardMenuItems
+  },
+
   getImage (state) {
     return state.image
   },
@@ -45,6 +49,10 @@ export default {
 
   getUserMenuItems (state) {
     return state.userMenuItems
+  },
+
+  getAccessibleUserMenuItems (state) {
+    return state.accessibleUserMenuItems
   },
 
   getDashboardDrawerModel (state) {

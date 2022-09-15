@@ -22,39 +22,23 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.request;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
+import org.jboss.resteasy.reactive.RestQuery;
+import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
 
-/**
- * Service-Role
- *
- * @author mjz
- * @date 2022/8/26
- */
-@ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
+public class BlogLogQueryRequest extends BaseQueryRequest {
 
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
-    }
-    //endregion
+    private static final long serialVersionUID = -5191031689542503740L;
 
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
+    @RestQuery
+    public String type;
 
-        return super.dao.selectOne(wrapper)
-    }
-    //endregion
+    @RestQuery
+    public String method;
+
+    @RestQuery
+    public String status;
 
 }
+

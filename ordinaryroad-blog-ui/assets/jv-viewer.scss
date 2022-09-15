@@ -1,0 +1,108 @@
+/*!
+ * MIT License
+ *
+ * Copyright (c) 2021 苗锦洲
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+.jv-dark {
+  background: #1e1e1e;
+  white-space: nowrap;
+  color: #525252;
+  font-size: 14px;
+  font-family: Consolas, Menlo, Courier, monospace;
+
+  .jv-ellipsis {
+    color: #999;
+    background-color: #eee;
+    display: inline-block;
+    line-height: 0.9;
+    font-size: 0.9em;
+    padding: 0px 4px 2px 4px;
+    border-radius: 3px;
+    vertical-align: 2px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .jv-button {
+    color: #49b3ff
+  }
+
+  .jv-key {
+    color: #fff;
+    margin-right: 4px
+  }
+
+  .jv-item {
+    &.jv-array {
+      color: #fff
+    }
+
+    &.jv-boolean {
+      color: #fc1e70
+    }
+
+    &.jv-function {
+      color: #067bca
+    }
+
+    &.jv-number {
+      color: #fc1e70
+    }
+
+    &.jv-number-float {
+      color: #fc1e70
+    }
+
+    &.jv-number-integer {
+      color: #fc1e70
+    }
+
+    &.jv-object {
+      color: #fff
+    }
+
+    &.jv-undefined {
+      color: #e08331
+    }
+
+    &.jv-string {
+      color: #42b983;
+      word-break: break-word;
+      white-space: normal;
+    }
+  }
+
+  .jv-code {
+    .jv-toggle {
+      &:before {
+        padding: 0px 2px;
+        border-radius: 2px;
+      }
+
+      &:hover {
+        &:before {
+          background: #eee;
+        }
+      }
+    }
+  }
+}

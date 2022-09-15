@@ -22,39 +22,33 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+export const baiduCountMobileArr = [
+  {
+    city: '',
+    code: ''
+  }
+]
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
+export function baiduCountAllCode (code) {
+  (function () {
+    // 会叠加 需要 每次执行前，先移除上次插入的代码
+    document.getElementById('g_baidu') && document.getElementById('g_baidu').remove()
+    const hm = document.createElement('script')
+    hm.src = 'https://hm.baidu.com/hm.js?' + code
+    hm.id = 'g_baidu'
+    const s = document.getElementsByTagName('script')[0]
+    s.parentNode.insertBefore(hm, s)
+  })()
+}
 
-/**
- * Service-Role
- *
- * @author mjz
- * @date 2022/8/26
- */
-@ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
-
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
-    }
-    //endregion
-
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
-
-        return super.dao.selectOne(wrapper)
-    }
-    //endregion
-
+export function baiduCountCode (code) {
+  (function () {
+    // 会叠加 需要 每次执行前，先移除上次插入的代码
+    document.getElementById('w_baidu') && document.getElementById('w_baidu').remove()
+    const hm = document.createElement('script')
+    hm.src = 'https://hm.baidu.com/hm.js?' + code
+    hm.id = 'w_baidu'
+    const s = document.getElementsByTagName('script')[0]
+    s.parentNode.insertBefore(hm, s)
+  })()
 }

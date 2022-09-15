@@ -22,6 +22,8 @@
   },
   "articleCount": "文章{0}",
   "avatar": "头像",
+  "copied": "已复制",
+  "copy": "复制",
   "createWhat": "创建{0}",
   "dashboardMenuTitles": {
     "dashboard": {
@@ -42,8 +44,27 @@
       },
       "tag": {
         "title": "标签管理"
+      },
+      "log": {
+        "title": "操作日志"
       }
     }
+  },
+  "log": {
+    "ip": "IP",
+    "path": "请求路径",
+    "method": "请求方法",
+    "headers": "请求头",
+    "cookies": "请求Cookie",
+    "pathParams": "路径参数",
+    "queryParams": "查询参数",
+    "request": "请求体",
+    "status": "状态",
+    "responseHeaders": "响应头",
+    "responseCookies": "响应Cookie",
+    "response": "响应体",
+    "consumedTime": "耗时",
+    "type": "类型"
   },
   "loginFormTitle": "登录到OR博客",
   "oAuthUser": {
@@ -70,7 +91,8 @@
   "titles": {
     "form": {
       "type": "分类",
-      "tag": "标签"
+      "tag": "标签",
+      "log": "日志"
     }
   },
   "type": {
@@ -83,6 +105,7 @@
     "profile": "个人中心",
     "article": "文章管理",
     "type": "分类管理",
-    "tag": "标签管理"
+    "tag": "标签管理",
+    "log": "操作日志"
   }
 }

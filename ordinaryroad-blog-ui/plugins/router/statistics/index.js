@@ -22,39 +22,24 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+import { baiduCountAllCode, baiduCountCode, baiduCountMobileArr } from './baidu'
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
-
-/**
- * Service-Role
- *
- * @author mjz
- * @date 2022/8/26
- */
-@ApplicationScoped
-class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
-
-    //region 业务相关
-    /**
-     * 根据用户Id查询所有角色
-     */
-    fun findAllByUserId(userId: String): List<BlogRole> {
-        return super.dao.selectAllByUserId(userId)
+export default ({ app: { router }, store }) => {
+  // 每次路由变更时进行pv统计
+  router.afterEach((to, from) => {
+    // 加上try 不然会报错
+    try {
+      const city = to.params.city
+      if (city !== '') {
+        baiduCountMobileArr.forEach((value, index) => {
+          if (value.city === city) {
+            baiduCountCode(value.code)
+          }
+        })
+      }
+      // 平台主域名统计
+      baiduCountAllCode(baiduCountMobileArr[0].code)
+    } catch (e) {
     }
-    //endregion
-
-    //region SQL相关
-    fun findByRoleCode(roleCode: String): BlogRole? {
-        val wrapper = Wrappers.query<BlogRole>()
-            .eq("role_code", roleCode)
-
-        return super.dao.selectOne(wrapper)
-    }
-    //endregion
-
+  })
 }

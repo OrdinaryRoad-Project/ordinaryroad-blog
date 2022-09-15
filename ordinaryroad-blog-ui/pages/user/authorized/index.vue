@@ -85,6 +85,8 @@ export default {
     if (this.success) {
       this.$store.commit('user/SET_TOKEN_INFO', this.token)
       this.$store.commit('user/SET_USER_INFO', this.userInfo)
+      this.$store.commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', this.$access)
+      this.$store.commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', this.$access)
       this.$router.replace(this.redirect)
     } else {
       this.$dialog({

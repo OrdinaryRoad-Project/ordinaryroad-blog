@@ -66,6 +66,9 @@ class BlogResource {
         return blogService.userInfo()
     }
 
+    /**
+     * 用户上传文件
+     */
     @POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -74,9 +77,9 @@ class BlogResource {
         @MultipartForm request: FileUploadRequest,
         @RestHeader("or-blog-token") token: String
     ): Response {
-        // BlogArticleResource.throwBadRequest()
-
-        StpUtil.getLoginIdByToken(token)
+        if (StpUtil.getLoginIdByToken(token) == null) {
+            BlogArticleResource.throwBadRequest()
+        }
 
         val fileUpload = request.file
 

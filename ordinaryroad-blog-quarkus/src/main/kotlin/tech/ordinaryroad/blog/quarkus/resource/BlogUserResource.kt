@@ -35,6 +35,7 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -74,6 +75,9 @@ class BlogUserResource {
         }
     }
 
+    /**
+     * 用户更新头像
+     */
     @PUT
     @Path("avatar")
     @Transactional
@@ -90,6 +94,9 @@ class BlogUserResource {
         })
     }
 
+    /**
+     * 用户更新用户名
+     */
     @PUT
     @Path("username")
     @Transactional
@@ -121,7 +128,7 @@ class BlogUserResource {
         @RestPath id: String,
         @RestQuery roleIds: List<String> = emptyList()
     ) {
-        StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
+        BlogUtils.checkAdminOrDeveloper()
 
         userService.updateRoles(id, roleIds)
     }

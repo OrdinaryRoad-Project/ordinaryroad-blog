@@ -111,7 +111,7 @@
         </template>
         <or-base-tree-list
           :nav="false"
-          :items="userMenuItems"
+          :items="accessibleUserMenuItems"
           @clickListItem="logout"
         />
       </v-menu>
@@ -146,8 +146,7 @@ export default {
       selectedThemeOption: 'getSelectedThemeOption',
       themeOptions: 'getThemeOptions',
       titleKey: 'getTitleKey',
-      userMenuItems: 'getUserMenuItems',
-      dashboardMenuItems: 'getDashboardMenuItems'
+      accessibleUserMenuItems: 'getAccessibleUserMenuItems'
     }),
     ...mapGetters('user', {
       userInfo: 'getUserInfo',

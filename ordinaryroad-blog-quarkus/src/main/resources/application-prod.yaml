@@ -16,7 +16,6 @@ quarkus:
     port: 8080
   mybatis:
     configuration-factory: tech.ordinaryroad.blog.quarkus.config.BlogMyBatisPlusConfigurationFactory
-    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     map-underscore-to-camel-case: true
     mapper-locations: mapper
@@ -53,6 +52,8 @@ quarkus:
     auth-methods: DIGEST-MD5 CRAM-SHA256 CRAM-SHA1 CRAM-MD5 PLAIN LOGIN
 sa-token:
   token-name: or-blog-token
+  is-log: false
+  annotation-intercepted-enabled: true
 # OrdinaryRoad
 ordinaryroad:
   oauth2:

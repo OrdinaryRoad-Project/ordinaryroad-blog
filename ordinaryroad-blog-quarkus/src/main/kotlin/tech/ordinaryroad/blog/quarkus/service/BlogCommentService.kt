@@ -36,8 +36,9 @@ import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogCommentDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
@@ -45,7 +46,6 @@ import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
-import tech.ordinaryroad.commons.base.cons.StatusCode
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.util.*
@@ -212,7 +212,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
      */
     private fun validateArticle(articleId: String?): BlogArticle {
         if (articleId.isNullOrBlank()) {
-            throw BaseBlogException(StatusCode.PARAM_IS_BLANK)
+            BlogArticleNotValidException().throws()
         }
         return articleService.findById(articleId) ?: throw BlogArticleNotFoundException()
     }
@@ -223,7 +223,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     private fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
         if (originalId.isNullOrBlank()) {
             if (must) {
-                throw BaseBlogException(StatusCode.PARAM_IS_BLANK)
+                BlogCommentNotValidException().throws()
             } else {
                 return null
             }

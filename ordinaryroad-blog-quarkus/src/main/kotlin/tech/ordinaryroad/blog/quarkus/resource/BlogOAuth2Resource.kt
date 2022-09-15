@@ -187,7 +187,10 @@ class BlogOAuth2Resource {
         // 2023年之前通过ordinaryroad账号登录赋予SSSSSSVIP角色
         if (LocalDate.now().isBefore(LocalDate.of(2023, 1, 1))) {
             if (provider == OrdinaryRoadOAuth2Source.NAME) {
-                userService.updateRoles(userId, arrayListOf("SSSSSSVIP"))
+                if (roleService.findAllByUserId(userId).isEmpty()) {
+                    val role = roleService.findByRoleCode("SSSSSSVIP")!!
+                    userService.updateRoles(userId, arrayListOf(role.uuid))
+                }
             }
         }
 

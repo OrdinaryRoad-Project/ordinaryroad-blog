@@ -37,8 +37,6 @@ import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecov
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
-import tech.ordinaryroad.commons.base.cons.StatusCode
-import tech.ordinaryroad.commons.base.exception.BaseException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
@@ -57,15 +55,15 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         val blogArticle = findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
 
         if (blogArticle == null) {
-            throw BaseException(StatusCode.DATA_NOT_EXIST)
+            BlogArticleNotFoundException().throws()
         } else {
             if (blogArticle.status != BlogArticleStatus.PUBLISH) {
                 // 必须是已发布的文章
-                throw BaseException(StatusCode.PARAM_NOT_VALID)
+                BlogArticleNotValidException().throws()
             }
         }
 
-        var createdTime: LocalDateTime = blogArticle.createdTime
+        var createdTime: LocalDateTime = blogArticle!!.createdTime
         var updateTime: LocalDateTime? = null
 
         if (blogArticle.firstId != blogArticle.uuid) {

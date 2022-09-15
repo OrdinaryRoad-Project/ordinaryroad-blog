@@ -33,7 +33,7 @@
     >
       <OrBaseTreeList
         :nav="true"
-        :items="dashboardMenuItems"
+        :items="accessibleDashboardMenuItems"
       />
     </v-navigation-drawer>
 
@@ -95,8 +95,7 @@ export default {
       dashboardDrawerModel: 'getDashboardDrawerModel',
       rightDrawerModel: 'getRightDrawerModel',
       titleKey: 'getTitleKey',
-      userMenuItems: 'getUserMenuItems',
-      dashboardMenuItems: 'getDashboardMenuItems'
+      accessibleDashboardMenuItems: 'getAccessibleDashboardMenuItems'
     }),
     localDashboardDrawerModel: {
       get () {

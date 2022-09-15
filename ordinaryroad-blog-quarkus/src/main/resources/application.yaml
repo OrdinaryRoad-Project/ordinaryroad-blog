@@ -16,7 +16,7 @@ quarkus:
   live-reload:
     instrumentation: true
   mybatis:
-    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+    configuration-factory: tech.ordinaryroad.blog.quarkus.config.BlogMyBatisPlusConfigurationFactory
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
     mapper-locations: mapper
@@ -53,6 +53,8 @@ quarkus:
 # Sa-Token
 sa-token:
   token-name: or-blog-token
+  is-log: true
+  annotation-intercepted-enabled: true
 # OrdinaryRoad
 ordinaryroad:
   oauth2:
