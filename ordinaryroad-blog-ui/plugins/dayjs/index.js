@@ -24,7 +24,7 @@
 
 // plugins/day.js
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
-import RelativeTime from 'dayjs/plugin/RelativeTime'
+import RelativeTime from 'dayjs/plugin/relativeTime'
 // 默认格式化方法
 import FormatTime from './plugin/formatTime'
 
