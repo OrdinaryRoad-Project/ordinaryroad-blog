@@ -44,6 +44,7 @@
           hide-details
           :placeholder="$t('search')"
           solo
+          :solo-inverted="soloInverted"
           clearable
           flat
           maxlength="10"
@@ -58,7 +59,6 @@
     <v-fade-transition>
       <v-btn
         v-if="(!autoExpand||$vuetify.breakpoint.smAndDown)&&!searchInputFocused"
-        style="position: absolute; top: -24px; right: 0;"
         icon
         @click="searchInputFocused=true"
       >
@@ -72,6 +72,10 @@
 export default {
   name: 'OrSearch',
   props: {
+    soloInverted: {
+      type: Boolean,
+      default: false
+    },
     autoExpand: {
       type: Boolean,
       default: true

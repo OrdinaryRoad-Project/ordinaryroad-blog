@@ -173,6 +173,7 @@
               </v-input>
             </v-col>
 
+            <!-- 分类 -->
             <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
               <v-combobox
                 v-model="article.typeName"
@@ -190,6 +191,7 @@
               >
                 <template #selection="{ attrs, item, select, selected }">
                   <v-chip
+                    label
                     v-bind="attrs"
                     :input-value="selected"
                     close
@@ -201,6 +203,7 @@
                 </template>
               </v-combobox>
             </v-col>
+            <!-- 标签 -->
             <v-col sm="12" md="6" lg="6" xl="6" class="mt-2 mb-2">
               <or-base-menu
                 offset-y

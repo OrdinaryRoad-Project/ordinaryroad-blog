@@ -58,6 +58,7 @@
       <!-- 标题 -->
       <v-toolbar-title
         style="cursor: pointer;"
+        :style="{color:showScrollToTopFab||!drawer?'white':'black'}"
         @click="onClickToolbarTitle"
       >
         {{ showScrollToTopFab ? blogArticle.title : $t('appName') }}
@@ -66,7 +67,7 @@
       <v-spacer />
 
       <!-- 搜索 -->
-      <or-search :auto-expand="false" />
+      <or-search :auto-expand="false" solo-inverted />
 
       <!-- 用户信息 -->
       <or-user-info-menu
@@ -250,12 +251,16 @@
             v-if="blogArticle.type && blogArticle.type !== ''"
           >
             <div class="d-inline-flex align-center">
-              <v-icon class="pa-2">
+              <v-icon class="pa-2" small>
                 mdi-view-list
               </v-icon>
-              <v-btn text @click="onClickType(blogArticle.type)">
+              <v-chip
+                small
+                label
+                @click="onClickType(blogArticle.type)"
+              >
                 {{ blogArticle.type.name }}
-              </v-btn>
+              </v-chip>
             </div>
           </div>
 
@@ -265,13 +270,14 @@
             class="ms-2"
           >
             <div class="d-inline-flex align-center">
-              <v-icon class="pa-2">
+              <v-icon class="pa-2" small>
                 mdi-tag-multiple
               </v-icon>
               <v-chip-group>
                 <v-chip
                   v-for="tag in blogArticle.tags"
                   :key="tag.uuid"
+                  small
                   @click="onClickTag(tag)"
                   @keypress.enter="onClickTag(tag)"
                 >
@@ -353,9 +359,15 @@
         <!-- 评论 -->
         <v-divider />
         <v-card>
-          <v-card-title>评论（{{ articleComments.total }}）</v-card-title>
+          <v-card-title>评论{{ articleComments.total ? $t('parentheses', [articleComments.total]) : '' }}</v-card-title>
           <div class="mx-2">
             <div class="d-flex align-end">
+              <or-avatar
+                v-if="$access.isLogged()"
+                class="mb-auto"
+                :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
+                :username="userInfo.user.username"
+              />
               <or-md-vditor
                 ref="commentVditor"
                 :transfer-content.sync="commentOptions.content"
@@ -447,6 +459,7 @@
 
 <script>
 import VueQr from 'vue-qr'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrBlogArticleDetail',
@@ -482,6 +495,9 @@ export default {
     }
   }),
   computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    }),
     commentContentValid () {
       return this.commentOptions.content && this.commentOptions.content !== '' && this.commentOptions.content !== '\n'
     },
