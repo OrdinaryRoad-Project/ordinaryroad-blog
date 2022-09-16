@@ -54,6 +54,10 @@ export default {
       type: Boolean,
       default: false
     },
+    lang: {
+      type: String,
+      default: 'zh-Hans'
+    },
     /**
      * 计算标题出现时到顶部的偏移量
      */
@@ -71,6 +75,16 @@ export default {
     headingElements: []
   }),
   watch: {
+    lang (val) {
+      try {
+        if (this.readOnly) {
+          this.updatePreviewerLang(val)
+        } else {
+          this.updateEditorLang(val)
+        }
+      } catch (e) {
+      }
+    },
     dark (val) {
       try {
         if (this.readOnly) {
@@ -132,6 +146,13 @@ export default {
         // this.initEditor(null)
       }
     },
+    updateEditorLang (lang) {
+      // todo
+      if (this.instance) {
+        // this.instance.destroy()
+        // this.initEditor()
+      }
+    },
     updateEditorTheme (dark) {
       if (this.instance) {
         let editorTheme = 'classic'
@@ -144,6 +165,9 @@ export default {
         }
         this.instance.setTheme(editorTheme, theme, codeTheme)
       }
+    },
+    updatePreviewerLang (lang) {
+      // todo
     },
     updatePreviewerTheme (dark) {
       // TODO 夜间模式链接颜色不对
@@ -158,6 +182,7 @@ export default {
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
+        lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
         placeholder: this.placeholder,
         toolbarConfig: {
           hide: this.commentMode,
@@ -292,6 +317,7 @@ export default {
       }
       Vditor.preview(previewElement, content,
         {
+          lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
           markdown: {
             autoSpace: true,
             paragraphBeginningSpace: true,

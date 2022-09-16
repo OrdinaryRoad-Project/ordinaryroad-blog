@@ -38,7 +38,7 @@
     </v-navigation-drawer>
 
     <!-- 设置 -->
-    <or-settings-drawer />
+    <or-settings-drawer :show-i18n-setting="$vuetify.breakpoint.smAndDown" />
 
     <!-- 标题 用户名 -->
     <or-header />
@@ -107,7 +107,7 @@ export default {
     }
   },
   created () {
-    this.localDashboardDrawerModel = !this.$vuetify.breakpoint.smAndDown
+    this.localDashboardDrawerModel = !this.$vuetify.breakpoint.mdAndDown
   },
   mounted () {
     this.$nextTick(() => {

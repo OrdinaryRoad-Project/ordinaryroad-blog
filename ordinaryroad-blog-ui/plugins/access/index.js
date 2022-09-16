@@ -50,8 +50,8 @@ export default ({
   }
   inject('access', {
     has: (permissionCode) => {
-      const userInfo = store.getters['user/getUserInfo']
-      console.log('hasAccess', permissionCode, userInfo)
+      // const userInfo = store.getters['user/getUserInfo']
+      // console.log('hasAccess', permissionCode, userInfo)
       return true
       // let permissions = []
       // if (userInfo && userInfo.permissions) {
@@ -66,7 +66,7 @@ export default ({
      *
      * @param roles {String[]} 角色列表
      */
-    checkRoleOr: (roles) => {
+    hasRolesOr: (roles) => {
       const logged = isLogged()
       if (!logged) {
         return false

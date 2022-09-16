@@ -157,23 +157,28 @@
       </template>
 
       <template #actionsTop>
-        <v-btn
-          outlined
-          color="primary"
-          dark
-          @click="$refs.dataTable.insertItem()"
-        >
-          <v-icon left>
-            mdi-pencil
-          </v-icon>
-          {{ $t('article.actions.writing') }}
-        </v-btn>
+        <slot name="actionsTop">
+          <v-btn
+            outlined
+            color="primary"
+            dark
+            @click="$refs.dataTable.insertItem()"
+          >
+            <v-icon left>
+              mdi-pencil
+            </v-icon>
+            {{ $t('article.actions.writing') }}
+          </v-btn>
+        </slot>
       </template>
 
       <template #[`item.title`]="{ item }">
-        <or-blog-link :href="`/${userInfo.user.uuid}/article/detail/${item.uuid}`">
+        <or-link
+          :text="item.status!=='PUBLISH'"
+          :href="`/${item.createUserId}/article/detail/${item.uuid}`"
+        >
           {{ item.title }}
-        </or-blog-link>
+        </or-link>
       </template>
       <template #[`item.status`]="{ item }">
         <v-chip
@@ -245,12 +250,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import OrBlogLink from '@/components/or/Link'
 
 export default {
   name: 'OrBlogArticleDataTable',
-  components: { OrBlogLink },
   props: {
     /**
      * 选中返回完整Object数组，默认只返回uuid数组
@@ -341,10 +343,6 @@ export default {
     }
   }),
   computed: {
-    ...mapGetters('user', {
-      userInfo: 'getUserInfo'
-    }),
-
     // 放在这为了支持国际化，如果放在data下切换语言不会更新
     headers () {
       const statusHeader = {

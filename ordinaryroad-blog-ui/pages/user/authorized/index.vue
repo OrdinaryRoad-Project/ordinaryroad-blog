@@ -92,11 +92,13 @@ export default {
       this.$dialog({
         persistent: true,
         title: '系统提示',
-        content: '失败，请重试。\n' + this.msg,
-        confirmText: '确定'
+        content: this.msg,
+        cancelText: '返回首页'
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$router.replace(`/user/login?redirect=${this.redirect}`)
+        } else {
+          this.$router.replace('/')
         }
       })
     }

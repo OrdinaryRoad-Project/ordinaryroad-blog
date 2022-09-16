@@ -60,11 +60,27 @@
           />
         </v-col>
       </template>
+
+      <template #[`item.name`]="{ item }">
+        <v-chip label>
+          {{ item.name }}
+        </v-chip>
+      </template>
+
       <template #actions="{ item }">
         <v-btn
           icon
+          :to="`/${item.createUserId}/type/${item.uuid}`"
+          target="_blank"
+          color="primary"
+          class="me-2"
+        >
+          <v-icon>mdi-file-document-multiple</v-icon>
+        </v-btn>
+        <v-btn
+          icon
           color="accent"
-          class="mr-2"
+          class="me-2"
           @click="onEditItem({item})"
         >
           <v-icon>mdi-pencil</v-icon>
@@ -94,6 +110,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'OrBlogTypeDataTable',
   props: {

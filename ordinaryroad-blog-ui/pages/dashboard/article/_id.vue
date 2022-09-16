@@ -34,6 +34,7 @@
             :disabled="!article.firstId"
             offset-y
             :close-on-content-click="false"
+            :close-on-click="false"
           >
             <template #activator="{ on, attrs }">
               <v-btn
@@ -49,7 +50,15 @@
               </v-btn>
             </template>
             <v-card>
+              <v-card-title>
+                <span>历史版本选择</span>
+                <v-spacer />
+                <v-btn icon @click="articleInheritsMenuModel=false">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-card-title>
               <or-blog-article-data-table
+                ref="articleDataTable"
                 show-status-column
                 show-base-headers-when-selecting
                 :preset-status="['PUBLISH', 'INHERIT', 'PUBLISH_INHERIT']"
@@ -58,7 +67,21 @@
                 show-select
                 single-select
                 @itemsSelected="onSelectArticleInherit"
-              />
+              >
+                <template #actionsTop>
+                  <v-btn
+                    outlined
+                    color="primary"
+                    dark
+                    @click="articleInheritsMenuModel=false"
+                  >
+                    <v-icon left>
+                      mdi-close
+                    </v-icon>
+                    {{ $t('close') }}
+                  </v-btn>
+                </template>
+              </or-blog-article-data-table>
             </v-card>
           </v-menu>
           <v-spacer />
@@ -139,6 +162,7 @@
               >
                 <or-md-vditor
                   ref="vditor"
+                  :lang="$i18n.locale"
                   :placeholder="$t('article.startWritingHint')"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
@@ -461,6 +485,7 @@ export default {
             const newArticle = items[0]
             this.changeCurrentArticle(newArticle)
           }
+          this.$refs.articleDataTable.unSelectItem(items[0])
         })
       }
     },

@@ -35,13 +35,11 @@
       <div class="d-flex">
         <div class="d-flex align-center">
           <!-- 用户名 -->
-          <nuxt-link
+          <span
+            style="cursor: pointer"
             class="text-subtitle-1 font-weight-bold me-2"
-            target="_blank"
-            :to="`/${blogComment.user.uuid}`"
-          >
-            {{ blogComment.user.username }}
-          </nuxt-link>
+            @click="onClickUsername(blogComment.user)"
+          >{{ blogComment.user.username }}</span>
 
           <!-- 角色 -->
           <span v-if="blogComment.user.roles.length>0" class="me-2">
@@ -49,7 +47,7 @@
           </span>
 
           <!-- 时间 -->
-          <span class="text-body-2"> {{ blogComment.createdTime }}</span>
+          <span class="text-body-2"> {{ $dayjs(blogComment.createdTime, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
         </div>
 
         <!-- 更多操作 -->
@@ -157,6 +155,9 @@ export default {
     this.blogComment = this.item
   },
   methods: {
+    onClickUsername (user) {
+      window.open(`/${user.uuid}`, '_blank')
+    },
     /**
      * 加载回复
      */

@@ -24,15 +24,18 @@
 
 package tech.ordinaryroad.blog.quarkus.dto
 
+import cn.hutool.core.util.StrUtil
 import tech.ordinaryroad.commons.core.quarkus.base.dto.BaseModelDTO
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 
 abstract class BaseBlogModelDTO<DO : BaseDO> : BaseModelDTO() {
 
+    var createUserId: String = StrUtil.EMPTY
+
     abstract fun parse(baseDo: DO)
 
     companion object {
-        private const val serialVersionUID: Long = 5946007619312092768L
+        private const val serialVersionUID: Long = 1158019069703081846L
     }
 
 }

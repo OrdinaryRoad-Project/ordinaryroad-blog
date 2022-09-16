@@ -23,31 +23,11 @@
   -->
 
 <template>
-  <span v-if="roles.length">
-    <v-chip
-      v-for="(role,index) in roles"
-      :key="role.roleCode"
-      :class="index!==roles.length-1?'me-2':null"
-      small
-      :color="!(role.roleCode.indexOf('DEVELOPER') > 0 || role.roleCode.indexOf('ADMIN') > 0 || role.roleCode.indexOf('VIP') > 0) ? null : 'primary'"
-      :outlined="!(role.roleCode.indexOf('DEVELOPER') > 0 || role.roleCode.indexOf('ADMIN') > 0 || role.roleCode.indexOf('VIP') > 0)"
-      label
-    >
-      {{ role.roleName }}
-    </v-chip>
-  </span>
+  <div>{{ $route.params }}</div>
 </template>
 
 <script>
-export default {
-  name: 'OrUserRoles',
-  props: {
-    roles: {
-      type: Array,
-      default: () => ([])
-    }
-  }
-}
+export default {}
 </script>
 
 <style scoped>

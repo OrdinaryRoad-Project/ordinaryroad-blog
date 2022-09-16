@@ -33,7 +33,7 @@
       >
         <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
           <or-blog-article-list
-            auto-load-more
+            ref="articleList"
             :total.sync="totalArticle"
             :create-by="blogUser.uuid"
           />
@@ -102,6 +102,7 @@ export default {
     }
   },
   mounted () {
+    this.$refs.articleList.getArticles(false)
   },
   methods: {}
 }

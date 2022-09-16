@@ -52,7 +52,7 @@ export default {
     const menuItems = state.userMenuItems
     const accessibleUserMenuItems = []
     menuItems.forEach((item) => {
-      if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.checkRoleOr(item.meta.roles.or)) {
+      if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.hasRolesOr(item.meta.roles.or)) {
         accessibleUserMenuItems.push(item)
       }
     })
@@ -68,7 +68,7 @@ export default {
           if (item1.children && item1.children.length > 0) {
             const dashboardMenuItems2 = []
             item1.children.forEach((item2) => {
-              if (!item2.meta || !item2.meta.roles || !item2.meta.roles.or || $access.checkRoleOr(item2.meta.roles.or)) {
+              if (!item2.meta || !item2.meta.roles || !item2.meta.roles.or || $access.hasRolesOr(item2.meta.roles.or)) {
                 dashboardMenuItems2.push(item2)
               }
             })
@@ -76,7 +76,7 @@ export default {
               item1.children = dashboardMenuItems2
               dashboardMenuItems1.push(item1)
             }
-          } else if (!item1.meta || !item1.meta.roles || !item1.meta.roles.or || $access.checkRoleOr(item1.meta.roles.or)) {
+          } else if (!item1.meta || !item1.meta.roles || !item1.meta.roles.or || $access.hasRolesOr(item1.meta.roles.or)) {
             dashboardMenuItems1.push(item1)
           }
         })
@@ -84,7 +84,7 @@ export default {
           item.children = dashboardMenuItems1
           accessibleDashboardMenuItems.push(item)
         }
-      } else if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.checkRoleOr(item.meta.roles.or)) {
+      } else if (!item.meta || !item.meta.roles || !item.meta.roles.or || $access.hasRolesOr(item.meta.roles.or)) {
         accessibleDashboardMenuItems.push(item)
       }
     })

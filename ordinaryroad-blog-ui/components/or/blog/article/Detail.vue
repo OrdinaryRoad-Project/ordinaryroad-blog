@@ -56,9 +56,24 @@
       </v-tooltip>
 
       <!-- 标题 -->
-      <v-toolbar-title>{{ showScrollToTopFab ? blogArticle.title : null }}</v-toolbar-title>
+      <v-toolbar-title
+        style="cursor: pointer;"
+        @click="onClickToolbarTitle"
+      >
+        {{ showScrollToTopFab ? blogArticle.title : $t('appName') }}
+      </v-toolbar-title>
 
       <v-spacer />
+
+      <!-- 搜索 -->
+      <or-search :auto-expand="false" />
+
+      <!-- 用户信息 -->
+      <or-user-info-menu
+        :transparent="!showScrollToTopFab"
+        start-writing-color="transparent"
+        login-color="white"
+      />
 
       <!-- 在其他设备上阅读 -->
       <v-menu
@@ -223,10 +238,48 @@
         <!-- 摘要 -->
         <div v-if="blogArticle.summary && blogArticle.summary !== ''">
           <or-md-vditor
-            class="mt-2"
+            class="my-2"
             :dark="$vuetify.theme.dark"
             :pre-set-content="blogArticle.summary"
           />
+        </div>
+
+        <div class="d-flex align-center mx-2">
+          <!-- 分类 -->
+          <div
+            v-if="blogArticle.type && blogArticle.type !== ''"
+          >
+            <div class="d-inline-flex align-center">
+              <v-icon class="pa-2">
+                mdi-view-list
+              </v-icon>
+              <v-btn text @click="onClickType(blogArticle.type)">
+                {{ blogArticle.type.name }}
+              </v-btn>
+            </div>
+          </div>
+
+          <!-- 标签 -->
+          <div
+            v-if="blogArticle.tags && blogArticle.tags.length && blogArticle.tags.length > 0"
+            class="ms-2"
+          >
+            <div class="d-inline-flex align-center">
+              <v-icon class="pa-2">
+                mdi-tag-multiple
+              </v-icon>
+              <v-chip-group>
+                <v-chip
+                  v-for="tag in blogArticle.tags"
+                  :key="tag.uuid"
+                  @click="onClickTag(tag)"
+                  @keypress.enter="onClickTag(tag)"
+                >
+                  {{ tag.name }}
+                </v-chip>
+              </v-chip-group>
+            </div>
+          </div>
         </div>
 
         <!-- 阅读时长创建时间修改时间 -->
@@ -283,52 +336,18 @@
               <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
             </div>
             <strong>本文链接：</strong>
-            <or-blog-link :href="currentUrl" target="_self">
+            <or-link :href="currentUrl" target="_self">
               {{ currentUrl }}
-            </or-blog-link>
+            </or-link>
             <br>
             <div v-if="blogArticle.original">
               <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循
-              <or-blog-link href="https://creativecommons.org/licenses/by-sa/4.0/">
+              <or-link href="https://creativecommons.org/licenses/by-sa/4.0/">
                 CC BY-SA 4.0
-              </or-blog-link>
+              </or-link>
               许可协议，转载请附上本文链接及本声明。
             </div>
           </v-alert>
-        </div>
-
-        <!-- 分类 -->
-        <div
-          v-if="blogArticle.type && blogArticle.type !== ''"
-        >
-          <v-divider />
-          <div class="d-inline-flex align-center">
-            <v-icon class="pa-2">
-              mdi-view-list
-            </v-icon>
-            <v-btn text @click="$router.push({name:'home-type',params:{paramType: blogArticle.type.name}})">
-              {{ blogArticle.type.name }}
-            </v-btn>
-          </div>
-        </div>
-
-        <!-- 标签 -->
-        <div
-          v-if="blogArticle.tags && blogArticle.tags.length && blogArticle.tags.length > 0"
-        >
-          <v-divider />
-          <div class="d-inline-flex align-center">
-            <v-icon class="pa-2">
-              mdi-tag-multiple
-            </v-icon>
-            <v-chip-group>
-              <v-chip v-for="tag in blogArticle.tags" :key="tag.uuid">
-                <router-link v-slot="{ navigate }" :to="{name:'home-tag',params:{paramTag:tag.name}}" custom>
-                  <span role="link" @click="navigate" @keypress.enter="navigate">{{ tag.name }}</span>
-                </router-link>
-              </v-chip>
-            </v-chip-group>
-          </div>
         </div>
 
         <!-- 评论 -->
@@ -340,7 +359,7 @@
               <or-md-vditor
                 ref="commentVditor"
                 :transfer-content.sync="commentOptions.content"
-                placeholder="写一条友善的发言吧（支持Markdown）"
+                :placeholder="`写一条友善的发言吧（支持Markdown${$access.isLogged()?'':'，请先登录'}）`"
                 class="flex-grow-1 mx-2"
                 :dark="$vuetify.theme.dark"
                 pre-set-content=""
@@ -428,11 +447,10 @@
 
 <script>
 import VueQr from 'vue-qr'
-import OrBlogLink from '@/components/or/Link'
 
 export default {
   name: 'OrBlogArticleDetail',
-  components: { OrBlogLink, VueQr },
+  components: { VueQr },
   props: {
     article: {
       type: Object,
@@ -489,7 +507,7 @@ export default {
         this.drawer = false
         return
       }
-      this.drawer = !this.$vuetify.breakpoint.smAndDown
+      this.drawer = !this.$vuetify.breakpoint.mdAndDown
 
       // 处理连续的
       const tocIndexContinuously = []
@@ -645,6 +663,19 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    onClickToolbarTitle () {
+      if (this.showScrollToTopFab) {
+        this.$vuetify.goTo(0)
+      } else {
+        this.$router.push('/')
+      }
+    },
+    onClickType (type) {
+      window.open(`/${this.blogArticle.user.uuid}/type/${type.uuid}`, '_blank')
+    },
+    onClickTag (tag) {
+      window.open(`/search/${tag.name}`, '_blank')
+    },
     onClickReply ({
       originalComment,
       parentComment

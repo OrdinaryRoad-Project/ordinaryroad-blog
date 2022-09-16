@@ -69,7 +69,7 @@ export default ({ app, store }) => {
     }
     if (found && item && item.meta && item.meta.roles && item.meta.roles.or) {
       // 判断权限
-      if (!$access.checkRoleOr(item.meta.roles.or)) {
+      if (!$access.hasRolesOr(item.meta.roles.or)) {
         if (from.path === '/user/login') {
           next('/')
         } else {

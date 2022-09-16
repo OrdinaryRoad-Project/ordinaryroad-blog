@@ -24,8 +24,11 @@
 
 <template>
   <span>
-    <a :href="href" :target="target" style="text-decoration: none; cursor: auto">
-      <slot />
+    <span v-if="text">
+      <slot/>
+    </span>
+    <a v-else :href="href" :target="target" style="text-decoration: none; cursor: auto">
+      <slot/>
       <span>
         <v-icon v-if="target==='_blank'" x-small>
           mdi-arrow-top-right-bold-box-outline
@@ -37,8 +40,15 @@
 
 <script>
 export default {
-  name: 'OrBlogLink',
+  name: 'OrLink',
   props: {
+    /**
+     * 是否为纯文本样式
+     */
+    text: {
+      type: Boolean,
+      default: false
+    },
     href: {
       type: String,
       required: true

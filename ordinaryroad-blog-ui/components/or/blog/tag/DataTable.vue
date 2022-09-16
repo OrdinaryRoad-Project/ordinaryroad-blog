@@ -62,8 +62,22 @@
         </v-col>
       </template>
 
-      <template #actions>
-        <v-btn>查看相关文章</v-btn>
+      <template #[`item.name`]="{ item }">
+        <v-chip>
+          {{ item.name }}
+        </v-chip>
+      </template>
+
+      <template #actions="{ item }">
+        <v-btn
+          :to="`/search/${item.name}`"
+          target="_blank"
+          icon
+          color="primary"
+          class="mx-2"
+        >
+          <v-icon>mdi-file-document-multiple</v-icon>
+        </v-btn>
       </template>
     </or-base-data-table>
     <or-base-dialog

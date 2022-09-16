@@ -43,6 +43,9 @@
     <v-tabs v-model="tab">
       <v-tab>{{ $t('articleCount', [`${totalArticles ? $t('parentheses', [totalArticles]) : ''}`]) }}</v-tab>
       <v-tab disabled>
+        分类
+      </v-tab>
+      <v-tab disabled>
         用户
       </v-tab>
     </v-tabs>
@@ -82,7 +85,7 @@ export default {
       this.loading = false
     },
     onInputChange (input) {
-      if (input === '') {
+      if (!input || input.trim() === '') {
         return
       }
       if (!this.$refs.searchForm.validate()) {
