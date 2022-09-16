@@ -36,7 +36,8 @@ export default ({
     if (!logged) {
       app.$dialog({
         persistent: false,
-        content: '请登录'
+        content: '请登录',
+        confirmText: app.i18n.$t('login')
       }).then(({ isConfirm }) => {
         if (isConfirm) {
           app.router.push({

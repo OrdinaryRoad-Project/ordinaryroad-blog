@@ -58,7 +58,7 @@
       <!-- 标题 -->
       <v-toolbar-title
         style="cursor: pointer;"
-        :style="{color:showScrollToTopFab||!drawer?'white':'black'}"
+        :style="{color:showScrollToTopFab||!drawer||$vuetify.theme.dark?'white':'black'}"
         @click="onClickToolbarTitle"
       >
         {{ showScrollToTopFab ? blogArticle.title : $t('appName') }}
@@ -196,7 +196,9 @@
         <div>
           <!-- 用户名 -->
           <v-list-item-title
+            style="cursor: pointer"
             class="font-weight-medium"
+            @click="onClickUsername"
           >
             {{ blogArticle.user.username }}
           </v-list-item-title>
@@ -406,6 +408,7 @@
           </div>
           <or-blog-comment-list
             ref="commentList"
+            class="mt-2"
             :article-id="blogArticle.uuid"
             :article-comments="articleComments"
             @clickReply="onClickReply"
@@ -679,6 +682,9 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    onClickUsername () {
+      window.open(`/${this.blogArticle.user.uuid}`, '_blank')
+    },
     onClickToolbarTitle () {
       if (this.showScrollToTopFab) {
         this.$vuetify.goTo(0)
