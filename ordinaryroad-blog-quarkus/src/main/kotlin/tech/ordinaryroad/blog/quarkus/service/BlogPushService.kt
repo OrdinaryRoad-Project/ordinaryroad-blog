@@ -28,9 +28,7 @@ import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
-import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -49,9 +47,6 @@ class BlogPushService {
 
     @Inject
     protected lateinit var userService: BlogUserService
-
-    @Inject
-    protected lateinit var oauthUserService: BlogOAuthUserService
 
     fun comment(
         fromUser: BlogUser,
@@ -75,9 +70,11 @@ class BlogPushService {
             toUser = userService.findById(parentComment.createBy)
         }
 
-
-        val allOAuthUser = oauthUserService.findAllByUserId(notifier)
-        val emailSet = allOAuthUser.stream().map(BlogOAuthUser::getEmail).collect(Collectors.toSet())
+        val user = userService.findById(notifier)
+        if (user.email.isNullOrBlank()) {
+            return
+        }
+        val emailSet = setOf(user.email)
 
         var contentTemplate = NEW_COMMENT_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)

@@ -35,7 +35,9 @@
       depressed
       @click="startLoading(false)"
     >
-      <v-icon>mdi-chevron-down</v-icon>
+      <v-icon v-if="showDownIcon" left>
+        mdi-chevron-down
+      </v-icon>
       加载更多
     </v-btn>
   </div>
@@ -45,6 +47,13 @@
 export default {
   name: 'OrLoadMoreFooter',
   props: {
+    /**
+     * 是否显示向下的图标
+     */
+    showDownIcon: {
+      type: Boolean,
+      default: true
+    },
     noMoreData: {
       type: Boolean,
       required: true

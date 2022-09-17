@@ -45,6 +45,7 @@
 
     <or-load-more-footer
       ref="loadMoreFooter"
+      :show-down-icon="!autoLoadMore"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
       @loadMore="!autoLoadMore&&getArticles()"

@@ -80,7 +80,7 @@ export default {
     },
     count: (userId = '') => {
       return $axios({
-        url: `/blog/article/count?userId=${userId}`,
+        url: `/blog/type/count?userId=${userId}`,
         method: 'get'
       })
     }
