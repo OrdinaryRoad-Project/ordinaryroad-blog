@@ -329,7 +329,7 @@ export default {
             style: codeTheme,
             lineNumber: true
           },
-          anchor: 0,
+          anchor: 1,
           theme: {
             current: theme
           },

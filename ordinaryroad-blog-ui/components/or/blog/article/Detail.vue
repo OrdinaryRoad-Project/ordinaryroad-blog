@@ -26,6 +26,8 @@
   <v-container fluid class="pa-0">
     <!-- 顶部栏 -->
     <v-app-bar
+      ref="appBar"
+      :hide-on-scroll="percentOfRead>0.0"
       clipped-left
       app
       dark
@@ -307,7 +309,7 @@
 
         <!-- 内容 -->
         <or-md-vditor
-          :headings-offset-top="$vuetify.breakpoint.smAndDown?56:64"
+          id="content"
           :preview-toc.sync="toc"
           :current-toc-index.sync="currentTocIndex"
           :dark="$vuetify.theme.dark"
@@ -508,13 +510,24 @@ export default {
       return this.currentUrl + '?p=' + this.realPercentOfRead + '&t=' + this.$store.getters['app/getSelectedThemeOption']
     },
     currentUrl () {
-      return process.client ? window.location.href : ''
+      return process.client ? window.location.origin + window.location.pathname : ''
     },
     watchTimeString () {
       // 估算阅读时长
       const totalSeconds = this.article.content.length / 8
       const formatSeconds = this.$util.formatSeconds(totalSeconds)
       return formatSeconds === '' ? '一瞬间~' : formatSeconds
+    },
+    /**
+     * AppBar是否已隐藏
+     *
+     * @returns {Boolean}
+     */
+    appBarHidden () {
+      return this.$refs.appBar.$el.style.transform.includes('-')
+    },
+    appBarHeight () {
+      return this.appBarHidden ? 0 : (this.$vuetify.breakpoint.smAndDown ? 56 : 64)
     }
   },
   watch: {
@@ -746,7 +759,7 @@ export default {
       this.showScrollToTopFab = scrollTop > 0
 
       // 文章开始偏移量
-      const cardOffsetTop = document.getElementById('card').offsetTop
+      const cardOffsetTop = document.getElementById('card').offsetTop - this.appBarHeight
       // 文章结束偏移量
       const likeFabOffsetTop = document.getElementById('likeFab').offsetTop
 
@@ -762,7 +775,7 @@ export default {
         this.percentOfRead = 0.0
       }
       // 计算网页百分比
-      this.realPercentOfRead = scrollTop / (totalHeight - window.innerHeight)
+      this.realPercentOfRead = (scrollTop) / (totalHeight - window.innerHeight - (this.appBarHeight))
 
       // console.log("this.percentOfRead", this.percentOfRead, "this.realPercentOfRead", this.realPercentOfRead)
     },
@@ -785,18 +798,31 @@ export default {
         }
 
         // 恢复阅读位置
-        const realPercentOfRead = this.$route.query.p
-        if (realPercentOfRead !== undefined) {
-          const pN = parseFloat(realPercentOfRead)
-          if (pN >= 0 && pN <= 100) {
-            const totalHeight = document.body.scrollHeight
-            // console.log(pN, totalHeight, window.innerHeight, totalHeight - window.innerHeight)
-            // 获取准确位置
-            this.$vuetify.goTo(pN * (totalHeight - window.innerHeight))
-            if (!this.snackbar) {
-              this.snackbar = true
+        const titleHash = this.$route.hash
+        if (!(titleHash && titleHash.length > 1)) {
+          const realPercentOfRead = this.$route.query.p
+          if (realPercentOfRead !== undefined) {
+            const pN = parseFloat(realPercentOfRead)
+            if (pN >= 0 && pN <= 100) {
+              const totalHeight = document.body.scrollHeight
+              // console.log(pN, totalHeight, window.innerHeight, totalHeight - window.innerHeight)
+              // 获取准确位置
+              this.$vuetify.goTo(pN * (totalHeight - window.innerHeight + this.appBarHeight))
+              if (!this.snackbar) {
+                this.snackbar = true
+              }
             }
           }
+        } else {
+          const title = decodeURIComponent(titleHash).slice(1)
+          this.toc.forEach((item) => {
+            if (item.headString === title) {
+              const headDivElement = document.getElementById('blog-toc-id-' + item.id)
+              if (headDivElement) {
+                this.$vuetify.goTo(headDivElement)
+              }
+            }
+          })
         }
       }, 2000)
     }
