@@ -34,6 +34,7 @@ import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
+import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
@@ -42,6 +43,7 @@ import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO
@@ -53,7 +55,9 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -570,6 +574,44 @@ class BlogArticleResource {
         return articleService.getPublishCreatedTimeAndUpdateTimeById(id)
     }
 
+    /**
+     * 获取已发布文章的个数
+     */
+    @GET
+    @Path("count")
+    fun count(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        val wrapper = Wrappers.query<BlogArticle>()
+            .eq("status", BlogArticleStatus.PUBLISH)
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return articleService.dao.selectCount(wrapper)
+    }
+
+    /**
+     * 获取评论数前N的文章
+     */
+    @GET
+    @Path("top/comment")
+    fun getCommentTopN(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        return articleService.dao.getTopNByUserId(n, userId)
+    }
     //endregion
 
     //region TODO 开发中

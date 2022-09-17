@@ -24,17 +24,158 @@
 
 <template>
   <div>
-    <base-material-card
-      title="控制台"
-      subtitle="开发中..."
-    >
-      <v-img src="https://api.ixiaowai.cn/gqapi/gqapi.php" />
+    <base-material-card :title="$t('userMenuTitles.dashboard')">
+      <v-card flat>
+        <v-card-title>我的数据</v-card-title>
+        <v-container fluid>
+          <v-row>
+            <v-col
+              v-for="countOption in countOptions"
+              :key="countOption.to"
+              cols="12"
+              sm="12"
+              md="6"
+              lg="3"
+              xl="3"
+            >
+              <v-hover :disabled="!countOption.to">
+                <template #default="{ hover }">
+                  <v-card
+                    :outlined="!hover"
+                    :elevation="hover?4:0"
+                    class="transition-swing"
+                    :to="countOption.to"
+                  >
+                    <v-card-title>
+                      <v-icon
+                        v-if="countOption.icon"
+                        left
+                        color="primary"
+                      >
+                        {{ countOption.icon }}
+                      </v-icon>
+                      {{ countOption.title }}
+                      <v-spacer />
+                      <v-slide-x-reverse-transition>
+                        <span
+                          v-if="!hover"
+                          class="text-h4 font-weight-bold primary--text"
+                          style="position: absolute; right: 16px"
+                        >{{ countOption.data }}</span>
+                        <v-icon
+                          v-else
+                          style="position: absolute; right: 16px"
+                          size="24"
+                          class="ma-2"
+                        >
+                          mdi-chevron-right
+                        </v-icon>
+                      </v-slide-x-reverse-transition>
+                    </v-card-title>
+                  </v-card>
+                </template>
+              </v-hover>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col
+              cols="12"
+              sm="12"
+              md="12"
+              lg="6"
+              xl="4"
+            >
+              <or-blog-type-top-n-chart />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="12"
+              lg="6"
+              xl="4"
+            >
+              <or-blog-article-comment-top-n-chart />
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
     </base-material-card>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+
+export default {
+  data: () => ({
+    countOptions: [],
+    articlesCountOptions: {
+      title: '已发布文章',
+      to: '/dashboard/article/box/PUBLISH',
+      icon: 'mdi-file-document-multiple',
+      loading: true,
+      data: null
+    },
+    typesCountOptions: {
+      title: '分类',
+      to: '/dashboard/type',
+      icon: 'mdi-view-list',
+      loading: true,
+      data: null
+    },
+    commentsCountOptions: {
+      title: '评论发表数',
+      to: null,
+      icon: null,
+      loading: true,
+      data: null
+    }
+  }),
+  computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    })
+  },
+  created () {
+    this.countOptions.push(this.articlesCountOptions, this.typesCountOptions, this.commentsCountOptions)
+    this.countArticles()
+    this.countTypes()
+    this.countComments()
+  },
+  methods: {
+    countArticles () {
+      this.$apis.blog.article.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountOptions.loading = false
+          this.articlesCountOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountOptions.loading = false
+        })
+    },
+    countTypes () {
+      this.$apis.blog.type.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.typesCountOptions.loading = false
+          this.typesCountOptions.data = data
+        })
+        .catch(() => {
+          this.typesCountOptions.loading = false
+        })
+    },
+    countComments () {
+      this.$apis.blog.comment.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.commentsCountOptions.loading = false
+          this.commentsCountOptions.data = data
+        })
+        .catch(() => {
+          this.commentsCountOptions.loading = false
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

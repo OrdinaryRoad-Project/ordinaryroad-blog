@@ -55,5 +55,26 @@
 
     </select>
 
+    <select id="getTopNByUserId" resultType="map">
+        SELECT ba.uuid, ba.title, COUNT(ba.uuid) comment_count, ba.create_by
+        FROM blog_article ba
+        INNER JOIN (SELECT uuid, article_id FROM blog_comment WHERE deleted = 0
+        ) bc ON bc.article_id = ba.uuid
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND create_by = #{userId}
+        </if>
+        GROUP BY ba.uuid
+        ORDER BY comment_count DESC
+        LIMIT
+        <choose>
+            <when test="n != null and n >= 0 and n &lt;= 50">
+                ${n}
+            </when>
+            <otherwise>
+                10
+            </otherwise>
+        </choose>
+    </select>
 
 </mapper>

@@ -6,6 +6,8 @@
     "summary": "Summary",
     "content": "Content",
     "status": "Status",
+    "typeName": "Type",
+    "tagNames": "Tags",
     "canReward": "Can Reward",
     "original": "Original",
     "originalOptions": {

@@ -109,6 +109,19 @@ export default {
         url: `/blog/article/recover_from_trash/${id}`,
         method: 'post'
       })
+    },
+    count: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count?userId=${userId}`,
+        method: 'get'
+      })
+    },
+    getCommentTopN ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/comment?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
     }
   }
 }

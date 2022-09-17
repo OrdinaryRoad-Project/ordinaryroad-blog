@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
@@ -184,6 +185,27 @@ class BlogTypeResource {
         }
 
         return dtoPage
+    }
+
+    /**
+     * 获取分类个数
+     */
+    @GET
+    @Path("count")
+    fun count(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        val wrapper = Wrappers.query<BlogType>()
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return typeService.dao.selectCount(wrapper)
     }
 
 }

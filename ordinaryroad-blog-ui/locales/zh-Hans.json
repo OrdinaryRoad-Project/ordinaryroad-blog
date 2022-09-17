@@ -6,6 +6,8 @@
     "summary": "摘要",
     "content": "内容",
     "status": "状态",
+    "typeName": "分类",
+    "tagNames": "标签",
     "canReward": "允许打赏",
     "original": "是否原创",
     "originalOptions": {

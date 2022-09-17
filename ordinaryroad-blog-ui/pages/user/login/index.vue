@@ -85,7 +85,7 @@ export default {
   },
   data () {
     return {
-      redirect: undefined
+      redirect: '/'
     }
   },
   methods: {

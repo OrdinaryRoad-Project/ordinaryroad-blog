@@ -21,24 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import * as echarts from 'echarts'
 
-import Vue from 'vue'
-/* 自定义常量 */
-import constants from './constants/index'
-/* 自定义工具类 */
-import util from './utils/index'
-import rules from './rules/index'
-import echarts from './echarts/index'
-
-Vue.prototype.$constants = constants
-Vue.prototype.$util = util
-Vue.prototype.$echarts = echarts
-
-export default function (context, inject) {
-  const { app } = context
-  const i18n = app.i18n
-  rules.init(i18n.$t)
-
-  // 将自定义form rules注入nuxt上下文 $rules
-  inject('rules', rules)
-}
+export default echarts

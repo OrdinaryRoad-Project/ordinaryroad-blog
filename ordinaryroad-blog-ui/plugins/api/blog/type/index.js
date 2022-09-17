@@ -77,6 +77,12 @@ export default {
         url: `/blog/type/top?1=1${urlEncode(params)}`,
         method: 'get'
       })
+    },
+    count: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count?userId=${userId}`,
+        method: 'get'
+      })
     }
   }
 }

@@ -711,6 +711,9 @@ export default {
         return
       }
       if (this.commentContentValid) {
+        if (!this.commentOptions.showAlert) {
+          this.commentOptions.parentId = ''
+        }
         this.commentOptions.posting = true
         this.$apis.blog.comment.post({
           ...this.commentOptions,

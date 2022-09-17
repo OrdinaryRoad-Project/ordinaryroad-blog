@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.dal.dao
 
 import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
@@ -40,5 +41,12 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
     fun selectAllFirstArticleByStateAndCreateBy(status: BlogArticleStatus, createBy: String): List<BlogArticle>
 
 //    fun selectAllPublishByType(page:IPage,typeName)
+
+    /**
+     * 查询评论数前十的文章
+     * @param n N
+     * @param userId 用户Id
+     */
+    fun getTopNByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
 
 }

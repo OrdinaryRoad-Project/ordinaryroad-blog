@@ -55,6 +55,12 @@ export default {
         url: `/blog/comment/page/sub/${originalId}/${page}/5?sortBy=createdTime&sortDesc=true`,
         method: 'get'
       })
+    },
+    count: (userId = '') => {
+      return $axios({
+        url: `/blog/comment/count?userId=${userId}`,
+        method: 'get'
+      })
     }
   }
 }

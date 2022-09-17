@@ -210,6 +210,24 @@
         </span>
         <span v-else>无</span>
       </template>
+      <template #[`item.typeName`]="{ item }">
+        <v-chip v-if="item.typeName" label>
+          {{ item.typeName }}
+        </v-chip>
+        <span v-else>无</span>
+      </template>
+      <template #[`item.tagNames`]="{ item }">
+        <template v-if="item.tagNames && item.tagNames.length">
+          <v-chip
+            v-for="(tagName, index) in item.tagNames"
+            :key="tagName"
+            :class="index===item.tagNames.length-1?null:'me-1'"
+          >
+            {{ tagName }}
+          </v-chip>
+        </template>
+        <span v-else>无</span>
+      </template>
       <template #[`item.canReward`]="{ item }">
         <v-simple-checkbox v-model="item.canReward" disabled />
       </template>
@@ -365,6 +383,15 @@ export default {
           text: this.$t('article.summary'),
           value: 'summary',
           width: 400
+        },
+        {
+          text: this.$t('article.typeName'),
+          value: 'typeName'
+        },
+        {
+          text: this.$t('article.tagNames'),
+          value: 'tagNames',
+          width: 300
         },
         {
           text: this.$t('article.canReward'),

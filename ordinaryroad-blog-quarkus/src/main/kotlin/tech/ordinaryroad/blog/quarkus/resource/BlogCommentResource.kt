@@ -24,17 +24,24 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import mybatis.mate.annotation.DataColumn
 import mybatis.mate.annotation.DataScope
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -44,6 +51,9 @@ class BlogCommentResource {
 
     @Inject
     protected lateinit var commentService: BlogCommentService
+
+    @Inject
+    protected lateinit var userService: BlogUserService
 
     //region 已测试
     /**
@@ -90,6 +100,26 @@ class BlogCommentResource {
         return commentService.page(request)
     }
 
+    /**
+     * 获取评论发表数
+     */
+    @GET
+    @Path("count")
+    fun countPost(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        val wrapper = Wrappers.query<BlogComment>()
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return commentService.dao.selectCount(wrapper)
+    }
     //region 开发中
     //endregion
 }
