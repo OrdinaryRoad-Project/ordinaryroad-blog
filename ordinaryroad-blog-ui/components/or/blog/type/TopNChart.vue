@@ -25,7 +25,15 @@
 <template>
   <v-card :loading="loading" flat outlined>
     <v-card-title>分类文章数Top10</v-card-title>
-    <div ref="div" style="width: 100%; height: 400px" />
+    <div
+      v-if="!loading"
+      ref="div"
+      style="width: 100%; height: 400px"
+    />
+    <div v-if="loading">
+      <v-skeleton-loader tile height="200" type="image" />
+      <v-skeleton-loader tile height="200" type="image" />
+    </div>
   </v-card>
 </template>
 
@@ -39,6 +47,7 @@ export default {
     topN: [],
     chart: undefined,
     options: {
+      tooltip: {},
       xAxis: {
         data: []
       },
@@ -76,7 +85,7 @@ export default {
 
           this.$nextTick(() => {
             this.chart = this.$echarts.init(this.$refs.div)
-            window.onresize = this.chart.resize
+            window.addEventListener('resize', this.chart.resize, true)
             this.chart.setOption(this.options)
           })
         })

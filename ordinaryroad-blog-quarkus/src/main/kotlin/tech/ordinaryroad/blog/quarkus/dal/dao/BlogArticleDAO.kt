@@ -49,4 +49,17 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
      */
     fun getTopNByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
 
+    /**
+     * 获取每日发表数
+     *
+     * @param startDateTime 统计开始时间
+     * @param endDateTime 统计结束时间
+     * @param userId 用户Id
+     */
+    fun countDailyPosts(
+        @Param("startDateTime") startDateTime: String,
+        @Param("endDateTime") endDateTime: String,
+        @Param("userId") userId: String
+    ): List<Map<String, String>>
+
 }
