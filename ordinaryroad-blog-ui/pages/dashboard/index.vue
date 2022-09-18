@@ -61,7 +61,7 @@
                           v-if="!hover"
                           class="text-h4 font-weight-bold primary--text"
                           style="position: absolute; right: 16px"
-                        >{{ countOption.data }}</span>
+                        >{{ countOption.loading ? '-' : countOption.data }}</span>
                         <v-icon
                           v-else
                           style="position: absolute; right: 16px"
@@ -80,11 +80,24 @@
 
           <v-row>
             <v-col
+              cols="8"
+              sm="6"
+              md="12"
+              lg="12"
+              xl="8"
+              order="10"
+              order-md="0"
+            >
+              <or-blog-article-daily-posts-chart
+                :vertical="$vuetify.breakpoint.smAndDown"
+              />
+            </v-col>
+            <v-col
               cols="12"
               sm="12"
               md="12"
               lg="6"
-              xl="4"
+              xl="5"
             >
               <or-blog-type-top-n-chart />
             </v-col>
@@ -93,7 +106,7 @@
               sm="12"
               md="12"
               lg="6"
-              xl="4"
+              xl="5"
             >
               <or-blog-article-comment-top-n-chart />
             </v-col>

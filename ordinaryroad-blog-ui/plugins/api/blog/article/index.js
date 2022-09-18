@@ -122,6 +122,13 @@ export default {
         url: `/blog/article/top/comment?1=1${urlEncode(params)}`,
         method: 'get'
       })
+    },
+    countDailyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/daily/posts?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
     }
   }
 }

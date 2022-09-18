@@ -50,6 +50,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -611,6 +612,23 @@ class BlogArticleResource {
             }
         }
         return articleService.dao.getTopNByUserId(n, userId)
+    }
+
+    /**
+     * 获取用户每日发表数
+     */
+    @GET
+    @Path("count/daily/posts")
+    fun countDailyPosts(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @RestQuery fromTime: LocalDateTime?,
+        @RestQuery endTime: LocalDateTime?,
+    ): List<Map<String, String>> {
+        val now = LocalDateTime.now()
+        val currentYear = now.year
+        val startDateTime = "${currentYear}-01-01 00:00:00"
+        val endDateTime = "${currentYear}-12-31 23:59:59"
+        return articleService.dao.countDailyPosts(startDateTime, endDateTime, userId)
     }
     //endregion
 
