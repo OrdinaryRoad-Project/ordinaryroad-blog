@@ -40,7 +40,7 @@
               :username="username"
               :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
             />
-            <v-list-item-title :style="{'max-width':$vuetify.breakpoint.mdAndUp?null:'50px' }">
+            <v-list-item-title v-if="!$vuetify.breakpoint.smAndDown">
               {{ username }}
             </v-list-item-title>
             <v-icon>mdi-chevron-down</v-icon>
@@ -48,12 +48,12 @@
         </template>
         <or-base-tree-list
           :nav="false"
-          :items="accessibleUserMenuItems"
+          :items="accessibleUserMenuItemsModel"
           @clickListItem="logout"
         />
       </v-menu>
       <v-btn
-        v-if="$vuetify.breakpoint.mdAndUp"
+        v-if="!$vuetify.breakpoint.smAndDown"
         to="/dashboard/article"
         depressed
         :text="transparent"
@@ -104,7 +104,21 @@ export default {
     ...mapGetters('user', {
       userInfo: 'getUserInfo',
       username: 'getUsername'
-    })
+    }),
+
+    accessibleUserMenuItemsModel: {
+      get () {
+        const items = [...this.accessibleUserMenuItems]
+        if (this.$vuetify.breakpoint.smAndDown) {
+          items.unshift({
+            titleKey: 'article.actions.writing',
+            to: '/dashboard/article',
+            icon: 'mdi-pencil'
+          })
+        }
+        return items
+      }
+    }
   },
   methods: {
     logout ({ titleKey }) {

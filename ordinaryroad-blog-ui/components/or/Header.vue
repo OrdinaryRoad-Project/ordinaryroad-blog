@@ -33,10 +33,11 @@
     <!-- 搜索 -->
     <or-search
       v-if="$route.name!=='search-input'"
+      :focused.sync="searchInputFocused"
     />
 
     <!-- 用户信息 -->
-    <or-user-info-menu />
+    <or-user-info-menu v-if="!$vuetify.breakpoint.smAndDown||!searchInputFocused" />
 
     <!-- 国际化 -->
     <or-i18n-menu v-if="!$vuetify.breakpoint.smAndDown" />
@@ -52,7 +53,9 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'OrHeader',
-  data: () => ({}),
+  data: () => ({
+    searchInputFocused: false
+  }),
   computed: {
     ...mapGetters('app', {
       selectedThemeOption: 'getSelectedThemeOption',

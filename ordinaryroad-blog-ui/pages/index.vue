@@ -24,7 +24,7 @@
 
 <template>
   <div>
-    <v-tabs v-model="tabModel" @change="onTabChange">
+    <v-tabs v-model="tabModel" show-arrows @change="onTabChange">
       <v-tab>
         全部 {{ articleTotal ? $t('parentheses', [articleTotal]) : '' }}
       </v-tab>

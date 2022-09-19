@@ -85,6 +85,11 @@ export default {
     searchInput: '',
     searchInputFocused: false
   }),
+  watch: {
+    searchInputFocused (val) {
+      this.$emit('update:focused', val)
+    }
+  },
   methods: {
     onClickSearchInputAppend () {
       if (this.searchInputFocused) {

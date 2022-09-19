@@ -158,7 +158,7 @@
               cols="12"
             >
               <v-input
-                :error-messages="contentEmpty?[$t('rules.contentNotEmpty')]:null"
+                :error-messages="!firstValid && contentEmpty ? [$t('rules.contentNotEmpty')] : null"
               >
                 <or-md-vditor
                   ref="vditor"
@@ -221,13 +221,14 @@
                     chips
                     v-bind="attrs"
                     return-object
+                    :rules="[$rules.max10Size]"
                     clearable
                     :items="tagOptions.items"
                     :label="$t('titles.form.tag')"
                     prepend-inner-icon="mdi-tag-multiple"
                     solo
                     multiple
-                    hide-details
+                    hide-details="auto"
                     @input="onSelectedItemsInput"
                     v-on="on"
                   >
@@ -280,6 +281,11 @@ export default {
 
     articleInheritsMenuModel: false,
 
+    /**
+     * 文章内容延迟校验
+     */
+    firstValid: true,
+
     article: {
       coverImage: '',
       title: '',
@@ -319,7 +325,15 @@ export default {
   watch: {
     article: {
       handler (val) {
-        this.contentEmpty = !val || !val.content || val.content.length === 0 || val.content === '\n'
+        const contentEmpty = !val || !val.content || val.content.length === 0 || val.content === '\n'
+        if (!contentEmpty) {
+          if (this.firstValid) {
+            this.firstValid = false
+            this.contentEmpty = false
+            return
+          }
+        }
+        this.contentEmpty = contentEmpty
       },
       deep: true,
       immediate: true

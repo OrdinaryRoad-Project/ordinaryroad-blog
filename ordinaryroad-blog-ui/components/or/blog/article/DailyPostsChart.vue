@@ -71,7 +71,8 @@ export default {
         orient: 'horizontal',
         left: 'center',
         top: null,
-        bottom: 0
+        bottom: 0,
+        text: ['More', 'Less']
       },
       calendar: {
         orient: 'horizontal',
@@ -114,7 +115,8 @@ export default {
   methods: {
     updateOptionsOrient (vertical) {
       const orient = vertical ? 'vertical' : 'horizontal'
-      this.options.visualMap.showLabel = !vertical
+      // this.options.visualMap.showLabel = !vertical
+      this.options.visualMap.showLabel = false
       this.options.visualMap.top = vertical ? 0 : null
       this.options.visualMap.bottom = vertical ? null : 0
       this.options.calendar.orient = orient

@@ -48,7 +48,7 @@
 
           <!-- 封面上层 -->
           <div class="or-title px-4 pb-1">
-            <v-card-subtitle class="d-flex pt-0 pb-1 align-center">
+            <v-card-subtitle class="d-flex flex-wrap pt-0 pb-1 align-center">
               <!-- 创建时间 -->
               <v-icon dark small class="me-1">
                 mdi-calendar
@@ -66,12 +66,13 @@
               <!-- 标签 -->
               <span
                 v-if="item.tags && item.tags.length && item.tags.length > 0"
-                class="d-inline-flex ms-1"
+                class="d-flex flex-wrap"
               >
                 <span
-                  v-for="tag in item.tags"
+                  v-for="(tag,index) in item.tags"
                   :key="tag.uuid"
-                  class="d-inline-flex ms-2"
+                  :class="index!==item.tags.length-1?'me-2':null"
+                  class="d-inline-flex"
                 >
                   <v-icon dark small class="me-1">
                     mdi-tag
@@ -116,7 +117,8 @@
               <v-list-item-content>
                 <v-list-item-title
                   class="font-weight-medium"
-                  @click="onClickUsername(item)"
+                  style="cursor: pointer"
+                  @click.stop="onClickUsername(item)"
                 >
                   {{ item.user.username }}
                 </v-list-item-title>

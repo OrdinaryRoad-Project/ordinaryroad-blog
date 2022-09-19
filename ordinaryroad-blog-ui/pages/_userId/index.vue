@@ -64,7 +64,7 @@
               <v-list-item-content>
                 <v-list-item-title>
                   <span class="font-weight-bold">{{ blogUser.username }}</span>
-                  <or-user-roles v-if="blogUser.roles.length>0" class="ms-2" :roles="blogUser.roles" />
+                  <or-user-roles :roles="blogUser.roles" />
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>

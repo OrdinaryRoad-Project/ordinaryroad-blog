@@ -69,10 +69,15 @@
       <v-spacer />
 
       <!-- 搜索 -->
-      <or-search :auto-expand="false" solo-inverted />
+      <or-search
+        :focused.sync="searchInputFocused"
+        :auto-expand="false"
+        solo-inverted
+      />
 
       <!-- 用户信息 -->
       <or-user-info-menu
+        v-if="$vuetify.breakpoint.smAndDown&&!searchInputFocused"
         :transparent="!showScrollToTopFab"
         start-writing-color="transparent"
         login-color="white"
@@ -182,34 +187,31 @@
         {{ blogArticle.title }}
       </v-card-title>
 
-      <!-- 作者信息 -->
       <v-list-item
         dark
-        class="d-flex justify-center"
+        class="d-flex flex-wrap align-center justify-center"
         style="position: absolute; left: 0; right: 0; bottom: 100px"
       >
-        <!-- 头像 -->
-        <or-avatar
-          :username="blogArticle.user.username"
-          avatar-class="v-list-item__avatar"
-          :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
-        />
+        <!-- 作者信息 -->
+        <div class="d-flex align-center mx-4">
+          <!-- 头像 -->
+          <or-avatar
+            :username="blogArticle.user.username"
+            avatar-class="v-list-item__avatar"
+            :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
+          />
 
-        <div>
-          <!-- 用户名 -->
-          <v-list-item-title
-            style="cursor: pointer"
-            class="font-weight-medium"
-            @click="onClickUsername"
-          >
-            {{ blogArticle.user.username }}
-          </v-list-item-title>
-
-          <!-- todo 个性签名 -->
-          <v-list-item-subtitle>世间种种平凡都不平凡</v-list-item-subtitle>
+          <div>
+            <!-- 用户名 -->
+            <v-list-item-title class="font-weight-medium">
+              <span style="cursor: pointer" @click="onClickUsername">{{ blogArticle.user.username }}</span>
+            </v-list-item-title>
+            <!-- todo 个性签名 -->
+            <v-list-item-subtitle>世间种种平凡都不平凡</v-list-item-subtitle>
+          </div>
         </div>
 
-        <div class="ms-12 text-caption">
+        <div class="text-caption">
           <!-- 创建时间 -->
           <div>
             <strong>创建于：</strong>{{ blogArticle.createdTime }}
@@ -249,45 +251,43 @@
           />
         </div>
 
-        <div class="d-flex align-center mx-2">
+        <div class="d-flex flex-wrap align-center mx-2">
           <!-- 分类 -->
           <div
             v-if="blogArticle.type && blogArticle.type !== ''"
+            class="d-inline-flex align-center me-2"
           >
-            <div class="d-inline-flex align-center">
-              <v-icon class="pa-2" small>
-                mdi-view-list
-              </v-icon>
-              <v-chip
-                small
-                label
-                @click="onClickType(blogArticle.type)"
-              >
-                {{ blogArticle.type.name }}
-              </v-chip>
-            </div>
+            <v-icon class="pa-2" small>
+              mdi-view-list
+            </v-icon>
+            <v-chip
+              small
+              label
+              @click="onClickType(blogArticle.type)"
+            >
+              {{ blogArticle.type.name }}
+            </v-chip>
           </div>
 
           <!-- 标签 -->
           <div
             v-if="blogArticle.tags && blogArticle.tags.length && blogArticle.tags.length > 0"
-            class="ms-2"
+            class="d-inline-flex align-center"
           >
-            <div class="d-inline-flex align-center">
-              <v-icon class="pa-2" small>
-                mdi-tag-multiple
-              </v-icon>
-              <v-chip-group>
-                <v-chip
-                  v-for="tag in blogArticle.tags"
-                  :key="tag.uuid"
-                  small
-                  @click="onClickTag(tag)"
-                  @keypress.enter="onClickTag(tag)"
-                >
-                  {{ tag.name }}
-                </v-chip>
-              </v-chip-group>
+            <v-icon class="pa-2" small>
+              mdi-tag-multiple
+            </v-icon>
+            <div>
+              <v-chip
+                v-for="(tag,index) in blogArticle.tags"
+                :key="tag.uuid"
+                small
+                :class="index!==blogArticle.tags.length-1?'me-2':null"
+                @click="onClickTag(tag)"
+                @keypress.enter="onClickTag(tag)"
+              >
+                {{ tag.name }}
+              </v-chip>
             </div>
           </div>
         </div>
@@ -490,6 +490,7 @@ export default {
     toc: [],
     active: [],
     currentTocIndex: null,
+    searchInputFocused: false,
 
     commentOptions: {
       posting: false,

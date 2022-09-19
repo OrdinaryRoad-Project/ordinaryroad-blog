@@ -20,6 +20,7 @@
   "language": "Language",
   "login": "Log in",
   "logout": "Sign out",
+  "maxNSize": "Size cannot be greater than {0}",
   "maxNChars": "Length cannot be greater than {0}",
   "minNChars": "Length cannot be less than {0}",
   "ordinaryroad": "Ordinary Road",

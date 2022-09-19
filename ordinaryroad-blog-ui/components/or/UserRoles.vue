@@ -23,18 +23,30 @@
   -->
 
 <template>
-  <span v-if="roles.length">
-    <v-chip
+  <span v-if="roles.length" class="d-flex flex-wrap">
+    <v-menu
       v-for="(role,index) in roles"
       :key="role.roleCode"
-      :class="index!==roles.length-1?'me-2':null"
-      small
-      :color="roleColor(role.roleCode)"
-      :outlined="roleOutlined(role.roleCode)"
-      label
+      open-delay="500"
+      open-on-hover
     >
-      {{ role.roleName }}
-    </v-chip>
+      <template #activator="{ on, attrs }">
+        <v-chip
+          :class="index!==roles.length-1?'me-2':null"
+          small
+          :color="roleColor(role.roleCode)"
+          :outlined="roleOutlined(role.roleCode)"
+          label
+          v-bind="attrs"
+          v-on="on"
+        >
+          {{ role.roleName }}
+        </v-chip>
+      </template>
+      <v-card>
+        <v-card-title>{{ role.roleName }}</v-card-title>
+      </v-card>
+    </v-menu>
   </span>
 </template>
 
