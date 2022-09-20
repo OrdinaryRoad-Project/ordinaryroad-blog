@@ -23,54 +23,16 @@
   -->
 
 <template>
-  <v-container fluid class="pa-0">
-    <or-blog-article-detail :article="article" :article-comments="articleComments" />
-  </v-container>
+  <div>
+    <base-material-card :title="$t('dashboardMenuTitles.dashboard.system.log')">
+      <or-blog-log-data-table />
+    </base-material-card>
+  </div>
 </template>
 
 <script>
-
 export default {
-  layout: 'empty',
-  async asyncData ({
-    route,
-    $apis,
-    store
-  }) {
-    const tokenValue = store.getters['user/getTokenValue']
-    // 判断文章是否存在
-    const id = route.params.id || ''
-    if (id && id.trim() !== '') {
-      const article = await $apis.blog.article.findPublishById(tokenValue, id)
-      const articleComments = await $apis.blog.comment.pageArticle(id, 1)
-      return {
-        article,
-        articleComments
-      }
-    }
-  },
-  data () {
-    return {
-      article: null,
-      articleComments: {}
-    }
-  },
-  mounted () {
-    if (this.article == null) {
-      this.$dialog({
-        persistent: true,
-        content: this.$i18n.t('status.article.notFound'),
-        confirmText: this.$i18n.t('retry'),
-        cancelText: this.$i18n.t('back')
-      }).then(({ isConfirm }) => {
-        if (isConfirm) {
-          this.$router.go(0)
-        } else {
-          this.$router.back()
-        }
-      })
-    }
-  }
+  middleware: ['userInfo']
 }
 </script>
 

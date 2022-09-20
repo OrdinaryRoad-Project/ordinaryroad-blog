@@ -22,43 +22,34 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.resource.vo;
+package tech.ordinaryroad.blog.quarkus.dal.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
-@JsonInclude
-@JsonPropertyOrder
+/**
+ * 博客用户点赞的文章
+ */
 @RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+public class BlogUserLikedArticle extends BaseDO {
 
-    private String content;
+    private static final long serialVersionUID = 3832984619656761823L;
 
-    private Boolean canReward;
+    private String articleId;
 
-    public BlogArticleDetailVO() {
+    public BlogUserLikedArticle() {
     }
 
-    public BlogArticleDetailVO(String content, Boolean canReward) {
-        this.content = content;
-        this.canReward = canReward;
+    public BlogUserLikedArticle(String articleId) {
+        this.articleId = articleId;
     }
 
-    public String getContent() {
-        return content;
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Boolean getCanReward() {
-        return canReward;
-    }
-
-    public void setCanReward(Boolean canReward) {
-        this.canReward = canReward;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 
 }

@@ -23,16 +23,14 @@
   -->
 
 <template>
-  <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.log.title')">
-      <or-blog-log-data-table />
-    </base-material-card>
-  </div>
+  <div />
 </template>
 
 <script>
 export default {
-  middleware: ['userInfo']
+  asyncData ({ redirect }) {
+    redirect('/dashboard/system/log')
+  }
 }
 </script>
 

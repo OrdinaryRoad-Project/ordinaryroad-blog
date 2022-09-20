@@ -25,7 +25,6 @@
 package tech.ordinaryroad.blog.quarkus
 
 import cn.dev33.satoken.stp.StpUtil
-import cn.hutool.core.net.NetUtil
 import cn.hutool.json.JSONUtil
 import io.quarkus.arc.Priority
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
@@ -33,6 +32,7 @@ import org.jboss.logging.Logger
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogLog
 import tech.ordinaryroad.blog.quarkus.enums.BlogLogTypeEnum
 import tech.ordinaryroad.blog.quarkus.service.BlogLogService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -67,7 +67,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
 
     fun currentVertxRequest(): CurrentVertxRequest {
         if (currentVertxRequest == null) {
-            currentVertxRequest = CDI.current().select(CurrentVertxRequest::class.java).get()!!
+            currentVertxRequest = BlogUtils.currentVertxRequest()
         }
         return currentVertxRequest!!
     }
@@ -101,7 +101,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         val blogLog = BlogLog()
         val blogLogTypeEnum = BlogLogTypeEnum.get(path, method)
         blogLog.type = blogLogTypeEnum
-        blogLog.ip = this.getClientIp(requestContext)
+        blogLog.ip = BlogUtils.getClientIp(this.currentVertxRequest())
         blogLog.path = path
         blogLog.method = method
         blogLog.headers = JSONUtil.toJsonStr(headers)
@@ -155,31 +155,6 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         tlBlogLog.remove()
         log.info("consumed time: $consumedTime")
         log.info("==========request end==========")
-    }
-
-    private fun getClientIp(requestContext: ContainerRequestContext): String {
-        val headerNames = arrayOf(
-            "X-Forwarded-For",
-            "X-Real-IP",
-            "Proxy-Client-IP",
-            "WL-Proxy-Client-IP",
-            "HTTP_CLIENT_IP",
-            "HTTP_X_FORWARDED_FOR"
-        )
-        var ip = ""
-        for (header in headerNames) {
-            ip = requestContext.getHeaderString(header) ?: ""
-            if (!NetUtil.isUnknown(ip)) {
-                ip = NetUtil.getMultistageReverseProxyIp(ip)
-                break
-            }
-        }
-        if (ip == "") {
-            val request = currentVertxRequest().current.request()
-            val remoteHostAddress = request.remoteAddress().hostAddress()
-            ip = NetUtil.getMultistageReverseProxyIp(remoteHostAddress)
-        }
-        return ip
     }
 
 }

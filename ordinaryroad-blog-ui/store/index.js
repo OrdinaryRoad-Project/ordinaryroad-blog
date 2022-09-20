@@ -95,7 +95,7 @@ export const actions = {
       if (tokenInfo) {
         try {
           const userInfo = await $apisServer.blog.userInfo(tokenInfo.value)
-          commit('user/SET_TOKEN_INFO', tokenInfo.value)
+          commit('user/SET_TOKEN_INFO', tokenInfo)
           commit('user/SET_USER_INFO', userInfo)
 
           // 更新本地可以访问的MenuItems

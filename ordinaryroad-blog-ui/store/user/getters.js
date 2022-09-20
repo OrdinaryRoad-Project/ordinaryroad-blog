@@ -25,6 +25,7 @@
 export default {
   getOAuth2State: state => state.oAuth2State,
   getTokenInfo: state => state.tokenInfo,
+  getTokenValue: state => state.tokenInfo && state.tokenInfo.value ? state.tokenInfo.value : null,
   getUserInfo: state => state.userInfo,
   getRoles: (state) => {
     return state.userInfo.roles

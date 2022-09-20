@@ -39,9 +39,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO;
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO;
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTagVO;
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeVO;
-import tech.ordinaryroad.blog.quarkus.service.BlogArticleService;
-import tech.ordinaryroad.blog.quarkus.service.BlogTagService;
-import tech.ordinaryroad.blog.quarkus.service.BlogTypeService;
+import tech.ordinaryroad.blog.quarkus.service.*;
 
 import javax.enterprise.inject.spi.CDI;
 import java.time.LocalDateTime;
@@ -64,16 +62,30 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
     @Mapping(source = "createBy", target = "user")
     BlogArticleDetailVO transferDetail(BlogArticle article);
 
+    /**
+     * 填充 创建时间、更新时间，浏览量，点赞量 字段
+     *
+     * @param article From
+     * @param object  To
+     */
     @AfterMapping
-    default void fillTimes(BlogArticle article, @MappingTarget Object object) {
+    default void afterMapping(BlogArticle article, @MappingTarget Object object) {
+        String articleUuid = article.getUuid();
         BlogArticlePreviewVO vo = (BlogArticlePreviewVO) object;
+
         BlogArticleService articleService = CDI.current().select(BlogArticleService.class).get();
-        JsonObject times = articleService.getPublishCreatedTimeAndUpdateTimeById(article.getUuid());
+        JsonObject times = articleService.getPublishCreatedTimeAndUpdateTimeById(articleUuid);
         vo.setCreatedTime((LocalDateTime) times.getValue("createdTime"));
         Object updateTime = times.getValue("updateTime");
         if (Objects.nonNull(updateTime)) {
             vo.setUpdateTime((LocalDateTime) updateTime);
         }
+
+        BlogUserBrowsedArticleService userBrowsedArticleService = CDI.current().select(BlogUserBrowsedArticleService.class).get();
+        vo.setPv(userBrowsedArticleService.getBrowsedCount(articleUuid));
+
+        BlogUserLikedArticleService userLikedArticleService = CDI.current().select(BlogUserLikedArticleService.class).get();
+        vo.setLikesCount(userLikedArticleService.getLikesCount(articleUuid));
     }
 
     default BlogTypeVO string2TypeVO(String type) {

@@ -322,3 +322,50 @@ CREATE TABLE `blog_log`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_as_ci COMMENT = '博客日志表'
   ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for blog_user_browsed_article
+-- ----------------------------
+# DROP TABLE if exists `blog_user_browsed_article`;
+CREATE TABLE `blog_user_browsed_article`
+(
+    `id`                bigint(20)                                                     NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`              varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time`      datetime                                                       NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`       datetime                                                       NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '更新者ID',
+
+    `ip`                varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+    `article_id`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '文章ID',
+    `last_browsed_time` datetime                                                       NULL     DEFAULT NULL COMMENT '上次浏览时间',
+    `deleted`           bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `blog_user_browsed_article_uuid_uindex` (`uuid`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_as_ci COMMENT = '博客用户浏览的文章表'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for blog_user_liked_article
+-- ----------------------------
+# DROP TABLE if exists `blog_user_liked_article`;
+CREATE TABLE `blog_user_liked_article`
+(
+    `id`           bigint(20)                                                   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                     NULL DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '更新者ID',
+
+    `article_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '文章ID',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `blog_user_liked_article_uuid_uindex` (`uuid`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_as_ci COMMENT = '博客用户点赞的文章表'
+  ROW_FORMAT = Dynamic;

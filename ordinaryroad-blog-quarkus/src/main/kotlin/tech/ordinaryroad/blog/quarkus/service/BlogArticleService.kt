@@ -34,15 +34,20 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canMoveToTrash
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecoverFromTrash
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 @ApplicationScoped
 class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
+
+    @Inject
+    protected lateinit var userLikedArticleService: BlogUserLikedArticleService
 
     //region 业务相关
     /**
@@ -109,6 +114,38 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         } else {
             BlogArticleNotValidException().throws()
         }
+    }
+
+    /**
+     * 用户点赞文章
+     */
+    fun likesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userLikedArticleService.getLiked(userId, id)) {
+            BaseBlogException("已经赞过了...").throws()
+        } else {
+            userLikedArticleService.likesArticle(id)
+        }
+    }
+
+    /**
+     * 用户取消点赞文章
+     */
+    fun unlikesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userLikedArticleService.getLiked(userId, id)) {
+            userLikedArticleService.unlikesArticle(userId, id)
+        } else {
+            BaseBlogException("还未点赞...").throws()
+        }
+    }
+
+    /**
+     * 获取用户是否点赞
+     */
+    fun getLiked(id: String): Boolean {
+        val userId = StpUtil.getLoginIdAsString()
+        return userLikedArticleService.getLiked(userId, id)
     }
 
     /**

@@ -50,13 +50,15 @@
           <div class="or-title px-4 pb-1">
             <v-card-subtitle class="d-flex flex-wrap pt-0 pb-1 align-center">
               <!-- 创建时间 -->
-              <v-icon dark small class="me-1">
-                mdi-calendar
-              </v-icon>
-              {{ item.createdTime }}
+              <span class="d-inline-flex me-2">
+                <v-icon dark small class="me-1">
+                  mdi-calendar
+                </v-icon>
+                {{ item.createdTime }}
+              </span>
 
               <!-- 分类 -->
-              <span v-if="item.type" class="d-inline-flex ms-2">
+              <span v-if="item.type" class="d-inline-flex me-2">
                 <v-icon dark small class="me-1">
                   mdi-view-list
                 </v-icon>
@@ -132,22 +134,18 @@
                   align="center"
                   justify="end"
                 >
-                  <v-col v-if="false" class="d-inline-flex align-center">
-                    <v-btn icon>
-                      <v-icon>mdi-thumb-up-outline</v-icon>
-                    </v-btn>
-                    <span>123</span>
+                  <v-col class="d-inline-flex align-center me-3">
+                    <v-icon left small>
+                      mdi-thumb-up
+                    </v-icon>
+                    <span>{{ item.likesCount }}</span>
                   </v-col>
 
-                  <v-col v-if="false" class="d-inline-flex align-center mx-2">
-                    <v-btn icon>
-                      <v-icon>mdi-thumb-down-outline</v-icon>
-                    </v-btn>
-                  </v-col>
-
-                  <v-col v-if="false" class="d-inline-flex align-center me-2">
-                    <v-icon>mdi-eye</v-icon>
-                    <span class="ms-1">{{ item.pv }}</span>
+                  <v-col class="d-inline-flex align-center">
+                    <v-icon left small>
+                      mdi-eye
+                    </v-icon>
+                    <span>{{ item.pv }}</span>
                   </v-col>
 
                   <v-col v-if="false" class="d-inline-flex align-center">

@@ -24,7 +24,14 @@
 
 <template>
   <div>
-    <v-tabs v-model="tabModel" show-arrows @change="onTabChange">
+    <v-tabs
+      v-model="tabModel"
+      show-arrows
+      class="sticky-top"
+      style="z-index: 2"
+      :style="`top :${$vuetify.breakpoint.smAndDown?'56px':'64px'} !important;`"
+      @change="onTabChange"
+    >
       <v-tab>
         全部 {{ articleTotal ? $t('parentheses', [articleTotal]) : '' }}
       </v-tab>
@@ -32,7 +39,12 @@
         {{ tag.name }} {{ $t('parentheses', [tag.article_count]) }}
       </v-tab>
     </v-tabs>
-    <or-blog-article-list ref="list" auto-load-more :total.sync="localArticleTotal" />
+    <or-blog-article-list
+      ref="list"
+      style="z-index: 1"
+      auto-load-more
+      :total.sync="localArticleTotal"
+    />
   </div>
 </template>
 

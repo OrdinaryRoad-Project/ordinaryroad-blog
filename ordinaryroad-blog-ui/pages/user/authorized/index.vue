@@ -56,7 +56,7 @@ export default {
       let tokenValue = ''
       const cookieString = req.headers.cookie
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
-      tokenValue = tokenInfo && tokenInfo.value
+      tokenValue = tokenInfo && tokenInfo.value ? tokenInfo.value : ''
       // 调用callback接口，换取用户信息和token
       const data = await $apis.blog.oauth2.callback(tokenValue, provider, code, stateFromServer)
       return {
@@ -83,7 +83,7 @@ export default {
   },
   mounted () {
     if (this.success) {
-      this.$store.commit('user/SET_TOKEN_INFO', this.token)
+      this.$store.commit('user/SET_TOKEN_INFO', { value: this.token })
       this.$store.commit('user/SET_USER_INFO', this.userInfo)
       this.$store.commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', this.$access)
       this.$store.commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', this.$access)

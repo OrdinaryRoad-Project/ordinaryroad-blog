@@ -49,6 +49,7 @@ import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.time.LocalDateTime
 import java.util.*
@@ -80,9 +81,11 @@ class BlogArticleResource {
     @Inject
     protected lateinit var typeService: BlogTypeService
 
-
     @Inject
     protected lateinit var tagService: BlogTagService
+
+    @Inject
+    protected lateinit var userBrowsedArticleService: BlogUserBrowsedArticleService
 
     //region 已测试方法
 
@@ -554,6 +557,7 @@ class BlogArticleResource {
      */
     @GET
     @Path("publish/{id}")
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun findPublishById(@RestPath id: String): BlogArticleDetailVO {
         val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
@@ -561,6 +565,11 @@ class BlogArticleResource {
         if (blogArticle == null) {
             throw BlogArticleNotFoundException()
         } else {
+            userBrowsedArticleService.browseArticle(
+                blogArticle.uuid,
+                BlogUtils.getClientIp(),
+                StpUtil.getLoginIdDefaultNull() as String?
+            )
             return articleMapStruct.transferDetail(blogArticle)
         }
     }
@@ -633,6 +642,42 @@ class BlogArticleResource {
     //endregion
 
     //region TODO 开发中
+    /**
+     * 用户点赞文章
+     */
+    @POST
+    @Transactional
+    @Path("likes/{id}")
+    fun likesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+        StpUtil.checkLogin()
+
+        articleService.likesArticle(id)
+    }
+
+    /**
+     * 用户取消点赞文章
+     */
+    @POST
+    @Transactional
+    @Path("unlikes/{id}")
+    fun unlikesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+        StpUtil.checkLogin()
+
+        articleService.unlikesArticle(id)
+    }
+
+    /**
+     * 获取用户是否点赞
+     */
+    @GET
+    @Transactional
+    @Path("liked/{id}")
+    fun getLiked(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String): Boolean {
+        StpUtil.checkLogin()
+
+        return articleService.getLiked(id)
+    }
+
 
     /**
      * 查询上一篇/下一篇文章

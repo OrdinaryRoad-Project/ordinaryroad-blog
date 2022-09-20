@@ -18,7 +18,9 @@
       "historicVersion": "Historic Version",
       "writing": "Start Writing",
       "saveDraft": "Save As Draft",
-      "publish": "Publish"
+      "publish": "Publish",
+      "like": "Like Article",
+      "unLike": "Unlike Article"
     },
     "startWritingHint": "Start Writing Now"
   },
@@ -47,8 +49,9 @@
       "tag": {
         "title": "Tag Management"
       },
-      "log": {
-        "title": "Operation Log"
+      "systemTitle": "System Management",
+      "system": {
+        "log": "Operation Log"
       }
     }
   },

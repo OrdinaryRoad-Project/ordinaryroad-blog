@@ -59,10 +59,11 @@ export default {
         data: article
       })
     },
-    findPublishById: (id) => {
+    findPublishById: (token, id) => {
       return $axios({
         url: `/blog/article/publish/${id}`,
-        method: 'get'
+        method: 'get',
+        headers: { 'or-blog-token': token }
       })
     },
     findOwnById: (id) => {
@@ -127,6 +128,24 @@ export default {
       const params = { startDateTime, endDateTime, userId }
       return $axios({
         url: `/blog/article/count/daily/posts?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    likesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/likes/${id}`,
+        method: 'post'
+      })
+    },
+    unlikesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/unlikes/${id}`,
+        method: 'post'
+      })
+    },
+    getLiked: (id) => {
+      return $axios({
+        url: `/blog/article/liked/${id}`,
         method: 'get'
       })
     }

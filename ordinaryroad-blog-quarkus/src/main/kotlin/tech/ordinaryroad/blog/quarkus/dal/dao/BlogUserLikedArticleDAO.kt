@@ -22,43 +22,13 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.resource.vo;
+package tech.ordinaryroad.blog.quarkus.dal.dao
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import org.apache.ibatis.annotations.Mapper
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserLikedArticle
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
-
-    private String content;
-
-    private Boolean canReward;
-
-    public BlogArticleDetailVO() {
-    }
-
-    public BlogArticleDetailVO(String content, Boolean canReward) {
-        this.content = content;
-        this.canReward = canReward;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Boolean getCanReward() {
-        return canReward;
-    }
-
-    public void setCanReward(Boolean canReward) {
-        this.canReward = canReward;
-    }
+@Mapper
+interface BlogUserLikedArticleDAO : IBaseMapper<BlogUserLikedArticle> {
 
 }

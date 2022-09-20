@@ -39,10 +39,10 @@ export default function (context, inject) {
   // 请求拦截器
   $axios.onRequest((config) => {
     // 将获取到token加入到请求头中
-    const tokenInfo = store.getters['user/getTokenInfo']
+    const tokenValue = store.getters['user/getTokenValue']
     // 兼容userInfo方法
-    if (tokenInfo && config.headers.common) {
-      config.headers.common['or-blog-token'] = tokenInfo
+    if (tokenValue && config.headers.common) {
+      config.headers.common['or-blog-token'] = tokenValue
     }
   })
 

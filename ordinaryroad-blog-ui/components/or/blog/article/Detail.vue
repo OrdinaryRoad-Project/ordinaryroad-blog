@@ -77,7 +77,7 @@
 
       <!-- 用户信息 -->
       <or-user-info-menu
-        v-if="$vuetify.breakpoint.smAndDown&&!searchInputFocused"
+        v-if="!$vuetify.breakpoint.smAndDown||!searchInputFocused"
         :transparent="!showScrollToTopFab"
         start-writing-color="transparent"
         login-color="white"
@@ -211,6 +211,7 @@
           </div>
         </div>
 
+        <!-- 时间信息 -->
         <div class="text-caption">
           <!-- 创建时间 -->
           <div>
@@ -221,11 +222,20 @@
             <strong>修改于：</strong>{{ blogArticle.updateTime }}
           </div>
         </div>
+      </v-list-item>
 
+      <v-list-item
+        dark
+        dense
+        class="d-flex flex-wrap align-center justify-center"
+        style="position: absolute; left: 0; right: 0; bottom: 60px"
+      >
         <!-- 浏览量 -->
-        <div v-if="false" class="ms-2">
-          <v-icon>mdi-eye</v-icon>
-          <span class="ms-1">999</span>
+        <div class="d-flex align-center">
+          <v-icon left small>
+            mdi-eye
+          </v-icon>
+          <span>{{ blogArticle.pv }}</span>
         </div>
       </v-list-item>
     </v-img>
@@ -317,47 +327,57 @@
           @after="onVditorAfter"
         />
 
-        <br>
-
-        <!-- 赞赏 -->
         <div id="likeFab" />
-        <div v-if="blogArticle.canReward" class="d-flex justify-center pt-5">
-          <v-tooltip bottom>
-            <template #activator="{ on }">
-              <div v-on="on">
-                <v-menu origin="center" nudge-left="45" nudge-top="75" transition="scale-transition">
-                  <template #activator="{ on }">
-                    <v-btn fab color="accent" v-on="on">
-                      <v-icon>mdi-thumb-up-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-img style="width: 150px" :src="require('~/static/vuetify-logo.svg')" />
-                </v-menu>
-              </div>
-            </template>
-            <span>赞赏</span>
-          </v-tooltip>
-        </div>
 
         <!--转载声明-->
-        <div class="pb-1">
-          <v-alert border="left" text class="text-break mx-5" colored-border color="#e00000">
-            <div v-if="blogArticle.original">
-              <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
-            </div>
-            <strong>本文链接：</strong>
-            <or-link :href="currentUrl" target="_self">
-              {{ currentUrl }}
+        <v-alert border="left" text class="text-break mx-5" colored-border color="#e00000">
+          <div v-if="blogArticle.original">
+            <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
+          </div>
+          <strong>本文链接：</strong>
+          <or-link :href="currentUrl" target="_self">
+            {{ currentUrl }}
+          </or-link>
+          <br>
+          <div v-if="blogArticle.original">
+            <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循
+            <or-link href="https://creativecommons.org/licenses/by-sa/4.0/">
+              CC BY-SA 4.0
             </or-link>
-            <br>
-            <div v-if="blogArticle.original">
-              <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循
-              <or-link href="https://creativecommons.org/licenses/by-sa/4.0/">
-                CC BY-SA 4.0
-              </or-link>
-              许可协议，转载请附上本文链接及本声明。
-            </div>
-          </v-alert>
+            许可协议，转载请附上本文链接及本声明。
+          </div>
+        </v-alert>
+
+        <!-- 赞赏 -->
+        <div class="d-flex justify-space-around align-center mb-4">
+          <!-- 点赞 -->
+          <v-btn
+            v-if="$access.isLogged()"
+            fab
+            :color="likeOptions.liked?'primary':null"
+            :loading="likeOptions.loading"
+            @click="onClickLike"
+          >
+            <v-icon>mdi-thumb-up</v-icon>
+          </v-btn>
+
+          <div v-if="blogArticle.canReward">
+            <v-tooltip bottom>
+              <template #activator="{ on }">
+                <div v-on="on">
+                  <v-menu origin="center" nudge-left="45" nudge-top="75" transition="scale-transition">
+                    <template #activator="{ on }">
+                      <v-btn fab v-on="on">
+                        <v-icon>mdi-currency-cny</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-img style="width: 150px" :src="require('~/static/vuetify-logo.svg')" />
+                  </v-menu>
+                </div>
+              </template>
+              <span>赞赏</span>
+            </v-tooltip>
+          </div>
         </div>
 
         <!-- 评论 -->
@@ -491,6 +511,12 @@ export default {
     active: [],
     currentTocIndex: null,
     searchInputFocused: false,
+
+    likeOptions: {
+      loading: false,
+
+      liked: null
+    },
 
     commentOptions: {
       posting: false,
@@ -686,6 +712,9 @@ export default {
   },
   created () {
     this.blogArticle = this.article
+    if (this.$access.isLogged()) {
+      this.updateLiked()
+    }
   },
   mounted () {
     // 监听滚动事件，然后用handleScroll这个方法进行相应的处理
@@ -696,6 +725,36 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    updateLiked () {
+      this.$apis.blog.article.getLiked(this.blogArticle.uuid)
+        .then((data) => {
+          this.likeOptions.liked = data
+        })
+    },
+    onClickLike () {
+      if (!this.$access.checkLogin()) {
+        return
+      }
+      if (this.likeOptions.liked === null) {
+        // 未获取到是否点赞
+        return
+      }
+
+      let promise
+      if (this.likeOptions.liked) {
+        promise = this.$apis.blog.article.unlikesArticle(this.blogArticle.uuid)
+      } else {
+        promise = this.$apis.blog.article.likesArticle(this.blogArticle.uuid)
+      }
+      promise.then(() => {
+        this.likeOptions.loading = false
+        this.likeOptions.liked = !this.likeOptions.liked
+        this.$snackbar.success(this.$t('whatSuccessfully', [this.likeOptions.liked ? this.$t('article.actions.like') : this.$t('article.actions.unlike')]))
+      })
+        .catch(() => {
+          this.likeOptions.loading = false
+        })
+    },
     onClickUsername () {
       window.open(`/${this.blogArticle.user.uuid}`, '_blank')
     },

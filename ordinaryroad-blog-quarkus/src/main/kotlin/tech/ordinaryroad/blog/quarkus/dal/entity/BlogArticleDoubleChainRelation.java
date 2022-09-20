@@ -22,43 +22,45 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.resource.vo;
+package tech.ordinaryroad.blog.quarkus.dal.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
-@JsonInclude
-@JsonPropertyOrder
+/**
+ * 博客文章双链关系
+ */
 @RegisterForReflection
-public class BlogArticleDetailVO extends BlogArticlePreviewVO {
+public class BlogArticleDoubleChainRelation extends BaseDO {
 
-    private String content;
+    private static final long serialVersionUID = -8695090890570453764L;
 
-    private Boolean canReward;
+    private String fromId;
 
-    public BlogArticleDetailVO() {
+    private String toId;
+
+    public BlogArticleDoubleChainRelation() {
     }
 
-    public BlogArticleDetailVO(String content, Boolean canReward) {
-        this.content = content;
-        this.canReward = canReward;
+    public BlogArticleDoubleChainRelation(String fromId, String toId) {
+        this.fromId = fromId;
+        this.toId = toId;
     }
 
-    public String getContent() {
-        return content;
+    public String getFromId() {
+        return fromId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setFromId(String fromId) {
+        this.fromId = fromId;
     }
 
-    public Boolean getCanReward() {
-        return canReward;
+    public String getToId() {
+        return toId;
     }
 
-    public void setCanReward(Boolean canReward) {
-        this.canReward = canReward;
+    public void setToId(String toId) {
+        this.toId = toId;
     }
 
 }

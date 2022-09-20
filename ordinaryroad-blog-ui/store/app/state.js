@@ -73,10 +73,21 @@ export default () => ({
       children: []
     },
     {
-      to: '/dashboard/log',
-      titleKey: 'dashboardMenuTitles.dashboard.log.title',
-      icon: 'mdi-text-box-multiple',
-      children: [],
+      titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
+      icon: 'mdi-cog',
+      children: [
+        {
+          to: '/dashboard/system/log',
+          titleKey: 'dashboardMenuTitles.dashboard.system.log',
+          icon: 'mdi-text-box-multiple',
+          children: [],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        }
+      ],
       meta: {
         roles: {
           or: ['ADMIN', 'DEVELOPER']
@@ -116,7 +127,7 @@ export default () => ({
     },
     {
       titleKey: 'userMenuTitles.log',
-      to: '/dashboard/log',
+      to: '/dashboard/system/log',
       icon: 'mdi-text-box-multiple',
       meta: {
         roles: {

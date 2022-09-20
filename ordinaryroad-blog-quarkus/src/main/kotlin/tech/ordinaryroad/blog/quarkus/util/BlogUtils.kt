@@ -25,6 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.util
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.net.NetUtil
+import io.quarkus.vertx.http.runtime.CurrentVertxRequest
+import javax.enterprise.inject.spi.CDI
 
 /**
  *
@@ -63,6 +66,37 @@ object BlogUtils {
 
     fun checkAdminOrDeveloper() {
         StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
+    }
+
+    /**
+     * 获取当前Request
+     */
+    fun currentVertxRequest(): CurrentVertxRequest {
+        return CDI.current().select(CurrentVertxRequest::class.java).get()!!
+    }
+
+    /**
+     * 获取当前请求的IP
+     */
+    fun getClientIp(request: CurrentVertxRequest = this.currentVertxRequest()): String {
+        val currentRequest = request.current.request()
+        var ip = NetUtil.getMultistageReverseProxyIp(currentRequest.remoteAddress().hostAddress())
+        val headerNames = arrayOf(
+            "X-Forwarded-For",
+            "X-Real-IP",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_X_FORWARDED_FOR"
+        )
+        for (header in headerNames) {
+            val tempIp = currentRequest.getHeader(header) ?: ""
+            if (!NetUtil.isUnknown(tempIp)) {
+                ip = NetUtil.getMultistageReverseProxyIp(tempIp)
+                break
+            }
+        }
+        return ip
     }
 
 }

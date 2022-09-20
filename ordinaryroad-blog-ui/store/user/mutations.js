@@ -31,7 +31,7 @@ export default {
   },
   SET_TOKEN_INFO (state, tokenInfo) {
     state.tokenInfo = tokenInfo
-    setTokenInfo({ value: tokenInfo })
+    setTokenInfo(tokenInfo)
   },
   REMOVE_USER_INFO (state) {
     state.userInfo = null
