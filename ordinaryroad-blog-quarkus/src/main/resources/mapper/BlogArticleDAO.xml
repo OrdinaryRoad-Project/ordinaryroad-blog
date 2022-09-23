@@ -26,6 +26,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.ordinaryroad.blog.quarkus.dal.dao.BlogArticleDAO">
 
+    <sql id="whereConditions">
+        <if test="title != null and title != ''">
+            AND #{alias}.title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="summary != null and summary != ''">
+            AND #{alias}.summary LIKE CONCAT('%', #{summary}, '%')
+        </if>
+        <if test="content != null and content != ''">
+            AND #{alias}.content LIKE CONCAT('%', #{content}, '%')
+        </if>
+        <if test="canReward != null">
+            AND #{alias}.can_reward = ${canReward}
+        </if>
+        <if test="original != null">
+            AND #{alias}.original = ${original}
+        </if>
+        <if test="status != null and status != ''">
+            AND #{alias}.status = ${status}
+        </if>
+        <if test="firstId != null and firstId != ''">
+            AND #{alias}.first_id = ${firstId}
+        </if>
+    </sql>
+
     <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO">
         <id column="id" property="id"/>
         <result column="uuid" property="uuid"/>
@@ -48,6 +72,35 @@
         <result column="type_id" property="typeId"/>
         <result column="tag_ids" property="tagIds"
                 typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="ArticleUserLikedResultMap" type="tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked"
+               extends="BaseDOResultMap">
+        <result column="title" property="title"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="can_reward" property="canReward"/>
+        <result column="original" property="original"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_ids" property="tagIds"
+                typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+        <result column="liked_time" property="likedTime"/>
+    </resultMap>
+
+    <resultMap id="ArticleUserBrowsedResultMap"
+               type="tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed"
+               extends="BaseDOResultMap">
+        <result column="title" property="title"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="can_reward" property="canReward"/>
+        <result column="original" property="original"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_ids" property="tagIds"
+                typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+        <result column="browsed_time" property="browsedTime"/>
     </resultMap>
 
     <select id="selectAllPublishByType">
@@ -89,6 +142,83 @@
             AND ba.create_by = #{userId}
         </if>
         GROUP BY date
+    </select>
+
+    <select id="pageLiked" resultMap="ArticleUserLikedResultMap">
+        SELECT bula.created_time liked_time, ba.*
+        FROM blog_user_liked_article bula
+        INNER JOIN blog_article ba ON (ba.uuid = bula.article_id
+
+        <if test="params.title != null and params.title != ''">
+            AND ba.title LIKE CONCAT('%', #{params.title}, '%')
+        </if>
+        <if test="params.summary != null and params.summary != ''">
+            AND ba.summary LIKE CONCAT('%', #{params.summary}, '%')
+        </if>
+        <if test="params.content != null and params.content != ''">
+            AND ba.content LIKE CONCAT('%', #{params.content}, '%')
+        </if>
+        <if test="params.canReward != null">
+            AND ba.can_reward = ${params.canReward}
+        </if>
+        <if test="params.original != null">
+            AND ba.original = ${params.original}
+        </if>
+        <if test="params.createBy != null and params.createBy != ''">
+            AND ba.create_by = #{params.createBy}
+        </if>
+        )
+
+        WHERE bula.create_by = #{userId}
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                bula.created_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="pageBrowsed" resultMap="ArticleUserBrowsedResultMap">
+        SELECT buba.last_browsed_time browsed_time, ba.*
+        FROM blog_user_browsed_article buba
+        INNER JOIN blog_article ba ON (ba.uuid = buba.article_id
+
+        <if test="params.title != null and params.title != ''">
+            AND ba.title LIKE CONCAT('%', #{params.title}, '%')
+        </if>
+        <if test="params.summary != null and params.summary != ''">
+            AND ba.summary LIKE CONCAT('%', #{params.summary}, '%')
+        </if>
+        <if test="params.content != null and params.content != ''">
+            AND ba.content LIKE CONCAT('%', #{params.content}, '%')
+        </if>
+        <if test="params.canReward != null">
+            AND ba.can_reward = ${params.canReward}
+        </if>
+        <if test="params.original != null">
+            AND ba.original = ${params.original}
+        </if>
+        <if test="params.createBy != null and params.createBy != ''">
+            AND ba.create_by = #{params.createBy}
+        </if>
+        )
+
+        WHERE buba.create_by = #{userId}
+        AND buba.deleted = 0
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                buba.last_browsed_time DESC
+            </otherwise>
+        </choose>
     </select>
 
 </mapper>

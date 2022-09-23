@@ -20,7 +20,8 @@
       "saveDraft": "保存草稿",
       "publish": "直接发布",
       "like": "点赞",
-      "unlike": "取消点赞"
+      "unlike": "取消点赞",
+      "edit": "编辑"
     },
     "startWritingHint": "开始写作吧"
   },
@@ -41,7 +42,9 @@
           "draft": "草稿箱",
           "publish": "已发布",
           "trash": "垃圾箱"
-        }
+        },
+        "liked": "已点赞",
+        "browsed": "已浏览"
       },
       "type": {
         "title": "分类管理"

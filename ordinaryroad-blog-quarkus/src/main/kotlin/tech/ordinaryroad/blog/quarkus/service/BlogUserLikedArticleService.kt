@@ -40,6 +40,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUserLikedArticle>() {
 
+    override fun getEntityClass(): Class<BlogUserLikedArticle> {
+        return BlogUserLikedArticle::class.java
+    }
+
     /**
      * 获取文章点赞个数
      */

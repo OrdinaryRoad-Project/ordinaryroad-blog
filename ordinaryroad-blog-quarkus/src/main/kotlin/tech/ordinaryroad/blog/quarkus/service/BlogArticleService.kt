@@ -46,8 +46,15 @@ import javax.inject.Inject
 @ApplicationScoped
 class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
 
+    override fun getEntityClass(): Class<BlogArticle> {
+        return BlogArticle::class.java
+    }
+
     @Inject
     protected lateinit var userLikedArticleService: BlogUserLikedArticleService
+
+    @Inject
+    protected lateinit var userBrowsedArticleService: BlogUserBrowsedArticleService
 
     //region 业务相关
     /**
@@ -146,6 +153,26 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     fun getLiked(id: String): Boolean {
         val userId = StpUtil.getLoginIdAsString()
         return userLikedArticleService.getLiked(userId, id)
+    }
+
+    /**
+     * 用户删除文章浏览记录
+     */
+    fun unBrowsesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userBrowsedArticleService.getBrowsed(userId, id)) {
+            userBrowsedArticleService.unBrowseArticle(userId, id)
+        } else {
+            BaseBlogException("还未浏览...").throws()
+        }
+    }
+
+    /**
+     * 获取用户是否浏览
+     */
+    fun getBrowsed(id: String): Boolean {
+        val userId = StpUtil.getLoginIdAsString()
+        return userBrowsedArticleService.getBrowsed(userId, id)
     }
 
     /**

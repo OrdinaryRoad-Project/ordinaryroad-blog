@@ -307,7 +307,7 @@
           <v-alert
             text
             dense
-            class="text-break mx-5 mt-2"
+            class="text-break mx-5 my-2"
             border="left"
             colored-border
             type="info"
@@ -330,7 +330,7 @@
         <div id="likeFab" />
 
         <!--转载声明-->
-        <v-alert border="left" text class="text-break mx-5" colored-border color="#e00000">
+        <v-alert border="left" text class="text-break mx-5 mt-2" colored-border color="#e00000">
           <div v-if="blogArticle.original">
             <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
           </div>

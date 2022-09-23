@@ -84,7 +84,7 @@ export default {
       title = '',
       summary = '',
       content = '',
-      sortBy = ['first_id'],
+      sortBy = ['firstId'],
       sortDesc = [true]
     }) => {
       const data = { createBy, tagName, title, summary, content, sortBy, sortDesc }
@@ -96,6 +96,18 @@ export default {
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
         url: `/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
+    pageOwnLiked: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/article/page/own/liked/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
+    pageOwnBrowsed: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/article/page/own/browsed/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },
@@ -147,6 +159,12 @@ export default {
       return $axios({
         url: `/blog/article/liked/${id}`,
         method: 'get'
+      })
+    },
+    unBrowsesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/un_browses/${id}`,
+        method: 'post'
       })
     }
   }

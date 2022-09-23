@@ -40,6 +40,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogTagService : BaseService<BlogTagDAO, BlogTag>() {
 
+    override fun getEntityClass(): Class<BlogTag> {
+        return BlogTag::class.java
+    }
+
     //region 业务相关
     /**
      * 管理员恢复分类

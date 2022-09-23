@@ -44,6 +44,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogTypeService : BaseService<BlogTypeDAO, BlogType>() {
 
+    override fun getEntityClass(): Class<BlogType> {
+        return BlogType::class.java
+    }
+
     //region 业务相关
     /**
      * 删除自己的分类

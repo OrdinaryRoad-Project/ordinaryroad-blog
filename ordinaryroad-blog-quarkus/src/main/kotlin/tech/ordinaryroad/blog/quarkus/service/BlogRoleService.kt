@@ -39,6 +39,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
 
+    override fun getEntityClass(): Class<BlogRole> {
+        return BlogRole::class.java
+    }
+
     //region 业务相关
     /**
      * 根据用户Id查询所有角色

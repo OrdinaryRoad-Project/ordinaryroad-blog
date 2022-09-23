@@ -63,7 +63,7 @@ public interface BlogCommentMapStruct extends BaseBlogMapStruct {
         blogCommentQueryRequest.setArticleId(comment.getArticleId());
         blogCommentQueryRequest.setOriginalId(comment.getUuid());
         blogCommentQueryRequest.setSize(5L);
-        blogCommentQueryRequest.setSortBy(Collections.singletonList("created_time"));
+        blogCommentQueryRequest.setSortBy(Collections.singletonList("createdTime"));
         blogCommentQueryRequest.setSortDesc(Collections.singletonList(true));
         Page<BlogSubCommentVO> replies = commentService.pageSubComment(blogCommentQueryRequest);
 

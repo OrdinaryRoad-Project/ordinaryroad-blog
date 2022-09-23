@@ -148,28 +148,8 @@
                     <span>{{ item.pv }}</span>
                   </v-col>
 
-                  <v-col v-if="false" class="d-inline-flex align-center">
-                    <v-menu>
-                      <template #activator="{ on, attrs }">
-                        <v-btn
-                          v-bind="attrs"
-                          icon
-                          v-on="on"
-                        >
-                          <v-icon>
-                            mdi-chevron-down
-                          </v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title>操作1</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-title>操作2</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
+                  <v-col class="d-inline-flex align-center">
+                    <slot name="actions" />
                   </v-col>
                 </v-row>
               </v-list-item-action>

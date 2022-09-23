@@ -39,6 +39,10 @@ class BlogOAuthUserService : BaseService<BlogOAuthUserDAO, BlogOAuthUser>() {
     @Inject
     protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
+    override fun getEntityClass(): Class<BlogOAuthUser> {
+        return BlogOAuthUser::class.java
+    }
+
     /**
      * 删除用户关联的OAuth用户和关联关系
      */

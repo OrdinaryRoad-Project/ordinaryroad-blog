@@ -33,6 +33,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAuthUsers>() {
 
+    override fun getEntityClass(): Class<BlogUserOAuthUsers> {
+        return BlogUserOAuthUsers::class.java
+    }
+
     /**
      * 查询用户关联的OAuth用户
      */

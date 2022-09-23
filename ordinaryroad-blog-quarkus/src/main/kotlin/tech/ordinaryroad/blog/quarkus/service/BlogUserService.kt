@@ -41,6 +41,10 @@ import javax.inject.Inject
 @ApplicationScoped
 class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
 
+    override fun getEntityClass(): Class<BlogUser> {
+        return BlogUser::class.java
+    }
+
     @Inject
     protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 

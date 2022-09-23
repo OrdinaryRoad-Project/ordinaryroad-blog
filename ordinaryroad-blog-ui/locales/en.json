@@ -20,7 +20,8 @@
       "saveDraft": "Save As Draft",
       "publish": "Publish",
       "like": "Like Article",
-      "unLike": "Unlike Article"
+      "unlike": "Unlike Article",
+      "edit": "Edit Article"
     },
     "startWritingHint": "Start Writing Now"
   },
@@ -41,7 +42,9 @@
           "draft": "Draft",
           "publish": "Publish",
           "trash": "Trash"
-        }
+        },
+        "liked": "Liked Article",
+        "browsed": "Browsed Article"
       },
       "type": {
         "title": "Type Management"

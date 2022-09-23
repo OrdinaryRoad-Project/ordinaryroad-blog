@@ -70,6 +70,10 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     @Inject
     protected lateinit var sqlSessionFactory: SqlSessionFactory
 
+    override fun getEntityClass(): Class<BlogComment> {
+        return BlogComment::class.java
+    }
+
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
         // 校验登录

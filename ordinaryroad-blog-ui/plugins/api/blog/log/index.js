@@ -36,7 +36,7 @@ export default {
       method = '',
       status = '',
       createBy = '',
-      sortBy = ['created_time'],
+      sortBy = ['createdTime'],
       sortDesc = [true]
     }) => {
       const data = { type, method, status, createBy, sortBy, sortDesc }

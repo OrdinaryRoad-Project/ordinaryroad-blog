@@ -57,6 +57,16 @@ export default () => ({
           titleKey: 'dashboardMenuTitles.dashboard.article.box.trash',
           to: '/dashboard/article/box/TRASH',
           children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.liked',
+          to: '/dashboard/article/liked',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.browsed',
+          to: '/dashboard/article/browsed',
+          children: []
         }
       ]
     },

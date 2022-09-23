@@ -39,4 +39,8 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogLogService : BaseService<BlogLogDAO, BlogLog>() {
 
+    override fun getEntityClass(): Class<BlogLog> {
+        return BlogLog::class.java
+    }
+
 }

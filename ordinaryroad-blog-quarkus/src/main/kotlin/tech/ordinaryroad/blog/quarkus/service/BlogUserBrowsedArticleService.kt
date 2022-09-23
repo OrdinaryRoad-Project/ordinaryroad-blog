@@ -41,6 +41,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, BlogUserBrowsedArticle>() {
 
+    override fun getEntityClass(): Class<BlogUserBrowsedArticle> {
+        return BlogUserBrowsedArticle::class.java
+    }
+
     /**
      * 获取文章浏览量
      */
@@ -103,7 +107,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
     /**
      * 删除浏览记录
      */
-    fun unBrowseArticle(articleId: String, userId: String) {
+    fun unBrowseArticle(userId: String, articleId: String) {
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
             .eq("article_id", articleId)
             .eq("create_by", userId)

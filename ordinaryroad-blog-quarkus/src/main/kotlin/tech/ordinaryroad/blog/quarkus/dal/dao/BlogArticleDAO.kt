@@ -24,9 +24,12 @@
 
 package tech.ordinaryroad.blog.quarkus.dal.dao
 
+import com.baomidou.mybatisplus.core.metadata.IPage
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Param
 import org.apache.ibatis.annotations.Select
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
@@ -61,5 +64,25 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
         @Param("endDateTime") endDateTime: String,
         @Param("userId") userId: String
     ): List<Map<String, String>>
+
+    /**
+     * 分页查询点赞的文章
+     */
+    fun pageLiked(
+        page: IPage<BlogArticle>,
+        userId: String,
+        @Param("params") article: BlogArticle,
+        orderBySql: String
+    ): IPage<BlogArticleUserLiked>
+
+    /**
+     * 分页查询浏览的文章
+     */
+    fun pageBrowsed(
+        page: IPage<BlogArticle>,
+        userId: String,
+        @Param("params") article: BlogArticle,
+        orderBySql: String
+    ): IPage<BlogArticleUserBrowsed>
 
 }

@@ -30,11 +30,14 @@ import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpStatus
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
@@ -47,10 +50,13 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogArticleMapStruct
 import tech.ordinaryroad.blog.quarkus.request.*
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewUserBrowsedVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewUserLikedVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import tech.ordinaryroad.commons.mybatis.quarkus.utils.TableInfoUtils
 import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
@@ -459,6 +465,102 @@ class BlogArticleResource {
     }
 
     /**
+     * 用户分页查询自己已点赞的文章
+     */
+    @GET
+    @Path("page/own/liked/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun pageOwnLiked(@BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserLikedVO> {
+        /* 登录校验 */
+        StpUtil.checkLogin()
+
+        val userId = StpUtil.getLoginIdAsString()
+
+        var orderBySql = ""
+        val sortBy = request.sortBy
+        if (!sortBy.isNullOrEmpty()) {
+            sortBy.forEachIndexed { index, item ->
+                orderBySql += "ba."
+                orderBySql += TableInfoUtils.getTableFieldColumn(articleService.entityClass, item)
+                if (request.sortDesc.getOrElse(index) { false }) {
+                    orderBySql += " "
+                    orderBySql += "DESC"
+                }
+                if (index != sortBy.size - 1) {
+                    orderBySql += ", "
+                }
+            }
+        }
+
+        val page = articleService.dao.pageLiked(
+            PageDTO.of(request.page, request.size), userId,
+            BlogArticle().apply {
+                title = request.title
+                summary = request.summary
+                content = request.content
+                canReward = request.canReward
+                original = request.original
+                firstId = request.firstId
+                createBy = request.createBy
+            }, orderBySql
+        ) as PageDTO<BlogArticleUserLiked>
+
+        val voPage = PageUtils.copyPage<BlogArticleUserLiked, BlogArticlePreviewUserLikedVO>(page).apply {
+            setRecords(page.records.map(articleMapStruct::transferPreviewUserLiked))
+        } as PageDTO<BlogArticlePreviewUserLikedVO>
+
+        return voPage
+    }
+
+    /**
+     * 用户分页查询自己已浏览的文章
+     */
+    @GET
+    @Path("page/own/browsed/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun pageOwnBrowsed(@BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserBrowsedVO> {
+        /* 登录校验 */
+        StpUtil.checkLogin()
+
+        val userId = StpUtil.getLoginIdAsString()
+
+        var orderBySql = ""
+        val sortBy = request.sortBy
+        if (!sortBy.isNullOrEmpty()) {
+            sortBy.forEachIndexed { index, item ->
+                orderBySql += "ba."
+                orderBySql += TableInfoUtils.getTableFieldColumn(articleService.entityClass, item)
+                if (request.sortDesc.getOrElse(index) { false }) {
+                    orderBySql += " "
+                    orderBySql += "DESC"
+                }
+                if (index != sortBy.size - 1) {
+                    orderBySql += ", "
+                }
+            }
+        }
+
+        val page = articleService.dao.pageBrowsed(
+            PageDTO.of(request.page, request.size), userId,
+            BlogArticle().apply {
+                title = request.title
+                summary = request.summary
+                content = request.content
+                canReward = request.canReward
+                original = request.original
+                firstId = request.firstId
+                createBy = request.createBy
+            }, orderBySql
+        ) as PageDTO<BlogArticleUserBrowsed>
+
+        val voPage = PageUtils.copyPage<BlogArticleUserBrowsed, BlogArticlePreviewUserBrowsedVO>(page).apply {
+            setRecords(page.records.map(articleMapStruct::transferPreviewUserBrowsed))
+        } as PageDTO<BlogArticlePreviewUserBrowsedVO>
+
+        return voPage
+    }
+
+    /**
      * 用户根据FirstId分页查询文章的所有版本
      */
     @GET
@@ -502,7 +604,8 @@ class BlogArticleResource {
         val tagName = request.tagName
         var tagId = ""
         var tagIds = emptyList<String>()
-        if (!tagName.isNullOrEmpty()) {
+        // TODO 防止sql注入
+        if (!tagName.isNullOrEmpty() && tagName != "%") {
             tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
             tagId = tagIds.first()
         }
@@ -639,9 +742,7 @@ class BlogArticleResource {
         val endDateTime = "${currentYear}-12-31 23:59:59"
         return articleService.dao.countDailyPosts(startDateTime, endDateTime, userId)
     }
-    //endregion
 
-    //region TODO 开发中
     /**
      * 用户点赞文章
      */
@@ -667,6 +768,18 @@ class BlogArticleResource {
     }
 
     /**
+     * 用户删除文章浏览记录
+     */
+    @POST
+    @Transactional
+    @Path("un_browses/{id}")
+    fun unBrowsesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+        StpUtil.checkLogin()
+
+        articleService.unBrowsesArticle(id)
+    }
+
+    /**
      * 获取用户是否点赞
      */
     @GET
@@ -678,6 +791,9 @@ class BlogArticleResource {
         return articleService.getLiked(id)
     }
 
+    //endregion
+
+    //region TODO 开发中
 
     /**
      * 查询上一篇/下一篇文章

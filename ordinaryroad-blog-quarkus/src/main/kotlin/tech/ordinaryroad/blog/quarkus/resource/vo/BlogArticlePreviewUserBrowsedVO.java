@@ -22,28 +22,36 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.service
+package tech.ordinaryroad.blog.quarkus.resource.vo;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserRolesDAO
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserRoles
-import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
-import javax.enterprise.context.ApplicationScoped
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
-@ApplicationScoped
-class BlogUserRolesService : BaseService<BlogUserRolesDAO, BlogUserRoles>() {
+import java.time.LocalDateTime;
 
-    override fun getEntityClass(): Class<BlogUserRoles> {
-        return BlogUserRoles::class.java
+/**
+ * 用户已浏览博客文章预览VO类
+ */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+public class BlogArticlePreviewUserBrowsedVO extends BlogArticlePreviewVO {
+
+    private LocalDateTime browsedTime;
+
+    public BlogArticlePreviewUserBrowsedVO() {
     }
 
-    /**
-     * 根据用户Id查询所有关联关系
-     */
-    fun findAllByUserId(userId: String): List<BlogUserRoles> {
-        val wrapper = Wrappers.query<BlogUserRoles>()
-        wrapper.eq("user_id", userId)
-        return super.dao.selectList(wrapper)
+    public BlogArticlePreviewUserBrowsedVO(LocalDateTime browsedTime) {
+        this.browsedTime = browsedTime;
     }
 
+    public LocalDateTime getBrowsedTime() {
+        return browsedTime;
+    }
+
+    public void setBrowsedTime(LocalDateTime browsedTime) {
+        this.browsedTime = browsedTime;
+    }
 }

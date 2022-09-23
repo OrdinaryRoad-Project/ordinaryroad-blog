@@ -32,13 +32,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed;
+import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked;
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle;
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag;
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleDetailVO;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTagVO;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeVO;
+import tech.ordinaryroad.blog.quarkus.resource.vo.*;
 import tech.ordinaryroad.blog.quarkus.service.*;
 
 import javax.enterprise.inject.spi.CDI;
@@ -60,6 +59,16 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
     @Mapping(source = "typeId", target = "type")
     @Mapping(source = "tagIds", target = "tags")
     @Mapping(source = "createBy", target = "user")
+    BlogArticlePreviewUserLikedVO transferPreviewUserLiked(BlogArticleUserLiked articleUserLiked);
+
+    @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "tagIds", target = "tags")
+    @Mapping(source = "createBy", target = "user")
+    BlogArticlePreviewUserBrowsedVO transferPreviewUserBrowsed(BlogArticleUserBrowsed articleUserBroswed);
+
+    @Mapping(source = "typeId", target = "type")
+    @Mapping(source = "tagIds", target = "tags")
+    @Mapping(source = "createBy", target = "user")
     BlogArticleDetailVO transferDetail(BlogArticle article);
 
     /**
@@ -71,8 +80,40 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
     @AfterMapping
     default void afterMapping(BlogArticle article, @MappingTarget Object object) {
         String articleUuid = article.getUuid();
-        BlogArticlePreviewVO vo = (BlogArticlePreviewVO) object;
+        fillFields(articleUuid, (BlogArticlePreviewVO) object);
+    }
 
+    /**
+     * 填充 创建时间、更新时间，浏览量，点赞量，点赞时间 字段
+     *
+     * @param articleUserLiked From
+     * @param object           To
+     */
+    @AfterMapping
+    default void afterMapping(BlogArticleUserLiked articleUserLiked, @MappingTarget Object object) {
+        String articleUuid = articleUserLiked.getUuid();
+        fillFields(articleUuid, (BlogArticlePreviewVO) object);
+    }
+
+    /**
+     * 填充 创建时间、更新时间，浏览量，点赞量，浏览时间 字段
+     *
+     * @param articleUserBrowsed From
+     * @param object             To
+     */
+    @AfterMapping
+    default void afterMapping(BlogArticleUserBrowsed articleUserBrowsed, @MappingTarget Object object) {
+        String articleUuid = articleUserBrowsed.getUuid();
+        fillFields(articleUuid, (BlogArticlePreviewVO) object);
+    }
+
+    /**
+     * 填充 创建时间、更新时间，浏览量，点赞量 字段
+     *
+     * @param articleUuid 文章Id
+     * @param vo          需要填充的VO类
+     */
+    private static void fillFields(String articleUuid, BlogArticlePreviewVO vo) {
         BlogArticleService articleService = CDI.current().select(BlogArticleService.class).get();
         JsonObject times = articleService.getPublishCreatedTimeAndUpdateTimeById(articleUuid);
         vo.setCreatedTime((LocalDateTime) times.getValue("createdTime"));
