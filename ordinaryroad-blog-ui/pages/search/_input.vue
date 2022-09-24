@@ -93,8 +93,6 @@ export default {
       }
       this.loading = true
       this.$refs.articleList.title = input
-      this.$refs.articleList.summary = input
-      this.$refs.articleList.content = input
       this.$refs.articleList.getArticles(false)
     }
   }

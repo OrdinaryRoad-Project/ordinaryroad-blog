@@ -204,7 +204,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
      * @param id 文章Id
      * @return BlogArticle 文章
      */
-    private fun validateOwn(id: String): BlogArticle {
+    fun validateOwn(id: String): BlogArticle {
         val userId = StpUtil.getLoginIdAsString()
         if (id.isBlank()) {
             BlogArticleNotFoundException().throws()

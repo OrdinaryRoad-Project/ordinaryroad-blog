@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor
 import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor
@@ -214,7 +215,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     /**
      * 校验文章是否存在
      */
-    private fun validateArticle(articleId: String?): BlogArticle {
+    fun validateArticle(articleId: String?): BlogArticle {
         if (articleId.isNullOrBlank()) {
             BlogArticleNotValidException().throws()
         }
@@ -224,7 +225,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     /**
      * 校验评论是否存在
      */
-    private fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
+    fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
         if (originalId.isNullOrBlank()) {
             if (must) {
                 BlogCommentNotValidException().throws()
@@ -233,6 +234,14 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             }
         }
         return findById(originalId) ?: throw BlogCommentNotFoundException()
+    }
+    //endregion
+
+    //region SQL相关
+    fun countByUserId(userId: String): Long {
+        val wrapper = Wrappers.query<BlogComment>()
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return super.dao.selectCount(wrapper)
     }
     //endregion
 

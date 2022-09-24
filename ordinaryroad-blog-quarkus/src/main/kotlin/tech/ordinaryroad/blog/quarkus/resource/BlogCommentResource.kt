@@ -24,12 +24,10 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import mybatis.mate.annotation.DataColumn
 import mybatis.mate.annotation.DataScope
 import org.jboss.resteasy.reactive.RestQuery
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
@@ -116,9 +114,7 @@ class BlogCommentResource {
                 BlogUserNotFoundException().throws()
             }
         }
-        val wrapper = Wrappers.query<BlogComment>()
-            .eq(userId.isNotBlank(), "create_by", userId)
-        return commentService.dao.selectCount(wrapper)
+        return commentService.countByUserId(userId)
     }
     //region 开发中
     //endregion
