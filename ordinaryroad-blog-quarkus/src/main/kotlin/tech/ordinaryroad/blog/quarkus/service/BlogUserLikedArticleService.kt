@@ -27,8 +27,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import io.quarkus.arc.Unremovable
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserLikedArticleDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserLikedArticle
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 /**
  * Service-BlogUserLikedArticle
@@ -40,6 +43,9 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUserLikedArticle>() {
 
+    @Inject
+    protected lateinit var articleService: BlogArticleService
+
     override fun getEntityClass(): Class<BlogUserLikedArticle> {
         return BlogUserLikedArticle::class.java
     }
@@ -48,8 +54,13 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 获取文章点赞个数
      */
     fun getLikesCount(articleId: String): Long {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserLikedArticle>()
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
 
         return super.dao.selectCount(wrapper)
     }
@@ -58,8 +69,13 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 点赞文章
      */
     fun likesArticle(articleId: String) {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         super.create(BlogUserLikedArticle().apply {
-            setArticleId(articleId)
+            setArticleId(firstArticleById!!.uuid)
         })
     }
 
@@ -67,9 +83,14 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 取消点赞
      */
     fun unlikesArticle(userId: String, articleId: String) {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserLikedArticle>()
             .eq("create_by", userId)
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
 
         super.dao.delete(wrapper)
     }
@@ -78,9 +99,13 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 获取是否已点赞
      */
     fun getLiked(userId: String, articleId: String): Boolean {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
         val wrapper = Wrappers.query<BlogUserLikedArticle>()
             .eq("create_by", userId)
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
 
         return super.dao.exists(wrapper)
     }

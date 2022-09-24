@@ -184,6 +184,21 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
+     * 根据Id获取最初版本的文章
+     */
+    fun getFirstArticleById(id: String): BlogArticle? {
+        if (id.isBlank()) {
+            return null
+        }
+        val findById = super.findById(id) ?: return null
+        return if (findById.firstId == findById.uuid) {
+            super.findById(findById.firstId)
+        } else {
+            super.findById(findById.firstId)
+        }
+    }
+
+    /**
      * 校验文章是否属于自己
      *
      * @param id 文章Id

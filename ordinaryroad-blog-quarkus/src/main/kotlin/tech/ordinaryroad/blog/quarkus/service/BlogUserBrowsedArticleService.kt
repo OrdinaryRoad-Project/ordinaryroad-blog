@@ -27,9 +27,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import io.quarkus.arc.Unremovable
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserBrowsedArticleDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserBrowsedArticle
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 /**
  * Service-BlogUserBrowsedArticle
@@ -41,16 +44,25 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, BlogUserBrowsedArticle>() {
 
+    @Inject
+    protected lateinit var articleService: BlogArticleService
+
     override fun getEntityClass(): Class<BlogUserBrowsedArticle> {
         return BlogUserBrowsedArticle::class.java
     }
 
+    //region 业务相关
     /**
      * 获取文章浏览量
      */
     fun getBrowsedCount(articleId: String): Long {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
 
         return super.dao.selectCount(wrapper)
     }
@@ -59,14 +71,19 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 增加浏览记录
      */
     fun browseArticle(articleId: String, ip: String, userId: String? = null) {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         if (userId == null) {
             // 未登录
-            val byIpAndArticleId = this.findByIpAndArticleId(ip, articleId)
+            val byIpAndArticleId = this.findByIpAndArticleId(ip, firstArticleById!!.uuid)
             if (byIpAndArticleId == null) {
                 // 创建
                 super.create(BlogUserBrowsedArticle().apply {
                     setIp(ip)
-                    setArticleId(articleId)
+                    setArticleId(firstArticleById.uuid)
                     lastBrowsedTime = LocalDateTime.now()
                 })
             } else {
@@ -77,12 +94,12 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
                 })
             }
         } else {
-            val byUserIdAndIpAndArticleId = this.findByUserIdAndIpAndArticleId(userId, ip, articleId)
+            val byUserIdAndIpAndArticleId = this.findByUserIdAndIpAndArticleId(userId, ip, firstArticleById!!.uuid)
             if (byUserIdAndIpAndArticleId == null) {
                 // 创建
                 super.create(BlogUserBrowsedArticle().apply {
                     setIp(ip)
-                    setArticleId(articleId)
+                    setArticleId(firstArticleById.uuid)
                     lastBrowsedTime = LocalDateTime.now()
                 })
             } else {
@@ -108,8 +125,13 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 删除浏览记录
      */
     fun unBrowseArticle(userId: String, articleId: String) {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
             .eq("create_by", userId)
 
         super.dao.update(BlogUserBrowsedArticle().apply {
@@ -121,14 +143,21 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 获取是否已浏览
      */
     fun getBrowsed(userId: String, articleId: String): Boolean {
+        val firstArticleById = articleService.getFirstArticleById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
             .eq("create_by", userId)
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById!!.uuid)
             .eq("deleted", false)
 
         return super.dao.exists(wrapper)
     }
+    //endregion
 
+    //region SQL相关
     fun findByUserIdAndIpAndArticleId(userId: String, ip: String, articleId: String): BlogUserBrowsedArticle? {
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
             .eq("create_by", userId)
@@ -146,5 +175,6 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
 
         return super.dao.selectOne(wrapper)
     }
+    //endregion
 
 }
