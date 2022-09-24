@@ -38,20 +38,31 @@ import java.time.LocalDateTime;
 @RegisterForReflection
 public class BlogArticlePreviewUserBrowsedVO extends BlogArticlePreviewVO {
 
-    private LocalDateTime browsedTime;
+    private LocalDateTime firstBrowsedTime;
+
+    private LocalDateTime lastBrowsedTime;
 
     public BlogArticlePreviewUserBrowsedVO() {
     }
 
-    public BlogArticlePreviewUserBrowsedVO(LocalDateTime browsedTime) {
-        this.browsedTime = browsedTime;
+    public BlogArticlePreviewUserBrowsedVO(LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime) {
+        this.firstBrowsedTime = firstBrowsedTime;
+        this.lastBrowsedTime = lastBrowsedTime;
     }
 
-    public LocalDateTime getBrowsedTime() {
-        return browsedTime;
+    public LocalDateTime getFirstBrowsedTime() {
+        return firstBrowsedTime;
     }
 
-    public void setBrowsedTime(LocalDateTime browsedTime) {
-        this.browsedTime = browsedTime;
+    public void setFirstBrowsedTime(LocalDateTime firstBrowsedTime) {
+        this.firstBrowsedTime = firstBrowsedTime;
+    }
+
+    public LocalDateTime getLastBrowsedTime() {
+        return lastBrowsedTime;
+    }
+
+    public void setLastBrowsedTime(LocalDateTime lastBrowsedTime) {
+        this.lastBrowsedTime = lastBrowsedTime;
     }
 }

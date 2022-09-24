@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class BlogArticleUserBrowsed extends BaseDO {
 
-    private static final long serialVersionUID = 5641323019888410416L;
+    private static final long serialVersionUID = 7663230835173080251L;
 
     /**
      * 标题
@@ -87,15 +87,21 @@ public class BlogArticleUserBrowsed extends BaseDO {
     private List<String> tagIds;
 
     /**
-     * 浏览时间
+     * 首次浏览时间
      */
-    private LocalDateTime browsedTime;
+    private LocalDateTime firstBrowsedTime;
+
+
+    /**
+     * 上次浏览时间
+     */
+    private LocalDateTime lastBrowsedTime;
 
 
     public BlogArticleUserBrowsed() {
     }
 
-    public BlogArticleUserBrowsed(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String typeId, List<String> tagIds, LocalDateTime browsedTime) {
+    public BlogArticleUserBrowsed(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String typeId, List<String> tagIds, LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
@@ -104,7 +110,8 @@ public class BlogArticleUserBrowsed extends BaseDO {
         this.original = original;
         this.typeId = typeId;
         this.tagIds = tagIds;
-        this.browsedTime = browsedTime;
+        this.firstBrowsedTime = firstBrowsedTime;
+        this.lastBrowsedTime = lastBrowsedTime;
     }
 
     public String getTitle() {
@@ -171,11 +178,19 @@ public class BlogArticleUserBrowsed extends BaseDO {
         this.tagIds = tagIds;
     }
 
-    public LocalDateTime getBrowsedTime() {
-        return browsedTime;
+    public LocalDateTime getFirstBrowsedTime() {
+        return firstBrowsedTime;
     }
 
-    public void setBrowsedTime(LocalDateTime browsedTime) {
-        this.browsedTime = browsedTime;
+    public void setFirstBrowsedTime(LocalDateTime firstBrowsedTime) {
+        this.firstBrowsedTime = firstBrowsedTime;
+    }
+
+    public LocalDateTime getLastBrowsedTime() {
+        return lastBrowsedTime;
+    }
+
+    public void setLastBrowsedTime(LocalDateTime lastBrowsedTime) {
+        this.lastBrowsedTime = lastBrowsedTime;
     }
 }

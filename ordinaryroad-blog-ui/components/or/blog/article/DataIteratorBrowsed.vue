@@ -40,7 +40,12 @@
               :key="item.uuid"
             >
               <template #opposite>
-                <span v-if="!$vuetify.breakpoint.mdAndDown">{{ item.browsedTime }}</span>
+                <span v-if="!$vuetify.breakpoint.mdAndDown">
+                  浏览时间：{{
+                    item.lastBrowsedTime
+                  }}<br>{{
+                    item.firstBrowsedTime !== item.lastBrowsedTime ? `首次浏览时间：${item.firstBrowsedTime}` : null
+                  }}</span>
               </template>
 
               <v-card-title v-if="$vuetify.breakpoint.mdAndDown">

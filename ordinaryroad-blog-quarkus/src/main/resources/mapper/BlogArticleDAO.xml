@@ -100,7 +100,8 @@
         <result column="type_id" property="typeId"/>
         <result column="tag_ids" property="tagIds"
                 typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
-        <result column="browsed_time" property="browsedTime"/>
+        <result column="first_browsed_time" property="firstBrowsedTime"/>
+        <result column="last_browsed_time" property="lastBrowsedTime"/>
     </resultMap>
 
     <select id="selectAllPublishByType">
@@ -147,27 +148,29 @@
     <select id="pageLiked" resultMap="ArticleUserLikedResultMap">
         SELECT bula.created_time liked_time, ba.*
         FROM blog_user_liked_article bula
-        INNER JOIN blog_article ba ON (ba.uuid = bula.article_id
-
-        <if test="params.title != null and params.title != ''">
-            AND ba.title LIKE CONCAT('%', #{params.title}, '%')
-        </if>
-        <if test="params.summary != null and params.summary != ''">
-            AND ba.summary LIKE CONCAT('%', #{params.summary}, '%')
-        </if>
-        <if test="params.content != null and params.content != ''">
-            AND ba.content LIKE CONCAT('%', #{params.content}, '%')
-        </if>
-        <if test="params.canReward != null">
-            AND ba.can_reward = ${params.canReward}
-        </if>
-        <if test="params.original != null">
-            AND ba.original = ${params.original}
-        </if>
-        <if test="params.createBy != null and params.createBy != ''">
-            AND ba.create_by = #{params.createBy}
-        </if>
-        )
+        INNER JOIN (SELECT * FROM blog_article
+        <where>
+            status = 'PUBLISH'
+            <if test="params.title != null and params.title != ''">
+                AND title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params.summary != null and params.summary != ''">
+                AND summary LIKE CONCAT('%', #{params.summary}, '%')
+            </if>
+            <if test="params.content != null and params.content != ''">
+                AND content LIKE CONCAT('%', #{params.content}, '%')
+            </if>
+            <if test="params.canReward != null">
+                AND can_reward = ${params.canReward}
+            </if>
+            <if test="params.original != null">
+                AND original = ${params.original}
+            </if>
+            <if test="params.createBy != null and params.createBy != ''">
+                AND create_by = #{params.createBy}
+            </if>
+        </where>
+        ) ba ON (ba.first_id = bula.article_id)
 
         WHERE bula.create_by = #{userId}
 
@@ -183,29 +186,31 @@
     </select>
 
     <select id="pageBrowsed" resultMap="ArticleUserBrowsedResultMap">
-        SELECT buba.last_browsed_time browsed_time, ba.*
+        SELECT buba.created_time first_browsed_time, buba.last_browsed_time, ba.*
         FROM blog_user_browsed_article buba
-        INNER JOIN blog_article ba ON (ba.uuid = buba.article_id
-
-        <if test="params.title != null and params.title != ''">
-            AND ba.title LIKE CONCAT('%', #{params.title}, '%')
-        </if>
-        <if test="params.summary != null and params.summary != ''">
-            AND ba.summary LIKE CONCAT('%', #{params.summary}, '%')
-        </if>
-        <if test="params.content != null and params.content != ''">
-            AND ba.content LIKE CONCAT('%', #{params.content}, '%')
-        </if>
-        <if test="params.canReward != null">
-            AND ba.can_reward = ${params.canReward}
-        </if>
-        <if test="params.original != null">
-            AND ba.original = ${params.original}
-        </if>
-        <if test="params.createBy != null and params.createBy != ''">
-            AND ba.create_by = #{params.createBy}
-        </if>
-        )
+        INNER JOIN (SELECT * FROM blog_article
+        <where>
+            status = 'PUBLISH'
+            <if test="params.title != null and params.title != ''">
+                AND title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params.summary != null and params.summary != ''">
+                AND summary LIKE CONCAT('%', #{params.summary}, '%')
+            </if>
+            <if test="params.content != null and params.content != ''">
+                AND content LIKE CONCAT('%', #{params.content}, '%')
+            </if>
+            <if test="params.canReward != null">
+                AND can_reward = ${params.canReward}
+            </if>
+            <if test="params.original != null">
+                AND original = ${params.original}
+            </if>
+            <if test="params.createBy != null and params.createBy != ''">
+                AND create_by = #{params.createBy}
+            </if>
+        </where>
+        ) ba ON (ba.first_id = buba.article_id)
 
         WHERE buba.create_by = #{userId}
         AND buba.deleted = 0
