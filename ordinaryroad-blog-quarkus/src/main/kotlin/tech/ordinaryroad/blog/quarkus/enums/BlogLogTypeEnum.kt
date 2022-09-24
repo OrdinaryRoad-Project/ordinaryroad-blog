@@ -69,8 +69,10 @@ enum class BlogLogTypeEnum(
     BLOG_ARTICLE_SAVE_DRAFT("用户手动保存草稿", 10001, "/article/draft", "POST"),
     BLOG_ARTICLE_MOVE_TO_TRASH("用户移动至废纸篓", 10002, "/article/move_to_trash/*", "POST"),
     BLOG_ARTICLE_RECOVER_FROM_TRASH("用户从废纸篓恢复", 10003, "/article/recover_from_trash/*", "POST"),
-    BLOG_ARTICLE_UNLIKES("用户取消点赞", 11000, "/article/unlikes/*", "POST"),
-    BLOG_ARTICLE_UN_BROWSES("用户删除浏览记录", 11001, "/article/un_browses/*", "POST"),
+    BLOG_ARTICLE_FIND_PUBLISH("用户浏览文章", 10004, "/article/publish/*", "GET"),
+    BLOG_ARTICLE_LIKES("用户点赞文章", 11000, "/article/likes/*", "POST"),
+    BLOG_ARTICLE_UNLIKES("用户取消点赞", 11001, "/article/unlikes/*", "POST"),
+    BLOG_ARTICLE_UN_BROWSES("用户删除浏览记录", 11003, "/article/un_browses/*", "POST"),
     //endregion
 
     //region BlogTypeResource
@@ -118,6 +120,8 @@ enum class BlogLogTypeEnum(
             put(BLOG_ARTICLE_SAVE_DRAFT.pathPattern, BLOG_ARTICLE_SAVE_DRAFT)
             put(BLOG_ARTICLE_MOVE_TO_TRASH.pathPattern, BLOG_ARTICLE_MOVE_TO_TRASH)
             put(BLOG_ARTICLE_RECOVER_FROM_TRASH.pathPattern, BLOG_ARTICLE_RECOVER_FROM_TRASH)
+            put(BLOG_ARTICLE_FIND_PUBLISH.pathPattern, BLOG_ARTICLE_FIND_PUBLISH)
+            put(BLOG_ARTICLE_LIKES.pathPattern, BLOG_ARTICLE_LIKES)
             put(BLOG_ARTICLE_UNLIKES.pathPattern, BLOG_ARTICLE_UNLIKES)
             put(BLOG_ARTICLE_UN_BROWSES.pathPattern, BLOG_ARTICLE_UN_BROWSES)
             put(BLOG_TYPE_CREATE.pathPattern, BLOG_TYPE_CREATE)
