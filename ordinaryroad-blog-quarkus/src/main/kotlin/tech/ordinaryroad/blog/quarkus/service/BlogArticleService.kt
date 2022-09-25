@@ -192,7 +192,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         }
         val findById = super.findById(id) ?: return null
         return if (findById.firstId == findById.uuid) {
-            super.findById(findById.firstId)
+            findById
         } else {
             super.findById(findById.firstId)
         }
