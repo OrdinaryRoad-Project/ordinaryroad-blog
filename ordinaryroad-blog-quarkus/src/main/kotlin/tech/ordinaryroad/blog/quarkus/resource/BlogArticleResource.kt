@@ -663,18 +663,26 @@ class BlogArticleResource {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun findPublishById(@RestPath id: String): BlogArticleDetailVO {
-        val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
-
+        var blogArticle = articleService.findById(id)
         if (blogArticle == null) {
             throw BlogArticleNotFoundException()
-        } else {
-            userBrowsedArticleService.browseArticle(
-                blogArticle.uuid,
-                BlogUtils.getClientIp(),
-                StpUtil.getLoginIdDefaultNull() as String?
-            )
-            return articleMapStruct.transferDetail(blogArticle)
         }
+        val firstId = blogArticle.firstId
+
+        if (blogArticle.status != BlogArticleStatus.PUBLISH) {
+            blogArticle =
+                articleService.findFirstOrLastByFirstIdAndStatus(blogArticle.firstId, BlogArticleStatus.PUBLISH)
+        }
+        if (blogArticle == null) {
+            throw BlogArticleNotFoundException()
+        }
+
+        userBrowsedArticleService.browseArticle(
+            firstId,
+            BlogUtils.getClientIp(),
+            StpUtil.getLoginIdDefaultNull() as String?
+        )
+        return articleMapStruct.transferDetail(blogArticle)
     }
 
     /**

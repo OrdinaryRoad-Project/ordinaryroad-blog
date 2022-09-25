@@ -112,7 +112,7 @@
     <select id="getTopNCommentsByUserId" resultType="map">
         SELECT ba.uuid, ba.title, COUNT(ba.uuid) comment_count, ba.create_by
         FROM blog_article ba
-        INNER JOIN (SELECT uuid, article_id FROM blog_comment WHERE deleted = 0) bc ON bc.article_id = ba.uuid
+        INNER JOIN (SELECT uuid, article_id FROM blog_comment WHERE deleted = 0) bc ON bc.article_id = ba.first_id
         WHERE ba.status = 'PUBLISH'
         <if test="userId != null and userId != ''">
             AND ba.create_by = #{userId}

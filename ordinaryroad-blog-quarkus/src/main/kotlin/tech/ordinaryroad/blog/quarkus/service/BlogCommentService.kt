@@ -104,6 +104,10 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
                     throw BlogCommentNotValidException()
                 } else {
                     article = validateArticle(request.articleId)
+                    // 只关联最初版本的文章Id
+                    if (article.uuid != article.firstId) {
+                        comment.articleId = article.firstId
+                    }
                 }
             }
 
@@ -115,11 +119,15 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             }
         } else {
             article = validateArticle(request.articleId)
+            // 只关联最初版本的文章Id
+            if (article.uuid != article.firstId) {
+                comment.articleId = article.firstId
+            }
 
             comment.originalId = ""
         }
 
-        val create = create(comment)
+        val create = super.create(comment)
 
         pushService.comment(fromUser, content, article, parentComment)
 
@@ -149,10 +157,15 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     fun pageArticleComment(request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
-        validateArticle(request.articleId)
+        val article = validateArticle(request.articleId)
+        val articleId = if (article.uuid != article.firstId) {
+            article.firstId
+        } else {
+            article.uuid
+        }
 
         val wrapper = ChainWrappers.queryChain(dao)
-            .eq("article_id", request.articleId)
+            .eq("article_id", articleId)
             .eq("original_id", "")
 
         val page = page(request, wrapper)
