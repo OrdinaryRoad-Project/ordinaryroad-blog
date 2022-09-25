@@ -108,7 +108,25 @@
               lg="6"
               xl="5"
             >
-              <or-blog-article-comment-top-n-chart />
+              <or-blog-article-top-n-comments-chart />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="12"
+              lg="6"
+              xl="5"
+            >
+              <or-blog-article-top-n-liked-chart />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="12"
+              lg="6"
+              xl="5"
+            >
+              <or-blog-article-top-n-browsed-chart />
             </v-col>
           </v-row>
         </v-container>

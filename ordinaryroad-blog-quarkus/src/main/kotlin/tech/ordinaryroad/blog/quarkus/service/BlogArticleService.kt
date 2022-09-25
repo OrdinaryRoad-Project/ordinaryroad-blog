@@ -186,7 +186,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     /**
      * 根据Id获取最初版本的文章
      */
-    fun getFirstArticleById(id: String): BlogArticle? {
+    fun getFirstById(id: String): BlogArticle? {
         if (id.isBlank()) {
             return null
         }

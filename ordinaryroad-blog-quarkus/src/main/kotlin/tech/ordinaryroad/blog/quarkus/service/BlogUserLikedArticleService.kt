@@ -54,7 +54,7 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 获取文章点赞个数
      */
     fun getLikesCount(articleId: String): Long {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -69,7 +69,7 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 点赞文章
      */
     fun likesArticle(articleId: String) {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -83,7 +83,7 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 取消点赞
      */
     fun unlikesArticle(userId: String, articleId: String) {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -99,7 +99,7 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
      * 获取是否已点赞
      */
     fun getLiked(userId: String, articleId: String): Boolean {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }

@@ -41,7 +41,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'OrBlogArticleCommentTopNChart',
+  name: 'OrBlogArticleTopNCommentsChart',
   data: () => ({
     loading: true,
     topN: [],
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     getTopN () {
-      this.$apis.blog.article.getCommentTopN({ userId: this.userInfo.user.uuid })
+      this.$apis.blog.article.getTopNComments({ userId: this.userInfo.user.uuid })
         .then((data) => {
           this.options.xAxis.data = []
           this.options.series[0].data = []

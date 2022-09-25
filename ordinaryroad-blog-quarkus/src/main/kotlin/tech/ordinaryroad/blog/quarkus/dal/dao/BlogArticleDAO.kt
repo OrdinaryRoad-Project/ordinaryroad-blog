@@ -46,11 +46,28 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
 //    fun selectAllPublishByType(page:IPage,typeName)
 
     /**
-     * 查询评论数前十的文章
+     * 查询用户评论数前N的文章
+     *
      * @param n N
      * @param userId 用户Id
      */
-    fun getTopNByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
+    fun getTopNCommentsByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
+
+    /**
+     * 查询用户点赞数前N的文章
+     *
+     * @param n N
+     * @param userId 用户Id
+     */
+    fun getTopNLikedByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
+
+    /**
+     * 查询用户浏览数前N的文章
+     *
+     * @param n N
+     * @param userId 用户Id
+     */
+    fun getTopNBrowsedByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
 
     /**
      * 获取每日发表数

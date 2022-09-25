@@ -714,7 +714,7 @@ class BlogArticleResource {
      */
     @GET
     @Path("top/comment")
-    fun getCommentTopN(
+    fun getTopNComments(
         @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
         @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
     ): List<Map<String, String>> {
@@ -723,7 +723,41 @@ class BlogArticleResource {
                 BlogUserNotFoundException().throws()
             }
         }
-        return articleService.dao.getTopNByUserId(n, userId)
+        return articleService.dao.getTopNCommentsByUserId(n, userId)
+    }
+
+    /**
+     * 获取点赞数前N的文章
+     */
+    @GET
+    @Path("top/liked")
+    fun getLikedTopN(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        return articleService.dao.getTopNLikedByUserId(n, userId)
+    }
+
+    /**
+     * 获取浏览数前N的文章
+     */
+    @GET
+    @Path("top/browsed")
+    fun getBrowsedTopN(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        return articleService.dao.getTopNBrowsedByUserId(n, userId)
     }
 
     /**

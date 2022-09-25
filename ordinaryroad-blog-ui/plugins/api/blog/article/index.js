@@ -129,10 +129,24 @@ export default {
         method: 'get'
       })
     },
-    getCommentTopN ({ n = 10, userId }) {
+    getTopNComments ({ n = 10, userId }) {
       const params = { n, userId }
       return $axios({
         url: `/blog/article/top/comment?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getTopNLiked ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/liked?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getTopNBrowsed ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/browsed?1=1${urlEncode(params)}`,
         method: 'get'
       })
     },

@@ -56,7 +56,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 获取文章浏览量
      */
     fun getBrowsedCount(articleId: String): Long {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -71,7 +71,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 增加浏览记录
      */
     fun browseArticle(articleId: String, ip: String, userId: String? = null) {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -125,7 +125,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 删除浏览记录
      */
     fun unBrowseArticle(userId: String, articleId: String) {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
@@ -143,7 +143,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
      * 获取是否已浏览
      */
     fun getBrowsed(userId: String, articleId: String): Boolean {
-        val firstArticleById = articleService.getFirstArticleById(articleId)
+        val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
             BlogArticleNotFoundException().throws()
         }
