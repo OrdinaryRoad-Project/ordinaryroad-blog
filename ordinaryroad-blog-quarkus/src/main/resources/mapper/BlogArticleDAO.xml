@@ -133,11 +133,11 @@
     <select id="getTopNLikedByUserId" resultType="map">
         SELECT ba.uuid, ba.title, COUNT(ba.uuid) liked_count, ba.create_by
         FROM blog_article ba
-        INNER JOIN (SELECT uuid, article_id FROM blog_user_liked_article
-        <if test="userId != null and userId != ''">
-            WHERE create_by = #{userId}
-        </if>) bula ON bula.article_id = ba.first_id
+        INNER JOIN (SELECT uuid, article_id FROM blog_user_liked_article) bula ON bula.article_id = ba.first_id
         WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
         GROUP BY ba.uuid
         ORDER BY liked_count DESC
         LIMIT
@@ -154,11 +154,11 @@
     <select id="getTopNBrowsedByUserId" resultType="map">
         SELECT ba.uuid, ba.title, COUNT(ba.uuid) browsed_count, ba.create_by
         FROM blog_article ba
-        INNER JOIN (SELECT uuid, article_id FROM blog_user_browsed_article
-        <if test="userId != null and userId != ''">
-            WHERE create_by = #{userId}
-        </if>) buba ON buba.article_id = ba.first_id
+        INNER JOIN (SELECT uuid, article_id FROM blog_user_browsed_article) buba ON buba.article_id = ba.first_id
         WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
         GROUP BY ba.uuid
         ORDER BY browsed_count DESC
         LIMIT
