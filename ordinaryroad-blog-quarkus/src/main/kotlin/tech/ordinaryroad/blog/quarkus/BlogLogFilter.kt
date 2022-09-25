@@ -43,6 +43,7 @@ import javax.ws.rs.container.ContainerRequestContext
 import javax.ws.rs.container.ContainerRequestFilter
 import javax.ws.rs.container.ContainerResponseContext
 import javax.ws.rs.container.ContainerResponseFilter
+import javax.ws.rs.core.Response
 import javax.ws.rs.ext.Provider
 
 
@@ -127,7 +128,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
     override fun filter(requestContext: ContainerRequestContext, responseContext: ContainerResponseContext) {
         val blogLog = tlBlogLog.get()
 
-        blogLog.status = responseContext.statusInfo.toEnum()
+        blogLog.status = responseContext.statusInfo?.toEnum() ?: Response.Status.NOT_IMPLEMENTED
         blogLog.responseHeaders = JSONUtil.toJsonStr(responseContext.headers)
         blogLog.responseCookies = JSONUtil.toJsonStr(responseContext.cookies)
         blogLog.response = JSONUtil.toJsonStr(responseContext.entity)
