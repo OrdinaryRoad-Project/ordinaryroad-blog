@@ -148,6 +148,20 @@ export default {
       loading: true,
       data: null
     },
+    articlesCountBrowsedOptions: {
+      title: '已浏览文章',
+      to: '/dashboard/article/browsed',
+      icon: 'mdi-history',
+      loading: true,
+      data: null
+    },
+    articlesCountLikedOptions: {
+      title: '已点赞文章',
+      to: '/dashboard/article/liked',
+      icon: 'mdi-thumb-up',
+      loading: true,
+      data: null
+    },
     typesCountOptions: {
       title: '分类',
       to: '/dashboard/type',
@@ -169,8 +183,10 @@ export default {
     })
   },
   created () {
-    this.countOptions.push(this.articlesCountOptions, this.typesCountOptions, this.commentsCountOptions)
+    this.countOptions.push(this.articlesCountOptions, this.articlesCountBrowsedOptions, this.articlesCountLikedOptions, this.typesCountOptions, this.commentsCountOptions)
     this.countArticles()
+    this.countArticlesBrowsed()
+    this.countArticlesLiked()
     this.countTypes()
     this.countComments()
   },
@@ -183,6 +199,26 @@ export default {
         })
         .catch(() => {
           this.articlesCountOptions.loading = false
+        })
+    },
+    countArticlesBrowsed () {
+      this.$apis.blog.article.countBrowsed(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountBrowsedOptions.loading = false
+          this.articlesCountBrowsedOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountBrowsedOptions.loading = false
+        })
+    },
+    countArticlesLiked () {
+      this.$apis.blog.article.countLiked(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountLikedOptions.loading = false
+          this.articlesCountLikedOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountLikedOptions.loading = false
         })
     },
     countTypes () {

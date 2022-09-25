@@ -129,6 +129,18 @@ export default {
         method: 'get'
       })
     },
+    countBrowsed: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count/browsed?userId=${userId}`,
+        method: 'get'
+      })
+    },
+    countLiked: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count/liked?userId=${userId}`,
+        method: 'get'
+      })
+    },
     getTopNComments ({ n = 10, userId }) {
       const params = { n, userId }
       return $axios({

@@ -38,9 +38,7 @@ import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
+import tech.ordinaryroad.blog.quarkus.dal.entity.*
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
@@ -92,6 +90,9 @@ class BlogArticleResource {
 
     @Inject
     protected lateinit var userBrowsedArticleService: BlogUserBrowsedArticleService
+
+    @Inject
+    protected lateinit var userLikedArticleService: BlogUserLikedArticleService
 
     //region 已测试方法
 
@@ -715,6 +716,49 @@ class BlogArticleResource {
             .eq("status", BlogArticleStatus.PUBLISH)
             .eq(userId.isNotBlank(), "create_by", userId)
         return articleService.dao.selectCount(wrapper)
+    }
+
+    /**
+     * 获取已浏览文章的个数
+     */
+    @GET
+    @Path("count/browsed")
+    fun countBrowsed(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
+            .eq("deleted", false)
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return userBrowsedArticleService.dao.selectCount(wrapper)
+    }
+
+    /**
+     * 获取已点赞文章的个数
+     */
+    @GET
+    @Path("count/liked")
+    fun countLiked(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        val wrapper = Wrappers.query<BlogUserLikedArticle>()
+            .eq(userId.isNotBlank(), "create_by", userId)
+        return userLikedArticleService.dao.selectCount(wrapper)
     }
 
     /**
