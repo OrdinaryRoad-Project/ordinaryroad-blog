@@ -127,6 +127,9 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
 
         BlogUserLikedArticleService userLikedArticleService = CDI.current().select(BlogUserLikedArticleService.class).get();
         vo.setLikesCount(userLikedArticleService.getLikesCount(articleUuid));
+
+        BlogCommentService commentService = CDI.current().select(BlogCommentService.class).get();
+        vo.setCommentsCount(commentService.getCommentsCount(articleUuid));
     }
 
     default BlogTypeVO string2TypeVO(String type) {

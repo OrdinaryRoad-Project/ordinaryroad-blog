@@ -46,31 +46,41 @@
         order="1"
         order-md="2"
       >
-        <base-material-card
-          class="sticky-top"
+        <div
           style="top: 108px !important;"
-          :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
+          class="sticky-top"
         >
-          <template #avatar>
-            <or-avatar
-              :username="blogUser.username"
-              avatar-class="v-card--material__avatar elevation-6"
-              size="128"
-              :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
-            />
-          </template>
-          <v-list>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <span class="font-weight-bold">{{ blogUser.username }}</span>
-                  <or-user-roles :roles="blogUser.roles" />
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <!--          <v-divider inset />-->
-        </base-material-card>
+          <!-- 用户基本资料 -->
+          <base-material-card :avatar="$apis.blog.getFileUrl(blogUser.avatar)">
+            <template #avatar>
+              <or-avatar
+                :username="blogUser.username"
+                avatar-class="v-card--material__avatar elevation-6"
+                size="128"
+                :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
+              />
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <span class="font-weight-bold">{{ blogUser.username }}</span>
+                    <or-user-roles :roles="blogUser.roles" />
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <!--          <v-divider inset />-->
+          </base-material-card>
+
+          <div class="mt-14" />
+          <!-- 用户创建的分类 -->
+          <base-material-card
+            :title="$t('typeTitle')"
+          >
+            <or-blog-type-treeview />
+          </base-material-card>
+        </div>
       </v-col>
     </v-row>
   </div>

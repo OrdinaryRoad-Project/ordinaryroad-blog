@@ -230,12 +230,30 @@
         class="d-flex flex-wrap align-center justify-center"
         style="position: absolute; left: 0; right: 0; bottom: 60px"
       >
+        <!-- 点赞量 -->
+        <div class="d-flex align-center me-2">
+          <v-icon left small>
+            mdi-thumb-up
+          </v-icon>
+          <span>{{ blogArticle.likesCount }}</span>
+        </div>
         <!-- 浏览量 -->
-        <div class="d-flex align-center">
+        <div class="d-flex align-center me-2">
           <v-icon left small>
             mdi-eye
           </v-icon>
           <span>{{ blogArticle.pv }}</span>
+        </div>
+        <!-- 评论数 -->
+        <div
+          class="d-flex align-center"
+          style="cursor: pointer"
+          @click="$vuetify.goTo($refs.commentVditor)"
+        >
+          <v-icon left small>
+            mdi-comment-text
+          </v-icon>
+          <span>{{ blogArticle.commentsCount }}</span>
         </div>
       </v-list-item>
     </v-img>

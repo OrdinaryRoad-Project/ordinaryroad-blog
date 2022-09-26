@@ -38,6 +38,7 @@ import tech.ordinaryroad.blog.quarkus.mapstruct.BlogTypeMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogTypeQueryRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogTypeSaveRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogTypeUpdateRequest
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeInfoVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
@@ -69,6 +70,8 @@ class BlogTypeResource {
 
     @Inject
     protected lateinit var dtoService: BlogDtoService
+
+    private val typeMapStruct = BlogTypeMapStruct.INSTANCE
 
     /**
      * 获取文章数前N的分类
@@ -182,6 +185,27 @@ class BlogTypeResource {
 
         val dtoPage = PageUtils.copyPage(page) { item ->
             dtoService.transfer(item, BlogTypeDTO::class.java)
+        }
+
+        return dtoPage
+    }
+
+    /**
+     * 分页查询分类信息（包含文章个数）
+     */
+    @GET
+    @Path("page/info/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun pageInfo(@BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
+        /* 登录校验 */
+        val wrapper = ChainWrappers.queryChain(typeService.dao)
+            .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
+            .eq(!request.createBy.isNullOrBlank(), "create_by", request.createBy)
+
+        val page = typeService.page(request, wrapper)
+
+        val dtoPage = PageUtils.copyPage(page) { item ->
+            typeMapStruct.transferInfo(item)
         }
 
         return dtoPage

@@ -22,32 +22,37 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.mapstruct;
+package tech.ordinaryroad.blog.quarkus.resource.vo;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeInfoVO;
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeVO;
-import tech.ordinaryroad.blog.quarkus.service.BlogArticleService;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
-import javax.enterprise.inject.spi.CDI;
+/**
+ * 分类信息VO类
+ *
+ * @author mjz
+ * @date 2022/9/26
+ */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+public class BlogTypeInfoVO extends BlogTypeVO {
 
-@Mapper
-public interface BlogTypeMapStruct extends BaseBlogMapStruct {
+    private Long articleCount;
 
-    BlogTypeMapStruct INSTANCE = Mappers.getMapper(BlogTypeMapStruct.class);
-
-    BlogTypeVO transfer(BlogType type);
-
-    BlogTypeInfoVO transferInfo(BlogType type);
-
-    @AfterMapping
-    default void afterMapping(BlogType type, @MappingTarget BlogTypeInfoVO target) {
-        BlogArticleService articleService = CDI.current().select(BlogArticleService.class).get();
-        target.setArticleCount(articleService.countPublishByTypeId(type.getUuid()));
+    public BlogTypeInfoVO() {
     }
 
+    public BlogTypeInfoVO(Long articleCount) {
+        this.articleCount = articleCount;
+    }
+
+    public Long getArticleCount() {
+        return articleCount;
+    }
+
+    public void setArticleCount(Long articleCount) {
+        this.articleCount = articleCount;
+    }
 }

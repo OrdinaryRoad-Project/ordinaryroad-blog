@@ -226,6 +226,21 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     /**
+     * 获取文章评论量
+     */
+    fun getCommentsCount(articleId: String): Long {
+        val firstArticleById = articleService.getFirstById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
+        val wrapper = Wrappers.query<BlogComment>()
+            .eq("article_id", firstArticleById!!.uuid)
+
+        return super.dao.selectCount(wrapper)
+    }
+
+    /**
      * 校验文章是否存在
      */
     fun validateArticle(articleId: String?): BlogArticle {

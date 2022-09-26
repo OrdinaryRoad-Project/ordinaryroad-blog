@@ -63,10 +63,12 @@ public class BlogArticlePreviewVO {
 
     private Long likesCount;
 
+    private Long commentsCount;
+
     public BlogArticlePreviewVO() {
     }
 
-    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, BlogTypeVO type, List<BlogTagVO> tags, Long pv, Long likesCount) {
+    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, BlogTypeVO type, List<BlogTagVO> tags, Long pv, Long likesCount, Long commentsCount) {
         this.uuid = uuid;
         this.coverImage = coverImage;
         this.title = title;
@@ -79,6 +81,7 @@ public class BlogArticlePreviewVO {
         this.tags = tags;
         this.pv = pv;
         this.likesCount = likesCount;
+        this.commentsCount = commentsCount;
     }
 
     public String getUuid() {
@@ -177,4 +180,11 @@ public class BlogArticlePreviewVO {
         this.likesCount = likesCount;
     }
 
+    public Long getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Long commentsCount) {
+        this.commentsCount = commentsCount;
+    }
 }

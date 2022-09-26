@@ -102,6 +102,7 @@
       "tag": "Tag"
     }
   },
+  "typeTitle": "Type",
   "type": {
     "name": "Type Name"
   },

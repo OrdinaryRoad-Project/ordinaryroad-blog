@@ -328,5 +328,16 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
             this.status = newStatus
         }, wrapper)
     }
+
+    /**
+     * 查询某个分类下的已发布文章的个数
+     */
+    fun countPublishByTypeId(typeId: String): Long {
+        val wrapper = Wrappers.query<BlogArticle>()
+            .eq("type_id", typeId)
+            .eq("status", BlogArticleStatus.PUBLISH)
+
+        return super.dao.selectCount(wrapper)
+    }
     //endregion
 }

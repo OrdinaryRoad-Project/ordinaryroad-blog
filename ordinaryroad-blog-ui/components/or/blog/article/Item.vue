@@ -141,11 +141,18 @@
                     <span>{{ item.likesCount }}</span>
                   </v-col>
 
-                  <v-col class="d-inline-flex align-center">
+                  <v-col class="d-inline-flex align-center me-3">
                     <v-icon left small>
                       mdi-eye
                     </v-icon>
                     <span>{{ item.pv }}</span>
+                  </v-col>
+
+                  <v-col class="d-inline-flex align-center">
+                    <v-icon left small>
+                      mdi-comment-text
+                    </v-icon>
+                    <span>{{ item.commentsCount }}</span>
                   </v-col>
 
                   <v-col class="d-inline-flex align-center">

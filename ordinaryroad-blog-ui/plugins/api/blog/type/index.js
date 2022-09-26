@@ -71,6 +71,13 @@ export default {
         method: 'get'
       })
     },
+    pageInfo: (page, size, { sortBy, sortDesc, createBy }) => {
+      const searchParams = { sortBy, sortDesc, createBy }
+      return $axios({
+        url: `/blog/type/page/info/${page}/${size}?1=1${urlEncode(searchParams)}`,
+        method: 'get'
+      })
+    },
     getTopN ({ n = 10, userId }) {
       const params = { n, userId }
       return $axios({
