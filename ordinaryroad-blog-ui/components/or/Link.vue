@@ -25,12 +25,12 @@
 <template>
   <span>
     <span v-if="text">
-      <slot/>
+      <slot />
     </span>
     <a v-else :href="href" :target="target" style="text-decoration: none; cursor: auto">
-      <slot/>
+      <slot />
       <span>
-        <v-icon v-if="target==='_blank'" x-small>
+        <v-icon v-if="!hideIcon&&target==='_blank'" x-small>
           mdi-arrow-top-right-bold-box-outline
         </v-icon>
       </span>
@@ -56,6 +56,10 @@ export default {
     target: {
       type: String,
       default: '_blank'
+    },
+    hideIcon: {
+      type: Boolean,
+      default: false
     }
   }
 }
