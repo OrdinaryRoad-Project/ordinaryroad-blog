@@ -75,10 +75,10 @@
 
           <div class="mt-14" />
           <!-- 用户创建的分类 -->
-          <base-material-card
-            :title="$t('typeTitle')"
-          >
-            <or-blog-type-treeview />
+          <base-material-card :title="$t('typeCount',[`${totalTypes?$t('parentheses',[totalTypes]):''}`])">
+            <or-blog-type-treeview
+              :total.sync="totalTypes"
+            />
           </base-material-card>
         </div>
       </v-col>
@@ -108,7 +108,8 @@ export default {
   data () {
     return {
       blogUser: null,
-      totalArticle: null
+      totalArticle: null,
+      totalTypes: null
     }
   },
   mounted () {

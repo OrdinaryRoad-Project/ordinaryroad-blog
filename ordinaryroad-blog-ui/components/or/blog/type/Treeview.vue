@@ -69,6 +69,11 @@ export default {
       current: 1
     }
   }),
+  watch: {
+    'typeInfoPageItems.total' () {
+      this.$emit('update:total', this.typeInfoPageItems.total)
+    }
+  },
   mounted () {
     this.getTypes(false)
   },
