@@ -108,7 +108,7 @@ class BlogPushService {
             "    {content}\n" +
             "</div>\n" +
             "<div>\n" +
-            "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/detail/{articleId}\">{articleTitle}</a>\n" +
+            "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/{articleId}\">{articleTitle}</a>\n" +
             "</div>\n" +
             "\n" +
             "</body>\n" +

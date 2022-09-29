@@ -175,7 +175,7 @@
       <template #[`item.title`]="{ item }">
         <or-link
           :text="item.status!=='PUBLISH'"
-          :href="`/${item.creatorId}/article/detail/${item.uuid}`"
+          :href="`/${item.creatorId}/article/${item.uuid}`"
         >
           {{ item.title }}
         </or-link>

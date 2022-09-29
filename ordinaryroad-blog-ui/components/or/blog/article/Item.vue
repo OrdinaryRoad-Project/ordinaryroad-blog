@@ -216,7 +216,7 @@ export default {
       window.open(href, '_blank')
     },
     onClickArticle (item) {
-      const { href } = this.$router.resolve({ path: `/${item.user.uuid}/article/detail/${item.uuid}` })
+      const { href } = this.$router.resolve({ path: `/${item.user.uuid}/article/${item.uuid}` })
       window.open(href, '_blank')
     }
   }

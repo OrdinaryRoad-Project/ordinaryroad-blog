@@ -44,7 +44,7 @@ export default {
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       const article = await $apis.blog.article.findPublishById(tokenValue, id)
-      if (article.creatorId !== userId) {
+      if (article.user.uuid !== userId) {
         redirect(`/${userId}`)
       }
       const articleComments = await $apis.blog.comment.pageArticle(id, 1)
