@@ -148,8 +148,16 @@ export default {
 
     OAUTH2: {
       PROVIDERS: ['ordinaryroad', 'github', 'gitee']
-    }
+    },
 
+    APP_VERSION: require('./package.json').version,
+
+    CI: {
+      VERSION: {
+        FRONTEND: process.env.CI_VERSION_FTONTEND,
+        BACKEND: process.env.CI_VERSION_BACKEND
+      }
+    }
   },
   privateRuntimeConfig: {},
 

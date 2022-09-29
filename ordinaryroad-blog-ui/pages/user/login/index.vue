@@ -35,9 +35,11 @@
       >
         <template #heading>
           <div class="text-center">
-            <h2 class="font-weight-bold mb-2">
-              {{ $t('loginFormTitle') }}
-            </h2>
+            <span class="d-flex justify-center">
+              <h2 class="font-weight-bold mb-2 ms-9">{{ $t('loginFormTitle') }}</h2><span
+                class="text-caption mb-auto ms-1"
+              >{{ $config.APP_VERSION }}</span>
+            </span>
             <v-btn @click="login('ordinaryroad')">
               使用OR账号登录
             </v-btn>
