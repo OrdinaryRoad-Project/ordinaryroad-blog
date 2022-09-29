@@ -42,6 +42,8 @@ CREATE TABLE `blog_article`
     `update_time`  datetime                                                       NULL DEFAULT NULL COMMENT '更新时间',
     `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '更新者ID',
 
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
     `title`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '标题',
     `cover_image`  varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '封面图片',
     `summary`      varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '摘要',
@@ -74,6 +76,8 @@ CREATE TABLE `blog_oauth_user`
     `update_time`  datetime                                                       NULL DEFAULT NULL COMMENT '更新时间',
     `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '更新者ID',
 
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
     `username`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '用户名',
     `avatar`       varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '头像地址',
     `email`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '邮箱',
@@ -99,6 +103,8 @@ CREATE TABLE `blog_user`
     `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '创建者ID',
     `update_time`  datetime                                                       NULL DEFAULT NULL COMMENT '更新时间',
     `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '更新者ID',
+
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
 
     `username`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '用户名',
     `avatar`       varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '头像地址',
@@ -143,18 +149,20 @@ SET FOREIGN_KEY_CHECKS = 1;
 # DROP TABLE if exists `blog_comment`;
 CREATE TABLE `blog_comment`
 (
-    `id`           bigint(20)                                                   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '主键UUID',
-    `created_time` datetime                                                     NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL     DEFAULT NULL COMMENT '创建者ID',
-    `update_time`  datetime                                                     NULL     DEFAULT NULL COMMENT '更新时间',
-    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL     DEFAULT NULL COMMENT '更新者ID',
+    `id`           bigint(20)                                                     NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                       NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                       NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '更新者ID',
 
-    `content`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci        NULL     DEFAULT NULL COMMENT '内容',
-    `article_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '文章ID',
-    `parent_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT '父评论ID',
-    `original_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT '原始评论ID',
-    `deleted`      bit(1)                                                       NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
+    `content`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci          NULL     DEFAULT NULL COMMENT '内容',
+    `article_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '文章ID',
+    `parent_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL COMMENT '父评论ID',
+    `original_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL COMMENT '原始评论ID',
+    `deleted`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_comment_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
@@ -247,15 +255,17 @@ CREATE TABLE `blog_user_roles`
 # DROP TABLE if exists `blog_type`;
 CREATE TABLE `blog_type`
 (
-    `id`           bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '主键UUID',
-    `created_time` datetime                                                      NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '创建者ID',
-    `update_time`  datetime                                                      NULL     DEFAULT NULL COMMENT '更新时间',
-    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '更新者ID',
+    `id`           bigint(20)                                                     NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                       NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                       NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '更新者ID',
 
-    `name`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '名称',
-    `deleted`      bit(1)                                                        NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
+    `name`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '名称',
+    `deleted`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_type_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
@@ -270,15 +280,17 @@ CREATE TABLE `blog_type`
 # DROP TABLE if exists `blog_tag`;
 CREATE TABLE `blog_tag`
 (
-    `id`           bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '主键UUID',
-    `created_time` datetime                                                      NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '创建者ID',
-    `update_time`  datetime                                                      NULL     DEFAULT NULL COMMENT '更新时间',
-    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL     DEFAULT NULL COMMENT '更新者ID',
+    `id`           bigint(20)                                                     NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                       NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                       NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '更新者ID',
 
-    `name`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '名称',
-    `deleted`      bit(1)                                                        NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
+    `name`         varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NOT NULL COMMENT '名称',
+    `deleted`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_tag_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
@@ -354,14 +366,16 @@ CREATE TABLE `blog_user_browsed_article`
 # DROP TABLE if exists `blog_user_liked_article`;
 CREATE TABLE `blog_user_liked_article`
 (
-    `id`           bigint(20)                                                   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NOT NULL COMMENT '主键UUID',
-    `created_time` datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '创建者ID',
-    `update_time`  datetime                                                     NULL DEFAULT NULL COMMENT '更新时间',
-    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '更新者ID',
+    `id`           bigint(20)                                                     NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                       NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                       NULL DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '更新者ID',
 
-    `article_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '文章ID',
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
+    `article_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '文章ID',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_user_liked_article_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB

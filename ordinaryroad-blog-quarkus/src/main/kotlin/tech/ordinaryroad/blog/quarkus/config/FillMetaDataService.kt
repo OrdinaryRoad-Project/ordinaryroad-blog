@@ -25,6 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.config
 
 import cn.dev33.satoken.stp.StpUtil
+import tech.ordinaryroad.blog.quarkus.dal.entity.BaseBlogDO
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 import tech.ordinaryroad.commons.mybatis.quarkus.service.IFillMetaFieldService
 import javax.enterprise.context.ApplicationScoped
 
@@ -37,6 +40,18 @@ class FillMetaDataService : IFillMetaFieldService {
 
     override fun generateUpdateBy(): String? {
         return StpUtil.getLoginIdDefaultNull()?.toString()
+    }
+
+    override fun <T : BaseDO?> beforeInsert(t: T) {
+        if (t is BaseBlogDO) {
+            t.ip = BlogUtils.getClientIp()
+        }
+    }
+
+    override fun <T : BaseDO?> beforeUpdate(t: T) {
+        if (t is BaseBlogDO) {
+            t.ip = BlogUtils.getClientIp()
+        }
     }
 
 }

@@ -24,31 +24,35 @@
 
 package tech.ordinaryroad.blog.quarkus.dal.entity;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
 /**
- * 博客用户点赞的文章
+ * Blog业务抽象DO类
+ *
+ * @author mjz
+ * @date 2022/9/29
  */
-@RegisterForReflection
-public class BlogUserLikedArticle extends BaseBlogDO {
+public abstract class BaseBlogDO extends BaseDO {
 
-    private static final long serialVersionUID = -57310002446012781L;
+    private static final long serialVersionUID = 7721434524564915295L;
 
-    private String articleId;
+    /**
+     * 创建时自动填充
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String ip;
 
-    public BlogUserLikedArticle() {
+    public BaseBlogDO() {
     }
 
-    public BlogUserLikedArticle(String articleId) {
-        this.articleId = articleId;
+    public String getIp() {
+        return ip;
     }
 
-    public String getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
 }

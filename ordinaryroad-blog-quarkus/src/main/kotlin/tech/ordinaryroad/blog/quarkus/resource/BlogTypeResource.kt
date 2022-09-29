@@ -33,6 +33,7 @@ import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
 import tech.ordinaryroad.blog.quarkus.dto.BlogTypeDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNameAlreadyExistException
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogTypeMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogTypeQueryRequest
@@ -102,6 +103,13 @@ class BlogTypeResource {
         /* 登录校验 */
         StpUtil.checkLogin()
 
+        val userId = StpUtil.getLoginIdAsString()
+
+        /* 唯一性校验 */
+        if (typeService.existByNameAndCreateBy(request.name, userId)) {
+            BlogTypeNameAlreadyExistException().throws()
+        }
+
         val blogType = BlogType().apply {
             name = request.name
         }
@@ -137,6 +145,13 @@ class BlogTypeResource {
     fun updateOwn(@Valid request: BlogTypeUpdateRequest): BlogTypeDTO {
         /* 登录校验 */
         StpUtil.checkLogin()
+
+        val userId = StpUtil.getLoginIdAsString()
+
+        /* 唯一性校验 */
+        if (typeService.existByNameAndCreateBy(request.name, userId)) {
+            BlogTypeNameAlreadyExistException().throws()
+        }
 
         val blogType = BlogType().apply {
             uuid = request.uuid

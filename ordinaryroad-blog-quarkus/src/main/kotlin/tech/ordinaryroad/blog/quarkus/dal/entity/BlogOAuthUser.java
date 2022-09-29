@@ -26,16 +26,15 @@ package tech.ordinaryroad.blog.quarkus.dal.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
 /**
  * OAuth用户
  */
 @RegisterForReflection
 @TableName("blog_oauth_user")
-public class BlogOAuthUser extends BaseDO {
+public class BlogOAuthUser extends BaseBlogDO {
 
-    private static final long serialVersionUID = -4003301046672658223L;
+    private static final long serialVersionUID = 997957501518247801L;
 
     private String username;
 

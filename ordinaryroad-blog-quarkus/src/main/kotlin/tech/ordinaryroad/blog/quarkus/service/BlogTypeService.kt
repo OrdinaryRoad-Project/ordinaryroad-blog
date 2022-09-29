@@ -132,6 +132,16 @@ class BlogTypeService : BaseService<BlogTypeDAO, BlogType>() {
             .eq("create_by", createBy)
         return super.dao.selectOne(wrapper)
     }
+
+    /**
+     * 根据名称和创建者查询是否存在
+     */
+    fun existByNameAndCreateBy(typeName: String, createBy: String): Boolean {
+        val wrapper = Wrappers.query<BlogType>()
+            .eq("name", typeName)
+            .eq("create_by", createBy)
+        return super.dao.exists(wrapper)
+    }
     //endregion
 
 }

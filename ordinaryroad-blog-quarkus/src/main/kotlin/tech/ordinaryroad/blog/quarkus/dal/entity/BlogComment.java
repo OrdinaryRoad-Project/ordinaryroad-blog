@@ -26,15 +26,14 @@ package tech.ordinaryroad.blog.quarkus.dal.entity;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
 /**
  * 博客文章评论
  */
 @RegisterForReflection
-public class BlogComment extends BaseDO {
+public class BlogComment extends BaseBlogDO {
 
-    private static final long serialVersionUID = 1979386402743304926L;
+    private static final long serialVersionUID = 5060539984321143111L;
 
     /**
      * 内容

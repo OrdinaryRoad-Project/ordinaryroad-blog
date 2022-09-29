@@ -38,8 +38,10 @@ enum class StatusCode(
     BLOG_USER_NOT_FOUND(404, "用户不存在"),
     BLOG_TYPE_NOT_FOUND(404, "分类不存在"),
     BLOG_TYPE_NOT_VALID(400, "分类无效"),
+    BLOG_TYPE_NAME_ALREADY_EXIST(400, "分类名已存在"),
     BLOG_TAG_NOT_FOUND(404, "标签不存在"),
     BLOG_TAG_NOT_VALID(400, "标签无效"),
+    BLOG_TAG_NAME_ALREADY_EXIST(400, "标签名已存在"),
     BLOG_ROLE_NOT_FOUND(404, "角色不存在"),
     BLOG_ROLE_NOT_VALID(400, "角色无效"),
     ;

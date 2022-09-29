@@ -22,33 +22,10 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.dal.entity;
+package tech.ordinaryroad.blog.quarkus.exception
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
-
-/**
- * 博客用户点赞的文章
- */
-@RegisterForReflection
-public class BlogUserLikedArticle extends BaseBlogDO {
-
-    private static final long serialVersionUID = -57310002446012781L;
-
-    private String articleId;
-
-    public BlogUserLikedArticle() {
+class BlogTagNameAlreadyExistException : BaseBlogException(StatusCode.BLOG_TAG_NAME_ALREADY_EXIST) {
+    companion object {
+        private const val serialVersionUID: Long = 1420975736853277214L
     }
-
-    public BlogUserLikedArticle(String articleId) {
-        this.articleId = articleId;
-    }
-
-    public String getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
-    }
-
 }

@@ -31,7 +31,7 @@ import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.dto.BlogTagDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
-import tech.ordinaryroad.blog.quarkus.exception.BlogTagNotValidException
+import tech.ordinaryroad.blog.quarkus.exception.BlogTagNameAlreadyExistException
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogTagQueryRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogTagSaveRequest
@@ -97,7 +97,7 @@ class BlogTagResource {
 
         /* 唯一性校验 */
         if (tagService.existByName(name)) {
-            BlogTagNotValidException().throws()
+            BlogTagNameAlreadyExistException().throws()
         }
 
         val blogTag = BlogTag().apply {

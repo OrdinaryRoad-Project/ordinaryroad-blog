@@ -29,16 +29,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.apache.ibatis.type.JdbcType;
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus;
-import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 import tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler;
 
 import java.util.List;
 
 @TableName(value = "blog_article", autoResultMap = true)
 @RegisterForReflection
-public class BlogArticle extends BaseDO {
+public class BlogArticle extends BaseBlogDO {
 
-    private static final long serialVersionUID = -6337366196886010571L;
+    private static final long serialVersionUID = -8926354700795802869L;
 
     /**
      * 标题

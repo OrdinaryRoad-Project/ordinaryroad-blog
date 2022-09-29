@@ -25,8 +25,6 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
-import mybatis.mate.annotation.DataColumn
-import mybatis.mate.annotation.DataScope
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
@@ -88,13 +86,9 @@ class BlogCommentResource {
      */
     @GET
     @Path("page/{page}/{size}")
-    @DataScope(
-        value = [
-            DataColumn(alias = "a", name = "n")
-        ],
-        type = "TYPE"
-    )
     fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
+        throw BadRequestException()
+
         return commentService.page(request)
     }
 
