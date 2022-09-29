@@ -53,7 +53,7 @@ class BlogDtoService {
         if (!createBy.isNullOrEmpty()) {
             userService.findById(createBy)?.let {
                 dto.createBy = it.username
-                dto.createUserId = createBy
+                dto.creatorId = createBy
             }
         }
         val updateBy = baseDo.updateBy

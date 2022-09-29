@@ -30,12 +30,12 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 
 abstract class BaseBlogModelDTO<DO : BaseDO> : BaseModelDTO() {
 
-    var createUserId: String = StrUtil.EMPTY
+    var creatorId: String = StrUtil.EMPTY
 
     abstract fun parse(baseDo: DO)
 
     companion object {
-        private const val serialVersionUID: Long = 1158019069703081846L
+        private const val serialVersionUID: Long = 27966988565671631L
     }
 
 }

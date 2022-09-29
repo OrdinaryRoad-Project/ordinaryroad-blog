@@ -28,14 +28,16 @@ import org.jboss.resteasy.reactive.RestForm;
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import javax.ws.rs.PathParam;
 
 
 public class BlogArticleUpdateRequest extends BaseRequest {
 
-    private static final long serialVersionUID = -7241819517522442104L;
+    private static final long serialVersionUID = 6181222509425827773L;
 
     @NotBlank(message = "ID不能为空")
+    @Size(max = 32, message = "id长度不能大于32")
     @PathParam("id")
     public String uuid;
 

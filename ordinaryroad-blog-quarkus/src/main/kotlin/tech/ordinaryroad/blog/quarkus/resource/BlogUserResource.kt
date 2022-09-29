@@ -64,7 +64,7 @@ class BlogUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun findById(
         @Valid @NotBlank(message = "Id不能为空")
-        @RestPath id: String
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): BlogUserVO {
         val blogUser = userService.findById(id)
 

@@ -47,6 +47,7 @@ import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.Max
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -116,7 +117,10 @@ class BlogTypeResource {
     @DELETE
     @Path("delete/own/{id}")
     @Transactional
-    fun deleteOwn(@RestPath id: String) {
+    fun deleteOwn(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         /* 登录校验 */
         StpUtil.checkLogin()
 

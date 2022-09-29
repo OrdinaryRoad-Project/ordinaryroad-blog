@@ -35,13 +35,18 @@ export default {
   async asyncData ({
     route,
     $apis,
-    store
+    store,
+    redirect
   }) {
     const tokenValue = store.getters['user/getTokenValue']
     // 判断文章是否存在
+    const userId = route.params.userId || ''
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       const article = await $apis.blog.article.findPublishById(tokenValue, id)
+      if (article.creatorId !== userId) {
+        redirect(`/${userId}`)
+      }
       const articleComments = await $apis.blog.comment.pageArticle(id, 1)
       return {
         article,

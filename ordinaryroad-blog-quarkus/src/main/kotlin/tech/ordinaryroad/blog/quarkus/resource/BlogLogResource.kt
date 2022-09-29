@@ -37,6 +37,9 @@ import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
+import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -79,7 +82,10 @@ class BlogLogResource {
     @DELETE
     @Path("delete/{id}")
     @Transactional
-    fun delete(@RestPath id: String) {
+    fun delete(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         BlogUtils.checkAdminOrDeveloper()
 
         logService.delete(id)

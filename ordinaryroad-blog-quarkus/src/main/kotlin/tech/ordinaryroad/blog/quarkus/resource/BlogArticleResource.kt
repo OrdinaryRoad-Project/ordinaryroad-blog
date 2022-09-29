@@ -102,7 +102,10 @@ class BlogArticleResource {
     @POST
     @Path("move_to_trash/{id}")
     @Transactional
-    fun moveToTrash(@RestPath id: String) {
+    fun moveToTrash(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -115,7 +118,10 @@ class BlogArticleResource {
     @POST
     @Path("recover_from_trash/{id}")
     @Transactional
-    fun recoverFromTrash(@RestPath id: String) {
+    fun recoverFromTrash(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -636,7 +642,7 @@ class BlogArticleResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun findOwnById(
         @Valid @NotBlank(message = "Id不能为空")
-        @RestPath id: String
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): BlogArticleDTO {
         /* 登录校验 */
         StpUtil.checkLogin()
@@ -663,7 +669,10 @@ class BlogArticleResource {
     @Path("publish/{id}")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    fun findPublishById(@RestPath id: String): BlogArticleDetailVO {
+    fun findPublishById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): BlogArticleDetailVO {
         var blogArticle = articleService.findById(id)
         if (blogArticle == null) {
             throw BlogArticleNotFoundException()
@@ -692,7 +701,10 @@ class BlogArticleResource {
     @GET
     @Path("publish/{id}/created_update_Time")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getPublishCreatedTimeAndUpdateTimeById(@RestPath id: String): JsonObject {
+    fun getPublishCreatedTimeAndUpdateTimeById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): JsonObject {
         return articleService.getPublishCreatedTimeAndUpdateTimeById(id)
     }
 
@@ -835,7 +847,10 @@ class BlogArticleResource {
     @POST
     @Transactional
     @Path("likes/{id}")
-    fun likesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+    fun likesArticle(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         StpUtil.checkLogin()
 
         articleService.likesArticle(id)
@@ -847,7 +862,10 @@ class BlogArticleResource {
     @POST
     @Transactional
     @Path("unlikes/{id}")
-    fun unlikesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+    fun unlikesArticle(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         StpUtil.checkLogin()
 
         articleService.unlikesArticle(id)
@@ -859,7 +877,10 @@ class BlogArticleResource {
     @POST
     @Transactional
     @Path("un_browses/{id}")
-    fun unBrowsesArticle(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String) {
+    fun unBrowsesArticle(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
         StpUtil.checkLogin()
 
         articleService.unBrowsesArticle(id)
@@ -871,7 +892,10 @@ class BlogArticleResource {
     @GET
     @Transactional
     @Path("liked/{id}")
-    fun getLiked(@Valid @Size(max = 32, message = "id长度不能大于32") @RestPath id: String): Boolean {
+    fun getLiked(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): Boolean {
         StpUtil.checkLogin()
 
         return articleService.getLiked(id)
@@ -886,7 +910,10 @@ class BlogArticleResource {
      */
     @GET
     @Path("pre_and_next/{id}")
-    fun getPreAndNextArticle(@RestPath id: String): JsonObject {
+    fun getPreAndNextArticle(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): JsonObject {
         return articleService.getPreAndNextArticle(id)
     }
     //endregion
@@ -959,7 +986,10 @@ class BlogArticleResource {
 
     @DELETE
     @Path("/delete/{id}")
-    fun deleteById(@RestPath id: String): Response {
+    fun deleteById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): Response {
         throwBadRequest()
 
         val success = articleService.delete(id)
@@ -996,7 +1026,10 @@ class BlogArticleResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun findById(@RestPath id: String): Response {
+    fun findById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): Response {
         throwBadRequest()
 
         val blogArticle = articleService.findById(id)
