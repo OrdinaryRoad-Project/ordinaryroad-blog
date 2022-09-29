@@ -624,6 +624,7 @@ class BlogArticleResource {
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
             .like(tagIds.isNotEmpty(), "tag_ids", "%${tagId}%")
+            .eq(!request.typeId.isNullOrBlank(), "type_id", request.typeId)
 
         val page = articleService.page(request, wrapper)
 

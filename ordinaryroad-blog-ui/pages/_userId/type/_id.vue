@@ -23,11 +23,72 @@
   -->
 
 <template>
-  <div>{{ $route.params }}</div>
+  <base-material-card>
+    <template #heading>
+      <div
+        class="text-h4 font-weight-light"
+        v-text="`${type.name}${totalArticle?$t('parentheses',[totalArticle]):''}`"
+      />
+      <div class="category font-weight-thin">
+        <or-link
+          hide-icon
+          :href="`/${type.creatorId}`"
+        >
+          <span style="color: white">{{ type.createBy }}</span>
+        </or-link>
+        创建于 {{ $dayjs(type.createdTime).format() }}
+      </div>
+    </template>
+    <or-blog-article-list
+      :total.sync="totalArticle"
+      :create-by="type.creatorId"
+      :type-id="type.uuid"
+      auto-load-more
+    />
+  </base-material-card>
 </template>
 
 <script>
-export default {}
+export default {
+  async asyncData ({
+    route,
+    $apis,
+    store,
+    redirect
+  }) {
+    // const tokenValue = store.getters['user/getTokenValue']
+    // 判断分类是否存在
+    const userId = route.params.userId || ''
+    const id = route.params.id || ''
+    if (id && id.trim() !== '') {
+      const type = await $apis.blog.type.findById(id)
+      if (type.creatorId !== userId) {
+        redirect('/404')
+      }
+      return { type }
+    }
+  },
+  data: () => ({
+    type: null,
+    totalArticle: null
+  }),
+  mounted () {
+    if (this.type == null) {
+      this.$dialog({
+        persistent: true,
+        content: this.$i18n.t('status.type.notFound'),
+        confirmText: this.$i18n.t('retry'),
+        cancelText: this.$i18n.t('back')
+      }).then(({ isConfirm }) => {
+        if (isConfirm) {
+          this.$router.go(0)
+        } else {
+          this.$router.back()
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>

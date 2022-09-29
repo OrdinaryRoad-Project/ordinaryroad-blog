@@ -236,4 +236,18 @@ class BlogTypeResource {
         return typeService.dao.selectCount(wrapper)
     }
 
+    /**
+     * 根据Id查询分类
+     */
+    @GET
+    @Path("{id}")
+    fun findById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): BlogTypeDTO {
+        val findById = typeService.findById(id)
+
+        return dtoService.transfer(findById, BlogTypeDTO::class.java)
+    }
+
 }

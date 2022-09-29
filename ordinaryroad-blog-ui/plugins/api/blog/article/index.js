@@ -84,10 +84,11 @@ export default {
       title = '',
       summary = '',
       content = '',
+      typeId = '',
       sortBy = ['firstId'],
       sortDesc = [true]
     }) => {
-      const data = { createBy, tagName, title, summary, content, sortBy, sortDesc }
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
       return $axios({
         url: `/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
         method: 'get'

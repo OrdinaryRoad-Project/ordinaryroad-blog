@@ -90,6 +90,12 @@ export default {
         url: `/blog/type/count?userId=${userId}`,
         method: 'get'
       })
+    },
+    findById: (id = '') => {
+      return $axios({
+        url: `/blog/type/${id}`,
+        method: 'get'
+      })
     }
   }
 }

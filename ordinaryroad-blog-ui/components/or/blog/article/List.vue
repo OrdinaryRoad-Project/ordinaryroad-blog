@@ -66,6 +66,10 @@ export default {
       type: String,
       default: null
     },
+    typeId: {
+      type: String,
+      default: null
+    },
     autoLoadMore: {
       type: Boolean,
       default: false
@@ -137,6 +141,7 @@ export default {
       // console.log('开始加载', this.articlePageItems.current + 1)
       const page = loadMore ? this.articlePageItems.current + 1 : 1
       this.$apis.blog.article.pagePublish(page, {
+        typeId: this.typeId,
         createBy: this.createBy,
         tagName: this.tagName,
         title: this.title,

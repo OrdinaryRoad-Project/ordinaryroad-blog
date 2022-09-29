@@ -58,7 +58,7 @@ public class BlogArticleQueryRequest extends BaseQueryRequest {
     public String tagName;
 
     @RestQuery
-    public Boolean liked;
+    public String typeId;
 
 }
 
