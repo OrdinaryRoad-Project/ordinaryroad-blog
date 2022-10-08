@@ -1,0 +1,71 @@
+<!--
+  - MIT License
+  -
+  - Copyright (c) 2021 苗锦洲
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to deal
+  - in the Software without restriction, including without limitation the rights
+  - to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  - copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  - IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  - FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  - AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  - LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  - OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  - SOFTWARE.
+  -->
+
+<template>
+  <v-container fluid>
+    <v-list v-if="top6Articles">
+      <v-list-item
+        v-for="item in top6Articles"
+        :key="item.uuid"
+      >
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
+        <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
+      </v-list-item>
+    </v-list>
+
+    <or-blog-article-daily-posts-chart
+      :create-by="userId"
+    />
+  </v-container>
+</template>
+
+<script>
+export default {
+  name: 'OrBlogUserOverview',
+  props: {
+    userId: {
+      type: String,
+      required: true
+    }
+  },
+  data: () => ({
+    top6Articles: null
+  }),
+  created () {
+    // TODO this.getTop6Articles()
+  },
+  methods: {
+    getTop6Articles () {
+      this.$apis.blog.article.getTopNBrowsed({ n: 6, userId: this.userId })
+        .then((data) => {
+          this.top6Articles = data
+        })
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

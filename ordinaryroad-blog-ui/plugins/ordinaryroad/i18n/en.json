@@ -25,6 +25,7 @@
   "minNChars": "Length cannot be less than {0}",
   "ordinaryroad": "Ordinary Road",
   "parentheses": "({0})",
+  "parenthesesWithSpace": " ({0})",
   "refresh": "Refresh",
   "remove": "Remove",
   "required": "Required",

@@ -30,14 +30,35 @@
         cols="12"
         order="2"
         order-md="1"
+        class="pa-0"
       >
-        <base-material-card :title="$t('articleCount',[`${totalArticle?$t('parentheses',[totalArticle]):''}`])">
-          <or-blog-article-list
-            ref="articleList"
-            :total.sync="totalArticle"
-            :create-by="blogUser.uuid"
-          />
-        </base-material-card>
+        <v-tabs
+          v-model="tabModel"
+          class="sticky-top"
+          style="z-index: 2"
+          :style="`top :${$vuetify.breakpoint.smAndDown?'56px':'64px'} !important;`"
+        >
+          <v-tab @click="onClickTab()">
+            {{ $t('overview') }}
+          </v-tab>
+          <v-tab @click="onClickTab('article')">
+            {{ $t('articleCount', [`${totalArticle ? $t('parentheses', [totalArticle]) : ''}`]) }}
+          </v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tabModel">
+          <v-tab-item>
+            <or-blog-user-overview
+              :user-id="blogUser.uuid"
+            />
+          </v-tab-item>
+          <v-tab-item>
+            <or-blog-user-articles
+              :user-id="blogUser.uuid"
+              :total.sync="totalArticle"
+            />
+          </v-tab-item>
+        </v-tabs-items>
       </v-col>
 
       <v-col
@@ -89,15 +110,20 @@
 <script>
 
 export default {
+  props: {},
   asyncData ({
     route,
     redirect,
     $apis
   }) {
+    const tabItems = ['overview', 'article']
     const userId = route.params.userId
+    const tab = route.query.tab
+    const indexOf = tab ? tabItems.indexOf(tab) : 0
     return $apis.blog.user.findById(userId)
       .then((data) => {
         return {
+          tabModel: indexOf === -1 ? 0 : indexOf,
           blogUser: data
         }
       })
@@ -109,13 +135,30 @@ export default {
     return {
       blogUser: null,
       totalArticle: null,
-      totalTypes: null
+      totalTypes: null,
+
+      tabModel: 0
+    }
+  },
+  watch: {
+    tabModel (val) {
+      // ignore
+      switch (val) {
+        case 0:
+          break
+        case 1:
+          break
+        default:
+      }
     }
   },
   mounted () {
-    this.$refs.articleList.getArticles(false)
   },
-  methods: {}
+  methods: {
+    onClickTab (tab) {
+      this.$router.replace({ path: this.$route.path, query: { tab } })
+    }
+  }
 }
 </script>
 

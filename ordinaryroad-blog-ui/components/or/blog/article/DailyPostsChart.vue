@@ -54,6 +54,10 @@ export default {
     vertical: {
       type: Boolean,
       default: false
+    },
+    createBy: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -124,7 +128,7 @@ export default {
       this.options.calendar.bottom = vertical ? 10 : 30
     },
     getData () {
-      this.$apis.blog.article.countDailyPosts({ userId: this.userInfo.user.uuid })
+      this.$apis.blog.article.countDailyPosts({ userId: this.createBy || this.userInfo.user.uuid })
         .then((data) => {
           this.options.series.data = []
           let maxCount = 0

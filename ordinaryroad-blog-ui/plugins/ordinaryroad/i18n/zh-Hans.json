@@ -25,6 +25,7 @@
   "minNChars": "长度不能小于{0}",
   "ordinaryroad": "Ordinary Road",
   "parentheses": "（{0}）",
+  "parenthesesWithSpace": "（{0}）",
   "refresh": "刷新",
   "remove": "移除",
   "required": "必填",

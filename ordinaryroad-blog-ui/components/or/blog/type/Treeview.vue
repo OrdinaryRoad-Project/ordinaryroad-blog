@@ -38,7 +38,7 @@
       >
         <v-list-item-title>
           {{ item.name }}{{
-            item.articleCount ? $t('parentheses', [item.articleCount]) : ''
+            item.articleCount ? $t('parenthesesWithSpace', [item.articleCount]) : ''
           }}
         </v-list-item-title>
       </v-list-item>
