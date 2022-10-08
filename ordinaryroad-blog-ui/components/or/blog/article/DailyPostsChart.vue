@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <v-card :loading="loading" flat outlined>
+  <v-card :loading="loading" flat :outlined="outlined">
     <v-card-title>文章发布热力图</v-card-title>
     <div
       v-if="!loading"
@@ -54,6 +54,10 @@ export default {
     vertical: {
       type: Boolean,
       default: false
+    },
+    outlined: {
+      type: Boolean,
+      default: true
     },
     createBy: {
       type: String,

@@ -24,19 +24,22 @@
 
 <template>
   <v-container fluid>
-    <v-list v-if="top6Articles">
-      <v-list-item
-        v-for="item in top6Articles"
-        :key="item.uuid"
-      >
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-        <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
+    <v-card>
+      <v-list v-if="top6Articles">
+        <v-list-item
+          v-for="item in top6Articles"
+          :key="item.uuid"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
+        </v-list-item>
+      </v-list>
 
-    <or-blog-article-daily-posts-chart
-      :create-by="userId"
-    />
+      <or-blog-article-daily-posts-chart
+        :outlined="false"
+        :create-by="userId"
+      />
+    </v-card>
   </v-container>
 </template>
 
