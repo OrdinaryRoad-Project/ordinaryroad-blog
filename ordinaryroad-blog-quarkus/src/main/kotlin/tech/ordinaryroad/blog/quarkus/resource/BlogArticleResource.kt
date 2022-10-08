@@ -64,7 +64,6 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
-import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 import javax.ws.rs.*
@@ -784,16 +783,13 @@ class BlogArticleResource {
      */
     @GET
     @Path("top/comment")
-    fun getTopNComments(
-        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
-        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
-    ): List<Map<String, String>> {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
+    fun getTopNComments(@Valid @BeanParam request: BlogArticleTopNRequest): List<Map<String, String>> {
+        if (request.userId.isNotBlank()) {
+            if (userService.findById(request.userId) == null) {
                 BlogUserNotFoundException().throws()
             }
         }
-        return articleService.dao.getTopNCommentsByUserId(n, userId)
+        return articleService.dao.getTopNCommentsByUserId(request.n, request.userId)
     }
 
     /**
@@ -801,16 +797,13 @@ class BlogArticleResource {
      */
     @GET
     @Path("top/liked")
-    fun getLikedTopN(
-        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
-        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
-    ): List<Map<String, String>> {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
+    fun getLikedTopN(@Valid @BeanParam request: BlogArticleTopNRequest): List<Map<String, String>> {
+        if (request.userId.isNotBlank()) {
+            if (userService.findById(request.userId) == null) {
                 BlogUserNotFoundException().throws()
             }
         }
-        return articleService.dao.getTopNLikedByUserId(n, userId)
+        return articleService.dao.getTopNLikedByUserId(request.n, request.userId)
     }
 
     /**
@@ -818,16 +811,13 @@ class BlogArticleResource {
      */
     @GET
     @Path("top/browsed")
-    fun getBrowsedTopN(
-        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
-        @Valid @Max(value = 50, message = "n不能大于50") @DefaultValue("10") @RestQuery n: Int
-    ): List<Map<String, String>> {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
+    fun getBrowsedTopN(@Valid @BeanParam request: BlogArticleTopNRequest): List<Map<String, String>> {
+        if (request.userId.isNotBlank()) {
+            if (userService.findById(request.userId) == null) {
                 BlogUserNotFoundException().throws()
             }
         }
-        return articleService.dao.getTopNBrowsedByUserId(n, userId)
+        return articleService.dao.getTopNBrowsedByUserId(request.n, request.userId)
     }
 
     /**
