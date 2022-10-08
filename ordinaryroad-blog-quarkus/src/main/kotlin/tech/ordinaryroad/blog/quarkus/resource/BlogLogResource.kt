@@ -30,7 +30,6 @@ import org.jboss.resteasy.reactive.RestPath
 import tech.ordinaryroad.blog.quarkus.dto.BlogLogDTO
 import tech.ordinaryroad.blog.quarkus.enums.BlogLogTypeEnum
 import tech.ordinaryroad.blog.quarkus.request.BlogLogQueryRequest
-import tech.ordinaryroad.blog.quarkus.resource.vo.BlogLogTypeEnumVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogLogService
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils
@@ -96,19 +95,10 @@ class BlogLogResource {
      */
     @GET
     @Path("all/types")
-    fun findAllTypes(): List<BlogLogTypeEnumVO> {
+    fun findAllTypes(): Array<BlogLogTypeEnum> {
         BlogUtils.checkAdminOrDeveloper()
 
-        val list = ArrayList<BlogLogTypeEnumVO>()
-        val allTypes = BlogLogTypeEnum.getAllTypes()
-        allTypes.forEach {
-            val logTypeEnumVO = BlogLogTypeEnumVO()
-            logTypeEnumVO.description = it.description
-            logTypeEnumVO.code = it.code
-            logTypeEnumVO.method = it.method
-            list.add(logTypeEnumVO)
-        }
-        return list
+        return BlogLogTypeEnum.values()
     }
 
     @GET

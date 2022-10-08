@@ -108,31 +108,9 @@ enum class BlogLogTypeEnum(
         private val antPathMatcher = AntPathMatcher()
 
         private val blogLogTypeEnumMap = HashMap<String, BlogLogTypeEnum>().apply {
-            put(OAUTH2_AUTHORIZE.pathPattern, OAUTH2_AUTHORIZE)
-            put(OAUTH2_CALLBACK.pathPattern, OAUTH2_CALLBACK)
-            put(BLOG_LOGOUT.pathPattern, BLOG_LOGOUT)
-            put(BLOG_UPLOAD.pathPattern, BLOG_UPLOAD)
-            put(BLOG_USER_UPDATE_AVATAR.pathPattern, BLOG_USER_UPDATE_AVATAR)
-            put(BLOG_USER_UPDATE_USERNAME.pathPattern, BLOG_USER_UPDATE_USERNAME)
-            put(BLOG_ROLE_UPDATE_AVATAR.pathPattern, BLOG_ROLE_UPDATE_AVATAR)
-            put(BLOG_OAUTH_USER_DELETE.pathPattern, BLOG_OAUTH_USER_DELETE)
-            put(BLOG_ARTICLE_PUBLISH.pathPattern, BLOG_ARTICLE_PUBLISH)
-            put(BLOG_ARTICLE_SAVE_DRAFT.pathPattern, BLOG_ARTICLE_SAVE_DRAFT)
-            put(BLOG_ARTICLE_MOVE_TO_TRASH.pathPattern, BLOG_ARTICLE_MOVE_TO_TRASH)
-            put(BLOG_ARTICLE_RECOVER_FROM_TRASH.pathPattern, BLOG_ARTICLE_RECOVER_FROM_TRASH)
-            put(BLOG_ARTICLE_FIND_PUBLISH.pathPattern, BLOG_ARTICLE_FIND_PUBLISH)
-            put(BLOG_ARTICLE_LIKES.pathPattern, BLOG_ARTICLE_LIKES)
-            put(BLOG_ARTICLE_UNLIKES.pathPattern, BLOG_ARTICLE_UNLIKES)
-            put(BLOG_ARTICLE_UN_BROWSES.pathPattern, BLOG_ARTICLE_UN_BROWSES)
-            put(BLOG_TYPE_CREATE.pathPattern, BLOG_TYPE_CREATE)
-            put(BLOG_TYPE_DELETE.pathPattern, BLOG_TYPE_DELETE)
-            put(BLOG_TYPE_UPDATE.pathPattern, BLOG_TYPE_UPDATE)
-            put(BLOG_TAG_CREATE.pathPattern, BLOG_TAG_CREATE)
-            put(BLOG_COMMENT_POST.pathPattern, BLOG_COMMENT_POST)
-        }
-
-        fun getAllTypes(): Collection<BlogLogTypeEnum> {
-            return blogLogTypeEnumMap.values
+            BlogLogTypeEnum.values().forEach {
+                put(it.pathPattern, it)
+            }
         }
 
         fun get(path: String, method: String): BlogLogTypeEnum? {
