@@ -23,8 +23,10 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
+import cn.hutool.core.lang.RegexPool
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 class BlogArticleSaveDraftRequest : BaseRequest() {
@@ -50,13 +52,14 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     var firstId: String? = null
 
     @Size(max = 100, message = "分类名称长度不能超过100")
+    @Pattern(regexp = RegexPool.GENERAL_WITH_CHINESE, message = "分类名称只能包含中文字、英文字母、数字和下划线")
     var typeName: String? = null
 
     @Size(max = 10, message = "标签个数不能超过10")
     var tagNames: List<String> = emptyList()
 
     companion object {
-        private const val serialVersionUID: Long = 534468300453589323L
+        private const val serialVersionUID: Long = -1612313003011954942L
     }
 
 }

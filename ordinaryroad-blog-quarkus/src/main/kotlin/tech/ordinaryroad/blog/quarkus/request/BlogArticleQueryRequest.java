@@ -24,14 +24,16 @@
 
 package tech.ordinaryroad.blog.quarkus.request;
 
+import cn.hutool.core.lang.RegexPool;
 import org.jboss.resteasy.reactive.RestQuery;
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class BlogArticleQueryRequest extends BaseQueryRequest {
 
-    private static final long serialVersionUID = -699442366661850652L;
+    private static final long serialVersionUID = 1187564287897225907L;
 
     @RestQuery
     public String title;
@@ -55,6 +57,7 @@ public class BlogArticleQueryRequest extends BaseQueryRequest {
     public List<String> status;
 
     @RestQuery
+    @Pattern(regexp = RegexPool.GENERAL_WITH_CHINESE, message = "标签名称只能包含中文字、英文字母、数字和下划线")
     public String tagName;
 
     @RestQuery

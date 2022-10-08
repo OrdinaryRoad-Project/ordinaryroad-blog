@@ -23,9 +23,11 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
+import cn.hutool.core.lang.RegexPool
 import org.jboss.resteasy.reactive.RestForm
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.ws.rs.PathParam
 
 class BlogTypeUpdateRequest : BaseRequest() {
@@ -36,10 +38,11 @@ class BlogTypeUpdateRequest : BaseRequest() {
 
     @RestForm
     @NotBlank(message = "名称不能为空")
+    @Pattern(regexp = RegexPool.GENERAL_WITH_CHINESE, message = "名称只能包含中文字、英文字母、数字和下划线")
     var name: String = ""
 
     companion object {
-        private const val serialVersionUID: Long = 4539543105962765395L
+        private const val serialVersionUID: Long = 4639185330623929226L
     }
 
 }

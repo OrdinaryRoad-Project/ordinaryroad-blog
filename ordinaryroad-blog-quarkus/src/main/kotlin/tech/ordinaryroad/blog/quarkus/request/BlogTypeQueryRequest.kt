@@ -23,16 +23,19 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
+import cn.hutool.core.lang.RegexPool
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
+import javax.validation.constraints.Pattern
 
 class BlogTypeQueryRequest : BaseQueryRequest() {
 
     @RestQuery
+    @Pattern(regexp = RegexPool.GENERAL_WITH_CHINESE, message = "名称只能包含中文字、英文字母、数字和下划线")
     var name: String? = null
 
     companion object {
-        private const val serialVersionUID: Long = 1729845016558027553L
+        private const val serialVersionUID: Long = -9217358602093298154L
     }
 
 }

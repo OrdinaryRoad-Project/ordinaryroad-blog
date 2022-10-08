@@ -26,6 +26,8 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.collection.CollUtil
+import cn.hutool.core.lang.PatternPool
+import cn.hutool.core.util.ReUtil
 import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpStatus
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
@@ -41,6 +43,7 @@ import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
 import tech.ordinaryroad.blog.quarkus.dal.entity.*
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
@@ -189,6 +192,9 @@ class BlogArticleResource {
         } else {
             val ids = arrayListOf<String>()
             tagNames.forEach {
+                if (!ReUtil.isMatch(PatternPool.GENERAL_WITH_CHINESE, it)) {
+                    BaseBlogException("标签名称只能包含中文字、英文字母、数字和下划线").throws()
+                }
                 val wrapper = Wrappers.query<BlogTag>()
                     .eq("name", it)
                 var tag = tagService.dao.selectOne(wrapper)
@@ -611,8 +617,7 @@ class BlogArticleResource {
         val tagName = request.tagName
         var tagId = ""
         var tagIds = emptyList<String>()
-        // TODO 防止sql注入
-        if (!tagName.isNullOrEmpty() && tagName != "%") {
+        if (!tagName.isNullOrEmpty()) {
             tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
             tagId = tagIds.first()
         }
