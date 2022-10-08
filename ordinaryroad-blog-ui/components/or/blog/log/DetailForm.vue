@@ -26,11 +26,17 @@
   <div>
     <v-card flat>
       <v-card-title class="d-flex">
-        <span>
+        <span :class="`${$apis.statusColor({status:model.status})}--text`">
           <span class="me-2">{{ model.method }}</span> {{ model.path }}
         </span>
         <span class="ml-auto">
-          {{ model.consumedTime }}ms<span class="ms-2">{{ model.status }}</span>
+          <span :class="`${$apis.statusColor({status:model.status})}--text`">{{ model.consumedTime }}ms</span><v-chip
+            label
+            class="ms-2"
+            :color="$apis.statusColor({status:model.status})"
+          >{{
+            model.status
+          }}</v-chip>
         </span>
       </v-card-title>
       <v-card-subtitle>
@@ -41,8 +47,9 @@
         <!-- 路径参数 -->
         <v-card outlined flat class="mb-4">
           <v-card-title>
-            路径参数
-            {{ Object.keys(pathParams).length ? $t('parentheses', [Object.keys(pathParams).length]) : '' }}
+            路径参数{{
+              Object.keys(pathParams).length ? $t('parenthesesWithSpace', [Object.keys(pathParams).length]) : ''
+            }}
           </v-card-title>
           <v-divider />
           <v-simple-table
@@ -84,7 +91,11 @@
         </v-card>
         <!-- 查询参数 -->
         <v-card outlined flat>
-          <v-card-title>查询参数</v-card-title>
+          <v-card-title>
+            查询参数{{
+              Object.keys(queryParams).length ? $t('parenthesesWithSpace', [Object.keys(queryParams).length]) : ''
+            }}
+          </v-card-title>
           <v-divider />
           <v-simple-table
             v-if="Object.keys(queryParams).length"
@@ -208,7 +219,11 @@
       <v-tab-item>
         <!-- 请求Header -->
         <v-card outlined flat class="mb-4">
-          <v-card-title>请求Header</v-card-title>
+          <v-card-title>
+            请求Header{{
+              Object.keys(headers).length ? $t('parenthesesWithSpace', [Object.keys(headers).length]) : ''
+            }}
+          </v-card-title>
           <v-divider />
           <v-simple-table
             v-if="Object.keys(headers).length"
@@ -250,7 +265,11 @@
 
         <!-- 响应Header -->
         <v-card outlined flat>
-          <v-card-title>响应Header</v-card-title>
+          <v-card-title>
+            响应Header{{
+              Object.keys(responseHeaders).length ? $t('parenthesesWithSpace', [Object.keys(responseHeaders).length]) : ''
+            }}
+          </v-card-title>
           <v-divider />
           <v-simple-table
             v-if="Object.keys(responseHeaders).length"
@@ -295,7 +314,11 @@
         <v-container fluid class="ma-0 px-0 py-2">
           <!-- 请求Cookie -->
           <v-card outlined flat class="mb-4">
-            <v-card-title>请求Cookie</v-card-title>
+            <v-card-title>
+              请求Cookie{{
+                Object.keys(cookies).length ? $t('parenthesesWithSpace', [Object.keys(cookies).length]) : ''
+              }}
+            </v-card-title>
             <v-divider />
             <v-simple-table
               v-if="Object.keys(cookies).length"
@@ -338,7 +361,11 @@
 
           <!-- 响应Cookie -->
           <v-card outlined flat>
-            <v-card-title>响应Cookie</v-card-title>
+            <v-card-title>
+              响应Cookie{{
+                Object.keys(responseCookies).length ? $t('parenthesesWithSpace', [Object.keys(responseCookies).length]) : ''
+              }}
+            </v-card-title>
             <v-divider />
             <v-simple-table
               v-if="Object.keys(responseCookies).length"

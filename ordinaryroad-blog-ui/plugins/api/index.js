@@ -32,7 +32,19 @@ export default function ({
   // 初始化axios
   blogApis.initAxios($axios, $config)
   const $apis = {
-    blog: blogApis.apis
+    blog: blogApis.apis,
+    statusColor (item) {
+      if (['OK', 'NO_CONTENT'].includes(item.status)) {
+        return 'success'
+      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status)) {
+        return 'error'
+      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
+        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
+        return 'warning'
+      } else {
+        return null
+      }
+    }
   }
   // $apis
   inject('apis', $apis)
