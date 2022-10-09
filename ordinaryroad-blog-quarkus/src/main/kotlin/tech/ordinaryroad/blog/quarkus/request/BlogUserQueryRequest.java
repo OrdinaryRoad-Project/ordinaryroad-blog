@@ -27,38 +27,12 @@ package tech.ordinaryroad.blog.quarkus.request;
 import org.jboss.resteasy.reactive.RestQuery;
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
 
-import java.util.List;
+public class BlogUserQueryRequest extends BaseQueryRequest {
 
-public class BlogArticleQueryRequest extends BaseQueryRequest {
-
-    private static final long serialVersionUID = 1187564287897225907L;
+    private static final long serialVersionUID = -4005654259557529003L;
 
     @RestQuery
-    public String title;
-
-    @RestQuery
-    public String summary;
-
-    @RestQuery
-    public String content;
-
-    @RestQuery
-    public Boolean canReward;
-
-    @RestQuery
-    public Boolean original;
-
-    @RestQuery
-    public String firstId;
-
-    @RestQuery
-    public List<String> status;
-
-    @RestQuery
-    public String tagName;
-
-    @RestQuery
-    public String typeId;
+    public String username;
 
 }
 

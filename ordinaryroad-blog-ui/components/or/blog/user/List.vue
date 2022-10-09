@@ -25,62 +25,65 @@
 <template>
   <v-container fluid>
     <v-row
-      v-if="typeInfoPageItems==null"
+      v-if="userPageItems==null"
     >
       加载失败
     </v-row>
     <v-list v-else>
       <v-list-item
-        v-for="item in typeInfoPageItems.records"
+        v-for="item in userPageItems.records"
         :key="item.uuid"
-        :to="`/${item.createBy}/type/${item.uuid}`"
         target="_blank"
+        :to="`/${item.uuid}`"
       >
-        <v-list-item-title>
-          {{ item.name }}{{
-            item.articleCount ? $t('parenthesesWithSpace', [item.articleCount]) : ''
-          }}
-        </v-list-item-title>
+        <v-list-item-avatar>
+          <or-avatar
+            :username="item.username"
+            :avatar="$apis.blog.getFileUrl(item.avatar)"
+          />
+        </v-list-item-avatar>
+        <v-list-item-title>{{ item.username }}</v-list-item-title>
       </v-list-item>
     </v-list>
+
     <or-load-more-footer
       ref="loadMoreFooter"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
-      @loadMore="getTypes()"
+      @loadMore="getUsers()"
     />
   </v-container>
 </template>
 
 <script>
+
 export default {
-  name: 'OrBlogTypeTreeview',
-  props: {
-    createBy: {
-      type: String,
-      default: null
-    }
-  },
+  name: 'OrBlogUserList',
+  props: {},
   data: () => ({
     loadMoreOptions: {
       loading: false,
       noMoreData: false
     },
-    typeInfoPageItems: {
+    userPageItems: {
       records: [],
       current: 1
-    }
+    },
+
+    username: null
   }),
+  computed: {},
   watch: {
-    'typeInfoPageItems.total' () {
-      this.$emit('update:total', this.typeInfoPageItems.total)
+    'userPageItems.total' () {
+      this.$emit('update:total', this.userPageItems.total)
     }
   },
   mounted () {
-    this.getTypes(false)
+  },
+  created () {
   },
   methods: {
-    getTypes (loadMore = true) {
+    getUsers (loadMore = true) {
       if (loadMore) {
         if (this.loadMoreOptions.noMoreData) {
           return
@@ -92,39 +95,41 @@ export default {
         this.$refs.loadMoreFooter.startLoading(true)
         this.loadMoreOptions.loading = true
       }
-      const page = loadMore ? this.typeInfoPageItems.current + 1 : 1
-      this.$apis.blog.type.pageInfo(page, 20, { createBy: this.createBy })
+      this.$emit('update:loading', true)
+      const page = loadMore ? this.userPageItems.current + 1 : 1
+      this.$apis.blog.user.page(page, 20, { username: this.username })
         .then((data) => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
-            const newRecords = this.typeInfoPageItems.records.concat(data.records)
-            this.typeInfoPageItems = {
+            const newRecords = this.userPageItems.records.concat(data.records)
+            this.userPageItems = {
               ...data,
               records: newRecords
             }
-            if (this.typeInfoPageItems.current === this.typeInfoPageItems.pages) {
+            if (this.userPageItems.current === this.userPageItems.pages) {
               this.loadMoreOptions.noMoreData = true
             }
             setTimeout(() => {
               this.loadMoreOptions.loading = false
             }, 1000)
           } else {
-            this.typeInfoPageItems = data
+            this.userPageItems = data
             this.loadMoreOptions = {
               loading: false,
               noMoreData: data.pages === 0 || data.current === data.pages
             }
             this.$emit('loadFinish')
           }
+          this.$emit('update:loading', false)
         })
         .catch(() => {
-          this.typeInfoPageItems = null
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
             setTimeout(() => {
               this.loadMoreOptions.loading = false
             }, 1000)
           }
+          this.$emit('update:loading', false)
         })
     }
   }
@@ -133,4 +138,11 @@ export default {
 
 <style scoped>
 
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+  display: block;
+}
 </style>

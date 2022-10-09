@@ -23,17 +23,14 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
-import cn.hutool.core.lang.RegexPool
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 class BlogTypeSaveRequest : BaseRequest() {
 
     @NotBlank(message = "名称不能为空")
     @Size(max = 100, message = "名称长度不能超过100")
-    @Pattern(regexp = RegexPool.GENERAL_WITH_CHINESE, message = "名称只能包含中文字、英文字母、数字和下划线")
     var name: String = ""
 
     companion object {

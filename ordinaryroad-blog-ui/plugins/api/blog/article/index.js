@@ -94,6 +94,22 @@ export default {
         method: 'get'
       })
     },
+    searchPublish: (page, {
+      createBy,
+      tagName = '',
+      title = '',
+      summary = '',
+      content = '',
+      typeId = '',
+      sortBy = ['firstId'],
+      sortDesc = [true]
+    }) => {
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
+      return $axios({
+        url: `/blog/article/search/publish/${page}/20?1=1${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
         url: `/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,

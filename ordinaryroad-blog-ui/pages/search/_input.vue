@@ -28,7 +28,7 @@
       ref="searchForm"
       :disabled="loading"
       @submit.native.prevent
-      @submit="onInputChange(input)"
+      @submit="onInputSubmit(input)"
     >
       <v-text-field
         v-model.trim="input"
@@ -37,29 +37,42 @@
         :placeholder="$t('search')"
         outlined
         :rules="[$rules.max100Chars]"
-        @click:append-outer="onInputChange(input)"
+        @click:append-outer="onInputSubmit(input)"
       />
     </v-form>
-    <v-tabs v-model="tab">
+    <v-tabs
+      v-model="tabModel"
+      class="sticky-top"
+      style="z-index: 2"
+      :style="`top :${$vuetify.breakpoint.smAndDown?'56px':'64px'} !important;`"
+    >
       <v-tab>{{ $t('articleCount', [`${totalArticles ? $t('parentheses', [totalArticles]) : ''}`]) }}</v-tab>
-      <v-tab disabled>
-        分类
-      </v-tab>
-      <v-tab disabled>
-        用户
-      </v-tab>
+      <v-tab>{{ $t('typeCount', [`${totalTypes ? $t('parentheses', [totalTypes]) : ''}`]) }}</v-tab>
+      <v-tab>{{ $t('userCount', [`${totalUsers ? $t('parentheses', [totalUsers]) : ''}`]) }}</v-tab>
     </v-tabs>
 
-    <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <or-blog-article-list
-          ref="articleList"
-          :auto-load-more="false"
+    <v-tabs-items v-model="tabModel">
+      <v-tab-item eager>
+        <or-blog-article-search
+          ref="articleSearch"
           :total.sync="totalArticles"
-          @loadFinish="onArticleLoadFinish"
+          :loading.sync="loading"
         />
       </v-tab-item>
-      <v-tab-item />
+      <v-tab-item eager>
+        <or-blog-type-search
+          ref="typeSearch"
+          :total.sync="totalTypes"
+          :loading.sync="loading"
+        />
+      </v-tab-item>
+      <v-tab-item eager>
+        <or-blog-user-search
+          ref="userSearch"
+          :total.sync="totalUsers"
+          :loading.sync="loading"
+        />
+      </v-tab-item>
     </v-tabs-items>
   </div>
 </template>
@@ -72,28 +85,58 @@ export default {
     }
   },
   data: () => ({
-    tab: 0,
+    tabModel: 0,
     input: '',
     loading: false,
-    totalArticles: null
+    totalArticles: null,
+    totalTypes: null,
+    totalUsers: null
   }),
+  watch: {
+    tabModel () {
+      this.onInputSubmit(this.input)
+    }
+  },
   mounted () {
-    this.onInputChange(this.input)
+    this.onInputSubmit(this.input)
   },
   methods: {
-    onArticleLoadFinish () {
-      this.loading = false
-    },
-    onInputChange (input) {
+    onInputSubmit (input) {
       if (!input || input.trim() === '') {
         return
       }
       if (!this.$refs.searchForm.validate()) {
         return
       }
-      this.loading = true
-      this.$refs.articleList.title = input
-      this.$refs.articleList.getArticles(false)
+
+      switch (this.tabModel) {
+        case 0:
+          if (this.$refs.articleSearch) {
+            if (this.$refs.articleSearch.$refs.articleList.title !== this.input) {
+              this.$refs.articleSearch.$refs.articleList.title = this.input
+              this.$refs.articleSearch.$refs.articleList.tagName = this.input
+              this.$refs.articleSearch.$refs.articleList.getArticles(false)
+            }
+          }
+          break
+        case 1:
+          if (this.$refs.typeSearch) {
+            if (this.$refs.typeSearch.name !== this.input) {
+              this.$refs.typeSearch.name = this.input
+              this.$refs.typeSearch.getTypes(false)
+            }
+          }
+          break
+        case 2:
+          if (this.$refs.userSearch) {
+            if (this.$refs.userSearch.$refs.userList.username !== this.input) {
+              this.$refs.userSearch.$refs.userList.username = this.input
+              this.$refs.userSearch.$refs.userList.getUsers(false)
+            }
+          }
+          break
+        default:
+      }
     }
   }
 }

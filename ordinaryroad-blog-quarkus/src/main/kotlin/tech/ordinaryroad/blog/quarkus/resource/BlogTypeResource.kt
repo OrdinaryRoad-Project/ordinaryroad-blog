@@ -190,7 +190,7 @@ class BlogTypeResource {
     @GET
     @Path("page/own/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwn(@BeanParam request: BlogTypeQueryRequest): Page<BlogTypeDTO> {
+    fun pageOwn(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeDTO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -215,7 +215,7 @@ class BlogTypeResource {
     @GET
     @Path("page/info/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageInfo(@BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
+    fun pageInfo(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
         /* 登录校验 */
         val wrapper = ChainWrappers.queryChain(typeService.dao)
             .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")

@@ -267,4 +267,30 @@
         </choose>
     </select>
 
+    <select id="searchPublish" resultMap="BaseResultMap">
+        SELECT *
+        FROM blog_article
+        WHERE status = 'PUBLISH'
+        <if test="(title != null and title != '') or (tagId != null and tagId != '')">
+            AND (
+            <if test="title != null and title != ''">
+                `title` LIKE #{title}
+            </if>
+            <if test="tagId != null and tagId != ''">
+                OR `tag_ids` LIKE #{tagId}
+            </if>
+            )
+        </if>
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                `created_time` DESC
+            </otherwise>
+        </choose>
+    </select>
+
 </mapper>

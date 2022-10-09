@@ -174,6 +174,12 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             return@copyPage commentMapStruct.transferArticle(it)
         }
 
+        var total = voPage.total
+        voPage.records.forEach {
+            total += it.replies.total
+        }
+        voPage.total = total
+
         return voPage
     }
 

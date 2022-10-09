@@ -512,7 +512,7 @@ export default {
       type: Object,
       required: true
     },
-    articleComments: {
+    presetArticleComments: {
       type: Object,
       required: true
     }
@@ -542,7 +542,9 @@ export default {
       content: '',
       parentId: '',
       showAlert: false
-    }
+    },
+
+    articleComments: {}
   }),
   computed: {
     ...mapGetters('user', {
@@ -730,6 +732,7 @@ export default {
   },
   created () {
     this.blogArticle = this.article
+    this.articleComments = this.presetArticleComments
     if (this.$access.isLogged()) {
       this.updateLiked()
     }
@@ -767,6 +770,11 @@ export default {
       promise.then(() => {
         this.likeOptions.loading = false
         this.likeOptions.liked = !this.likeOptions.liked
+        if (this.likeOptions.liked) {
+          this.blogArticle.likesCount++
+        } else {
+          this.blogArticle.likesCount--
+        }
         this.$snackbar.success(this.$t('whatSuccessfully', [this.likeOptions.liked ? this.$t('article.actions.like') : this.$t('article.actions.unlike')]))
       })
         .catch(() => {
@@ -816,6 +824,8 @@ export default {
             this.commentOptions.showAlert = false
             this.$refs.commentVditor.setValue('')
             this.$refs.commentList.addComment(data)
+            this.blogArticle.commentsCount++
+            this.articleComments.total++
             this.commentOptions.posting = false
           })
           .catch(() => {
@@ -876,8 +886,8 @@ export default {
         }
 
         // 恢复阅读位置
-        const titleHash = this.$route.hash
-        if (!(titleHash && titleHash.length > 1)) {
+        const hash = this.$route.hash
+        if (!(hash && hash.length > 1)) {
           const realPercentOfRead = this.$route.query.p
           if (realPercentOfRead !== undefined) {
             const pN = parseFloat(realPercentOfRead)
@@ -892,17 +902,23 @@ export default {
             }
           }
         } else {
-          const title = decodeURIComponent(titleHash).slice(1)
-          this.toc.forEach((item) => {
-            if (item.headString === title) {
-              const headDivElement = document.getElementById('blog-toc-id-' + item.id)
-              if (headDivElement) {
-                this.$vuetify.goTo(headDivElement)
+          const hashValue = decodeURIComponent(hash).slice(1)
+          const elementById = document.getElementById(hashValue)
+          // 非正文的标题
+          if (elementById) {
+            this.$vuetify.goTo(elementById)
+          } else {
+            this.toc.forEach((item) => {
+              if (item.headString === hashValue) {
+                const headDivElement = document.getElementById('blog-toc-id-' + item.id)
+                if (headDivElement) {
+                  this.$vuetify.goTo(headDivElement)
+                }
               }
-            }
-          })
+            })
+          }
         }
-      }, 2000)
+      }, 1000)
     }
   }
 }

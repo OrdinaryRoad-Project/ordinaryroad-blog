@@ -37,6 +37,8 @@
  这里我们是采用的ES6 语法 引入 的qs模块
  */
 
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
+
 let $axios = null
 
 export default {
@@ -54,6 +56,13 @@ export default {
       return $axios({
         url: `/blog/user/username?username=${username}`,
         method: 'put'
+      })
+    },
+    page: (page, size, { username }) => {
+      const data = { username }
+      return $axios({
+        url: `/blog/user/page/${page}/${size}?1=1${urlEncode(data)}`,
+        method: 'get'
       })
     },
     findById: (id) => {

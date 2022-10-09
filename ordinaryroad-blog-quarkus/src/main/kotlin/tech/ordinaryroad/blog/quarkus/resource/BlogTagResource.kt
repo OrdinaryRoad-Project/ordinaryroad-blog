@@ -115,7 +115,7 @@ class BlogTagResource {
     @GET
     @Path("page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun page(@BeanParam request: BlogTagQueryRequest): Page<BlogTagDTO> {
+    fun page(@Valid @BeanParam request: BlogTagQueryRequest): Page<BlogTagDTO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 

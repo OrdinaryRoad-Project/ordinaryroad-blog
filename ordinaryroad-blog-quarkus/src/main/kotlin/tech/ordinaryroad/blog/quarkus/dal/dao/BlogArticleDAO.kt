@@ -102,4 +102,14 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
         orderBySql: String
     ): IPage<BlogArticleUserBrowsed>
 
+    /**
+     * 分页搜索已发布的文章
+     */
+    fun searchPublish(
+        page: IPage<BlogArticle>,
+        title: String?,
+        tagId: String?,
+        orderBySql: String
+    ): IPage<BlogArticle>
+
 }

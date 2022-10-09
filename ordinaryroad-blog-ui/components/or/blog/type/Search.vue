@@ -24,9 +24,7 @@
 
 <template>
   <v-container fluid>
-    <v-row
-      v-if="typeInfoPageItems==null"
-    >
+    <v-row v-if="typeInfoPageItems==null">
       加载失败
     </v-row>
     <v-list v-else>
@@ -54,14 +52,9 @@
 
 <script>
 export default {
-  name: 'OrBlogTypeTreeview',
-  props: {
-    createBy: {
-      type: String,
-      default: null
-    }
-  },
+  name: 'OrBlogTypeSearch',
   data: () => ({
+    name: null,
     loadMoreOptions: {
       loading: false,
       noMoreData: false
@@ -77,7 +70,7 @@ export default {
     }
   },
   mounted () {
-    this.getTypes(false)
+    // this.getTypes(false)
   },
   methods: {
     getTypes (loadMore = true) {
@@ -92,8 +85,9 @@ export default {
         this.$refs.loadMoreFooter.startLoading(true)
         this.loadMoreOptions.loading = true
       }
+      this.$emit('update:loading', true)
       const page = loadMore ? this.typeInfoPageItems.current + 1 : 1
-      this.$apis.blog.type.pageInfo(page, 20, { createBy: this.createBy })
+      this.$apis.blog.type.pageInfo(page, 20, { name: this.name, createBy: this.createBy })
         .then((data) => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
@@ -114,7 +108,7 @@ export default {
               loading: false,
               noMoreData: data.pages === 0 || data.current === data.pages
             }
-            this.$emit('loadFinish')
+            this.$emit('update:loading', false)
           }
         })
         .catch(() => {
@@ -125,6 +119,7 @@ export default {
               this.loadMoreOptions.loading = false
             }, 1000)
           }
+          this.$emit('update:loading', false)
         })
     }
   }

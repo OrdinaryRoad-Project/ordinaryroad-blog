@@ -60,7 +60,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
 
     private val log = Logger.getLogger(BlogLogFilter::class.java.name)
 
-    private var startTimestamp = ThreadLocal<Long>()
+    private var tlStartTimestamp = ThreadLocal<Long>()
     private var tlBlogLog = ThreadLocal<BlogLog>()
 
     @Volatile
@@ -85,7 +85,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
 
     @Throws(IOException::class)
     override fun filter(requestContext: ContainerRequestContext) {
-        startTimestamp.set(System.currentTimeMillis())
+        tlStartTimestamp.set(System.currentTimeMillis())
         log.info("==========request start==========")
         val loginIdDefaultNull = StpUtil.getLoginIdDefaultNull() as String?
         log.info("current userId: $loginIdDefaultNull")
@@ -126,7 +126,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
 
     @Throws(IOException::class)
     override fun filter(requestContext: ContainerRequestContext, responseContext: ContainerResponseContext) {
-        val blogLog = tlBlogLog.get()
+        val blogLog = tlBlogLog.get() ?: return
 
         blogLog.status = responseContext.statusInfo?.toEnum() ?: Response.Status.NOT_IMPLEMENTED
         blogLog.responseHeaders = JSONUtil.toJsonStr(responseContext.headers)
@@ -138,7 +138,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         log.info("response cookies: ${blogLog.cookies}")
         log.info("response body: ${blogLog.response}")
 
-        val consumedTime = System.currentTimeMillis() - startTimestamp.get()
+        val consumedTime = System.currentTimeMillis() - tlStartTimestamp.get()
         blogLog.consumedTime = consumedTime
 
         if (blogLog.type != null) {
@@ -152,7 +152,7 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
             }
         }
 
-        startTimestamp.remove()
+        tlStartTimestamp.remove()
         tlBlogLog.remove()
         log.info("consumed time: $consumedTime")
         log.info("==========request end==========")

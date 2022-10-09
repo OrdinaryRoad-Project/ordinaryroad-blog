@@ -451,7 +451,7 @@ class BlogArticleResource {
     @GET
     @Path("page/own/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwn(@BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
+    fun pageOwn(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -482,7 +482,7 @@ class BlogArticleResource {
     @GET
     @Path("page/own/liked/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwnLiked(@BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserLikedVO> {
+    fun pageOwnLiked(@Valid @BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserLikedVO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -530,7 +530,7 @@ class BlogArticleResource {
     @GET
     @Path("page/own/browsed/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwnBrowsed(@BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserBrowsedVO> {
+    fun pageOwnBrowsed(@Valid @BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserBrowsedVO> {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -578,7 +578,7 @@ class BlogArticleResource {
     @GET
     @Path("page/firstId/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageByFirstId(@BeanParam request: BlogArticleQueryRequest): Response {
+    fun pageByFirstId(@Valid @BeanParam request: BlogArticleQueryRequest): Response {
         /* 登录校验 */
         StpUtil.checkLogin()
 
@@ -609,16 +609,15 @@ class BlogArticleResource {
     @GET
     @Path("page/publish/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pagePublish(@BeanParam request: BlogArticleQueryRequest): Response {
-        // TODO
+    fun pagePublish(@Valid @BeanParam request: BlogArticleQueryRequest): Response {
         val status = BlogArticleStatus.PUBLISH
 
         val tagName = request.tagName
-        var tagId = ""
+        var tagId: String? = null
         var tagIds = emptyList<String>()
         if (!tagName.isNullOrEmpty()) {
             tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
-            tagId = tagIds.first()
+            tagId = tagIds.firstOrNull()
         }
 
         val wrapper = ChainWrappers.queryChain(articleService.dao)
@@ -637,6 +636,50 @@ class BlogArticleResource {
                 .collect(Collectors.toList())
         }
         return Response.ok().entity(voPage).build()
+    }
+
+    /**
+     * 分页搜索用户已发布的文章
+     */
+    @GET
+    @Path("search/publish/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun searchPublish(@Valid @BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewVO> {
+        val tagName = request.tagName
+        var tagId: String? = null
+        var tagIds = emptyList<String>()
+        if (!tagName.isNullOrEmpty()) {
+            tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
+            tagId = tagIds.firstOrNull()
+        }
+
+        var orderBySql = ""
+        val sortBy = request.sortBy
+        if (!sortBy.isNullOrEmpty()) {
+            sortBy.forEachIndexed { index, item ->
+                orderBySql += TableInfoUtils.getTableFieldColumn(articleService.entityClass, item)
+                if (request.sortDesc.getOrElse(index) { false }) {
+                    orderBySql += " "
+                    orderBySql += "DESC"
+                }
+                if (index != sortBy.size - 1) {
+                    orderBySql += ", "
+                }
+            }
+        }
+
+        val page = articleService.dao.searchPublish(
+            PageDTO.of(request.page, request.size),
+            if (request.title.isNullOrBlank()) null else "%${request.title}%",
+            if (tagIds.isEmpty()) null else "%${tagId}%",
+            orderBySql
+        ) as PageDTO<BlogArticle>
+
+        val voPage = PageUtils.copyPage<BlogArticle, BlogArticlePreviewVO>(page).apply {
+            records = page.records.stream().map(articleMapStruct::transferPreview)
+                .collect(Collectors.toList())
+        } as PageDTO<BlogArticlePreviewVO>
+        return voPage
     }
 
     /**
@@ -970,7 +1013,7 @@ class BlogArticleResource {
     @GET
     @Path("admin/page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageAdmin(@BeanParam request: BlogArticleQueryRequest): Response {
+    fun pageAdmin(@Valid @BeanParam request: BlogArticleQueryRequest): Response {
         throwBadRequest()
 
         val wrapper = ChainWrappers.queryChain(articleService.dao)

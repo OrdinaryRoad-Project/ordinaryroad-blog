@@ -72,7 +72,7 @@
           class="sticky-top"
         >
           <!-- 用户基本资料 -->
-          <base-material-card :avatar="$apis.blog.getFileUrl(blogUser.avatar)">
+          <base-material-card avatar="_required">
             <template #avatar>
               <or-avatar
                 :username="blogUser.username"
@@ -98,6 +98,7 @@
           <!-- 用户创建的分类 -->
           <base-material-card :title="$t('typeCount',[`${totalTypes?$t('parentheses',[totalTypes]):''}`])">
             <or-blog-type-treeview
+              :create-by="blogUser.uuid"
               :total.sync="totalTypes"
             />
           </base-material-card>

@@ -25,26 +25,30 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogUserMapStruct
+import tech.ordinaryroad.blog.quarkus.request.BlogUserQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO
+import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils
+import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
-import javax.ws.rs.GET
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 
@@ -55,6 +59,9 @@ class BlogUserResource {
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
 
     /**
      * 查询用户
@@ -118,6 +125,26 @@ class BlogUserResource {
             uuid = userId
             this.username = username
         })
+    }
+
+    /**
+     * 分页查询用户
+     */
+    @GET
+    @Path("page/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun page(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserDTO> {
+        val wrapper = ChainWrappers.queryChain(userService.dao)
+            .like(!request.username.isNullOrBlank(), "username", "%" + request.username + "%")
+
+        val page = userService.page(request, wrapper)
+
+        val dtoPage = PageUtils.copyPage<BlogUser, BlogUserDTO>(page).apply {
+            records = page.records.stream()
+                .map { dtoService.transfer(it, BlogUserDTO::class.java) }
+                .collect(Collectors.toList())
+        }
+        return dtoPage
     }
 
     //region 开发中（管理员）
