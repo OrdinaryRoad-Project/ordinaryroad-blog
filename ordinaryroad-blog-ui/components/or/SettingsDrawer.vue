@@ -79,47 +79,79 @@
     </v-container>
 
     <!-- 国际化设置 -->
-    <v-container v-if="showI18nSetting">
-      <div>
-        <div class="text-subtitle-2 font-weight-black">
-          {{ $t('language') }}
+    <div v-if="showI18nSetting">
+      <v-divider />
+      <v-container>
+        <div>
+          <div class="text-subtitle-2 font-weight-black">
+            {{ $t('language') }}
+          </div>
+          <v-item-group v-model="selectedLocaleOptionModel" mandatory>
+            <v-container>
+              <v-row>
+                <v-col
+                  v-for="(localeOption,index) in localeOptions"
+                  :key="localeOption"
+                  cols="6"
+                  class="pa-1"
+                  @click.stop="setLang({
+                    value: locales[index],
+                    $i18n, $vuetify, $dayjs
+                  })"
+                >
+                  <v-item v-slot="{ active, toggle }">
+                    <v-card
+                      flat
+                      :color="active ? 'primary' : $vuetify.theme.dark? 'grey darken-3':'grey lighten-3'"
+                      :dark="active"
+                      class="py-3 px-4 d-flex align-center justify-space-between"
+                      height="50"
+                      @click="toggle"
+                    >
+                      <span>{{ localeOption }}</span>
+                    </v-card>
+                  </v-item>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-item-group>
         </div>
-        <v-item-group v-model="selectedLocaleOptionModel" mandatory>
-          <v-container>
-            <v-row>
-              <v-col
-                v-for="(localeOption,index) in localeOptions"
-                :key="localeOption"
-                cols="6"
-                class="pa-1"
-                @click.stop="setLang({
-                  value: locales[index],
-                  $i18n, $vuetify, $dayjs
-                })"
-              >
-                <v-item v-slot="{ active, toggle }">
-                  <v-card
-                    flat
-                    :color="active ? 'primary' : $vuetify.theme.dark? 'grey darken-3':'grey lighten-3'"
-                    :dark="active"
-                    class="py-3 px-4 d-flex align-center justify-space-between"
-                    height="50"
-                    @click="toggle"
-                  >
-                    <span>{{ localeOption }}</span>
-                  </v-card>
-                </v-item>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-item-group>
+      </v-container>
+    </div>
+
+    <!-- 反馈 -->
+    <v-divider />
+    <v-container>
+      <div class="text-subtitle-2 font-weight-black">
+        {{ $t('other') }}
       </div>
+      <v-list>
+        <client-only>
+          <v-list-item
+            :href="feedbackUrl"
+            target="_blank"
+          >
+            <v-list-item-content>
+              <v-list-item-title>{{ $t('feedback') }}</v-list-item-title>
+              <v-list-item-subtitle v-if="!$access.isLogged()">
+                <span>
+                  <or-link href="/user/login" target="_self">{{ $t('login') }}</or-link>{{ $t('loginToFeedbackTip') }}
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </client-only>
+      </v-list>
     </v-container>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
 
 export default {
   name: 'OrSettingsDrawer',
@@ -134,6 +166,9 @@ export default {
       themeOptions: 'getThemeOptions',
       selectedThemeOption: 'getSelectedThemeOption',
       rightDrawerModel: 'getRightDrawerModel'
+    }),
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
     }),
     ...mapGetters('i18n', {
       localeOptions: 'getLocaleOptions',
@@ -163,6 +198,27 @@ export default {
       },
       set (val) {
         // ignore
+      }
+    },
+
+    feedbackUrl () {
+      if (!process.client) {
+        return ''
+      }
+      const customParams = {
+        clientInfo: this.$util.getBrowserInfo(),
+        clientVersion: this.$config.APP_VERSION
+      }
+      if (this.$access.isLogged()) {
+        const user = this.userInfo.user
+        const userParams = {
+          openid: user.uuid,
+          nickname: user.username,
+          avatar: this.$apis.blog.getFileUrl(user.avatar)
+        }
+        return `https://support.qq.com/product/439619?${urlEncode(userParams).slice(1)}${urlEncode(customParams)}`
+      } else {
+        return `https://support.qq.com/product/439619?${urlEncode(customParams).slice(1)}`
       }
     }
   },

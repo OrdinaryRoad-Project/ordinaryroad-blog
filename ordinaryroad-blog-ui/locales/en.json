@@ -1,4 +1,7 @@
 {
+  "other": "Other",
+  "feedback": "Feedback",
+  "loginToFeedbackTip": " for a better experience~",
   "overview": "Overview",
   "appName": "OR BLOG",
   "article": {
