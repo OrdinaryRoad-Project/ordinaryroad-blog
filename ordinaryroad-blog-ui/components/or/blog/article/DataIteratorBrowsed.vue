@@ -69,13 +69,17 @@
                     </template>
                     <v-list>
                       <v-list-item @click="unBrowsesArticle(item)">
-                        <v-list-item-title>{{ $t('delete') }}</v-list-item-title>
+                        <v-list-item-content>
+                          <v-list-item-title>{{ $t('delete') }}</v-list-item-title>
+                        </v-list-item-content>
                       </v-list-item>
                       <v-list-item
                         v-if="item.user.uuid===userInfo.user.uuid"
                         :to="`/dashboard/article/${item.uuid}`"
                       >
-                        <v-list-item-title>{{ $t('article.actions.edit') }}</v-list-item-title>
+                        <v-list-item-content>
+                          <v-list-item-title>{{ $t('article.actions.edit') }}</v-list-item-title>
+                        </v-list-item-content>
                       </v-list-item>
                     </v-list>
                   </v-menu>

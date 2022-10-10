@@ -42,7 +42,9 @@
             :avatar="$apis.blog.getFileUrl(item.avatar)"
           />
         </v-list-item-avatar>
-        <v-list-item-title>{{ item.username }}</v-list-item-title>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.username }}</v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
 

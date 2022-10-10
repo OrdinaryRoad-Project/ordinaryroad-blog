@@ -30,8 +30,10 @@
           v-for="item in top6Articles"
           :key="item.uuid"
         >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-          <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
 

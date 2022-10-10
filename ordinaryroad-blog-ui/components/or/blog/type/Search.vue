@@ -34,11 +34,13 @@
         :to="`/${item.createBy}/type/${item.uuid}`"
         target="_blank"
       >
-        <v-list-item-title>
-          {{ item.name }}{{
-            item.articleCount ? $t('parenthesesWithSpace', [item.articleCount]) : ''
-          }}
-        </v-list-item-title>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ item.name }}{{
+              item.articleCount ? $t('parenthesesWithSpace', [item.articleCount]) : ''
+            }}
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
     <or-load-more-footer

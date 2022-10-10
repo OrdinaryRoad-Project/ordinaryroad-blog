@@ -43,7 +43,9 @@
           $i18n, $vuetify, $dayjs
         })"
       >
-        <v-list-item-title>{{ localeOption }}</v-list-item-title>
+        <v-list-item-content>
+          <v-list-item-title>{{ localeOption }}</v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
   </v-menu>
