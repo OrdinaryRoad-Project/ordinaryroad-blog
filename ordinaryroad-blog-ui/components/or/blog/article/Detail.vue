@@ -157,7 +157,7 @@
         class="me-2"
       >
         <template #label="{item}">
-          <div :id="`label_blog-toc-id_${item.id}`" :blog-toc-id="item.id">
+          <div :id="`label_h_${item.id}`" :blog-toc-id="item.id">
             {{ item.name }}
           </div>
         </template>
@@ -201,14 +201,23 @@
             :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
           />
 
-          <div>
+          <v-list-item-content>
             <!-- 用户名 -->
-            <v-list-item-title class="font-weight-medium">
-              <span style="cursor: pointer" @click="onClickUsername">{{ blogArticle.user.username }}</span>
-            </v-list-item-title>
+            <v-hover>
+              <template #default="{ hover }">
+                <v-list-item-title
+                  class="font-weight-medium transition-swing"
+                  :class="hover?'primary--text':null"
+                >
+                  <span style="cursor: pointer" @click="onClickUsername">{{ blogArticle.user.username }}</span>
+                </v-list-item-title>
+              </template>
+            </v-hover>
             <!-- todo 个性签名 -->
-            <v-list-item-subtitle>世间种种平凡都不平凡</v-list-item-subtitle>
-          </div>
+            <v-list-item-subtitle v-if="false">
+              世间种种平凡都不平凡
+            </v-list-item-subtitle>
+          </v-list-item-content>
         </div>
 
         <!-- 时间信息 -->
@@ -245,16 +254,23 @@
           <span>{{ blogArticle.pv }}</span>
         </div>
         <!-- 评论数 -->
-        <div
-          class="d-flex align-center"
-          style="cursor: pointer"
-          @click="$vuetify.goTo($refs.commentVditor)"
-        >
-          <v-icon left small>
-            mdi-comment-text
-          </v-icon>
-          <span>{{ blogArticle.commentsCount }}</span>
-        </div>
+        <v-hover>
+          <template #default="{ hover }">
+            <div
+              class="d-flex align-center"
+              style="cursor: pointer"
+              @click="$vuetify.goTo($refs.commentVditor)"
+            >
+              <v-icon left small :color="hover?'primary':null">
+                mdi-comment-text
+              </v-icon>
+              <span
+                class="transition-swing"
+                :class="hover?'primary--text':null"
+              >{{ blogArticle.commentsCount }}</span>
+            </div>
+          </template>
+        </v-hover>
       </v-list-item>
     </v-img>
 
@@ -366,7 +382,6 @@
           </div>
         </v-alert>
 
-        <!-- 赞赏 -->
         <div class="d-flex justify-space-around align-center mb-4">
           <!-- 点赞 -->
           <v-btn
@@ -379,7 +394,8 @@
             <v-icon>mdi-thumb-up</v-icon>
           </v-btn>
 
-          <div v-if="blogArticle.canReward">
+          <!-- 赞赏 -->
+          <div v-if="false&&blogArticle.canReward">
             <v-tooltip bottom>
               <template #activator="{ on }">
                 <div v-on="on">
@@ -400,8 +416,10 @@
 
         <!-- 评论 -->
         <v-divider />
-        <v-card>
-          <v-card-title>评论{{ articleComments.total ? $t('parentheses', [articleComments.total]) : '' }}</v-card-title>
+        <v-card id="comments">
+          <v-card-title>
+            {{ $t('commentCount', [`${articleComments.total ? $t('parentheses', [articleComments.total]) : ''}`]) }}
+          </v-card-title>
           <div class="mx-2">
             <div class="d-flex align-end">
               <or-avatar
@@ -716,9 +734,10 @@ export default {
           }
           const headId = elementTemp.getAttribute('blog-toc-id')
           // console.log(headId)
-          const headDivElement = document.getElementById('blog-toc-id-' + headId)
+          const headDivElement = document.getElementById('h-' + headId)
           if (headDivElement) {
             this.$vuetify.goTo(headDivElement)
+            this.$router.replace(this.$route.path + '#h-' + headId)
           }
         }
       })
@@ -727,7 +746,7 @@ export default {
       // console.log('currentTocIndex', val)
       this.active = []
       this.active.push(val)
-      // const element = document.getElementById(`label_blog-toc-id_${val}`)
+      // const element = document.getElementById(`label_h_${val}`)
     }
   },
   created () {
@@ -910,7 +929,7 @@ export default {
           } else {
             this.toc.forEach((item) => {
               if (item.headString === hashValue) {
-                const headDivElement = document.getElementById('blog-toc-id-' + item.id)
+                const headDivElement = document.getElementById('h-' + item.id)
                 if (headDivElement) {
                   this.$vuetify.goTo(headDivElement)
                 }

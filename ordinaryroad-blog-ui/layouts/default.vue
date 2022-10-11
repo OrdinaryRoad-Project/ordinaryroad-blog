@@ -86,7 +86,7 @@ export default {
   head () {
     return {
       htmlAttrs: {
-        lang: this.$i18n.locale
+        lang: this.$i18n.locale === 'zh-Hans' ? 'zh-CN' : this.$i18n.locale
       }
     }
   },

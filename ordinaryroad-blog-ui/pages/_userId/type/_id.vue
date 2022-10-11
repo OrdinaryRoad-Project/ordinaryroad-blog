@@ -27,7 +27,7 @@
     <template #heading>
       <div
         class="text-h4 font-weight-light"
-        v-text="`${type.name}${totalArticle?$t('parentheses',[totalArticle]):''}`"
+        v-text="`${type.name}${totalArticle?$t('parenthesesWithSpace',[totalArticle]):''}`"
       />
       <div class="category font-weight-thin">
         <or-link

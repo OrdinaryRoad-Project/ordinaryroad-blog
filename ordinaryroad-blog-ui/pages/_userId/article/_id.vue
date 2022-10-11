@@ -60,6 +60,30 @@ export default {
       articleComments: {}
     }
   },
+  head () {
+    return {
+      title: this.article.title,
+      meta: [
+        { name: 'keywords', content: this.keywords },
+        { hid: 'description', name: 'description', content: this.article.summary }
+      ]
+    }
+  },
+  computed: {
+    keywords () {
+      let keywords = ''
+      if (this.article.type) {
+        keywords += this.article.type.name
+      }
+      if (this.article.tags) {
+        this.article.tags.forEach((item) => {
+          keywords += ','
+          keywords += item.name
+        })
+      }
+      return keywords
+    }
+  },
   mounted () {
     if (this.article == null) {
       this.$dialog({

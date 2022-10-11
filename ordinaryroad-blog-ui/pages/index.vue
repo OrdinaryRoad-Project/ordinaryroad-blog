@@ -86,16 +86,10 @@ export default {
         confirmText: '让我康康！',
         cancelText: '下次一定～'
       }).then(({ isConfirm }) => {
-        if (!isConfirm) {
-          this.$snackbar.error('拿来吧你')
-          setTimeout(() => {
-            window.open('https://ordinaryroad.top', '_blank')
-            localStorage.setItem(key, 'true')
-          }, 1000)
-        } else {
+        if (isConfirm) {
           window.open('https://ordinaryroad.top', '_blank')
-          localStorage.setItem(key, 'true')
         }
+        localStorage.setItem(key, 'true')
       })
     }
   },

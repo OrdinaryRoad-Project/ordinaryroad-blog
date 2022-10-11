@@ -38,6 +38,7 @@
       >
         <v-list-item-avatar>
           <or-avatar
+            :size="40"
             :username="item.username"
             :avatar="$apis.blog.getFileUrl(item.avatar)"
           />

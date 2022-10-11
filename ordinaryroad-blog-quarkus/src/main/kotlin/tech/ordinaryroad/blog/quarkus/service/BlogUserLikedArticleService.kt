@@ -23,6 +23,7 @@
  */
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import io.quarkus.arc.Unremovable
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserLikedArticleDAO
@@ -45,6 +46,12 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
 
     @Inject
     protected lateinit var articleService: BlogArticleService
+
+    @Inject
+    protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var pushService: BlogPushService
 
     override fun getEntityClass(): Class<BlogUserLikedArticle> {
         return BlogUserLikedArticle::class.java
@@ -74,9 +81,14 @@ class BlogUserLikedArticleService : BaseService<BlogUserLikedArticleDAO, BlogUse
             BlogArticleNotFoundException().throws()
         }
 
-        super.create(BlogUserLikedArticle().apply {
+        val create = super.create(BlogUserLikedArticle().apply {
             setArticleId(firstArticleById!!.uuid)
         })
+
+        val userId = StpUtil.getLoginIdAsString()
+        val blogUser = userService.findById(userId)
+
+        pushService.likesArticle(blogUser, create)
     }
 
     /**

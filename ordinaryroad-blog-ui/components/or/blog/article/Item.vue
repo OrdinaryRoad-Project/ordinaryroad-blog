@@ -29,7 +29,7 @@
         dark
         :elevation="hover?24:0"
         class="transition-swing"
-        @click="onClickArticle(item)"
+        @click="onClickArticle"
       >
         <!-- 图片上层的信息 -->
         <div style="position: relative; overflow: hidden">
@@ -43,7 +43,7 @@
 
           <!-- 是否原创 -->
           <div v-if="item.original" class="primary or-original-label">
-            <span>原创</span>
+            <span>{{ $t('article.originalOptions.original') }}</span>
           </div>
 
           <!-- 封面上层 -->
@@ -117,15 +117,21 @@
               />
               <!-- 用户名 -->
               <v-list-item-content>
-                <v-list-item-title
-                  class="font-weight-medium"
-                  style="cursor: pointer"
-                  @click.stop="onClickUsername(item)"
-                >
-                  {{ item.user.username }}
-                </v-list-item-title>
+                <v-hover>
+                  <template #default="{ hover }">
+                    <v-list-item-title
+                      :class="hover?'primary--text':null"
+                      class="font-weight-medium transition-swing"
+                      @click.stop="onClickUsername"
+                    >
+                      {{ item.user.username }}
+                    </v-list-item-title>
+                  </template>
+                </v-hover>
                 <!-- todo 个性签名 -->
-                <v-list-item-subtitle>世间种种平凡都不平凡</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="false">
+                  世间种种平凡都不平凡
+                </v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
@@ -148,12 +154,19 @@
                     <span>{{ item.pv }}</span>
                   </v-col>
 
-                  <v-col class="d-inline-flex align-center">
-                    <v-icon left small>
-                      mdi-comment-text
-                    </v-icon>
-                    <span>{{ item.commentsCount }}</span>
-                  </v-col>
+                  <v-hover>
+                    <template #default="{ hover }">
+                      <v-col class="d-inline-flex align-center" @click.stop="onClickArticleComments">
+                        <v-icon left small :color="hover?'primary':null">
+                          mdi-comment-text
+                        </v-icon>
+                        <span
+                          class="transition-swing"
+                          :class="hover?'primary--text':null"
+                        >{{ item.commentsCount }}</span>
+                      </v-col>
+                    </template>
+                  </v-hover>
 
                   <v-col class="d-inline-flex align-center">
                     <slot name="actions" />
@@ -207,16 +220,25 @@ export default {
       summaryShow: false
     }
   },
+  computed: {
+    articlePath () {
+      return `/${this.item.user.uuid}/article/${this.item.uuid}`
+    }
+  },
   watch: {},
   created () {
   },
   methods: {
-    onClickUsername (item) {
+    onClickUsername () {
       const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}` })
       window.open(href, '_blank')
     },
-    onClickArticle (item) {
-      const { href } = this.$router.resolve({ path: `/${item.user.uuid}/article/${item.uuid}` })
+    onClickArticle () {
+      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.uuid}` })
+      window.open(href, '_blank')
+    },
+    onClickArticleComments () {
+      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.uuid}#comments` })
       window.open(href, '_blank')
     }
   }

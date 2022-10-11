@@ -4,10 +4,10 @@ import zhHans from 'vuetify/lib/locale/zh-Hans'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - ordinaryroad-blog-ui',
-    title: 'ordinaryroad-blog-ui',
+    titleTemplate: '%s - OR博客',
+    title: 'OR博客',
     htmlAttrs: {
-      lang: 'zh-Hans'
+      lang: 'zh-CN'
     },
     meta: [
       { charset: 'utf-8' },
@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: ''
+        content: 'OR博客，一个MarkDown多人博客'
       },
       {
         name: 'format-detection',
@@ -121,6 +121,12 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    theme: {
+      options: {
+        // https://vuetifyjs.com/zh-Hans/features/theme/#section-81ea5b9a4e495c5e6027
+        customProperties: true
+      }
+    },
     lang: {
       locales: {
         en,

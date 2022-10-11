@@ -386,7 +386,7 @@ export default {
               for (let i = 0; i < elementNodeListOf.length; i++) {
                 const element = elementNodeListOf[i]
                 headingElements.push(element)
-                element.setAttribute('id', 'blog-toc-id' + '-' + i)
+                element.setAttribute('id', 'h' + '-' + i)
                 // console.log(element.tagName.charAt(1))
                 // console.log(element.textContent)
                 // console.log('\n')

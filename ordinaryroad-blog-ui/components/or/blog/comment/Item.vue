@@ -35,11 +35,16 @@
       <div class="d-flex">
         <div class="d-flex align-center">
           <!-- 用户名 -->
-          <span
-            style="cursor: pointer"
-            class="text-subtitle-1 font-weight-bold me-2"
-            @click="onClickUsername(blogComment.user)"
-          >{{ blogComment.user.username }}</span>
+          <v-hover>
+            <template #default="{ hover }">
+              <span
+                style="cursor: pointer"
+                :class="hover?'primary--text':null"
+                class="text-subtitle-1 font-weight-bold me-2 transition-swing"
+                @click="onClickUsername(blogComment.user)"
+              >{{ blogComment.user.username }}</span>
+            </template>
+          </v-hover>
 
           <!-- 角色 -->
           <span v-if="blogComment.user.roles.length>0" class="me-2">
