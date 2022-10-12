@@ -323,6 +323,11 @@ export default {
     }
   },
   watch: {
+    '$route.params.id' (val) {
+      if (val === undefined) {
+        this.$router.go(0)
+      }
+    },
     article: {
       handler (val) {
         const contentEmpty = !val || !val.content || val.content.length === 0 || val.content === '\n'
@@ -344,15 +349,7 @@ export default {
     if (id !== '') {
       this.$apis.blog.article.findOwnById(id)
         .then((data) => {
-          this.article = data
-          this.articleContent = data.content
-          this.tagOptions.selectedItems = data.tagNames
-          this.$nextTick(() => {
-            try {
-              this.$refs.vditor && this.$refs.vditor.setValue(data.content)
-            } catch (ignore) {
-            }
-          })
+          this.initData(data)
         })
         .catch(() => {
           process.client && this.$dialog({
@@ -373,9 +370,9 @@ export default {
       this.$apis.blog.article.getDraft()
         .then((data) => {
           if (data) {
-            this.article = data
-            this.articleContent = data.content
-            this.tagOptions.selectedItems = data.tagNames
+            this.$router.replace(`/dashboard/article/writing/${data.uuid}`, () => {
+              this.$router.go(0)
+            })
           }
         })
     }
@@ -419,6 +416,22 @@ export default {
     }
   },
   methods: {
+    initData (data) {
+      // 只能编辑草稿或已发布的
+      if (data.status !== 'DRAFT' && data.status !== 'PUBLISH') {
+        this.$router.replace('/dashboard/article/writing')
+      } else {
+        this.article = data
+        this.articleContent = data.content
+        this.tagOptions.selectedItems = data.tagNames
+        this.$nextTick(() => {
+          try {
+            this.$refs.vditor && this.$refs.vditor.setValue(data.content)
+          } catch (ignore) {
+          }
+        })
+      }
+    },
     onVditorAfter () {
       // 防止数据比编辑器先加载出来
       this.$refs.vditor.setValue(this.articleContent)
@@ -537,6 +550,10 @@ export default {
     },
     publish () {
       if (this.formValid && !this.contentEmpty) {
+        if (this.article.status !== 'DRAFT' && this.article.status !== 'PUBLISH') {
+          this.$snackbar.error('只能编辑草稿或已发布的文章')
+          return
+        }
         this.updateArticleTagNames()
         this.$dialog({
           persistent: false,
@@ -548,7 +565,7 @@ export default {
               .then((data) => {
                 this.$snackbar.success('文章发布成功')
                 setTimeout(() => {
-                  this.$router.replace(`/dashboard/article/${data.uuid}`, () => {
+                  this.$router.replace(`/dashboard/article/writing/${data.uuid}`, () => {
                     this.$router.go(0)
                   })
                   dialog.cancel()

@@ -494,8 +494,8 @@ export default {
       index
     }) {
       this.selectedIndex = index
-      // TODO 编辑
-      this.$router.push(`/dashboard/article/${item.uuid}`)
+      // 编辑
+      this.$router.push(`/dashboard/article/writing/${item.uuid}`)
     },
     onGetItems ({
       options,

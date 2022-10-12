@@ -75,7 +75,7 @@
                       </v-list-item>
                       <v-list-item
                         v-if="item.user.uuid===userInfo.user.uuid"
-                        :to="`/dashboard/article/${item.uuid}`"
+                        :to="`/dashboard/article/writing/${item.uuid}`"
                       >
                         <v-list-item-content>
                           <v-list-item-title>{{ $t('article.actions.edit') }}</v-list-item-title>

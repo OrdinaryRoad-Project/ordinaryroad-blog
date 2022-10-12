@@ -68,6 +68,15 @@
 
       <v-spacer />
 
+      <!-- 编辑 -->
+      <v-btn
+        v-if="userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
+        icon
+        :to="`/dashboard/article/writing/${blogArticle.uuid}`"
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+
       <!-- 搜索 -->
       <or-search
         :focused.sync="searchInputFocused"
@@ -127,11 +136,11 @@
             </div>
           </v-menu>
         </template>
-        <span>在其他设备上继续阅读</span>
+        <span>{{ $t('continueReadingOnOtherDevices') }}</span>
       </v-tooltip>
 
       <v-btn icon @click.stop="$store.dispatch('app/toggleRightDrawerModel')">
-        <v-icon>mdi-cog</v-icon>
+        <v-icon>mdi-dots-horizontal</v-icon>
       </v-btn>
     </v-app-bar>
 
@@ -936,7 +945,7 @@ export default {
           } else {
             // vditor生成的锚点
             const elementById = document.getElementById('vditorAnchor-' + hashValue)
-            console.log(elementById)
+            // console.log(elementById)
             if (elementById) {
               this.$vuetify.goTo(elementById)
             } else {

@@ -89,7 +89,7 @@ export default {
   computed: {
     searchInputPlaceholder () {
       let placeholder = ''
-      if (!this.$vuetify.breakpoint.smAndDown) {
+      if (this.$route.name !== 'dashboard-article-writing-id' && !this.$vuetify.breakpoint.smAndDown) {
         if (this.searchInputFocused) {
           placeholder = this.$t('focusSearchInputTipWhenFocused')
         } else {
@@ -108,6 +108,9 @@ export default {
   },
   mounted () {
     window.addEventListener('keydown', (e) => {
+      if (this.$route.name === 'dashboard-article-writing-id') {
+        return
+      }
       // console.log(e.code)
       if (e.key === '/') {
         if (this.searchInputFocused) {
