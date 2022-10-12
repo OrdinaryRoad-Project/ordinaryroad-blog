@@ -40,9 +40,15 @@ export default () => ({
       children: []
     },
     {
-      titleKey: 'dashboardMenuTitles.dashboard.article.boxTitle',
+      to: '/dashboard/article',
+      titleKey: 'dashboardMenuTitles.dashboard.article.title',
       icon: 'mdi-file-document-multiple',
       children: [
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.writing',
+          to: '/dashboard/article/writing',
+          children: []
+        },
         {
           titleKey: 'dashboardMenuTitles.dashboard.article.box.draft',
           to: '/dashboard/article/box/DRAFT',
@@ -83,6 +89,7 @@ export default () => ({
       children: []
     },
     {
+      to: '/dashboard/system/log',
       titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
       icon: 'mdi-cog',
       children: [

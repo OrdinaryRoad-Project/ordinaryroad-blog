@@ -32,7 +32,7 @@
     fixed
   >
     <v-toolbar>
-      <v-toolbar-title>{{ $t('settings') }}</v-toolbar-title>
+      <v-toolbar-title>{{ $t('more') }}</v-toolbar-title>
       <v-spacer />
       <v-btn
         icon
@@ -139,9 +139,6 @@
                 </span>
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-action>
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-list-item-action>
           </v-list-item>
         </client-only>
       </v-list>

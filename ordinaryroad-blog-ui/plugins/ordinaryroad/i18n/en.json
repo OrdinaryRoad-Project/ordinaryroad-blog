@@ -20,9 +20,10 @@
   "language": "Language",
   "login": "Log in",
   "logout": "Sign out",
-  "maxNSize": "Size cannot be greater than {0}",
   "maxNChars": "Length cannot be greater than {0}",
+  "maxNSize": "Size cannot be greater than {0}",
   "minNChars": "Length cannot be less than {0}",
+  "more": "More",
   "ordinaryroad": "Ordinary Road",
   "parentheses": "({0})",
   "parenthesesWithSpace": " ({0})",
@@ -30,8 +31,8 @@
   "remove": "Remove",
   "required": "Required",
   "reset": "Reset",
-  "retry": "Retry",
   "restore": "Restore",
+  "retry": "Retry",
   "rules": {
     "contentNotEmpty": "The content can not be blank."
   },

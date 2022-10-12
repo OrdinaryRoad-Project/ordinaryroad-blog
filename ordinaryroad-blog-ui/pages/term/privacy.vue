@@ -23,53 +23,45 @@
   -->
 
 <template>
-  <v-row>
-    <v-col class="text-center">
-      <img
-        src="/v.png"
-        alt="Vuetify.js"
-        class="mb-5"
-      >
-      <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
-        <footer>
-          <small>
-            <em>&mdash;John Johnson</em>
-          </small>
-        </footer>
-      </blockquote>
-    </v-col>
-    <v-row>
-      <v-col>
-        {{ testData }}
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        {{ oAuthUsers }}
-      </v-col>
-    </v-row>
-  </v-row>
+  <div>
+    <nuxt-child style="position: absolute; top: 0;" />
+    <v-select
+      v-model="selectedPrivacyModel"
+      outlined
+      dense
+      class="mt-8"
+      hide-details
+      style="position: absolute; right: 15px; width: 150px"
+      label="选择版本"
+      :items="privacyItems"
+      @input="onInput"
+    />
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'InspirePage',
-  data () {
+  layout: 'empty',
+  asyncData ({ redirect }) {
+    const latest = '2022-10-12'
+    redirect(`/term/privacy/${latest}`)
     return {
-      testData: null,
-      oAuthUsers: null
+      selectedPrivacyModel: latest
     }
   },
-  mounted () {
-    this.$axios.get('/blog/article/all').then((value) => {
-      this.testData = value
-      console.log(value)
-    })
-
-    this.$apis.blog.oauth_user.all().then((value) => {
-      this.oAuthUsers = value
-    })
+  data: () => ({
+    selectedPrivacyModel: null,
+    privacyItems: ['2022-10-12']
+  }),
+  head: {
+    title: '隐私政策'
+  },
+  methods: {
+    onInput (val) {
+      this.$router.replace(`/term/privacy/${val}`)
+    }
   }
 }
 </script>
+
+<style scoped/>

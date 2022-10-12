@@ -27,42 +27,55 @@
     :app="app"
     padless
     inset
+    :height="$vuetify.breakpoint.smAndDown?150:100"
   >
-    <v-parallax
-      :height="$vuetify.breakpoint.smAndDown?200:300"
-      style="width: 100%; background-color: grey"
-      src="https://api.ixiaowai.cn/gqapi/gqapi.php"
-    >
-      <v-container
-        fluid
+    <v-container>
+      <div
+        class="d-flex justify-center align-center"
+        :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
         <div
-          class="d-flex justify-center align-center"
+          class="d-flex"
+          :class="$vuetify.breakpoint.smAndDown?null:'me-2'"
         >
           <v-btn
-            dark
             icon
             target="_blank"
             href="https://github.com/1962247851"
           >
-            <v-icon>mdi-github</v-icon>
+            <v-icon>
+              mdi-github
+            </v-icon>
           </v-btn>
+        </div>
+        <div class="d-flex text--grey">
           ©2019-{{ new Date().getFullYear() }} 苗锦洲 版权所有
         </div>
-        <div
-          class="d-flex justify-center align-center"
-        >
-          Frontend:<a class="d-flex mx-2" href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"><img
+      </div>
+      <div
+        class="d-flex justify-center align-center font-weight-light"
+        :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
+      >
+        <div class="d-flex">
+          Frontend:<span class="ms-1">{{ $config.CI.VERSION.FRONTEND }}</span><a
+            class="d-flex mx-2"
+            href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"
+          ><img
             alt="build status"
             src="https://ordinaryroad.coding.net/badges/ordinaryroad/job/1495289/build.svg"
           ></a>
-          Backend:<a class="d-flex ms-2" href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"><img
+        </div>
+        <div class="d-flex">
+          Backend:<span class="ms-1">{{ $config.CI.VERSION.BACKEND }}</span><a
+            class="d-flex ms-2"
+            href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"
+          ><img
             alt="build status"
             src="https://ordinaryroad.coding.net/badges/ordinaryroad/job/1483779/build.svg"
           ></a>
         </div>
-      </v-container>
-    </v-parallax>
+      </div>
+    </v-container>
   </v-footer>
 </template>
 

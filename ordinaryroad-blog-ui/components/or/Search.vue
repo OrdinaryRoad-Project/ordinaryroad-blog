@@ -31,18 +31,19 @@
       <v-form
         v-if="(autoExpand&&$vuetify.breakpoint.mdAndUp)||searchInputFocused"
         style="position: absolute; right: 0; width: 100%; max-width: 400px"
-        :style="{'width':$vuetify.breakpoint.smAndDown&&!searchInputFocused?'100px':'200px'}"
+        :style="{'width':$vuetify.breakpoint.smAndDown&&!searchInputFocused?'100px':'300px'}"
         @submit="onSearchFormSubmit"
         @submit.n.native.prevent
       >
         <v-text-field
+          ref="input"
           v-model.trim="searchInput"
           dense
           :autofocus="!autoExpand||$vuetify.breakpoint.smAndDown"
           class="transition-fast-in-fast-out"
           :class="searchInputFocused?'elevation-2':null"
           hide-details
-          :placeholder="$t('search')"
+          :placeholder="searchInputPlaceholder"
           solo
           :solo-inverted="soloInverted"
           clearable
@@ -85,10 +86,45 @@ export default {
     searchInput: '',
     searchInputFocused: false
   }),
+  computed: {
+    searchInputPlaceholder () {
+      let placeholder = ''
+      if (!this.$vuetify.breakpoint.smAndDown) {
+        if (this.searchInputFocused) {
+          placeholder = this.$t('focusSearchInputTipWhenFocused')
+        } else {
+          placeholder = this.$t('focusSearchInputTip')
+        }
+      } else {
+        placeholder = this.$t('search')
+      }
+      return placeholder
+    }
+  },
   watch: {
     searchInputFocused (val) {
       this.$emit('update:focused', val)
     }
+  },
+  mounted () {
+    window.addEventListener('keydown', (e) => {
+      // console.log(e.code)
+      if (e.key === '/') {
+        if (this.searchInputFocused) {
+          return
+        }
+        this.searchInputFocused = true
+        setTimeout(() => {
+          this.$refs.input.focus()
+        }, 100)
+      } else if (e.key === 'Escape') {
+        if (!this.searchInputFocused) {
+          return
+        }
+        this.searchInputFocused = false
+        this.$refs.input.blur()
+      }
+    })
   },
   methods: {
     onClickSearchInputAppend () {

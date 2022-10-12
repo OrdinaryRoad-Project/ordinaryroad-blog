@@ -451,7 +451,7 @@ export default {
     },
     onInsertItem () {
       this.selectedIndex = -1
-      this.$router.push('/dashboard/article')
+      this.$router.push('/dashboard/article/writing')
     },
     onDeleteItem (item) {
       this.$dialog({

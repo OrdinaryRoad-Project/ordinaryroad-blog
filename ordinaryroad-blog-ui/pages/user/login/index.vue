@@ -43,8 +43,9 @@
             <v-btn @click="login('ordinaryroad')">
               使用OR账号登录
             </v-btn>
+
             <br>
-            <br>
+
             <v-btn icon @click="login('github')">
               <v-icon>
                 mdi-github
@@ -53,11 +54,20 @@
             <v-btn icon @click="login('gitee')">
               <simple-icons-gitee />
             </v-btn>
-            <v-btn icon>
+            <v-btn v-if="false" icon>
               <v-icon>
                 mdi-qqchat
               </v-icon>
             </v-btn>
+
+            <br>
+
+            <div class="text-caption">
+              登录即代表同意<span v-if="false">《用户协议》和</span>
+              <or-link href="/term/privacy">
+                <span class="white--text">《隐私政策》</span>
+              </or-link>
+            </div>
           </div>
         </template>
       </base-material-card>
@@ -93,10 +103,25 @@ export default {
   methods: {
     login (provider) {
       const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
-      this.$apis.blog.oauth2.authorize(provider, state)
-        .then((data) => {
-          window.open(data, '_self')
+      if (provider !== 'ordinaryroad') {
+        this.$dialog({
+          content: '如使用未绑定账号的第三方账号登录，登录成功后将暂时无法解绑来绑定其他账号',
+          confirmText: '我知道了，继续登录'
         })
+          .then(({ isConfirm }) => {
+            if (isConfirm) {
+              this.$apis.blog.oauth2.authorize(provider, state)
+                .then((data) => {
+                  window.open(data, '_self')
+                })
+            }
+          })
+      } else {
+        this.$apis.blog.oauth2.authorize(provider, state)
+          .then((data) => {
+            window.open(data, '_self')
+          })
+      }
     }
   }
 }

@@ -157,9 +157,7 @@
         class="me-2"
       >
         <template #label="{item}">
-          <div :id="`label_h_${item.id}`" :blog-toc-id="item.id">
-            {{ item.name }}
-          </div>
+          <div :id="`label_h_${item.id}`" :blog-toc-id="item.name" v-html="item.html" />
         </template>
       </v-treeview>
     </v-navigation-drawer>
@@ -344,6 +342,7 @@
             class="text-break mx-5 my-2"
             border="left"
             colored-border
+            dismissible
             type="info"
           >
             <strong class="font-weight-bold">友情提示：</strong>
@@ -692,6 +691,7 @@ export default {
       for (let i = 0; i < headings.length; i++) {
         const currentItem = headings[i]
         currentItem.name = currentItem.headString
+        currentItem.html = currentItem.headHtml
         currentItem.children = []
         if (i === 0) {
           currentItem.parent = headCatalogue
@@ -734,10 +734,11 @@ export default {
           }
           const headId = elementTemp.getAttribute('blog-toc-id')
           // console.log(headId)
-          const headDivElement = document.getElementById('h-' + headId)
+          const headDivElement = document.getElementById('vditorAnchor-' + headId)
+          // console.log(headDivElement)
           if (headDivElement) {
             this.$vuetify.goTo(headDivElement)
-            this.$router.replace(this.$route.path + '#h-' + headId)
+            this.$router.replace(this.$route.path + '#' + headId)
           }
         }
       })
@@ -746,7 +747,13 @@ export default {
       // console.log('currentTocIndex', val)
       this.active = []
       this.active.push(val)
-      // const element = document.getElementById(`label_h_${val}`)
+
+      /* hash定位不是在屏幕最顶部，有冲突
+      const element = document.getElementById(`label_h_${val}`)
+      console.log(element)
+      if (element) {
+        this.$router.replace(this.$route.path + '#' + element.getAttribute('blog-toc-id'))
+      } */
     }
   },
   created () {
@@ -927,14 +934,21 @@ export default {
           if (elementById) {
             this.$vuetify.goTo(elementById)
           } else {
-            this.toc.forEach((item) => {
-              if (item.headString === hashValue) {
-                const headDivElement = document.getElementById('h-' + item.id)
-                if (headDivElement) {
-                  this.$vuetify.goTo(headDivElement)
-                }
-              }
-            })
+            // vditor生成的锚点
+            const elementById = document.getElementById('vditorAnchor-' + hashValue)
+            console.log(elementById)
+            if (elementById) {
+              this.$vuetify.goTo(elementById)
+            } else {
+              // this.toc.forEach((item) => {
+              //   if (item.headString === hashValue) {
+              //     const headDivElement = document.getElementById('h-' + item.id)
+              //     if (headDivElement) {
+              //       this.$vuetify.goTo(headDivElement)
+              //     }
+              //   }
+              // })
+            }
           }
         }
       }, 1000)

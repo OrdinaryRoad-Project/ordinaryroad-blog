@@ -117,17 +117,17 @@
               />
               <!-- 用户名 -->
               <v-list-item-content>
-                <v-hover>
-                  <template #default="{ hover }">
-                    <v-list-item-title
-                      :class="hover?'primary--text':null"
-                      class="font-weight-medium transition-swing"
-                      @click.stop="onClickUsername"
-                    >
-                      {{ item.user.username }}
-                    </v-list-item-title>
-                  </template>
-                </v-hover>
+                <v-list-item-title>
+                  <v-hover>
+                    <template #default="{ hover }">
+                      <span
+                        class="font-weight-medium transition-swing"
+                        :class="hover?'primary--text':null"
+                        @click.stop="onClickUsername"
+                      >{{ item.user.username }}</span>
+                    </template>
+                  </v-hover>
+                </v-list-item-title>
                 <!-- todo 个性签名 -->
                 <v-list-item-subtitle v-if="false">
                   世间种种平凡都不平凡

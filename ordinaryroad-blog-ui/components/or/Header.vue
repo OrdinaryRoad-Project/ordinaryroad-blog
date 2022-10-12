@@ -43,7 +43,7 @@
     <or-i18n-menu v-if="!$vuetify.breakpoint.smAndDown" />
     <!-- 设置 -->
     <v-btn icon @click="$store.dispatch('app/toggleRightDrawerModel')">
-      <v-icon>mdi-cog</v-icon>
+      <v-icon>mdi-dots-horizontal</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

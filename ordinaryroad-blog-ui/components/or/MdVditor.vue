@@ -390,14 +390,26 @@ export default {
                 // console.log(element.tagName.charAt(1))
                 // console.log(element.textContent)
                 // console.log('\n')
+
+                let headString
+                let headHtml = element.innerHTML
+                const vditorAnchor = element.getElementsByTagName('a')
+                if (vditorAnchor && vditorAnchor[0]) {
+                  headString = vditorAnchor[0].getAttribute('id').slice(13)
+                  headHtml = headHtml.replace(vditorAnchor[0].outerHTML, '')
+                } else {
+                  headString = element.textContent
+                }
+
                 toc.push({
                   id: i,
                   index: element.tagName.charAt(1) - 1,
-                  headString: element.textContent
+                  headString,
+                  headHtml
                 })
               }
               this.$emit('update:previewToc', toc)
-              // console.log('toc', toc)
+              console.log('toc', toc)
 
               this.$emit('update:currentTocIndex', 0)
               // console.log('MdVditor 需要激活的目录', 0)

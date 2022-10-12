@@ -33,10 +33,10 @@
       @change="onTabChange"
     >
       <v-tab>
-        全部 {{ articleTotal ? $t('parentheses', [articleTotal]) : '' }}
+        {{ $t('all') }}{{ articleTotal ? $t('parenthesesWithSpace', [articleTotal]) : '' }}
       </v-tab>
       <v-tab v-for="tag in tags" :key="tag.uuid">
-        {{ tag.name }} {{ $t('parentheses', [tag.article_count]) }}
+        {{ tag.name }}{{ $t('parenthesesWithSpace', [tag.article_count]) }}
       </v-tab>
     </v-tabs>
     <or-blog-article-list
@@ -63,6 +63,11 @@ export default {
     articleTotal: null,
     tags: []
   }),
+  head () {
+    return {
+      titleTemplate: '%s'
+    }
+  },
   computed: {
     localArticleTotal: {
       get () {

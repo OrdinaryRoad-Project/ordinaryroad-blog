@@ -380,6 +380,40 @@ function getBrowserInfo () {
   return ''
 }
 
+/**
+ * 前序遍历树形结构
+ *
+ * @param root 根结点
+ * @param callback 回掉函数
+ * @param childrenKey children数组的key
+ * @return 数组
+ */
+function preorderTraversal (root, callback = null, childrenKey = 'children') {
+  let p = null
+  const stack = [root]
+  const res = []
+  while (stack.length > 0) {
+    p = stack.pop()
+    res.push(p)
+
+    let stop = false
+    if (callback) {
+      stop = callback(p) === true
+    }
+    if (stop) {
+      break
+    }
+
+    if (p[childrenKey]) {
+      const children = p[childrenKey]
+      for (let i = children.length - 1; i >= 0; i--) {
+        stack.push(children[i])
+      }
+    }
+  }
+  return res
+}
+
 module.exports = {
   formatSeconds,
   formatTime,
@@ -395,5 +429,6 @@ module.exports = {
   indexOf,
   getFileSizeString,
   urlEncode,
-  getBrowserInfo
+  getBrowserInfo,
+  preorderTraversal
 }

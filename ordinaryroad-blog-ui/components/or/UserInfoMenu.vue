@@ -54,7 +54,7 @@
       </v-menu>
       <v-btn
         v-if="!$vuetify.breakpoint.smAndDown"
-        to="/dashboard/article"
+        to="/dashboard/article/writing"
         depressed
         :text="transparent"
         :color="transparent?'white':startWritingColor"
@@ -112,7 +112,7 @@ export default {
         if (this.$vuetify.breakpoint.smAndDown) {
           items.unshift({
             titleKey: 'article.actions.writing',
-            to: '/dashboard/article',
+            to: '/dashboard/article/writing',
             icon: 'mdi-pencil'
           })
         }

@@ -31,12 +31,16 @@
       @submit="onInputSubmit(input)"
     >
       <v-text-field
+        ref="input"
         v-model.trim="input"
+        autofocus
         append-outer-icon="mdi-magnify"
         clearable
-        :placeholder="$t('search')"
+        :placeholder="searchInputPlaceholder"
         outlined
         :rules="[$rules.max100Chars]"
+        @focusin="searchInputFocused=true"
+        @focusout="searchInputFocused=false"
         @click:append-outer="onInputSubmit(input)"
       />
     </v-form>
@@ -86,18 +90,53 @@ export default {
   },
   data: () => ({
     tabModel: 0,
+    searchInputFocused: true,
     input: '',
     loading: false,
     totalArticles: null,
     totalTypes: null,
     totalUsers: null
   }),
+  head () {
+    return {
+      title: this.$t('search')
+    }
+  },
+  computed: {
+    searchInputPlaceholder () {
+      let placeholder = ''
+      if (this.searchInputFocused) {
+        placeholder = this.$t('focusSearchInputTipWhenFocused')
+      } else {
+        placeholder = this.$t('focusSearchInputTip')
+      }
+      return placeholder
+    }
+  },
   watch: {
     tabModel () {
       this.onInputSubmit(this.input)
     }
   },
   mounted () {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/') {
+        if (this.searchInputFocused) {
+          return
+        }
+        this.searchInputFocused = true
+        setTimeout(() => {
+          this.$refs.input.focus()
+        }, 100)
+      } else if (e.key === 'Escape') {
+        if (!this.searchInputFocused) {
+          return
+        }
+        this.searchInputFocused = false
+        this.$refs.input.blur()
+      }
+    })
+
     this.onInputSubmit(this.input)
   },
   methods: {
