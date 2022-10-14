@@ -48,10 +48,4 @@ class FillMetaDataService : IFillMetaFieldService {
         }
     }
 
-    override fun <T : BaseDO?> beforeUpdate(t: T) {
-        if (t is BaseBlogDO) {
-            t.ip = BlogUtils.getClientIp()
-        }
-    }
-
 }
