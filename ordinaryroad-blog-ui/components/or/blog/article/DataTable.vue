@@ -445,7 +445,7 @@ export default {
      * @param status 新的文章状态
      */
     onSearchParamsStatusChange (status) {
-      this.$router.replace(`/dashboard/article/box/${status}`)
+      this.$router.replace(`/dashboard/article/status/${status}`)
     },
     onResetSearch () {
     },

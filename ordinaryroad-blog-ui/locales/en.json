@@ -41,7 +41,7 @@
       "article": {
         "title": "Article Management",
         "writing": "Writing",
-        "box": {
+        "status": {
           "draft": "Draft",
           "publish": "Publish",
           "trash": "Trash"

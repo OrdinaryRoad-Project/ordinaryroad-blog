@@ -50,22 +50,29 @@
 
 <script>
 export default {
-  async asyncData ({
+  asyncData ({
     route,
     $apis,
     store,
-    redirect
+    error
   }) {
-    // const tokenValue = store.getters['user/getTokenValue']
     // 判断分类是否存在
     const userId = route.params.userId || ''
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
-      const type = await $apis.blog.type.findById(id)
-      if (type.creatorId !== userId) {
-        redirect('/404')
-      }
-      return { type }
+      return $apis.blog.type.findById(id)
+        .then((data) => {
+          if (!data || data.creatorId !== userId) {
+            error({ statusCode: 404, message: '分类不存在' })
+          } else {
+            return { type: data }
+          }
+        })
+        .catch(() => {
+          error({ statusCode: 404, message: '分类不存在' })
+        })
+    } else {
+      error({ statusCode: 404, message: '分类不存在' })
     }
   },
   data: () => ({

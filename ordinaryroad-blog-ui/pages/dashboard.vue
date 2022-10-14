@@ -33,7 +33,7 @@
               <span v-if="item.disabled">{{ $t(item.text) }}</span>
               <or-link
                 v-else
-                :href="item.href==='/dashboard/article'?'/dashboard/article/writing':item.href"
+                :href="item.href"
                 target="_self"
               >{{ $t(item.text) }}</or-link>
             </span>
@@ -77,6 +77,14 @@ export default {
             }
           }
         }
+      }
+
+      if (this.$route.name === 'dashboard-article-writing-id') {
+        items.push({
+          text: 'article.actions.writing',
+          disable: false,
+          href: this.$route.path
+        })
       }
 
       if (items.length !== 0) {

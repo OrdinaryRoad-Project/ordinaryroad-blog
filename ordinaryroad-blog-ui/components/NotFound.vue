@@ -28,7 +28,7 @@
       404
     </p><br>
     <p class="display-2">
-      {{ notFoundType }}不见了哦
+      {{ error.message }}
     </p><br>
     <p>抱歉，您访问的资源不存在。</p>
     <div>
@@ -45,25 +45,16 @@
 <script>
 export default {
   name: 'NotFound',
-  data () {
-    return {
-      notFoundType: '页面'
+  props: {
+    error: {
+      type: Object,
+      required: true
     }
   },
-  watch: {
-    $route: {
-      handler () {
-        setTimeout(() => {
-          const type = this.$route.params.type
-          if (type !== undefined) {
-            this.notFoundType = type
-          }
-        }, 300)
-      },
-      // 首次进入页面即执行
-      immediate: true
-    }
-  }
+  data () {
+    return {}
+  },
+  watch: {}
 }
 </script>
 

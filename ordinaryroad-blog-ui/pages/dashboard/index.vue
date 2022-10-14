@@ -143,7 +143,7 @@ export default {
     countOptions: [],
     articlesCountOptions: {
       title: '已发布文章',
-      to: '/dashboard/article/box/PUBLISH',
+      to: '/dashboard/article/status/PUBLISH',
       icon: 'mdi-file-document-multiple',
       loading: true,
       data: null

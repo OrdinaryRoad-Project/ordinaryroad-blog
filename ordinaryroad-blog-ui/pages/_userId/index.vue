@@ -114,7 +114,7 @@ export default {
   props: {},
   asyncData ({
     route,
-    redirect,
+    error,
     $apis
   }) {
     const tabItems = ['overview', 'article']
@@ -129,7 +129,7 @@ export default {
         }
       })
       .catch(() => {
-        redirect('/404')
+        error({ statusCode: 404, message: '用户不存在' })
       })
   },
   data () {

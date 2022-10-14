@@ -23,14 +23,16 @@
   -->
 
 <template>
-  <v-container fluid class="pa-0 fill-height">
-    <div v-if="error.statusCode === 404 ">
-      <NotFound />
-    </div>
-    <div v-else>
-      <p>{{ otherError }}</p>
-    </div>
-  </v-container>
+  <v-app>
+    <v-main>
+      <v-container fluid class="pa-0">
+        <NotFound v-if="error.statusCode === 404" :error="error" />
+        <p v-else>
+          {{ otherError }}
+        </p>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -49,8 +51,7 @@ export default {
     }
   },
   head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
       title
     }
@@ -59,7 +60,4 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-size: 20px;
-}
 </style>

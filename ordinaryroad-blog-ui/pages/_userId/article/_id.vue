@@ -36,22 +36,33 @@ export default {
     route,
     $apis,
     store,
-    redirect
+    redirect,
+    error
   }) {
     const tokenValue = store.getters['user/getTokenValue']
     // 判断文章是否存在
     const userId = route.params.userId || ''
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
-      const article = await $apis.blog.article.findPublishById(tokenValue, id)
-      if (article.user.uuid !== userId) {
-        redirect(`/${userId}`)
+      try {
+        const article = await $apis.blog.article.findPublishById(tokenValue, id)
+        if (article === null) {
+          error({ statusCode: 404, message: '文章不存在' })
+        }
+        if (article.user.uuid !== userId) {
+          redirect(`/${userId}`)
+        }
+
+        const articleComments = await $apis.blog.comment.pageArticle(id, 1)
+        return {
+          article,
+          articleComments
+        }
+      } catch {
+        error({ statusCode: 404, message: '文章不存在' })
       }
-      const articleComments = await $apis.blog.comment.pageArticle(id, 1)
-      return {
-        article,
-        articleComments
-      }
+    } else {
+      error({ statusCode: 404, message: '文章不存在' })
     }
   },
   data () {

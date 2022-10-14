@@ -40,28 +40,23 @@ export default () => ({
       children: []
     },
     {
-      to: '/dashboard/article',
+      to: '/dashboard/article/status',
       titleKey: 'dashboardMenuTitles.dashboard.article.title',
       icon: 'mdi-file-document-multiple',
       children: [
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.writing',
-          to: '/dashboard/article/writing',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.draft',
+          to: '/dashboard/article/status/DRAFT',
           children: []
         },
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.draft',
-          to: '/dashboard/article/box/DRAFT',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.publish',
+          to: '/dashboard/article/status/PUBLISH',
           children: []
         },
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.publish',
-          to: '/dashboard/article/box/PUBLISH',
-          children: []
-        },
-        {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.trash',
-          to: '/dashboard/article/box/TRASH',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.trash',
+          to: '/dashboard/article/status/TRASH',
           children: []
         },
         {
@@ -129,7 +124,7 @@ export default () => ({
     },
     {
       titleKey: 'userMenuTitles.article',
-      to: '/dashboard/article/box',
+      to: '/dashboard/article/status',
       icon: 'mdi-file-document-multiple'
     },
     {

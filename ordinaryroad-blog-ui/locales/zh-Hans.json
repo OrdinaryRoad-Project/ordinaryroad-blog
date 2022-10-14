@@ -41,7 +41,7 @@
       "article": {
         "title": "文章管理",
         "writing": "写作",
-        "box": {
+        "status": {
           "draft": "草稿箱",
           "publish": "已发布",
           "trash": "垃圾箱"
