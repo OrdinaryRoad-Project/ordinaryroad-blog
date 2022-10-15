@@ -356,8 +356,9 @@
             dismissible
             type="info"
           >
-            <strong class="font-weight-bold">友情提示：</strong>
-            此篇文章大约需要阅读<span style="color: #82b1ff">{{ watchTimeString }}</span>。
+            <strong class="font-weight-bold">{{ $t('article.detail.readingTimeHint.prefix') }}</strong>{{
+              $t('article.detail.readingTimeHint.hint')
+            }}<span class="accent--text">{{ watchTimeString }}</span>
           </v-alert>
         </div>
 
@@ -376,19 +377,21 @@
         <!--转载声明-->
         <v-alert border="left" text class="text-break mx-5 mt-2" colored-border color="#e00000">
           <div v-if="blogArticle.original">
-            <strong>本文作者：</strong>{{ blogArticle.user.username }}<br>
+            <strong>{{ $t('article.detail.copyrightStatement.author') }}</strong>{{ blogArticle.user.username }}<br>
           </div>
-          <strong>本文链接：</strong>
+          <strong>{{ $t('article.detail.copyrightStatement.link') }}</strong>
           <or-link :href="currentUrl" target="_self">
             {{ currentUrl }}
           </or-link>
           <br>
           <div v-if="blogArticle.original">
-            <strong>版权声明：</strong>本文为OrdinaryRoad博客博主{{ blogArticle.user.username }}的原创文章，遵循
+            <strong>{{
+              $t('article.detail.copyrightStatement.title')
+            }}</strong>{{ $t('article.detail.copyrightStatement.statementPrefix', [blogArticle.user.username]) }}
             <or-link href="https://creativecommons.org/licenses/by-sa/4.0/">
               CC BY-SA 4.0
             </or-link>
-            许可协议，转载请附上本文链接及本声明。
+            {{ $t('article.detail.copyrightStatement.statementSuffix') }}
           </div>
         </v-alert>
 
@@ -430,50 +433,72 @@
           <v-card-title>
             {{ $t('commentCount', [`${articleComments.total ? $t('parentheses', [articleComments.total]) : ''}`]) }}
           </v-card-title>
-          <div class="mx-2">
-            <div class="d-flex align-end">
+          <v-container>
+            <v-row
+              v-if="$access.isLogged()"
+              class="mx-2"
+            >
               <or-avatar
                 v-if="$access.isLogged()"
                 class="mb-auto"
                 :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
                 :username="userInfo.user.username"
               />
-              <or-md-vditor
-                ref="commentVditor"
-                :transfer-content.sync="commentOptions.content"
-                :placeholder="`写一条友善的发言吧（支持Markdown${$access.isLogged()?'':'，请先登录'}）`"
-                class="flex-grow-1 mx-2"
-                :dark="$vuetify.theme.dark"
-                pre-set-content=""
-                comment-mode
-                :read-only="false"
-              />
+              <div class="flex-grow-1">
+                <or-md-vditor
+                  ref="commentVditor"
+                  :transfer-content.sync="commentOptions.content"
+                  :placeholder="$t('comment.actions.placeholder')"
+                  class="mx-2"
+                  :dark="$vuetify.theme.dark"
+                  pre-set-content=""
+                  comment-mode
+                  :read-only="false"
+                />
+              </div>
               <v-btn
                 color="primary"
-                class="ml-auto"
+                class="mt-auto"
                 :disabled="!commentContentValid"
                 :loading="commentOptions.posting"
                 @click="postComment"
               >
-                发送
+                {{ $t('comment.actions.send') }}
               </v-btn>
-            </div>
-            <v-alert
-              v-model="commentOptions.showAlert"
-              class="mt-2 mx-2"
-              transition="slide-y-reverse-transition"
-              dense
-              dismissible
-              color="secondary"
-              colored-border
-              border="left"
-              elevation="2"
+            </v-row>
+            <v-sheet
+              v-else
+              rounded
+              height="60"
+              class="d-flex justify-center align-center mx-6"
+              outlined
             >
-              回复{{
-                commentOptions.parentComment ? `${commentOptions.parentComment.user.username}：${commentOptions.parentComment.content}` : ''
-              }}
-            </v-alert>
-          </div>
+              <v-btn
+                small
+                color="primary"
+                @click="$router.push({path:'/user/login',query:{redirect:$route.path}})"
+              >
+                {{ $t('login') }}
+              </v-btn>
+            </v-sheet>
+
+            <v-row class="d-block mt-6 mx-2">
+              <v-alert
+                v-model="commentOptions.showAlert"
+                transition="slide-y-reverse-transition"
+                dense
+                dismissible
+                color="secondary"
+                colored-border
+                border="left"
+                elevation="2"
+              >
+                {{ $t('comment.actions.reply') }}{{
+                  commentOptions.parentComment ? `${commentOptions.parentComment.user.username}：${commentOptions.parentComment.content}` : ''
+                }}
+              </v-alert>
+            </v-row>
+          </v-container>
           <or-blog-comment-list
             ref="commentList"
             class="mt-2"
@@ -492,9 +517,9 @@
 
     <!-- 恢复阅读位置日夜间模式 -->
     <v-snackbar v-model="snackbar">
-      已自动恢复阅读位置、日/夜间模式参数
+      {{ $t('article.restoreReadingStatusHint') }}
       <v-btn color="pink" text @click="$vuetify.goTo(0)">
-        从头开始
+        {{ $t('article.top') }}
       </v-btn>
     </v-snackbar>
 
@@ -590,8 +615,13 @@ export default {
     watchTimeString () {
       // 估算阅读时长
       const totalSeconds = this.article.content.length / 8
-      const formatSeconds = this.$util.formatSeconds(totalSeconds)
-      return formatSeconds === '' ? '一瞬间~' : formatSeconds
+      return this.$util.formatSeconds(totalSeconds, {
+        aMoment: this.$t('time.aMoment'),
+        second: this.$t('time.seconds'),
+        minute: this.$t('time.minutes'),
+        hour: this.$t('time.hours'),
+        day: this.$t('time.days')
+      })
     },
     /**
      * AppBar是否已隐藏
@@ -853,7 +883,7 @@ export default {
         this.commentOptions.posting = true
         this.$apis.blog.comment.post({
           ...this.commentOptions,
-          articleId: this.blogArticle.uuid
+          articleId: this.blogArticle.firstId
         })
           .then((data) => {
             this.commentOptions.content = ''

@@ -36,9 +36,10 @@ function formatTime (timeStamp) {
 /**
  * 格式化秒
  * @param  value int 总秒数
+ * @param i18nChars 国际化
  * @return result string 格式化后的字符串
  */
-function formatSeconds (value) {
+function formatSeconds (value, i18nChars = { aMoment: '一瞬间～', second: '秒', minute: '分', hour: '小时', day: '天' }) {
   let theTime = parseInt(value)// 需要转换的时间秒
   let theTime1 = 0// 分
   let theTime2 = 0// 小时
@@ -58,18 +59,18 @@ function formatSeconds (value) {
   }
   let result = ''
   if (theTime > 0) {
-    result = '' + parseInt(String(theTime)) + '秒'
+    result = '' + parseInt(String(theTime)) + i18nChars.second
   }
   if (theTime1 > 0) {
-    result = '' + parseInt(String(theTime1)) + '分' + result
+    result = '' + parseInt(String(theTime1)) + i18nChars.minute + result
   }
   if (theTime2 > 0) {
-    result = '' + parseInt(String(theTime2)) + '小时' + result
+    result = '' + parseInt(String(theTime2)) + i18nChars.hour + result
   }
   if (theTime3 > 0) {
-    result = '' + parseInt(String(theTime3)) + '天' + result
+    result = '' + parseInt(String(theTime3)) + i18nChars.day + result
   }
-  return result
+  return result || i18nChars.aMoment
 }
 
 function formatNumber (n) {

@@ -234,11 +234,11 @@ export default {
       window.open(href, '_blank')
     },
     onClickArticle () {
-      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.uuid}` })
+      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.firstId}` })
       window.open(href, '_blank')
     },
     onClickArticleComments () {
-      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.uuid}#comments` })
+      const { href } = this.$router.resolve({ path: `/${this.item.user.uuid}/article/${this.item.firstId}#comments` })
       window.open(href, '_blank')
     }
   }

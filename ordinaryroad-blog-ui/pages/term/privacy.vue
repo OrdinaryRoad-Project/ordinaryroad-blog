@@ -23,20 +23,20 @@
   -->
 
 <template>
-  <div>
-    <nuxt-child style="position: absolute; top: 0;" />
+  <v-sheet tile>
+    <nuxt-child />
     <v-select
       v-model="selectedPrivacyModel"
       outlined
       dense
       class="mt-8"
       hide-details
-      style="position: absolute; right: 15px; width: 150px"
-      label="选择版本"
+      style="position: absolute; top: 0; right: 20px; width: 150px"
+      :label="$t('selectVersion')"
       :items="privacyItems"
       @input="onInput"
     />
-  </div>
+  </v-sheet>
 </template>
 
 <script>

@@ -41,7 +41,7 @@
               >{{ $config.APP_VERSION }}</span>
             </span>
             <v-btn @click="login('ordinaryroad')">
-              使用OR账号登录
+              {{ $t('usingOrNumberLoginHint') }}
             </v-btn>
 
             <br>
@@ -63,9 +63,9 @@
             <br>
 
             <div class="text-caption">
-              登录即代表同意<span v-if="false">《用户协议》和</span>
+              {{ $t('agree') }}<span v-if="false">《用户协议》和</span>
               <or-link href="/term/privacy">
-                <span class="white--text">《隐私政策》</span>
+                <span class="white--text">{{ $t('term.privacy') }}</span>
               </or-link>
             </div>
           </div>

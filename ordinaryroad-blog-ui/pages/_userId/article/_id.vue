@@ -49,6 +49,9 @@ export default {
         if (article === null) {
           error({ statusCode: 404, message: '文章不存在' })
         }
+        if (article.firstId !== id) {
+          redirect(`/${userId}/article/${article.firstId}`)
+        }
         if (article.user.uuid !== userId) {
           redirect(`/${userId}`)
         }

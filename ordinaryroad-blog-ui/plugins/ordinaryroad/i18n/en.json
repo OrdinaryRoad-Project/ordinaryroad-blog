@@ -1,10 +1,14 @@
 {
-  "basicInfo": "Basic Info",
-  "noMoreData": "No More Data~",
+  "allRightsReserved": "All Rights Reserved",
+  "term": {
+    "privacy": "\"Privacy Policy\""
+  },
   "add": "Add",
+  "agree": "Agree",
   "areYouSureToDoWhat": "Are you sure to {0} ?",
   "attention": "Attention",
   "back": "Back",
+  "basicInfo": "Basic Info",
   "cancel": "Cancel",
   "confirm": "Confirm",
   "confirmLogout": "Confirm Logout?",
@@ -28,6 +32,7 @@
   "maxNSize": "Size cannot be greater than {0}",
   "minNChars": "Length cannot be less than {0}",
   "more": "More",
+  "noMoreData": "No More Data~",
   "ordinaryroad": "Ordinary Road",
   "parentheses": "({0})",
   "parenthesesWithSpace": " ({0})",
@@ -48,11 +53,19 @@
   "search": "Search",
   "settings": "Settings",
   "theme": "Theme",
+  "time": {
+    "aMoment": "a moment~",
+    "seconds": " seconds",
+    "minutes": " minutes",
+    "hours": " hours",
+    "days": " days"
+  },
   "update": "Update",
   "updateAt": "Update At{0}",
   "updateBy": "Update By",
   "updateTime": "Update Time",
   "username": "Username",
+  "usingOrNumberLoginHint": "Login with OR account",
   "whatSuccessfully": "{0} successfully.",
   "whatUpdateSuccessfully": "{0} updated successfully."
 }

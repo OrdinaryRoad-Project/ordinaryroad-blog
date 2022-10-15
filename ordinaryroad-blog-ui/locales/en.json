@@ -2,6 +2,19 @@
   "all": "All",
   "appName": "OR BLOG",
   "article": {
+    "detail": {
+      "copyrightStatement": {
+        "title": "Copyright Statement: ",
+        "statementPrefix": "This article is an original article by OrdinaryRoad blogger {0}, following the",
+        "statementSuffix": "license agreement, please attach a link to this article and this statement for reprinting.",
+        "link": "Link to this article: ",
+        "author": "Author: "
+      },
+      "readingTimeHint": {
+        "prefix": "Friendly Reminder: ",
+        "hint": "This article needs to be read about "
+      }
+    },
     "title": "Title",
     "coverImage": "Cover Image",
     "summary": "Summary",
@@ -24,7 +37,9 @@
       "unlike": "Unlike Article",
       "edit": "Edit Article"
     },
-    "startWritingHint": "Start Writing Now"
+    "startWritingHint": "Start Writing Now",
+    "restoreReadingStatusHint": "Reading position, day and night mode parameters have been automatically restored",
+    "top": "Top"
   },
   "articleCount": "Articles {0}",
   "avatar": "Avatar",
@@ -33,21 +48,6 @@
   "copied": "Copied",
   "copy": "Copy",
   "createWhat": "Create {0}",
-  "myStats": {
-    "title": "My Stats",
-    "publishedArticlesCount": "Published Articles Count",
-    "browsedArticlesCount": "Browsed Articles Count",
-    "likedArticlesCount": "Liked Articles Count",
-    "typesCount": "Types Count",
-    "postedCommentsCount": "Posted Comments Count",
-    "charts": {
-      "dailyPosts": "Article Publishing Heatmap",
-      "topNTypesArticle": "Types Top 10 Articles Chart",
-      "topNCommentsArticle": "Comments Top 10 Articles Chart",
-      "topNLikedArticle": "Top 10 Liked Articles Chart",
-      "topNBrowsedArticle": "Top 10 Browsed Articles Chart"
-    }
-  },
   "dashboardMenuTitles": {
     "dashboard": {
       "title": "Dashboard",
@@ -97,6 +97,21 @@
   },
   "loginFormTitle": "Login To OR BLOG",
   "loginToFeedbackTip": " for a better experience~",
+  "myStats": {
+    "title": "My Stats",
+    "publishedArticlesCount": "Published Articles Count",
+    "browsedArticlesCount": "Browsed Articles Count",
+    "likedArticlesCount": "Liked Articles Count",
+    "typesCount": "Types Count",
+    "postedCommentsCount": "Posted Comments Count",
+    "charts": {
+      "dailyPosts": "Article Publishing Heatmap",
+      "topNTypesArticle": "Types Top 10 Articles Chart",
+      "topNCommentsArticle": "Comments Top 10 Articles Chart",
+      "topNLikedArticle": "Top 10 Liked Articles Chart",
+      "topNBrowsedArticle": "Top 10 Browsed Articles Chart"
+    }
+  },
   "oAuthUser": {
     "actions": {
       "update": "Update",
@@ -106,6 +121,7 @@
   },
   "other": "Other",
   "overview": "Overview",
+  "selectVersion": "Select Version",
   "status": {
     "article": {
       "notFound": "Failed to get article information, please try again or return"
@@ -144,5 +160,13 @@
   },
   "userProfile": {
     "allAccounts": "All Accounts"
+  },
+  "comment": {
+    "actions": {
+      "send": "Send",
+      "reply": "Reply",
+      "viewOriginal": "Original Comment",
+      "placeholder": "Practice makes perfect."
+    }
   }
 }

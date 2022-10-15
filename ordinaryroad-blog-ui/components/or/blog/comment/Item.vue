@@ -23,47 +23,50 @@
   -->
 
 <template>
-  <v-sheet class="d-flex mx-5">
-    <!-- 头像 -->
-    <or-blog-user-avatar
-      class="mt-1"
-      :user="blogComment.user"
-    />
-    <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
-    <v-sheet class="flex-grow-1 ms-2 mt-1 bottom-toolbar-controller">
-      <div class="d-flex">
-        <div class="d-flex align-center">
-          <!-- 用户名 -->
-          <v-hover>
-            <template #default="{ hover }">
-              <span
-                style="cursor: pointer"
-                :class="hover?'primary--text':null"
-                class="text-subtitle-1 font-weight-bold me-2 transition-swing"
-                @click="onClickUsername(blogComment.user)"
-              >{{ blogComment.user.username }}</span>
-            </template>
-          </v-hover>
+  <div>
+    <v-hover v-model="focused">
+      <v-sheet class="d-flex mx-5">
+        <!-- 头像 -->
+        <or-blog-user-avatar
+          class="mt-1"
+          :user="blogComment.user"
+        />
+        <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
+        <v-sheet class="flex-grow-1 ms-2 mt-1">
+          <div class="d-flex">
+            <div class="d-flex align-center" style="min-height: 36px">
+              <!-- 用户名 -->
+              <v-hover>
+                <template #default="{ hover }">
+                  <span
+                    style="cursor: pointer;"
+                    :class="hover?'primary--text':null"
+                    class="text-subtitle-1 font-weight-bold me-2 transition-swing"
+                    @click="onClickUsername(blogComment.user)"
+                  >{{ blogComment.user.username }}</span>
+                </template>
+              </v-hover>
 
-          <!-- 角色 -->
-          <span v-if="blogComment.user.roles.length>0" class="me-2">
-            <or-user-roles :roles="blogComment.user.roles" />
-          </span>
+              <!-- 角色 -->
+              <span v-if="blogComment.user.roles.length>0" class="me-2">
+                <or-user-roles :roles="blogComment.user.roles" />
+              </span>
 
-          <!-- 时间 -->
-          <span class="text-body-2"> {{ $dayjs(blogComment.createdTime, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
-        </div>
+              <!-- 时间 -->
+              <span class="text-body-2"> {{ $dayjs(blogComment.createdTime, 'yyyy-MM-dd HH:mm:ss').fromNow() }}</span>
+            </div>
 
-        <!-- 更多操作 -->
-        <div class="ml-auto bottom-toolbar-hover-hide-item">
-          <span>
-            <v-btn
-              v-if="blogComment.parent"
-              small
-              :href="`#comment-${blogComment.parent.uuid}`"
-              text
-            >查看原评论</v-btn>
-            <!--TODO 点赞
+            <!-- 更多操作 -->
+            <v-fade-transition>
+              <div v-if="focused" class="ml-auto">
+                <span>
+                  <v-btn
+                    v-if="blogComment.parent"
+                    small
+                    :href="`#comment-${blogComment.parent.uuid}`"
+                    text
+                  >{{ $t('comment.actions.viewOriginal') }}</v-btn>
+                  <!--TODO 点赞
             <v-btn icon>
               <v-icon>mdi-thumb-up</v-icon>
             </v-btn>
@@ -72,60 +75,64 @@
               <v-icon>mdi-thumb-down</v-icon>
             </v-btn>
             -->
-            <v-btn icon color="primary" @click="onClickReply(null,blogComment)">
-              <v-icon>mdi-reply</v-icon>
-            </v-btn>
-          </span>
-        </div>
-      </div>
+                  <v-btn icon color="primary" @click="onClickReply(null,blogComment)">
+                    <v-icon>mdi-reply</v-icon>
+                  </v-btn>
+                </span>
+              </div>
+            </v-fade-transition>
+          </div>
 
-      <!--评论内容-->
-      <or-md-vditor
-        :dark="$vuetify.theme.dark"
-        :pre-set-content="commentContent"
-        comment-mode
-        class="mb-1"
-      />
+          <!--评论内容-->
+          <or-md-vditor
+            :dark="$vuetify.theme.dark"
+            :pre-set-content="commentContent"
+            comment-mode
+            class="mb-1"
+          />
+        </v-sheet>
+      </v-sheet>
+    </v-hover>
 
-      <!-- 回复 -->
-      <v-expansion-panels v-if="blogComment.replies&&blogComment.replies.total>0" flat tile>
-        <v-expansion-panel>
-          <v-divider />
-          <v-expansion-panel-header ripple>
-            <div>
-              共{{ blogComment.replies.total }}条回复
-            </div>
-          </v-expansion-panel-header>
+    <!-- 回复 -->
+    <v-expansion-panels v-if="blogComment.replies&&blogComment.replies.total>0" flat tile>
+      <v-expansion-panel>
+        <v-divider />
+        <v-expansion-panel-header ripple>
+          <div>
+            共{{ blogComment.replies.total }}条回复
+          </div>
+        </v-expansion-panel-header>
 
-          <v-expansion-panel-content>
-            <v-container>
-              <v-row
-                v-for="(commentReply) in blogComment.replies.records"
-                :key="commentReply.uuid"
-                class="d-block"
-              >
-                <or-blog-comment-item
-                  :item="commentReply"
-                  @clickReply="onClickReply(blogComment,commentReply)"
-                />
-              </v-row>
-              <v-row justify="center" no-gutters class="mt-6">
-                <!-- 加载更多Footer -->
-                <or-load-more-footer
-                  ref="loadMoreFooter"
-                  :no-more-data="blogComment.replies.pages === 0 || blogComment.replies.current === blogComment.replies.pages"
-                  @loadMore="loadSubComments"
-                />
-              </v-row>
-            </v-container>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-fade-transition>
-        <v-divider v-if="showDivider" />
-      </v-fade-transition>
-    </v-sheet>
-  </v-sheet>
+        <v-expansion-panel-content>
+          <v-container>
+            <v-row
+              v-for="(commentReply) in blogComment.replies.records"
+              :key="commentReply.uuid"
+              class="d-block"
+            >
+              <or-blog-comment-item
+                :item="commentReply"
+                @clickReply="onClickReply(blogComment,commentReply)"
+              />
+            </v-row>
+            <v-row justify="center" no-gutters class="mt-6">
+              <!-- 加载更多Footer -->
+              <or-load-more-footer
+                ref="loadMoreFooter"
+                :no-more-data="blogComment.replies.pages === 0 || blogComment.replies.current === blogComment.replies.pages"
+                @loadMore="loadSubComments"
+              />
+            </v-row>
+          </v-container>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <v-fade-transition>
+      <v-divider v-if="showDivider" />
+    </v-fade-transition>
+  </div>
 </template>
 
 <script>
@@ -143,6 +150,7 @@ export default {
   },
   data () {
     return {
+      focused: false,
       blogComment: {}
     }
   },
@@ -150,9 +158,9 @@ export default {
     commentContent () {
       let prefix = ''
       if (this.blogComment.parent && this.blogComment.parent.uuid !== this.blogComment.originalId) {
-        prefix = `回复[@${this.blogComment.parent.user.username}](/${this.blogComment.parent.user.uuid})`
+        prefix = `[@${this.blogComment.parent.user.username}](/${this.blogComment.parent.user.uuid}) `
       }
-      return `${prefix} ${this.blogComment.content}`
+      return `${prefix}${this.blogComment.content}`
     }
   },
   created () {
@@ -196,14 +204,5 @@ export default {
   display: block;
   height: 0;
   overflow: hidden;
-}
-
-.bottom-toolbar-hover-hide-item {
-  transition: 0.3s;
-  opacity: 0;
-}
-
-.bottom-toolbar-controller:hover .bottom-toolbar-hover-hide-item {
-  opacity: 1;
 }
 </style>

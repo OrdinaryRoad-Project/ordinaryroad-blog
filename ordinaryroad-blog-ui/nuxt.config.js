@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: 'OR博客，一个MarkDown多人博客'
+        content: 'OR博客，一个Markdown多人博客'
       },
       {
         name: 'format-detection',

@@ -55,6 +55,8 @@ public class BlogArticlePreviewVO {
 
     private LocalDateTime updateTime;
 
+    private String firstId;
+
     private BlogTypeVO type;
 
     private List<BlogTagVO> tags;
@@ -68,7 +70,7 @@ public class BlogArticlePreviewVO {
     public BlogArticlePreviewVO() {
     }
 
-    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, BlogTypeVO type, List<BlogTagVO> tags, Long pv, Long likesCount, Long commentsCount) {
+    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, String firstId, BlogTypeVO type, List<BlogTagVO> tags, Long pv, Long likesCount, Long commentsCount) {
         this.uuid = uuid;
         this.coverImage = coverImage;
         this.title = title;
@@ -77,6 +79,7 @@ public class BlogArticlePreviewVO {
         this.user = user;
         this.createdTime = createdTime;
         this.updateTime = updateTime;
+        this.firstId = firstId;
         this.type = type;
         this.tags = tags;
         this.pv = pv;
@@ -146,6 +149,14 @@ public class BlogArticlePreviewVO {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getFirstId() {
+        return firstId;
+    }
+
+    public void setFirstId(String firstId) {
+        this.firstId = firstId;
     }
 
     public BlogTypeVO getType() {

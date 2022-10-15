@@ -2,6 +2,19 @@
   "all": "全部",
   "appName": "OR博客",
   "article": {
+    "detail": {
+      "copyrightStatement": {
+        "title": "版权声明：",
+        "statementPrefix": "本文为OrdinaryRoad博客博主 {0} 的原创文章，遵循",
+        "statementSuffix": "许可协议，转载请附上本文链接及本声明。",
+        "link": "本文链接：",
+        "author": "本文作者："
+      },
+      "readingTimeHint": {
+        "prefix": "友情提示：",
+        "hint": "此篇文章大约需要阅读"
+      }
+    },
     "title": "标题",
     "coverImage": "封面",
     "summary": "摘要",
@@ -24,7 +37,9 @@
       "unlike": "取消点赞",
       "edit": "编辑"
     },
-    "startWritingHint": "开始写作吧"
+    "startWritingHint": "开始写作吧",
+    "restoreReadingStatusHint": "已自动恢复阅读位置、日/夜间模式参数",
+    "top": "从头开始"
   },
   "articleCount": "文章{0}",
   "avatar": "头像",
@@ -33,21 +48,6 @@
   "copied": "已复制",
   "copy": "复制",
   "createWhat": "创建{0}",
-  "myStats": {
-    "title": "我的统计",
-    "publishedArticlesCount": "已发布文章",
-    "browsedArticlesCount": "已浏览文章",
-    "likedArticlesCount": "已点赞文章",
-    "typesCount": "分类个数",
-    "postedCommentsCount": "评论发表数",
-    "charts": {
-      "dailyPosts": "文章发布热力图",
-      "topNTypesArticle": "分类文章数Top10",
-      "topNCommentsArticle": "分类评论数Top10",
-      "topNLikedArticle": "分类点赞数Top10",
-      "topNBrowsedArticle": "分类浏览数Top10"
-    }
-  },
   "dashboardMenuTitles": {
     "dashboard": {
       "title": "控制台",
@@ -97,6 +97,21 @@
   },
   "loginFormTitle": "登录到OR博客",
   "loginToFeedbackTip": "后体验更佳～",
+  "myStats": {
+    "title": "我的统计",
+    "publishedArticlesCount": "已发布文章",
+    "browsedArticlesCount": "已浏览文章",
+    "likedArticlesCount": "已点赞文章",
+    "typesCount": "分类个数",
+    "postedCommentsCount": "评论发表数",
+    "charts": {
+      "dailyPosts": "文章发布热力图",
+      "topNTypesArticle": "分类文章数Top10",
+      "topNCommentsArticle": "分类评论数Top10",
+      "topNLikedArticle": "分类点赞数Top10",
+      "topNBrowsedArticle": "分类浏览数Top10"
+    }
+  },
   "oAuthUser": {
     "actions": {
       "update": "更新",
@@ -106,6 +121,7 @@
   },
   "other": "其他",
   "overview": "概览",
+  "selectVersion": "选择版本",
   "status": {
     "article": {
       "notFound": "获取文章信息失败，请重试或返回"
@@ -145,5 +161,13 @@
   },
   "userProfile": {
     "allAccounts": "所有账号"
+  },
+  "comment": {
+    "actions": {
+      "send": "发送",
+      "reply": "回复",
+      "viewOriginal": "查看原评论",
+      "placeholder": "有志者，事竟成。"
+    }
   }
 }

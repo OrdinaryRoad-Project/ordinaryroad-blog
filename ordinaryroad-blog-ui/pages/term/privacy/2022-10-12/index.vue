@@ -23,8 +23,8 @@
   -->
 
 <template>
-  <div>
-    <div data-v-ad817de0="" class="v-card__title text-h4 my-4 mx-2 mb-0">
+  <div class="py-4">
+    <div data-v-ad817de0="" class="v-card__title text-h4 mx-2 mb-0">
       OR博客 隐私政策
     </div>
     <div style="text-indent: 2em;">
@@ -139,7 +139,7 @@
       Cookie 的小数据文件。 Cookie 通常包含标识符、产品名称以及一些号码和字符。 借助于
       Cookie，我们能够存储您的偏好或商品等数据，并用以判断注册用户是否已经登录， 提升服务和产品质量及优化用户体验。
     </div>
-    <div data-v-ad817de0="" class="ml-6 mr-2 text-body-1 mb-4" style="text-indent: 2em;">
+    <div data-v-ad817de0="" class="ml-6 mr-2 text-body-1" style="text-indent: 2em;">
       我们出于不同的目的使用各种Cookie，包括：严格必要型Cookie、性能Cookie、营销Cookie和功能Cookie。
       某些Cookie可能由外部第三方提供，以向我们的产品提供其它功能。 我们不会将 Cookie 用于本政策所述目的之外的任何用途。您可根据自己的偏好管理或删除
       Cookie。 您可以清除计算机上或手机中保存的所有 Cookie，大部分网络浏览器都设有阻止或禁用 Cookie 的功能，

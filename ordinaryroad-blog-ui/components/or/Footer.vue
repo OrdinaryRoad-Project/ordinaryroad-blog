@@ -49,7 +49,7 @@
           </v-btn>
         </div>
         <div class="d-flex text--grey">
-          ©2019-{{ new Date().getFullYear() }} 苗锦洲 版权所有
+          ©2019 - {{ new Date().getFullYear() }} 苗锦洲 {{ $t('allRightsReserved') }}
         </div>
       </div>
       <div
