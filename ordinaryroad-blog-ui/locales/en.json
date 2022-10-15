@@ -141,5 +141,8 @@
     "type": "Types",
     "tag": "Tags",
     "log": "Operation Logs"
+  },
+  "userProfile": {
+    "allAccounts": "All Accounts"
   }
 }

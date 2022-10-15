@@ -142,5 +142,8 @@
     "type": "分类管理",
     "tag": "标签管理",
     "log": "操作日志"
+  },
+  "userProfile": {
+    "allAccounts": "所有账号"
   }
 }

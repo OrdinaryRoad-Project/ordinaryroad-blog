@@ -1,4 +1,6 @@
 {
+  "basicInfo": "Basic Info",
+  "noMoreData": "No More Data~",
   "add": "Add",
   "areYouSureToDoWhat": "Are you sure to {0} ?",
   "attention": "Attention",
@@ -7,6 +9,7 @@
   "confirm": "Confirm",
   "confirmLogout": "Confirm Logout?",
   "createAt": "Create At{0}",
+  "createAtWithSpace": "Create At {0}",
   "createBy": "Create By",
   "createdTime": "Created Time",
   "dataTable": {

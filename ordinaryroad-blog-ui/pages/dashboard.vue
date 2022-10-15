@@ -33,7 +33,7 @@
               <span v-if="item.disabled">{{ $t(item.text) }}</span>
               <or-link
                 v-else
-                :href="item.href"
+                :href="item.href==='/dashboard/article'?'/dashboard/article/status/DRAFT':item.href"
                 target="_self"
               >{{ $t(item.text) }}</or-link>
             </span>

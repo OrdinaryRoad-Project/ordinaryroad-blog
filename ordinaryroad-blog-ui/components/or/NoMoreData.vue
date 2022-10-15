@@ -24,7 +24,7 @@
 
 <template>
   <div class="text-center">
-    <span>没有更多数据啦~</span>
+    <span>{{ $t('noMoreData') }}</span>
   </div>
 </template>
 

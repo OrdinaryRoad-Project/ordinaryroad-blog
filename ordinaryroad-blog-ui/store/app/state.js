@@ -40,7 +40,7 @@ export default () => ({
       children: []
     },
     {
-      to: '/dashboard/article/status',
+      to: '/dashboard/article',
       titleKey: 'dashboardMenuTitles.dashboard.article.title',
       icon: 'mdi-file-document-multiple',
       children: [

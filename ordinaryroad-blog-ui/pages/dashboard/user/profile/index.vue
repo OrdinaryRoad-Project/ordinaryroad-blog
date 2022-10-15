@@ -23,9 +23,9 @@
   -->
 
 <template>
-  <base-material-card title="个人中心">
+  <base-material-card :title="$t('userMenuTitles.profile')">
     <v-card flat outlined>
-      <v-card-title>基本信息</v-card-title>
+      <v-card-title>{{ $t('basicInfo') }}</v-card-title>
       <v-form ref="avatarForm" class="mx-4">
         <div class="d-flex align-center">
           <v-file-input
@@ -78,7 +78,7 @@
       </v-form>
     </v-card>
     <v-card flat outlined class="mt-2">
-      <v-card-title>所有账号</v-card-title>
+      <v-card-title>{{ $t('userProfile.allAccounts') }}</v-card-title>
       <v-list>
         <v-list-item
           v-for="(provider) in $config.OAUTH2.PROVIDERS"

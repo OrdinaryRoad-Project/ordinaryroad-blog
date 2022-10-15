@@ -36,7 +36,7 @@
         >
           <span style="color: white">{{ type.createBy }}</span>
         </or-link>
-        创建于 {{ $dayjs(type.createdTime).format() }}
+        {{ $t('createAtWithSpace', [$dayjs(type.createdTime).format()]) }}
       </div>
     </template>
     <or-blog-article-list
