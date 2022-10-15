@@ -24,7 +24,7 @@
 
 <template>
   <v-card :loading="loading" flat :outlined="outlined">
-    <v-card-title>文章发布热力图</v-card-title>
+    <v-card-title>{{ $t('myStats.charts.dailyPosts') }}</v-card-title>
     <div
       v-if="!loading"
       ref="div"

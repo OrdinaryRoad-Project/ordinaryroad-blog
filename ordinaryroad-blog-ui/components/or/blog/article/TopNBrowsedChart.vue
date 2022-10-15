@@ -24,7 +24,7 @@
 
 <template>
   <v-card :loading="loading" flat outlined>
-    <v-card-title>文章浏览数Top10</v-card-title>
+    <v-card-title>{{ $t('myStats.charts.topNBrowsedArticle') }}</v-card-title>
     <div
       v-if="!loading"
       ref="div"

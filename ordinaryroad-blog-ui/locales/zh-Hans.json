@@ -1,5 +1,4 @@
 {
-  "continueReadingOnOtherDevices": "在其他设备上继续阅读",
   "all": "全部",
   "appName": "OR博客",
   "article": {
@@ -30,9 +29,25 @@
   "articleCount": "文章{0}",
   "avatar": "头像",
   "commentCount": "评论{0}",
+  "continueReadingOnOtherDevices": "在其他设备上继续阅读",
   "copied": "已复制",
   "copy": "复制",
   "createWhat": "创建{0}",
+  "myStats": {
+    "title": "我的统计",
+    "publishedArticlesCount": "已发布文章",
+    "browsedArticlesCount": "已浏览文章",
+    "likedArticlesCount": "已点赞文章",
+    "typesCount": "分类个数",
+    "postedCommentsCount": "评论发表数",
+    "charts": {
+      "dailyPosts": "文章发布热力图",
+      "topNTypesArticle": "分类文章数Top10",
+      "topNCommentsArticle": "分类评论数Top10",
+      "topNLikedArticle": "分类点赞数Top10",
+      "topNBrowsedArticle": "分类浏览数Top10"
+    }
+  },
   "dashboardMenuTitles": {
     "dashboard": {
       "title": "控制台",

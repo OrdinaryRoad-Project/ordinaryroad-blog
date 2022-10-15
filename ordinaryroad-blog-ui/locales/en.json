@@ -1,5 +1,4 @@
 {
-  "continueReadingOnOtherDevices": "Continue reading on other devices",
   "all": "All",
   "appName": "OR BLOG",
   "article": {
@@ -30,9 +29,25 @@
   "articleCount": "Articles {0}",
   "avatar": "Avatar",
   "commentCount": "Comments {0}",
+  "continueReadingOnOtherDevices": "Continue reading on other devices",
   "copied": "Copied",
   "copy": "Copy",
   "createWhat": "Create {0}",
+  "myStats": {
+    "title": "My Stats",
+    "publishedArticlesCount": "Published Articles Count",
+    "browsedArticlesCount": "Browsed Articles Count",
+    "likedArticlesCount": "Liked Articles Count",
+    "typesCount": "Types Count",
+    "postedCommentsCount": "Posted Comments Count",
+    "charts": {
+      "dailyPosts": "Article Publishing Heatmap",
+      "topNTypesArticle": "Types Top 10 Articles Chart",
+      "topNCommentsArticle": "Comments Top 10 Articles Chart",
+      "topNLikedArticle": "Top 10 Liked Articles Chart",
+      "topNBrowsedArticle": "Top 10 Browsed Articles Chart"
+    }
+  },
   "dashboardMenuTitles": {
     "dashboard": {
       "title": "Dashboard",
