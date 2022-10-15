@@ -75,7 +75,6 @@
 <script>
 // Utilities
 import { mapActions, mapGetters } from 'vuex'
-import { updateTheme } from 'static/js/utils/vuetify'
 
 export default {
   data () {
@@ -111,7 +110,17 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      updateTheme(this.$store.getters['app/getSelectedThemeOption'], this.$vuetify)
+      this.$store.commit('app/UPDATE_THEME', {
+        value: this.$store.getters['app/getSelectedThemeOption'],
+        $vuetify: this.$vuetify
+      })
+      this.$store.commit('i18n/UPDATE_LANG', {
+        value: this.$store.getters['i18n/getLocale'],
+        $i18n: this.$i18n,
+        $vuetify: this.$vuetify,
+        $dayjs: this.$dayjs
+      })
+
       window.addEventListener('scroll', this.handleScroll)
     })
   },

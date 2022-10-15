@@ -6,6 +6,7 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
   "confirmLogout": "Confirm Logout?",
+  "createAt": "Create At{0}",
   "createBy": "Create By",
   "createdTime": "Created Time",
   "dataTable": {
@@ -27,6 +28,11 @@
   "ordinaryroad": "Ordinary Road",
   "parentheses": "({0})",
   "parenthesesWithSpace": " ({0})",
+  "punctuation": {
+    "colon": ":",
+    "colonWithPrefixSpace": " :",
+    "colonWithSuffixSpace": ": "
+  },
   "refresh": "Refresh",
   "remove": "Remove",
   "required": "Required",
@@ -40,6 +46,7 @@
   "settings": "Settings",
   "theme": "Theme",
   "update": "Update",
+  "updateAt": "Update At{0}",
   "updateBy": "Update By",
   "updateTime": "Update Time",
   "username": "Username",

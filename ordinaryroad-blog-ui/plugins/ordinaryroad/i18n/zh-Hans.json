@@ -6,6 +6,7 @@
   "cancel": "取消",
   "confirm": "确认",
   "confirmLogout": "确认退出登录？",
+  "createAt": "创建于{0}",
   "createBy": "创建者",
   "createdTime": "创建时间",
   "dataTable": {
@@ -27,6 +28,11 @@
   "ordinaryroad": "Ordinary Road",
   "parentheses": "（{0}）",
   "parenthesesWithSpace": "（{0}）",
+  "punctuation": {
+    "colon": "：",
+    "colonWithPrefixSpace": "：",
+    "colonWithSuffixSpace": "："
+  },
   "refresh": "刷新",
   "remove": "移除",
   "required": "必填",
@@ -40,6 +46,7 @@
   "settings": "设置",
   "theme": "主题",
   "update": "更新",
+  "updateAt": "更新于{0}",
   "updateBy": "更新者",
   "updateTime": "更新时间",
   "username": "用户名",

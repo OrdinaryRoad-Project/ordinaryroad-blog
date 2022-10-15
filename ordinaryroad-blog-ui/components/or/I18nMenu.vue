@@ -38,7 +38,7 @@
       <v-list-item
         v-for="(localeOption, index) in localeOptions"
         :key="index"
-        @click.stop="setLang({
+        @click.stop="updateLang({
           value: locales[localeOptions.indexOf(localeOption)],
           $i18n, $vuetify, $dayjs
         })"
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     ...mapActions('i18n', {
-      setLang: 'setLang'
+      updateLang: 'updateLang'
     })
   }
 }

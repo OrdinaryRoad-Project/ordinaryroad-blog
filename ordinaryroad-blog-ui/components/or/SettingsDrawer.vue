@@ -94,7 +94,7 @@
                   :key="localeOption"
                   cols="6"
                   class="pa-1"
-                  @click.stop="setLang({
+                  @click.stop="updateLang({
                     value: locales[index],
                     $i18n, $vuetify, $dayjs
                   })"
@@ -226,7 +226,7 @@ export default {
       setRightDrawerModel: 'setRightDrawerModel'
     }),
     ...mapActions('i18n', {
-      setLang: 'setLang'
+      updateLang: 'updateLang'
     }),
 
     click (index) {

@@ -231,11 +231,13 @@
         <div class="text-caption">
           <!-- 创建时间 -->
           <div>
-            <strong>创建于：</strong>{{ blogArticle.createdTime }}
+            <strong>{{ $t('createAt', [$t('punctuation.colonWithSuffixSpace')]) }}</strong>{{
+              blogArticle.createdTime
+            }}
           </div>
           <!-- 更新时间 -->
           <div v-if="blogArticle.updateTime">
-            <strong>修改于：</strong>{{ blogArticle.updateTime }}
+            <strong>{{ $t('updateAt', [$t('punctuation.colonWithSuffixSpace')]) }}</strong>{{ blogArticle.updateTime }}
           </div>
         </div>
       </v-list-item>

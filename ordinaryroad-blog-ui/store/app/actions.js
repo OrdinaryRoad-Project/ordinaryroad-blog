@@ -29,8 +29,12 @@ export default {
   setTitleKey ({ commit }, value) {
     commit('SET_TITLE_KEY', value)
   },
-  setSelectedThemeOption ({ commit }, values) {
-    commit('SET_SELECTED_THEME_OPTION', values)
+  setSelectedThemeOption ({ commit }, { value, $vuetify }) {
+    commit('SET_SELECTED_THEME_OPTION', { value, $vuetify })
+    commit('UPDATE_THEME', { value, $vuetify })
+  },
+  updateTheme ({ commit }, { value, $vuetify }) {
+    commit('UPDATE_THEME', { value, $vuetify })
   },
   setMenuItems ({ commit }, menuItems) {
     commit('SET_MENU_ITEMS', menuItems)

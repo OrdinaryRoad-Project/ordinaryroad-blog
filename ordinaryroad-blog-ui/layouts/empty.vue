@@ -33,13 +33,21 @@
 </template>
 
 <script>
-import { updateTheme } from 'static/js/utils/vuetify'
 
 export default {
   mounted () {
     // dom初始化完成再初始化主题
     this.$nextTick(() => {
-      updateTheme(this.$store.getters['app/getSelectedThemeOption'], this.$vuetify)
+      this.$store.commit('app/UPDATE_THEME', {
+        value: this.$store.getters['app/getSelectedThemeOption'],
+        $vuetify: this.$vuetify
+      })
+      this.$store.commit('i18n/UPDATE_LANG', {
+        value: this.$store.getters['i18n/getLocale'],
+        $i18n: this.$i18n,
+        $vuetify: this.$vuetify,
+        $dayjs: this.$dayjs
+      })
     })
   }
 }

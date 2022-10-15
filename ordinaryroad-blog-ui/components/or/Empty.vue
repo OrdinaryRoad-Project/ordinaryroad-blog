@@ -24,7 +24,7 @@
 
 <template>
   <v-sheet :height="200" class="d-flex justify-center align-center">
-    <h1>暂无数据...</h1>
+    <h1>{{ $vuetify.lang.t('$vuetify.noDataText') }}</h1>
   </v-sheet>
 </template>
 

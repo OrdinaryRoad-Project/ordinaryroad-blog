@@ -65,19 +65,14 @@ export function getObjectFromCookie (string, key, defaultValue) {
 }
 
 export const actions = {
-  async nuxtServerInit ({ commit }, {
+  nuxtServerInit ({ commit }, {
     $vuetify,
     $apisServer,
     $access,
     req,
     app
   }) {
-    const {
-      store,
-      $dayjs,
-      i18n
-    } = app
-    const $i18n = i18n
+    const { store } = app
     // 初始化，可以获取初始值
     if (typeof req !== 'undefined' && req.headers && req.headers.cookie) {
       const cookieString = req.headers.cookie
@@ -86,27 +81,25 @@ export const actions = {
         value: getNumberFromCookie(cookieString, SELECTED_THEME_OPTION_KEY, store.getters['app/getSelectedThemeOption']),
         $vuetify
       })
-
-      commit('i18n/SET_LANG', {
-        value: getStringFromCookie(cookieString, SELECTED_LANG_OPTION_KEY, store.getters['i18n/getLocale']),
-        $i18n,
-        $vuetify,
-        $dayjs
+      commit('i18n/SET_SELECTED_LANG_OPTION', {
+        value: getStringFromCookie(cookieString, SELECTED_LANG_OPTION_KEY, store.getters['i18n/getLocale'])
       })
 
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
       if (tokenInfo) {
-        try {
-          const userInfo = await $apisServer.blog.userInfo(tokenInfo.value)
-          commit('user/SET_TOKEN_INFO', tokenInfo)
-          commit('user/SET_USER_INFO', userInfo)
+        return $apisServer.blog.userInfo(tokenInfo.value)
+          .then((data) => {
+            const userInfo = data
+            commit('user/SET_TOKEN_INFO', tokenInfo)
+            commit('user/SET_USER_INFO', userInfo)
 
-          // 更新本地可以访问的MenuItems
-          commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', $access)
-          commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', $access)
-        } catch (e) {
-          // Token无效或其他异常，不做任何操作
-        }
+            // 更新本地可以访问的MenuItems
+            commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', $access)
+            commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', $access)
+          })
+          .catch(() => {
+            // Token无效或其他异常，不做任何操作
+          })
       }
     }
   }

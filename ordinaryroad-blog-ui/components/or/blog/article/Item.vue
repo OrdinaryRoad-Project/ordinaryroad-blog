@@ -23,160 +23,157 @@
   -->
 
 <template>
-  <v-hover close-delay="100">
-    <template #default="{ hover }">
-      <v-card
-        dark
-        :elevation="hover?24:0"
-        class="transition-swing"
-        @click="onClickArticle"
-      >
-        <!-- 图片上层的信息 -->
-        <div style="position: relative; overflow: hidden">
-          <!-- 封面 -->
-          <img
-            style="background-color: darkgrey"
-            alt=""
-            class="or-cover-image"
-            :src="$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')"
-          >
+  <v-hover
+    v-model="cardFocused"
+    close-delay="100"
+  >
+    <v-card
+      dark
+      :elevation="cardFocused?24:0"
+      class="transition-swing"
+      @click="onClickArticle"
+    >
+      <!-- 图片上层的信息 -->
+      <div style="position: relative; overflow: hidden">
+        <!-- 封面 -->
+        <img
+          style="background-color: darkgrey"
+          alt=""
+          class="or-cover-image"
+          :src="$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')"
+        >
 
-          <!-- 是否原创 -->
-          <div v-if="item.original" class="primary or-original-label">
-            <span>{{ $t('article.originalOptions.original') }}</span>
-          </div>
-
-          <!-- 封面上层 -->
-          <div class="or-title px-4 pb-1">
-            <v-card-subtitle class="d-flex flex-wrap pt-0 pb-1 align-center">
-              <!-- 创建时间 -->
-              <span class="d-inline-flex me-2">
-                <v-icon dark small class="me-1">
-                  mdi-calendar
-                </v-icon>
-                {{ item.createdTime }}
-              </span>
-
-              <!-- 分类 -->
-              <span v-if="item.type" class="d-inline-flex me-2">
-                <v-icon dark small class="me-1">
-                  mdi-view-list
-                </v-icon>
-                {{ item.type.name }}
-              </span>
-
-              <!-- 标签 -->
-              <span
-                v-if="item.tags && item.tags.length && item.tags.length > 0"
-                class="d-flex flex-wrap"
-              >
-                <span
-                  v-for="(tag,index) in item.tags"
-                  :key="tag.uuid"
-                  :class="index!==item.tags.length-1?'me-2':null"
-                  class="d-inline-flex"
-                >
-                  <v-icon dark small class="me-1">
-                    mdi-tag
-                  </v-icon>
-                  {{ tag.name }}
-                </span>
-              </span>
-            </v-card-subtitle>
-
-            <!-- 标题 -->
-            <v-card-title class="py-0 text-justify tow-lines-text">
-              {{ item.title }}
-            </v-card-title>
-
-            <!-- 悬浮显示 -->
-            <v-expand-transition>
-              <div
-                v-if="hover"
-                class="transition-fast-in-fast-out"
-              >
-                <!-- 摘要 -->
-                <v-card-subtitle
-                  v-if="item.summary !== undefined && item.summary !== ''"
-                  class="py-0 my-0 text-justify font-weight-light four-lines-text"
-                >
-                  {{ item.summary }}
-                </v-card-subtitle>
-              </div>
-            </v-expand-transition>
-
-            <v-divider class="mt-2" />
-
-            <!-- 作者信息和操作按钮栏 -->
-            <v-list-item>
-              <!-- 头像 -->
-              <or-blog-user-avatar
-                avatar-class="v-list-item__avatar"
-                :user="item.user"
-              />
-              <!-- 用户名 -->
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-hover>
-                    <template #default="{ hover }">
-                      <span
-                        class="font-weight-medium transition-swing"
-                        :class="hover?'primary--text':null"
-                        @click.stop="onClickUsername"
-                      >{{ item.user.username }}</span>
-                    </template>
-                  </v-hover>
-                </v-list-item-title>
-                <!-- todo 个性签名 -->
-                <v-list-item-subtitle v-if="false">
-                  世间种种平凡都不平凡
-                </v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-row
-                  no-gutters
-                  align="center"
-                  justify="end"
-                >
-                  <v-col class="d-inline-flex align-center me-3">
-                    <v-icon left small>
-                      mdi-thumb-up
-                    </v-icon>
-                    <span>{{ item.likesCount }}</span>
-                  </v-col>
-
-                  <v-col class="d-inline-flex align-center me-3">
-                    <v-icon left small>
-                      mdi-eye
-                    </v-icon>
-                    <span>{{ item.pv }}</span>
-                  </v-col>
-
-                  <v-hover>
-                    <template #default="{ hover }">
-                      <v-col class="d-inline-flex align-center" @click.stop="onClickArticleComments">
-                        <v-icon left small :color="hover?'primary':null">
-                          mdi-comment-text
-                        </v-icon>
-                        <span
-                          class="transition-swing"
-                          :class="hover?'primary--text':null"
-                        >{{ item.commentsCount }}</span>
-                      </v-col>
-                    </template>
-                  </v-hover>
-
-                  <v-col class="d-inline-flex align-center">
-                    <slot name="actions" />
-                  </v-col>
-                </v-row>
-              </v-list-item-action>
-            </v-list-item>
-          </div>
+        <!-- 是否原创 -->
+        <div v-if="item.original" class="primary or-original-label">
+          <span>{{ $t('article.originalOptions.original') }}</span>
         </div>
-      </v-card>
-    </template>
+
+        <!-- 封面上层 -->
+        <div class="or-title px-4 pb-1">
+          <v-card-subtitle class="d-flex flex-wrap pt-0 pb-1 align-center">
+            <!-- 创建时间 -->
+            <span class="d-inline-flex me-2">
+              <v-icon dark small class="me-1">
+                mdi-calendar
+              </v-icon>
+              {{ item.createdTime }}
+            </span>
+
+            <!-- 分类 -->
+            <span v-if="item.type" class="d-inline-flex me-2">
+              <v-icon dark small class="me-1">
+                mdi-view-list
+              </v-icon>
+              {{ item.type.name }}
+            </span>
+
+            <!-- 标签 -->
+            <span
+              v-if="item.tags && item.tags.length && item.tags.length > 0"
+              class="d-flex flex-wrap"
+            >
+              <span
+                v-for="(tag,index) in item.tags"
+                :key="tag.uuid"
+                :class="index!==item.tags.length-1?'me-2':null"
+                class="d-inline-flex"
+              >
+                <v-icon dark small class="me-1">
+                  mdi-tag
+                </v-icon>
+                {{ tag.name }}
+              </span>
+            </span>
+          </v-card-subtitle>
+
+          <!-- 标题 -->
+          <v-card-title class="py-0 text-justify tow-lines-text">
+            {{ item.title }}
+          </v-card-title>
+
+          <!-- 悬浮显示 -->
+          <v-expand-transition>
+            <div
+              v-if="cardFocused"
+              class="transition-fast-in-fast-out"
+            >
+              <!-- 摘要 -->
+              <v-card-subtitle
+                v-if="item.summary !== undefined && item.summary !== ''"
+                class="py-0 my-0 text-justify font-weight-light four-lines-text"
+              >
+                {{ item.summary }}
+              </v-card-subtitle>
+            </div>
+          </v-expand-transition>
+
+          <v-divider class="mt-2" />
+
+          <!-- 作者信息和操作按钮栏 -->
+          <v-list-item>
+            <!-- 头像 -->
+            <or-blog-user-avatar
+              avatar-class="v-list-item__avatar"
+              :user="item.user"
+            />
+            <!-- 用户名 -->
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-hover v-model="usernameFocused">
+                  <span
+                    class="font-weight-medium transition-swing"
+                    :class="usernameFocused?'primary--text':null"
+                    @click.stop="onClickUsername"
+                  >{{ item.user.username }}</span>
+                </v-hover>
+              </v-list-item-title>
+              <!-- todo 个性签名 -->
+              <v-list-item-subtitle v-if="false">
+                世间种种平凡都不平凡
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+            <v-list-item-action>
+              <v-row
+                no-gutters
+                align="center"
+                justify="end"
+              >
+                <v-col class="d-inline-flex align-center me-3">
+                  <v-icon left small>
+                    mdi-thumb-up
+                  </v-icon>
+                  <span>{{ item.likesCount }}</span>
+                </v-col>
+
+                <v-col class="d-inline-flex align-center me-3">
+                  <v-icon left small>
+                    mdi-eye
+                  </v-icon>
+                  <span>{{ item.pv }}</span>
+                </v-col>
+
+                <v-hover v-model="commentButtonFocused">
+                  <v-col class="d-inline-flex align-center" @click.stop="onClickArticleComments">
+                    <v-icon left small :color="commentButtonFocused?'primary':null">
+                      mdi-comment-text
+                    </v-icon>
+                    <span
+                      class="transition-swing"
+                      :class="commentButtonFocused?'primary--text':null"
+                    >{{ item.commentsCount }}</span>
+                  </v-col>
+                </v-hover>
+
+                <v-col class="d-inline-flex align-center">
+                  <slot name="actions" />
+                </v-col>
+              </v-row>
+            </v-list-item-action>
+          </v-list-item>
+        </div>
+      </div>
+    </v-card>
   </v-hover>
 </template>
 
@@ -216,6 +213,10 @@ export default {
   },
   data () {
     return {
+      cardFocused: false,
+      usernameFocused: false,
+      commentButtonFocused: false,
+
       summaryShow: false
     }
   },
