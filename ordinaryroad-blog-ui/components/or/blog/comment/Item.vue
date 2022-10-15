@@ -25,10 +25,9 @@
 <template>
   <v-sheet class="d-flex mx-5">
     <!-- 头像 -->
-    <or-avatar
+    <or-blog-user-avatar
       class="mt-1"
-      :avatar="$apis.blog.getFileUrl(blogComment.user.avatar)"
-      :username="blogComment.user.username"
+      :user="blogComment.user"
     />
     <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
     <v-sheet class="flex-grow-1 ms-2 mt-1 bottom-toolbar-controller">

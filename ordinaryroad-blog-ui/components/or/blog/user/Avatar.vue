@@ -23,50 +23,33 @@
   -->
 
 <template>
-  <div style="width: 100%;">
-    <or-no-more-data v-if="noMoreData" />
-    <v-btn
-      v-else
-      text
-      :loading="loading"
-      block
-      depressed
-      @click="startLoading(false)"
-    >
-      <v-icon v-if="showDownIcon" left>
-        mdi-chevron-down
-      </v-icon>
-      加载更多
-    </v-btn>
-  </div>
+  <v-menu
+    open-on-hover
+    content-class="elevation-0 pa-2"
+  >
+    <template #activator="{ attrs, on }">
+      <div
+        v-bind="attrs"
+        v-on="on"
+      >
+        <or-avatar
+          v-bind="$attrs"
+          :avatar="$apis.blog.getFileUrl(user.avatar)"
+          :username="user.username"
+        />
+      </div>
+    </template>
+    <or-blog-user-basic-info :user="user" />
+  </v-menu>
 </template>
 
 <script>
 export default {
-  name: 'OrLoadMoreFooter',
+  name: 'OrBlogUserAvatar',
   props: {
-    /**
-     * 是否显示向下的图标
-     */
-    showDownIcon: {
-      type: Boolean,
-      default: true
-    },
-    noMoreData: {
-      type: Boolean,
+    user: {
+      type: Object,
       required: true
-    }
-  },
-  data: () => ({
-    loading: false
-  }),
-  methods: {
-    startLoading (onlyAnimation = false) {
-      this.loading = true
-      !onlyAnimation && this.$emit('loadMore')
-    },
-    finishLoad () {
-      this.loading = false
     }
   }
 }

@@ -24,12 +24,13 @@
 
 <template>
   <v-container fluid>
-    <v-row
-      v-if="typeInfoPageItems==null"
-    >
+    <v-row v-if="typeInfoPageItems==null">
       加载失败
     </v-row>
-    <v-list v-else>
+
+    <or-empty v-else-if="typeInfoPageItems&&typeInfoPageItems.total===0" />
+
+    <v-list v-else-if="typeInfoPageItems&&typeInfoPageItems.records.length>0">
       <v-list-item
         v-for="item in typeInfoPageItems.records"
         :key="item.uuid"
@@ -45,7 +46,9 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+
     <or-load-more-footer
+      v-if="typeInfoPageItems.total>0"
       ref="loadMoreFooter"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"

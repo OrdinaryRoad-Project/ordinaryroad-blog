@@ -72,27 +72,7 @@
           class="sticky-top"
         >
           <!-- 用户基本资料 -->
-          <base-material-card avatar="_required">
-            <template #avatar>
-              <or-avatar
-                :username="blogUser.username"
-                avatar-class="v-card--material__avatar elevation-6"
-                size="128"
-                :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
-              />
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <span class="font-weight-bold">{{ blogUser.username }}</span>
-                    <or-user-roles :roles="blogUser.roles" />
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <!--          <v-divider inset />-->
-          </base-material-card>
+          <or-blog-user-basic-info :user="blogUser" username-link-disabled />
 
           <div class="mt-14" />
           <!-- 用户创建的分类 -->

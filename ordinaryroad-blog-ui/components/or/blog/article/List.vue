@@ -29,8 +29,11 @@
     >
       加载失败
     </v-row>
+
+    <or-empty v-else-if="articlePageItems&&articlePageItems.total===0" />
+
     <vue-masonry-wall
-      v-else-if="articlePageItems&&articlePageItems.records.length > 0"
+      v-else-if="articlePageItems&&articlePageItems.records.length>0"
       :items="articlePageItems.records"
       :options="options"
       :ssr="{columns: 1}"
@@ -44,6 +47,7 @@
     </vue-masonry-wall>
 
     <or-load-more-footer
+      v-if="articlePageItems.total!==0"
       ref="loadMoreFooter"
       :show-down-icon="!autoLoadMore"
       class="mt-4"

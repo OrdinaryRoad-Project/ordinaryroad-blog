@@ -110,10 +110,9 @@
             <!-- 作者信息和操作按钮栏 -->
             <v-list-item>
               <!-- 头像 -->
-              <or-avatar
-                :username="item.user.username"
-                :avatar="$apis.blog.getFileUrl(item.user.avatar)"
+              <or-blog-user-avatar
                 avatar-class="v-list-item__avatar"
+                :user="item.user"
               />
               <!-- 用户名 -->
               <v-list-item-content>

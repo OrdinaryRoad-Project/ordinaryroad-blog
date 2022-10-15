@@ -23,52 +23,14 @@
   -->
 
 <template>
-  <div style="width: 100%;">
-    <or-no-more-data v-if="noMoreData" />
-    <v-btn
-      v-else
-      text
-      :loading="loading"
-      block
-      depressed
-      @click="startLoading(false)"
-    >
-      <v-icon v-if="showDownIcon" left>
-        mdi-chevron-down
-      </v-icon>
-      加载更多
-    </v-btn>
+  <div class="text-center">
+    <span>没有更多数据啦</span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'OrLoadMoreFooter',
-  props: {
-    /**
-     * 是否显示向下的图标
-     */
-    showDownIcon: {
-      type: Boolean,
-      default: true
-    },
-    noMoreData: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data: () => ({
-    loading: false
-  }),
-  methods: {
-    startLoading (onlyAnimation = false) {
-      this.loading = true
-      !onlyAnimation && this.$emit('loadMore')
-    },
-    finishLoad () {
-      this.loading = false
-    }
-  }
+  name: 'OrNoMoreData'
 }
 </script>
 
