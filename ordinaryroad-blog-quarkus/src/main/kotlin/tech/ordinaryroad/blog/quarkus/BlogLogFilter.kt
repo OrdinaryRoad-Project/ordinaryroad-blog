@@ -86,9 +86,9 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
     @Throws(IOException::class)
     override fun filter(requestContext: ContainerRequestContext) {
         tlStartTimestamp.set(System.currentTimeMillis())
-        log.info("==========request start==========")
+        log.debug("==========request start==========")
         val loginIdDefaultNull = StpUtil.getLoginIdDefaultNull() as String?
-        log.info("current userId: $loginIdDefaultNull")
+        log.debug("current userId: $loginIdDefaultNull")
 
         val entityStream = requestContext.entityStream
         val out = ByteArrayOutputStream(entityStream.available())
@@ -111,14 +111,14 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         blogLog.queryParams = JSONUtil.toJsonStr(requestContext.uriInfo.queryParameters)
         blogLog.request = String(data, StandardCharsets.UTF_8)
 
-        log.info("ip: ${blogLog.ip}")
-        log.info("path: ${blogLog.path}")
-        log.info("method: ${blogLog.method}")
-        log.info("headers: ${blogLog.headers}")
-        log.info("cookies: ${blogLog.cookies}")
-        log.info("path params: ${blogLog.pathParams}")
-        log.info("query params: ${blogLog.queryParams}")
-        log.info("request body: ${blogLog.request}")
+        log.debug("ip: ${blogLog.ip}")
+        log.debug("path: ${blogLog.path}")
+        log.debug("method: ${blogLog.method}")
+        log.debug("headers: ${blogLog.headers}")
+        log.debug("cookies: ${blogLog.cookies}")
+        log.debug("path params: ${blogLog.pathParams}")
+        log.debug("query params: ${blogLog.queryParams}")
+        log.debug("request body: ${blogLog.request}")
 
         requestContext.entityStream = ByteArrayInputStream(data)
         tlBlogLog.set(blogLog)
@@ -133,10 +133,10 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         blogLog.responseCookies = JSONUtil.toJsonStr(responseContext.cookies)
         blogLog.response = JSONUtil.toJsonStr(responseContext.entity)
 
-        log.info("response status: ${blogLog.status}")
-        log.info("response headers: ${blogLog.headers}")
-        log.info("response cookies: ${blogLog.cookies}")
-        log.info("response body: ${blogLog.response}")
+        log.debug("response status: ${blogLog.status}")
+        log.debug("response headers: ${blogLog.headers}")
+        log.debug("response cookies: ${blogLog.cookies}")
+        log.debug("response body: ${blogLog.response}")
 
         val consumedTime = System.currentTimeMillis() - tlStartTimestamp.get()
         blogLog.consumedTime = consumedTime
@@ -146,16 +146,16 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
             blogLogService().create(blogLog)
         } else {
             if (requestContext.method != "GET") {
-                log.warn("blogLog.type is null")
+                log.warn("blogLog.type is null when GET")
             } else {
-                log.info("skip GET method")
+                log.debug("skip GET method")
             }
         }
 
         tlStartTimestamp.remove()
         tlBlogLog.remove()
-        log.info("consumed time: $consumedTime")
-        log.info("==========request end==========")
+        log.debug("consumed time: $consumedTime")
+        log.debug("==========request end==========")
     }
 
 }

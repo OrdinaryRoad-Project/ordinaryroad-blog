@@ -1,6 +1,8 @@
 quarkus:
   application:
     name: ordinaryroad-blog-quarkus
+  log:
+    level: DEBUG
   datasource:
     jdbc:
       driver: com.mysql.cj.jdbc.Driver
