@@ -81,6 +81,7 @@ export const actions = {
         value: getNumberFromCookie(cookieString, SELECTED_THEME_OPTION_KEY, store.getters['app/getSelectedThemeOption']),
         $vuetify
       })
+      commit('app/UPDATE_THEME', { value: store.getters['app/getSelectedThemeOption'], $vuetify })
       commit('i18n/SET_SELECTED_LANG_OPTION', {
         value: getStringFromCookie(cookieString, SELECTED_LANG_OPTION_KEY, store.getters['i18n/getLocale'])
       })
