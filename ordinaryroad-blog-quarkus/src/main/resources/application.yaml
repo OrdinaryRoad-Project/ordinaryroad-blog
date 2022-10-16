@@ -57,6 +57,7 @@ sa-token:
   token-name: or-blog-token
   is-log: true
   annotation-intercepted-enabled: true
+  activity-timeout: 43200
 # OrdinaryRoad
 ordinaryroad:
   oauth2:
