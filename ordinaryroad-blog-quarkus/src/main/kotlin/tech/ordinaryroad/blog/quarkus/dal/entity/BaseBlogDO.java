@@ -36,12 +36,12 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
  */
 public abstract class BaseBlogDO extends BaseDO {
 
-    private static final long serialVersionUID = 7721434524564915295L;
+    private static final long serialVersionUID = -5091541687576552L;
 
     /**
      * 创建时自动填充
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private String ip;
 
     public BaseBlogDO() {

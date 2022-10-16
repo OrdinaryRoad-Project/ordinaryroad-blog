@@ -184,6 +184,18 @@ class BlogOAuth2Resource {
         }
         val userId = user!!.uuid
 
+        // 已注销或者已封禁
+        if (user.deleted || !user.enabled) {
+            StpUtil.disable(userId, -1)
+        } else {
+            StpUtil.untieDisable(userId)
+        }
+
+        StpUtil.login(userId, SaLoginModel().apply {
+            setDevice(device)
+            setIsLastingCookie(true)
+        })
+
         // 2023年之前通过ordinaryroad账号登录赋予SSSSSSVIP角色
         if (LocalDate.now().isBefore(LocalDate.of(2023, 1, 1))) {
             if (provider == OrdinaryRoadOAuth2Source.NAME) {
@@ -193,11 +205,6 @@ class BlogOAuth2Resource {
                 }
             }
         }
-
-        StpUtil.login(userId, SaLoginModel().apply {
-            setDevice(device)
-            setIsLastingCookie(true)
-        })
 
         val roleDtoList = roleService.findAllByUserId(userId)
             .stream()

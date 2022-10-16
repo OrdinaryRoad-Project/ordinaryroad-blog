@@ -32,13 +32,17 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class BlogUser extends BaseBlogDO {
 
-    private static final long serialVersionUID = 3731411534385927372L;
+    private static final long serialVersionUID = 3030160973436107151L;
 
     private String username;
 
     private String avatar;
 
     private String email;
+
+    private Boolean enabled;
+
+    private Boolean deleted;
 
     public String getUsername() {
         return username;
@@ -62,5 +66,21 @@ public class BlogUser extends BaseBlogDO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
