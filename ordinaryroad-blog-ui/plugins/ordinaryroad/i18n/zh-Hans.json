@@ -1,4 +1,9 @@
 {
+  "error": {
+    "back": "返回上一级",
+    "home": "返回首页",
+    "404": "抱歉，您访问的资源不存在。"
+  },
   "allRightsReserved": "版权所有",
   "term": {
     "privacy": "《隐私政策》"

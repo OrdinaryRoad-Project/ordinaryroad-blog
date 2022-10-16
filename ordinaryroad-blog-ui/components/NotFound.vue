@@ -24,19 +24,19 @@
 
 <template>
   <div class="d-flex flex-column justify-center align-center" style="height: 100vh;text-align: center">
-    <p class="font-weight-bold display-3">
+    <p class="font-weight-bold display-4">
       404
     </p><br>
     <p class="display-2">
       {{ error.message }}
     </p><br>
-    <p>抱歉，您访问的资源不存在。</p>
+    <p>{{ $t('error.404') }}</p>
     <div>
       <v-btn class="ma-5" large @click="$router.replace({path:'/'})">
-        直接返回首页
+        {{ $t('error.home') }}
       </v-btn>
       <v-btn color="primary" large class="ma-5" @click="$router.back()">
-        返回上一级/首页
+        {{ $t('error.back') }}
       </v-btn>
     </div>
   </div>
@@ -54,7 +54,11 @@ export default {
   data () {
     return {}
   },
-  watch: {}
+  watch: {},
+  created () {
+    console.log(this.$router)
+    console.log(this.$router.history)
+  }
 }
 </script>
 

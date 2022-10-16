@@ -1,4 +1,9 @@
 {
+  "error": {
+    "back": "Back",
+    "home": "Home",
+    "404": "Sorry, the resource you accessed does not exist."
+  },
   "allRightsReserved": "All Rights Reserved",
   "term": {
     "privacy": "\"Privacy Policy\""
