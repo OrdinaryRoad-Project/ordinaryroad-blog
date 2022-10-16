@@ -49,6 +49,7 @@ CREATE TABLE `blog_article`
     `summary`      varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '摘要',
     `content`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci          NULL DEFAULT NULL COMMENT '内容',
     `status`       varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '状态',
+    `can_comment`  bit(1)                                                         NULL DEFAULT NULL COMMENT '是否可以评论',
     `can_reward`   bit(1)                                                         NULL DEFAULT NULL COMMENT '是否可以打赏',
     `original`     bit(1)                                                         NULL DEFAULT NULL COMMENT '是否为原创',
     `first_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL DEFAULT NULL COMMENT '最开始版本的UUID',

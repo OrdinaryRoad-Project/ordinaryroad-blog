@@ -37,7 +37,7 @@ import java.util.List;
 @RegisterForReflection
 public class BlogArticle extends BaseBlogDO {
 
-    private static final long serialVersionUID = -8926354700795802869L;
+    private static final long serialVersionUID = -8948779674195993743L;
 
     /**
      * 标题
@@ -63,6 +63,11 @@ public class BlogArticle extends BaseBlogDO {
      * 文章状态
      */
     private BlogArticleStatus status;
+
+    /**
+     * 是否允许评论
+     */
+    private Boolean canComment;
 
     /**
      * 是否允许打赏
@@ -96,12 +101,13 @@ public class BlogArticle extends BaseBlogDO {
     public BlogArticle() {
     }
 
-    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canReward, Boolean original, String firstId, String typeId, List<String> tagIds) {
+    public BlogArticle(String title, String coverImage, String summary, String content, BlogArticleStatus status, Boolean canComment, Boolean canReward, Boolean original, String firstId, String typeId, List<String> tagIds) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
         this.content = content;
         this.status = status;
+        this.canComment = canComment;
         this.canReward = canReward;
         this.original = original;
         this.firstId = firstId;
@@ -147,6 +153,14 @@ public class BlogArticle extends BaseBlogDO {
 
     public void setStatus(BlogArticleStatus status) {
         this.status = status;
+    }
+
+    public Boolean getCanComment() {
+        return canComment;
+    }
+
+    public void setCanComment(Boolean canComment) {
+        this.canComment = canComment;
     }
 
     public Boolean getCanReward() {

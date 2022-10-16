@@ -42,6 +42,8 @@ class BlogArticlePublishRequest : BaseRequest() {
     @NotBlank(message = "内容不能为空")
     var content: String = ""
 
+    var canComment: Boolean? = null
+
     var canReward: Boolean? = null
 
     var original: Boolean? = null
@@ -56,7 +58,7 @@ class BlogArticlePublishRequest : BaseRequest() {
     var tagNames: List<String> = emptyList()
 
     companion object {
-        private const val serialVersionUID: Long = 6243199611696895400L
+        private const val serialVersionUID: Long = 4440826574287058339L
     }
 
 }

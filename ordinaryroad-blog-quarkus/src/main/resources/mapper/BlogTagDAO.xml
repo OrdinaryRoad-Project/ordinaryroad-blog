@@ -73,7 +73,7 @@
         <if test="userId != null and userId != ''">
             AND create_by = #{userId}
         </if>
-        ) ba ON ba.tag_ids LIKE CONCAT('%', bt.uuid, '%')
+        ) ba ON ba.tag_ids LIKE CONCAT('%"', bt.uuid, '"%')
         WHERE bt.deleted = 0
         GROUP BY bt.uuid
         ORDER BY article_count DESC

@@ -42,6 +42,8 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @NotBlank(message = "内容不能为空")
     var content: String = ""
 
+    var canComment: Boolean? = null
+
     var canReward: Boolean? = null
 
     var original: Boolean? = null
@@ -56,7 +58,7 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     var tagNames: List<String> = emptyList()
 
     companion object {
-        private const val serialVersionUID: Long = 534468300453589323L
+        private const val serialVersionUID: Long = 5912248006931435075L
     }
 
 }
