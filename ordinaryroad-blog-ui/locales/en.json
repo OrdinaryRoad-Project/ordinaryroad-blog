@@ -9,6 +9,9 @@
   "all": "All",
   "appName": "OR BLOG",
   "article": {
+    "likedTime": "Like Time: {0}",
+    "browsedTime": "Browse Time: {0}",
+    "firstBrowsedTime": "First Browse Time: {0}",
     "detail": {
       "copyrightStatement": {
         "title": "Copyright Statement: ",

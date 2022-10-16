@@ -62,11 +62,17 @@
 
             <br>
 
-            <div class="text-caption">
-              {{ $t('agree') }}<span v-if="false">《用户协议》和</span>
-              <or-link href="/term/privacy">
-                <span class="white--text">{{ $t('term.privacy') }}</span>
-              </or-link>
+            <div class="d-flex text-caption align-center justify-center">
+              <v-simple-checkbox
+                v-model="agree"
+                style="scale: 80%"
+                class="pa-0 ma-0"
+                dark
+              />
+              <span>{{ $t('agree') }}<span v-if="false">《用户协议》和</span>
+                <or-link href="/term/privacy"><span class="white--text">{{
+                  $t('term.privacy')
+                }}</span></or-link></span>
             </div>
           </div>
         </template>
@@ -97,11 +103,16 @@ export default {
   },
   data () {
     return {
+      agree: false,
       redirect: '/'
     }
   },
   methods: {
     login (provider) {
+      if (!this.agree) {
+        this.$snackbar.info(this.$t('term.agreeHint'))
+        return
+      }
       const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
       this.$dialog({
         content: this.$t('loginHint'),

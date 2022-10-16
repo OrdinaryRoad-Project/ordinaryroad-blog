@@ -41,10 +41,10 @@
             >
               <template #opposite>
                 <span v-if="!$vuetify.breakpoint.mdAndDown">
-                  浏览时间：{{
-                    item.lastBrowsedTime
-                  }}<br>{{
-                    item.firstBrowsedTime !== item.lastBrowsedTime ? `首次浏览时间：${item.firstBrowsedTime}` : null
+                  {{ $t('article.browsedTime', [item.lastBrowsedTime]) }}
+                  <br>
+                  {{
+                    item.firstBrowsedTime !== item.lastBrowsedTime ? $t('article.firstBrowsedTime', [item.firstBrowsedTime]) : null
                   }}</span>
               </template>
 

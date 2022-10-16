@@ -9,6 +9,9 @@
   "all": "全部",
   "appName": "OR博客",
   "article": {
+    "likedTime": "点赞时间：{0}",
+    "browsedTime": "浏览时间：{0}",
+    "firstBrowsedTime": "首次浏览时间：{0}",
     "detail": {
       "copyrightStatement": {
         "title": "版权声明：",

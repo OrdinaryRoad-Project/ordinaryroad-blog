@@ -93,7 +93,7 @@
                           class="d-inline-flex my-0 elevation-4"
                           type="info"
                         >
-                          点赞时间： {{ $dayjs(item.likedTime).format() }}
+                          {{ $t('article.likedTime', [$dayjs(item.likedTime).format()]) }}
                         </v-alert>
                       </v-overlay>
                     </v-expand-transition>

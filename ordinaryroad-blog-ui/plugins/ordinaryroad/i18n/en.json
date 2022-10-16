@@ -7,11 +7,12 @@
   },
   "allRightsReserved": "All Rights Reserved",
   "term": {
-    "privacy": "\"Privacy Policy\""
+    "agreeHint": "Please tick to agree \"Privacy Policy\"",
+    "privacy": " \"Privacy Policy\""
   },
   "add": "Add",
   "agree": "Agree",
-  "areYouSureToDoWhat": "Are you sure to {0} ?",
+  "areYouSureToDoWhat": "Are you sure to {0}?",
   "attention": "Attention",
   "back": "Back",
   "basicInfo": "Basic Info",
