@@ -88,7 +88,7 @@ class BlogPushService {
         contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
-        contentTemplate = contentTemplate.replace("{articleId}", article.uuid)
+        contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
         contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
 
@@ -121,7 +121,7 @@ class BlogPushService {
         contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
-        contentTemplate = contentTemplate.replace("{articleId}", article.uuid)
+        contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
         contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
 

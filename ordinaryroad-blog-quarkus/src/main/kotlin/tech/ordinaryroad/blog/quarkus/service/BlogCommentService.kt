@@ -158,11 +158,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
     fun pageArticleComment(request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
         val article = validateArticle(request.articleId)
-        val articleId = if (article.uuid != article.firstId) {
-            article.firstId
-        } else {
-            article.uuid
-        }
+        val articleId = article.firstId
 
         val wrapper = ChainWrappers.queryChain(dao)
             .eq("article_id", articleId)
