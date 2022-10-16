@@ -32,8 +32,6 @@ package tech.ordinaryroad.blog.quarkus.util;
  */
 public class IpRegion {
 
-    public static final IpRegion NULL = new IpRegion();
-
     private String country;
 
     private String area;

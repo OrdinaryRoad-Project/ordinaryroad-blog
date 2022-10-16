@@ -107,9 +107,10 @@ object BlogUtils {
     /**
      * 获取IP归属地
      */
-    fun getIpRegion(ip: String?): IpRegion {
-        val ipRegion = IpRegion.NULL
+    fun getIpRegion(ip: String?): IpRegion? {
+        var ipRegion: IpRegion? = null
         if (!ip.isNullOrBlank()) {
+            ipRegion = IpRegion()
             try {
                 IP_REGION_SEARCHER.search(ip).let {
                     if (!it.isNullOrBlank()) {
@@ -131,6 +132,9 @@ object BlogUtils {
     @JvmStatic
     fun main(args: Array<String>) {
         println(Json.encode(getIpRegion("127.0.0.1")))
+        println(Json.encode(getIpRegion(null)))
+        println(Json.encode(getIpRegion("")))
+        println(Json.encode(getIpRegion("1.2.3.4")))
     }
 
 }
