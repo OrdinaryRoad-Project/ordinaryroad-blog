@@ -5,17 +5,23 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 界面：
 
-- MarkDown
+- Material Design
+- Markdown
 - 瀑布流
 
 功能：
 
 - 多人博客
-- 支持评论
+- 支持点赞、评论
 - 自建分类
 - 公共标签
+- 浏览记录
+- 数据统计
+- 第三方账号登录
+- 账号临时封禁、永久封禁、解封
 
 框架：
 
 - Quarkus
-- OAuth2
+- MyBatis Plus
+- SaToken

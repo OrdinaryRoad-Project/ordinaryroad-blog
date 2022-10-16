@@ -85,12 +85,25 @@ docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_
 
 主账号：OrdinaryRoad账号
 
-[//]: # (第三方账号：)
+第三方账号：
+
+- GitHub
+- Gitee
 
 ## 文章
 
-- [x] MarkDown格式
+- [x] Markdown格式
 - [ ] 文章归档
+
+### 浏览记录
+
+已登录：
+
+userId, articleId
+
+未登录：
+
+ip, articleId
 
 ## 分类
 
@@ -105,6 +118,19 @@ docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_
 标签为每个用户公有的
 
 ## 评论
+
+## 数据统计
+
+- 已发布文章
+- 已浏览文章
+- 已点赞文章
+- 分类数
+- 评论发表数
+- 文章发布热力图
+- 分类文章数Top10
+- 文章评论数Top10
+- 文章点赞数Top10
+- 文章浏览数Top10
 
 # 使用容器进行Maven构建
 
@@ -142,12 +168,12 @@ docker run -i --rm -p 8080:8080 -e ORDINARYROAD_OAUTH2_CLIENT_ID=xxx -e ORDINARY
 
 ```shell
 
-docker tag quarkus/ordinaryroad-blog-quarkus-jvm ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220831_3
+docker tag quarkus/ordinaryroad-blog-quarkus-jvm ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220902_6
 
 ```
 
 ```shell
 
-docker push ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220831_3
+docker push ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220902_6
 
 ```
