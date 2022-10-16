@@ -56,20 +56,22 @@
         class="d-flex justify-center align-center font-weight-light"
         :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
-        <div class="d-flex">
+        <div class="d-flex my-1">
           Frontend:<span class="ms-1">{{ $config.CI.VERSION.FRONTEND }}</span><a
             class="d-flex mx-2"
             href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"
           ><img
+            style="min-width: 120px"
             alt="build status"
             src="https://ordinaryroad.coding.net/badges/ordinaryroad/job/1495289/build.svg"
           ></a>
         </div>
-        <div class="d-flex">
+        <div class="d-flex my-1">
           Backend:<span class="ms-1">{{ $config.CI.VERSION.BACKEND }}</span><a
             class="d-flex ms-2"
             href="https://ordinaryroad.coding.net/p/ordinaryroad/ci/job"
           ><img
+            style="min-width: 120px"
             alt="build status"
             src="https://ordinaryroad.coding.net/badges/ordinaryroad/job/1483779/build.svg"
           ></a>
