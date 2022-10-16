@@ -184,13 +184,6 @@ class BlogOAuth2Resource {
         }
         val userId = user!!.uuid
 
-        // 已注销或者已封禁
-        if (user.deleted || !user.enabled) {
-            StpUtil.disable(userId, -1)
-        } else {
-            StpUtil.untieDisable(userId)
-        }
-
         StpUtil.login(userId, SaLoginModel().apply {
             setDevice(device)
             setIsLastingCookie(true)

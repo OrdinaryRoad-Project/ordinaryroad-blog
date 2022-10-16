@@ -27,7 +27,7 @@
     <v-card class="mx-auto">
       <v-card-text>
         <v-progress-circular indeterminate color="primary" class="me-2" />
-        授权通过，正在获取用户信息...
+        {{ $t('authorizedHint') }}
       </v-card-text>
     </v-card>
   </v-container>
@@ -91,9 +91,9 @@ export default {
     } else {
       this.$dialog({
         persistent: true,
-        title: '系统提示',
+        title: this.$t('systemHint'),
         content: this.msg,
-        cancelText: '返回首页'
+        cancelText: this.$t('error.home')
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$router.replace(`/user/login?redirect=${this.redirect}`)

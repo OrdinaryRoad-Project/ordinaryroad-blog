@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.exception.mapper;
 
+import cn.dev33.satoken.exception.DisableLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import org.jboss.logging.Logger;
@@ -55,6 +56,9 @@ public class SaTokenExceptionMapper implements ExceptionMapper<SaTokenException>
     public Response toResponse(SaTokenException exception) {
         // TODO 解析SaTokenException
         log.error("SaTokenException", exception);
+        if (exception instanceof DisableLoginException) {
+
+        }
         return Response.status(Response.Status.UNAUTHORIZED.getStatusCode(), exception.getMessage())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(exception)

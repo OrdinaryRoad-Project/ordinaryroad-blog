@@ -66,13 +66,14 @@ export function getObjectFromCookie (string, key, defaultValue) {
 
 export const actions = {
   nuxtServerInit ({ commit }, {
+    $dayjs,
     $vuetify,
     $apisServer,
     $access,
     req,
     app
   }) {
-    const { store } = app
+    const { store, i18n } = app
     // 初始化，可以获取初始值
     if (typeof req !== 'undefined' && req.headers && req.headers.cookie) {
       const cookieString = req.headers.cookie
@@ -84,6 +85,12 @@ export const actions = {
       commit('app/UPDATE_THEME', { value: store.getters['app/getSelectedThemeOption'], $vuetify })
       commit('i18n/SET_SELECTED_LANG_OPTION', {
         value: getStringFromCookie(cookieString, SELECTED_LANG_OPTION_KEY, store.getters['i18n/getLocale'])
+      })
+      commit('i18n/UPDATE_LANG', {
+        value: store.getters['i18n/getLocale'],
+        $i18n: i18n,
+        $vuetify,
+        $dayjs
       })
 
       const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])

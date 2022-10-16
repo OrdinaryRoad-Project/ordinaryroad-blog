@@ -147,6 +147,51 @@ class BlogUserResource {
         return dtoPage
     }
 
+    /**
+     * 封禁用户
+     */
+    @GET
+    @Path("disable")
+    fun disable(
+        @Valid @Size(max = 32, message = "userId长度不能大于32")
+        @NotBlank(message = "userId不能为空") @RestQuery userId: String,
+        @Valid @RestQuery disableTime: Long
+    ): Long {
+        BlogUtils.checkAdminOrDeveloper()
+
+        userService.update(BlogUser().apply {
+            this.uuid = userId
+            this.enabled = disableTime > 0
+        })
+
+        StpUtil.disable(userId, disableTime)
+
+        StpUtil.kickout(userId)
+
+        return StpUtil.getDisableTime(userId)
+    }
+
+    /**
+     * 解封用户
+     */
+    @GET
+    @Path("untieDisable")
+    fun untieDisable(
+        @Valid @Size(max = 32, message = "userId长度不能大于32")
+        @NotBlank(message = "userId不能为空") @RestQuery userId: String
+    ): Long {
+        BlogUtils.checkAdminOrDeveloper()
+
+        userService.update(BlogUser().apply {
+            this.uuid = userId
+            this.enabled = true
+        })
+
+        StpUtil.untieDisable(userId)
+
+        return StpUtil.getDisableTime(userId)
+    }
+
     //region 开发中（管理员）
     @PUT
     @Path("{id}")

@@ -1,4 +1,5 @@
 {
+  "authorizedHint": "Authorization passed, obtaining user information...",
   "clearAvatar": "Clear Avatar",
   "loginHint": "Currently, only account unbinding is supported, and canceling is not supported. After successful login, you can bind other accounts by unbinding",
   "understandAnd": "Understand And {0}",

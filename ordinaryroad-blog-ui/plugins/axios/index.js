@@ -29,6 +29,7 @@ export default function (context, inject) {
   // $dialog和$snackbar必须通过context.$xxx方式调用
   const {
     $axios,
+    $dayjs,
     route,
     app
   } = context
@@ -64,7 +65,7 @@ export default function (context, inject) {
           if (route.path !== '/') {
             context.$dialog({
               persistent: true,
-              title: '系统提示',
+              title: this.$t('systemHint'),
               content: '登录状态已过期，您可以继续留在该页面，或者重新登录。',
               confirmText: '重新登录'
             }).then((dialog) => {
@@ -85,12 +86,20 @@ export default function (context, inject) {
     }
   },
   (error) => {
+    console.log('error', error)
     let message
     if (typeof error === 'string') {
       message = error
     } else {
       const data = error.response.data
-      message = typeof data === 'string' ? data : data.message
+      if (typeof data === 'string') {
+        message = data
+      } else {
+        message = data.message
+        if (message === '此账号已被封禁') {
+          message += `，解封时间：${$dayjs().add(data.disableTime, 'second').format()}`
+        }
+      }
     }
     if (!message) {
       message = '失败'
@@ -100,7 +109,7 @@ export default function (context, inject) {
     } else if (message.includes('timeout')) {
       message = '系统接口请求超时'
     } else if (message.includes('Request failed with status code')) {
-      message = '系统接口' + message.substr(message.length - 3) + '异常'
+      message = '系统接口' + message.slice(message.length - 3) + '异常'
     }
     process.client && context.$snackbar.error(message)
     return Promise.reject(message)
