@@ -48,6 +48,9 @@ public interface BaseBlogMapStruct {
 
     default BlogIpRegionVO ip2Region(String ip) {
         IpRegion ipRegion = BlogUtils.INSTANCE.getIpRegion(ip);
+        if (ipRegion == null) {
+            return null;
+        }
         String country = ipRegion.getCountry();
         if (Objects.equals(country, "0")) {
             country = ipRegion.getArea();
