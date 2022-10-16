@@ -112,9 +112,9 @@
     "charts": {
       "dailyPosts": "文章发布热力图",
       "topNTypesArticle": "分类文章数Top10",
-      "topNCommentsArticle": "分类评论数Top10",
-      "topNLikedArticle": "分类点赞数Top10",
-      "topNBrowsedArticle": "分类浏览数Top10"
+      "topNCommentsArticle": "文章评论数Top10",
+      "topNLikedArticle": "文章点赞数Top10",
+      "topNBrowsedArticle": "文章浏览数Top10"
     }
   },
   "oAuthUser": {

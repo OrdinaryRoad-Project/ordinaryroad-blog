@@ -109,8 +109,8 @@ CREATE TABLE `blog_user`
     `username`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '用户名',
     `avatar`       varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '头像地址',
     `email`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '邮箱',
-    `enabled`      bit(1)                                                         NULL DEFAULT b'1' COMMENT '用户是否启用',
-    `deleted`      bit(1)                                                         NULL DEFAULT b'0' COMMENT '用户是否删除',
+    `enabled`      bit(1)                                                         NULL DEFAULT b'1' COMMENT '是否永久封禁',
+    `deleted`      bit(1)                                                         NULL DEFAULT b'0' COMMENT '是否已注销',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_user_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
