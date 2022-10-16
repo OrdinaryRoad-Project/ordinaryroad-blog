@@ -3,6 +3,8 @@
 Frontend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/job/1483779/build.svg)](https://ordinaryroad.coding.net/p/ordinaryroad/ci/job)
 Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/job/1495289/build.svg "Backend")](https://ordinaryroad.coding.net/p/ordinaryroad/ci/job)
 
+链接：[https://blog.ordinaryroad.tech](https://blog.ordinaryroad.tech)
+
 界面：
 
 - Material Design
