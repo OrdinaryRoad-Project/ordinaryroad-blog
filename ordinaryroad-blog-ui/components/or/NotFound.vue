@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  name: 'NotFound',
+  name: 'OrNotFound',
   props: {
     error: {
       type: Object,
@@ -56,8 +56,6 @@ export default {
   },
   watch: {},
   created () {
-    console.log(this.$router)
-    console.log(this.$router.history)
   }
 }
 </script>

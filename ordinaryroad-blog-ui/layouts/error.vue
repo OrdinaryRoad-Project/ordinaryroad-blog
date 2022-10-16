@@ -26,7 +26,7 @@
   <v-app>
     <v-main>
       <v-container fluid class="pa-0">
-        <NotFound v-if="error.statusCode === 404" :error="error" />
+        <or-not-found v-if="error.statusCode === 404" :error="error" />
         <p v-else>
           {{ otherError }}
         </p>
@@ -55,6 +55,21 @@ export default {
     return {
       title
     }
+  },
+  mounted () {
+    // dom初始化完成再初始化主题
+    this.$nextTick(() => {
+      this.$store.commit('app/UPDATE_THEME', {
+        value: this.$store.getters['app/getSelectedThemeOption'],
+        $vuetify: this.$vuetify
+      })
+      this.$store.commit('i18n/UPDATE_LANG', {
+        value: this.$store.getters['i18n/getLocale'],
+        $i18n: this.$i18n,
+        $vuetify: this.$vuetify,
+        $dayjs: this.$dayjs
+      })
+    })
   }
 }
 </script>
