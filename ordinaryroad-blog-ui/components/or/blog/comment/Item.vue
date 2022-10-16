@@ -53,7 +53,7 @@
               </span>
 
               <!-- IP归属地 -->
-              <div class="me-2">
+              <div v-if="blogComment.ip" class="me-2">
                 <span>{{
                   blogComment.ip.country === '中国' ? blogComment.ip.province : blogComment.ip.country === '0' ? '未知' : blogComment.ip.country
                 }}</span>

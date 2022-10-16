@@ -249,7 +249,7 @@
         style="position: absolute; left: 0; right: 0; bottom: 60px"
       >
         <!-- IP归属地 -->
-        <div class="d-flex align-center me-2">
+        <div v-if="blogArticle.ip" class="d-flex align-center me-2">
           <v-icon left small>
             mdi-map-marker
           </v-icon>
