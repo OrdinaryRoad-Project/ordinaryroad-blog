@@ -40,7 +40,7 @@ import javax.enterprise.inject.spi.CDI
  */
 object BlogUtils {
 
-    val IP_REGION_SEARCHER = Searcher.newWithFileOnly(FileUtil.file("classpath:ip2region/data_ip2region.xdb").path)
+    val IP_REGION_SEARCHER = Searcher.newWithBuffer(FileUtil.readBytes("classpath:ip2region/data_ip2region.xdb"))
 
     /**
      * 解析两个List的差异
