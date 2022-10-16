@@ -28,6 +28,7 @@ import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.io.FileUtil
 import cn.hutool.core.net.NetUtil
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
+import io.vertx.core.json.Json
 import org.lionsoul.ip2region.xdb.Searcher
 import javax.enterprise.inject.spi.CDI
 
@@ -39,8 +40,7 @@ import javax.enterprise.inject.spi.CDI
  */
 object BlogUtils {
 
-    val IP_REGION_SEARCHER =
-        Searcher.newWithFileOnly(FileUtil.getAbsolutePath("classpath:ip2region/data_ip2region.xdb"))
+    val IP_REGION_SEARCHER = Searcher.newWithFileOnly(FileUtil.file("classpath:ip2region/data_ip2region.xdb").path)
 
     /**
      * 解析两个List的差异
@@ -126,6 +126,11 @@ object BlogUtils {
             }
         }
         return ipRegion
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println(Json.encode(getIpRegion("127.0.0.1")))
     }
 
 }
