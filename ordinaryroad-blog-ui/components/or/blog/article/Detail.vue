@@ -479,7 +479,7 @@
               v-else
               rounded
               height="60"
-              class="d-flex justify-center align-center mx-6"
+              class="d-flex justify-center align-center mx-2"
               outlined
             >
               <v-btn
