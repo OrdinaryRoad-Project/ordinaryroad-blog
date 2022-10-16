@@ -1,4 +1,8 @@
 {
+  "clearAvatar": "清空头像",
+  "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",
+  "understandAnd": "我知道了，继续{0}",
+  "oauthAccountAlreadyRegisteredHint": "该账号已注册，请先注销账号（开发中...）",
   "all": "全部",
   "appName": "OR博客",
   "article": {

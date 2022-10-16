@@ -93,10 +93,14 @@
             <v-list-item-content>
               <v-list-item-title>{{ oAuthUser(provider).username }}</v-list-item-title>
               <v-list-item-subtitle>
-                添加时间：{{ oAuthUser(provider).createdTime }}
+                {{ $t('createdTime') }}{{
+                  $t('punctuation.colonWithSuffixSpace')
+                }}{{ $dayjs(oAuthUser(provider).createdTime).format() }}
                 <span v-if="oAuthUser(provider).updateTime">
                   <br>
-                  更新时间：{{ oAuthUser(provider).updateTime }}
+                  {{ $t('updateTime') }}{{
+                    $t('punctuation.colonWithSuffixSpace')
+                  }}{{ $dayjs(oAuthUser(provider).updateTime).format() }}
                 </span>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -166,7 +170,7 @@ export default {
       if (file == null) {
         if (this.userInfo.user.avatar) {
           this.$dialog({
-            content: this.$t('areYouSureToDoWhat', ['清空头像']),
+            content: this.$t('areYouSureToDoWhat', [this.$t('clearAvatar')]),
             loading: true
           })
             .then((dialog) => {
@@ -174,7 +178,7 @@ export default {
                 this.avatarForm.loading = true
                 this.updateAvatar({ avatar: '', $apis: this.$apis })
                   .then(() => {
-                    this.$snackbar.success(this.$t('whatSuccessfully', ['头像清空']))
+                    this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('clearAvatar')]))
                     this.avatarForm.loading = false
                     dialog.cancel()
                   })
@@ -193,7 +197,7 @@ export default {
           .then((data) => {
             this.updateAvatar({ avatar: data, $apis: this.$apis })
               .then(() => {
-                this.$snackbar.success(this.$t('whatUpdateSuccessfully', ['头像']))
+                this.$snackbar.success(this.$t('whatUpdateSuccessfully', [this.$t('avatar')]))
                 this.avatarForm.loading = false
               })
               .catch(() => {
@@ -238,10 +242,25 @@ export default {
         })
       } else {
         const state = `${this.$dayjs().valueOf()}_${this.$route.path}_${provider}_${action}`
-        this.$apis.blog.oauth2.authorize(provider, state)
-          .then((data) => {
-            window.open(data, '_self')
+        if (action === 'add') {
+          this.$dialog({
+            content: this.$t('loginHint'),
+            confirmText: this.$t('understandAnd', [this.$t('oAuthUser.actions.add')])
           })
+            .then(({ isConfirm }) => {
+              if (isConfirm) {
+                this.$apis.blog.oauth2.authorize(provider, state)
+                  .then((data) => {
+                    window.open(data, '_self')
+                  })
+              }
+            })
+        } else {
+          this.$apis.blog.oauth2.authorize(provider, state)
+            .then((data) => {
+              window.open(data, '_self')
+            })
+        }
       }
     },
     usernameClick () {

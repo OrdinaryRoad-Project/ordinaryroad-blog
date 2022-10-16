@@ -103,25 +103,18 @@ export default {
   methods: {
     login (provider) {
       const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
-      if (provider !== 'ordinaryroad') {
-        this.$dialog({
-          content: '如使用未绑定账号的第三方账号登录，登录成功后将暂时无法解绑来绑定其他账号',
-          confirmText: '我知道了，继续登录'
+      this.$dialog({
+        content: this.$t('loginHint'),
+        confirmText: this.$t('understandAnd', [this.$t('login')])
+      })
+        .then(({ isConfirm }) => {
+          if (isConfirm) {
+            this.$apis.blog.oauth2.authorize(provider, state)
+              .then((data) => {
+                window.open(data, '_self')
+              })
+          }
         })
-          .then(({ isConfirm }) => {
-            if (isConfirm) {
-              this.$apis.blog.oauth2.authorize(provider, state)
-                .then((data) => {
-                  window.open(data, '_self')
-                })
-            }
-          })
-      } else {
-        this.$apis.blog.oauth2.authorize(provider, state)
-          .then((data) => {
-            window.open(data, '_self')
-          })
-      }
     }
   }
 }
