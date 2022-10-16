@@ -630,7 +630,7 @@ class BlogArticleResource {
             .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
-            .like(tagIds.isNotEmpty(), "tag_ids", "%${tagId}%")
+            .like(tagIds.isNotEmpty(), "tag_ids", "%\"${tagId}\"%")
             .eq(!request.typeId.isNullOrBlank(), "type_id", request.typeId)
 
         val page = articleService.page(request, wrapper)
@@ -675,7 +675,7 @@ class BlogArticleResource {
         val page = articleService.dao.searchPublish(
             PageDTO.of(request.page, request.size),
             if (request.title.isNullOrBlank()) null else "%${request.title}%",
-            if (tagIds.isEmpty()) null else "%${tagId}%",
+            if (tagIds.isEmpty()) null else "%\"${tagId}\"%",
             orderBySql
         ) as PageDTO<BlogArticle>
 
