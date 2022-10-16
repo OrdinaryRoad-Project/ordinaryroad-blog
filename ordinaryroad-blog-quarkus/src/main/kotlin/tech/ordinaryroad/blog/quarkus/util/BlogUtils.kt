@@ -25,7 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.util
 
 import cn.dev33.satoken.stp.StpUtil
-import cn.hutool.core.io.FileUtil
+import cn.hutool.core.io.resource.ResourceUtil
 import cn.hutool.core.net.NetUtil
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
 import io.vertx.core.json.Json
@@ -40,7 +40,7 @@ import javax.enterprise.inject.spi.CDI
  */
 object BlogUtils {
 
-    val IP_REGION_SEARCHER = Searcher.newWithBuffer(FileUtil.readBytes("classpath:ip2region/data_ip2region.xdb"))
+    val IP_REGION_SEARCHER = Searcher.newWithBuffer(ResourceUtil.readBytes("ip2region/data_ip2region.xdb"))
 
     /**
      * 解析两个List的差异
