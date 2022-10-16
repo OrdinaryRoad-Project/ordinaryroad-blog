@@ -60,7 +60,6 @@ class BlogPushService {
     ) {
         val toUser: BlogUser
         val title: String
-        val notifier: String
         val actionString: String
         if (parentComment == null) {
             title = "新评论提醒"
