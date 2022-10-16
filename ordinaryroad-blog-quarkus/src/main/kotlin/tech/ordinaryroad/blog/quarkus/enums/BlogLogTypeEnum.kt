@@ -54,8 +54,8 @@ enum class BlogLogTypeEnum(
     //region BlogUserResource
     BLOG_USER_UPDATE_AVATAR("用户更新头像", 3000, "/user/avatar", "PUT"),
     BLOG_USER_UPDATE_USERNAME("用户更新用户名", 3001, "/user/username", "PUT"),
-    BLOG_USER_DISABLE("封禁用户", 3002, "/user/disable", "GET"),
-    BLOG_USER_UNTIE_DISABLE("解封用户", 3003, "/user/untieDisable", "GET"),
+    BLOG_USER_DISABLE("用户封禁", 3002, "/user/disable", "GET"),
+    BLOG_USER_UNTIE_DISABLE("用户解封", 3003, "/user/untieDisable", "GET"),
     //endregion
 
     //region BlogRoleResource

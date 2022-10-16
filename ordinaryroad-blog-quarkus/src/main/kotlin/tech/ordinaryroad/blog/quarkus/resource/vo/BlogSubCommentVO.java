@@ -42,6 +42,8 @@ public class BlogSubCommentVO {
 
     private String content;
 
+    private BlogIpRegionVO ip;
+
     private BlogSubCommentVO parent;
 
     private BlogUserVO user;
@@ -53,9 +55,10 @@ public class BlogSubCommentVO {
     public BlogSubCommentVO() {
     }
 
-    public BlogSubCommentVO(String uuid, String content, BlogSubCommentVO parent, BlogUserVO user, LocalDateTime createdTime, String originalId) {
+    public BlogSubCommentVO(String uuid, String content, BlogIpRegionVO ip, BlogSubCommentVO parent, BlogUserVO user, LocalDateTime createdTime, String originalId) {
         this.uuid = uuid;
         this.content = content;
+        this.ip = ip;
         this.parent = parent;
         this.user = user;
         this.createdTime = createdTime;
@@ -76,6 +79,14 @@ public class BlogSubCommentVO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public BlogIpRegionVO getIp() {
+        return ip;
+    }
+
+    public void setIp(BlogIpRegionVO ip) {
+        this.ip = ip;
     }
 
     public BlogSubCommentVO getParent() {

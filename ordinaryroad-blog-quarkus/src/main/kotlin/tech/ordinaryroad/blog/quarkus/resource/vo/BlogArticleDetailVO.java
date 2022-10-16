@@ -33,6 +33,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class BlogArticleDetailVO extends BlogArticlePreviewVO {
 
+    private BlogIpRegionVO ip;
+
     private String content;
 
     private Boolean canReward;
@@ -40,9 +42,18 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
     public BlogArticleDetailVO() {
     }
 
-    public BlogArticleDetailVO(String content, Boolean canReward) {
+    public BlogArticleDetailVO(BlogIpRegionVO ipRegion, String content, Boolean canReward) {
+        this.ip = ipRegion;
         this.content = content;
         this.canReward = canReward;
+    }
+
+    public BlogIpRegionVO getIp() {
+        return ip;
+    }
+
+    public void setIp(BlogIpRegionVO ip) {
+        this.ip = ip;
     }
 
     public String getContent() {

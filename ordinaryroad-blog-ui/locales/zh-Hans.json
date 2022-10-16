@@ -1,4 +1,6 @@
 {
+  "closeCatalogue": "开启目录",
+  "catalogue": "目录",
   "authorizedHint": "授权通过，正在获取用户信息...",
   "clearAvatar": "清空头像",
   "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",

@@ -54,7 +54,7 @@
             </v-icon>
           </v-btn>
         </template>
-        <span>{{ drawer ? '关闭目录' : '目录' }}</span>
+        <span>{{ drawer ? $t('closeCatalogue') : $t('catalogue') }}</span>
       </v-tooltip>
 
       <!-- 标题 -->
@@ -248,6 +248,15 @@
         class="d-flex flex-wrap align-center justify-center"
         style="position: absolute; left: 0; right: 0; bottom: 60px"
       >
+        <!-- IP归属地 -->
+        <div class="d-flex align-center me-2">
+          <v-icon left small>
+            mdi-map-marker
+          </v-icon>
+          <span>{{
+            blogArticle.ip.country === '中国' ? blogArticle.ip.province : blogArticle.ip.country === '0' ? '未知' : blogArticle.ip.country
+          }}</span>
+        </div>
         <!-- 点赞量 -->
         <div class="d-flex align-center me-2">
           <v-icon left small>

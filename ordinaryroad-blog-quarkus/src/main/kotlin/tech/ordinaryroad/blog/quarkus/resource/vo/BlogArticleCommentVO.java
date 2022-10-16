@@ -43,6 +43,8 @@ public class BlogArticleCommentVO {
 
     private String content;
 
+    private BlogIpRegionVO ip;
+
     private Page<BlogSubCommentVO> replies;
 
     private BlogUserVO user;
@@ -52,9 +54,10 @@ public class BlogArticleCommentVO {
     public BlogArticleCommentVO() {
     }
 
-    public BlogArticleCommentVO(String uuid, String content, Page<BlogSubCommentVO> replies, BlogUserVO user, LocalDateTime createdTime) {
+    public BlogArticleCommentVO(String uuid, String content, BlogIpRegionVO ip, Page<BlogSubCommentVO> replies, BlogUserVO user, LocalDateTime createdTime) {
         this.uuid = uuid;
         this.content = content;
+        this.ip = ip;
         this.replies = replies;
         this.user = user;
         this.createdTime = createdTime;
@@ -74,6 +77,14 @@ public class BlogArticleCommentVO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public BlogIpRegionVO getIp() {
+        return ip;
+    }
+
+    public void setIp(BlogIpRegionVO ip) {
+        this.ip = ip;
     }
 
     public Page<BlogSubCommentVO> getReplies() {

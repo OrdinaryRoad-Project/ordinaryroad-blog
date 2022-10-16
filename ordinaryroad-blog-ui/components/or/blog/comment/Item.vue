@@ -28,7 +28,7 @@
       <v-sheet class="d-flex mx-5">
         <!-- 头像 -->
         <or-blog-user-avatar
-          class="mt-1"
+          avatar-class="mt-1"
           :user="blogComment.user"
         />
         <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
@@ -51,6 +51,13 @@
               <span v-if="blogComment.user.roles.length>0" class="me-2">
                 <or-user-roles :roles="blogComment.user.roles" />
               </span>
+
+              <!-- IP归属地 -->
+              <div class="me-2">
+                <span>{{
+                  blogComment.ip.country === '中国' ? blogComment.ip.province : blogComment.ip.country === '0' ? '未知' : blogComment.ip.country
+                }}</span>
+              </div>
 
               <!-- 时间 -->
               <span class="text-body-2"> {{ $dayjs(blogComment.createdTime, 'yyyy-MM-dd HH:mm:ss').fromNow() }}</span>

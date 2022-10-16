@@ -25,8 +25,10 @@
 package tech.ordinaryroad.blog.quarkus.util
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.io.FileUtil
 import cn.hutool.core.net.NetUtil
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
+import org.lionsoul.ip2region.xdb.Searcher
 import javax.enterprise.inject.spi.CDI
 
 /**
@@ -36,6 +38,9 @@ import javax.enterprise.inject.spi.CDI
  * @date 2022/9/1
  */
 object BlogUtils {
+
+    val IP_REGION_SEARCHER =
+        Searcher.newWithFileOnly(FileUtil.getAbsolutePath("classpath:ip2region/data_ip2region.xdb"))
 
     /**
      * 解析两个List的差异
@@ -97,6 +102,30 @@ object BlogUtils {
             }
         }
         return ip
+    }
+
+    /**
+     * 获取IP归属地
+     */
+    fun getIpRegion(ip: String?): IpRegion {
+        val ipRegion = IpRegion.NULL
+        if (!ip.isNullOrBlank()) {
+            try {
+                IP_REGION_SEARCHER.search(ip).let {
+                    if (!it.isNullOrBlank()) {
+                        val split = it.split("|")
+                        ipRegion.country = split.getOrNull(0)
+                        ipRegion.area = split.getOrNull(1)
+                        ipRegion.province = split.getOrNull(2)
+                        ipRegion.city = split.getOrNull(3)
+                        ipRegion.isp = split.getOrNull(4)
+                    }
+                }
+            } catch (_: Exception) {
+                // ignore
+            }
+        }
+        return ipRegion
     }
 
 }
