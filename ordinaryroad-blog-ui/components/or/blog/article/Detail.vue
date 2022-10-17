@@ -277,7 +277,7 @@
             <div
               class="d-flex align-center"
               style="cursor: pointer"
-              @click="$vuetify.goTo($refs.commentVditor)"
+              @click="$vuetify.goTo($refs.commentsContainer)"
             >
               <v-icon left small :color="hover?'primary':null">
                 mdi-comment-text
@@ -442,55 +442,68 @@
           <v-card-title>
             {{ $t('commentCount', [`${articleComments.total ? $t('parentheses', [articleComments.total]) : ''}`]) }}
           </v-card-title>
-          <v-container>
-            <v-row
-              v-if="$access.isLogged()"
-              class="mx-2"
-            >
-              <or-avatar
+          <v-container ref="commentsContainer">
+            <div v-if="blogArticle.canComment">
+              <!-- 撰写评论 -->
+              <v-row
                 v-if="$access.isLogged()"
-                class="mb-auto"
-                :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
-                :username="userInfo.user.username"
-              />
-              <div class="flex-grow-1">
-                <or-md-vditor
-                  ref="commentVditor"
-                  :transfer-content.sync="commentOptions.content"
-                  :placeholder="$t('comment.actions.placeholder')"
-                  class="mx-2"
-                  :dark="$vuetify.theme.dark"
-                  pre-set-content=""
-                  comment-mode
-                  :read-only="false"
-                />
-              </div>
-              <v-btn
-                color="primary"
-                class="mt-auto"
-                :disabled="!commentContentValid"
-                :loading="commentOptions.posting"
-                @click="postComment"
+                class="mx-2"
               >
-                {{ $t('comment.actions.send') }}
-              </v-btn>
-            </v-row>
+                <or-avatar
+                  class="mb-auto"
+                  :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
+                  :username="userInfo.user.username"
+                />
+                <div class="flex-grow-1">
+                  <or-md-vditor
+                    ref="commentVditor"
+                    :transfer-content.sync="commentOptions.content"
+                    :placeholder="$t('comment.actions.placeholder')"
+                    class="mx-2"
+                    :dark="$vuetify.theme.dark"
+                    pre-set-content=""
+                    comment-mode
+                    :read-only="false"
+                  />
+                </div>
+                <v-btn
+                  color="primary"
+                  class="mt-auto"
+                  :disabled="!commentContentValid"
+                  :loading="commentOptions.posting"
+                  @click="postComment"
+                >
+                  {{ $t('comment.actions.send') }}
+                </v-btn>
+              </v-row>
+              <!-- 登录提示 -->
+              <v-sheet
+                v-else
+                rounded
+                height="60"
+                class="d-flex justify-center align-center mx-2"
+                outlined
+              >
+                <v-btn
+                  small
+                  color="primary"
+                  @click="$router.push({path:'/user/login',query:{redirect:$route.path}})"
+                >
+                  {{ $t('login') }}
+                </v-btn>
+              </v-sheet>
+            </div>
+            <!-- 关闭评论提示 -->
+
+            <!-- 回复提示 -->
             <v-sheet
               v-else
               rounded
-              height="60"
-              class="d-flex justify-center align-center mx-2"
+              class="d-flex justify-center align-center mx-2 py-2"
               outlined
             >
-              <v-btn
-                small
-                color="primary"
-                @click="$router.push({path:'/user/login',query:{redirect:$route.path}})"
-              >
-                {{ $t('login') }}
-              </v-btn>
+              <span class="pa-2">{{ $t('article.cannotCommentHint') }}</span>
             </v-sheet>
-
             <v-row class="d-block mt-6 mx-2">
               <v-alert
                 v-model="commentOptions.showAlert"

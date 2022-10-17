@@ -24,17 +24,21 @@
 
 <template>
   <div>
+    <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
     <v-hover v-model="focused">
-      <v-sheet class="d-flex mx-5">
+      <v-row
+        class="my-1"
+        no-gutters
+        style="flex-wrap: nowrap;"
+      >
         <!-- 头像 -->
-        <or-blog-user-avatar
-          avatar-class="mt-1"
-          :user="blogComment.user"
-        />
-        <a :id="`comment-${blogComment.uuid}`" class="target-fix" />
-        <v-sheet class="flex-grow-1 ms-2 mt-1">
-          <div class="d-flex">
-            <div class="d-flex align-center" style="min-height: 36px">
+        <or-blog-user-avatar :user="blogComment.user" />
+        <v-col
+          class="flex-grow-1 flex-shrink-0 ms-2"
+          style="min-width: 100px; max-width: 100%;"
+        >
+          <div style="min-height: 36px">
+            <div class="d-flex align-center">
               <!-- 用户名 -->
               <v-hover>
                 <template #default="{ hover }">
@@ -51,29 +55,41 @@
               <span v-if="blogComment.user.roles.length>0" class="me-2">
                 <or-user-roles :roles="blogComment.user.roles" />
               </span>
+            </div>
 
-              <!-- IP归属地 -->
-              <div v-if="blogComment.ip" class="me-2">
-                <span>{{
-                  blogComment.ip.country === '中国' ? blogComment.ip.province : blogComment.ip.country === '0' ? '未知' : blogComment.ip.country
+            <div
+              style="min-height: 36px"
+              class="d-flex align-center"
+              :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
+            >
+              <div class="d-flex align-center mr-auto">
+                <!-- IP归属地 -->
+                <div v-if="blogComment.ip" class="me-2">
+                  <span>{{
+                    blogComment.ip.country === '中国' ? blogComment.ip.province : blogComment.ip.country === '0' ? '未知' : blogComment.ip.country
+                  }}</span>
+                </div>
+
+                <!-- 时间 -->
+                <span class="text-body-2 me-2"> {{
+                  $dayjs(blogComment.createdTime, 'yyyy-MM-dd HH:mm:ss').fromNow()
                 }}</span>
               </div>
 
-              <!-- 时间 -->
-              <span class="text-body-2"> {{ $dayjs(blogComment.createdTime, 'yyyy-MM-dd HH:mm:ss').fromNow() }}</span>
-            </div>
-
-            <!-- 更多操作 -->
-            <v-fade-transition>
-              <div v-if="focused" class="ml-auto">
-                <span>
-                  <v-btn
-                    v-if="blogComment.parent"
-                    small
-                    :href="`#comment-${blogComment.parent.uuid}`"
-                    text
-                  >{{ $t('comment.actions.viewOriginal') }}</v-btn>
-                  <!--TODO 点赞
+              <!-- 更多操作 -->
+              <v-fade-transition v-if="!$vuetify.breakpoint.smAndDown">
+                <div
+                  v-if="focused||$vuetify.breakpoint.smAndDown"
+                  class="ml-auto"
+                >
+                  <span>
+                    <v-btn
+                      v-if="blogComment.parent"
+                      small
+                      :href="`#comment-${blogComment.parent.uuid}`"
+                      text
+                    >{{ $t('comment.actions.viewOriginal') }}</v-btn>
+                    <!--TODO 点赞
             <v-btn icon>
               <v-icon>mdi-thumb-up</v-icon>
             </v-btn>
@@ -82,12 +98,13 @@
               <v-icon>mdi-thumb-down</v-icon>
             </v-btn>
             -->
-                  <v-btn icon color="primary" @click="onClickReply(null,blogComment)">
-                    <v-icon>mdi-reply</v-icon>
-                  </v-btn>
-                </span>
-              </div>
-            </v-fade-transition>
+                    <v-btn icon color="primary" @click="onClickReply(null,blogComment)">
+                      <v-icon>mdi-reply</v-icon>
+                    </v-btn>
+                  </span>
+                </div>
+              </v-fade-transition>
+            </div>
           </div>
 
           <!--评论内容-->
@@ -97,8 +114,34 @@
             comment-mode
             class="mb-1"
           />
-        </v-sheet>
-      </v-sheet>
+
+          <!-- 更多操作 -->
+          <v-fade-transition v-if="$vuetify.breakpoint.smAndDown">
+            <div class="d-flex justify-end">
+              <span>
+                <v-btn
+                  v-if="blogComment.parent"
+                  small
+                  :href="`#comment-${blogComment.parent.uuid}`"
+                  text
+                >{{ $t('comment.actions.viewOriginal') }}</v-btn>
+                <!--TODO 点赞
+            <v-btn icon>
+              <v-icon>mdi-thumb-up</v-icon>
+            </v-btn>
+
+            <v-btn icon>
+              <v-icon>mdi-thumb-down</v-icon>
+            </v-btn>
+            -->
+                <v-btn icon color="primary" @click="onClickReply(null,blogComment)">
+                  <v-icon>mdi-reply</v-icon>
+                </v-btn>
+              </span>
+            </div>
+          </v-fade-transition>
+        </v-col>
+      </v-row>
     </v-hover>
 
     <!-- 回复 -->
@@ -106,27 +149,22 @@
       <v-expansion-panel>
         <v-divider />
         <v-expansion-panel-header ripple>
-          <div>
-            共{{ blogComment.replies.total }}条回复
-          </div>
+          <div>{{ $t('comment.totalRepliesCount', [blogComment.replies.total]) }}</div>
         </v-expansion-panel-header>
 
         <v-expansion-panel-content>
           <v-container>
-            <v-row
+            <or-blog-comment-item
               v-for="(commentReply) in blogComment.replies.records"
               :key="commentReply.uuid"
-              class="d-block"
-            >
-              <or-blog-comment-item
-                :item="commentReply"
-                @clickReply="onClickReply(blogComment,commentReply)"
-              />
-            </v-row>
-            <v-row justify="center" no-gutters class="mt-6">
+              :item="commentReply"
+              @clickReply="onClickReply(blogComment,commentReply)"
+            />
+            <v-row justify="center" no-gutters>
               <!-- 加载更多Footer -->
               <or-load-more-footer
                 ref="loadMoreFooter"
+                class="mt-4"
                 :no-more-data="blogComment.replies.pages === 0 || blogComment.replies.current === blogComment.replies.pages"
                 @loadMore="loadSubComments"
               />

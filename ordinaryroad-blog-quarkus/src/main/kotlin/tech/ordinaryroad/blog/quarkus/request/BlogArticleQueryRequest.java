@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BlogArticleQueryRequest extends BaseQueryRequest {
 
-    private static final long serialVersionUID = 1187564287897225907L;
+    private static final long serialVersionUID = 1803905228939244901L;
 
     @RestQuery
     public String title;
@@ -41,6 +41,9 @@ public class BlogArticleQueryRequest extends BaseQueryRequest {
 
     @RestQuery
     public String content;
+
+    @RestQuery
+    public Boolean canComment;
 
     @RestQuery
     public Boolean canReward;

@@ -9,6 +9,7 @@
   "all": "全部",
   "appName": "OR博客",
   "article": {
+    "cannotCommentHint": "楼主暂时不想被别人评论哦～",
     "likedTime": "点赞时间：{0}",
     "browsedTime": "浏览时间：{0}",
     "firstBrowsedTime": "首次浏览时间：{0}",
@@ -32,6 +33,7 @@
     "status": "状态",
     "typeName": "分类",
     "tagNames": "标签",
+    "canComment": "允许评论",
     "canReward": "允许打赏",
     "original": "是否原创",
     "originalOptions": {
@@ -39,10 +41,14 @@
       "reprint": "转载"
     },
     "actions": {
+      "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
+      "publish": "发布",
+      "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",
+      "selectionOfHistoricalVersions": "历史版本选择",
       "historicVersion": "历史版本",
       "writing": "开始写作",
       "saveDraft": "保存草稿",
-      "publish": "直接发布",
+      "directlyPublish": "直接发布",
       "like": "点赞",
       "unlike": "取消点赞",
       "edit": "编辑"
@@ -173,6 +179,7 @@
     "allAccounts": "所有账号"
   },
   "comment": {
+    "totalRepliesCount": "共{0}条回复",
     "actions": {
       "send": "发送",
       "reply": "回复",

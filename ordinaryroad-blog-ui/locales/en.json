@@ -9,6 +9,7 @@
   "all": "All",
   "appName": "OR BLOG",
   "article": {
+    "cannotCommentHint": "The owner does not want to be commented by others for the time being~",
     "likedTime": "Like Time: {0}",
     "browsedTime": "Browse Time: {0}",
     "firstBrowsedTime": "First Browse Time: {0}",
@@ -32,6 +33,7 @@
     "status": "Status",
     "typeName": "Type",
     "tagNames": "Tags",
+    "canComment": "Can Comment",
     "canReward": "Can Reward",
     "original": "Original",
     "originalOptions": {
@@ -39,10 +41,14 @@
       "reprint": "Reprint"
     },
     "actions": {
+      "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
+      "publish": "Publish",
+      "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
+      "selectionOfHistoricalVersions": "Selection Of Historical Versions",
       "historicVersion": "Historic Version",
       "writing": "Start Writing",
       "saveDraft": "Save As Draft",
-      "publish": "Publish",
+      "directlyPublish": "Directly Publish",
       "like": "Like Article",
       "unlike": "Unlike Article",
       "edit": "Edit Article"
@@ -172,6 +178,7 @@
     "allAccounts": "All Accounts"
   },
   "comment": {
+    "totalRepliesCount": "{0} Replies",
     "actions": {
       "send": "Send",
       "reply": "Reply",

@@ -37,14 +37,17 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
 
     private String content;
 
+    private Boolean canComment;
+
     private Boolean canReward;
 
     public BlogArticleDetailVO() {
     }
 
-    public BlogArticleDetailVO(BlogIpRegionVO ipRegion, String content, Boolean canReward) {
-        this.ip = ipRegion;
+    public BlogArticleDetailVO(BlogIpRegionVO ip, String content, Boolean canComment, Boolean canReward) {
+        this.ip = ip;
         this.content = content;
+        this.canComment = canComment;
         this.canReward = canReward;
     }
 
@@ -62,6 +65,14 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Boolean getCanComment() {
+        return canComment;
+    }
+
+    public void setCanComment(Boolean canComment) {
+        this.canComment = canComment;
     }
 
     public Boolean getCanReward() {

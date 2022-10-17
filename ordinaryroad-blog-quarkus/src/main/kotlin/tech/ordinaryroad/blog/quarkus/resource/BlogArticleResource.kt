@@ -465,6 +465,7 @@ class BlogArticleResource {
             .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
             .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
             .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
+            .eq(request.canComment != null, "can_comment", request.canComment)
             .eq(request.canReward != null, "can_reward", request.canReward)
             .eq(request.original != null, "original", request.original)
             .`in`(!request.status.isNullOrEmpty(), "status", request.status)

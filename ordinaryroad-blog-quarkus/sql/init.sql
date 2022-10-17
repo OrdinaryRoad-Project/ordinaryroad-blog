@@ -23,8 +23,8 @@
  */
 
 # DROP DATABASE IF EXISTS or_blog_dev;
-CREATE DATABASE or_blog_dev;
-USE or_blog_dev;
+CREATE DATABASE or_blog_pro_temp;
+USE or_blog_pro_temp;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

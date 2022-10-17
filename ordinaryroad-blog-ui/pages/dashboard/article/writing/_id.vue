@@ -51,7 +51,7 @@
             </template>
             <v-card>
               <v-card-title>
-                <span>历史版本选择</span>
+                <span>{{ $t('article.actions.selectionOfHistoricalVersions') }}</span>
                 <v-spacer />
                 <v-btn icon @click="articleInheritsMenuModel=false">
                   <v-icon>mdi-close</v-icon>
@@ -99,7 +99,7 @@
             color="primary"
             @click="publish"
           >
-            {{ $t('article.actions.publish') }}
+            {{ $t('article.actions.directlyPublish') }}
           </v-btn>
         </v-toolbar>
       </template>
@@ -257,7 +257,13 @@
               </or-base-menu>
             </v-col>
 
-            <v-col cols="12">
+            <v-col cols="4">
+              <v-checkbox
+                v-model="article.canComment"
+                :label="$t('article.canComment')"
+              />
+            </v-col>
+            <v-col cols="4">
               <v-checkbox
                 v-model="article.canReward"
                 :label="$t('article.canReward')"
@@ -291,6 +297,7 @@ export default {
       title: '',
       summary: '',
       content: '',
+      canComment: true,
       canReward: false,
       original: false,
       typeName: '',
@@ -508,7 +515,7 @@ export default {
     onSelectArticleInherit (items) {
       if (items.length === 1) {
         this.$dialog({
-          content: '确定使用该历史版本，本地编辑器将内容将会丢失'
+          content: this.$t('article.actions.selectHistoricHint')
         }).then((dialog) => {
           if (dialog.isConfirm) {
             this.articleInheritsMenuModel = false
@@ -551,19 +558,19 @@ export default {
     publish () {
       if (this.formValid && !this.contentEmpty) {
         if (this.article.status !== 'DRAFT' && this.article.status !== 'PUBLISH') {
-          this.$snackbar.error('只能编辑草稿或已发布的文章')
+          this.$snackbar.error(this.$t('article.actions.onlyEditDraftOrPublishHint'))
           return
         }
         this.updateArticleTagNames()
         this.$dialog({
           persistent: false,
           loading: true,
-          content: '确认发布？'
+          content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.publish')])
         }).then((dialog) => {
           if (dialog.isConfirm) {
             this.$apis.blog.article.publish(this.article)
               .then((data) => {
-                this.$snackbar.success('文章发布成功')
+                this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
                 setTimeout(() => {
                   this.$router.replace(`/dashboard/article/writing/${data.uuid}`, () => {
                     this.$router.go(0)
@@ -588,7 +595,7 @@ export default {
           .then((data) => {
             this.article = data
             this.draftSaving = false
-            this.$snackbar.success('草稿保存成功')
+            this.$snackbar.success(this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.saveDraft')])))
           })
           .catch(() => {
             this.draftSaving = false

@@ -44,8 +44,9 @@ data class BlogArticleDTO(
     var title: String = StrUtil.EMPTY,
     var summary: String = StrUtil.EMPTY,
     var content: String = StrUtil.EMPTY,
-    var original: Boolean = false,
+    var canComment: Boolean = true,
     var canReward: Boolean = false,
+    var original: Boolean = false,
     var status: String = StrUtil.EMPTY,
     var firstId: String = StrUtil.EMPTY,
     var typeName: String = StrUtil.EMPTY,
@@ -56,8 +57,9 @@ data class BlogArticleDTO(
         title = StrUtil.nullToEmpty(baseDo.title)
         summary = StrUtil.nullToEmpty(baseDo.summary)
         content = StrUtil.nullToEmpty(baseDo.content)
-        original = BooleanUtil.isTrue(baseDo.original)
+        canComment = BooleanUtil.isTrue(baseDo.canComment)
         canReward = BooleanUtil.isTrue(baseDo.canReward)
+        original = BooleanUtil.isTrue(baseDo.original)
         status = baseDo.status.name
         firstId = StrUtil.nullToEmpty(baseDo.firstId)
 
@@ -76,6 +78,6 @@ data class BlogArticleDTO(
     }
 
     companion object {
-        private const val serialVersionUID: Long = -3055244788429081461L
+        private const val serialVersionUID: Long = -1010217906295586636L
     }
 }

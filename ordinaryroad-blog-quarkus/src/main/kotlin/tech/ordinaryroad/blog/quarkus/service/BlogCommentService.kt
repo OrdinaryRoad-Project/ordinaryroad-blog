@@ -37,11 +37,8 @@ import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogCommentDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.exception.*
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
-import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
-import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
-import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
-import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
@@ -125,6 +122,11 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             }
 
             comment.originalId = ""
+        }
+
+        // 校验是否允许评论
+        if (!article.canComment) {
+            BlogArticleCannotCommentException().throws()
         }
 
         val create = super.create(comment)

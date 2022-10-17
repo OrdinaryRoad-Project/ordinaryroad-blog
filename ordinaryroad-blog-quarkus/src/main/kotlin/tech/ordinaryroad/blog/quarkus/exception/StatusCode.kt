@@ -32,6 +32,7 @@ enum class StatusCode(
 ) : IStatusCode {
     BLOG_ARTICLE_NOT_FOUND(404, "文章不存在"),
     BLOG_ARTICLE_NOT_VALID(400, "文章无效"),
+    BLOG_ARTICLE_CANNOT_COMMENT(400, "文章不允许评论"),
     BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
     BLOG_COMMENT_NOT_FOUND(404, "评论不存在"),
     BLOG_COMMENT_NOT_VALID(400, "评论无效"),

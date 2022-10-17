@@ -126,6 +126,23 @@
           md="4"
         >
           <v-select
+            v-model="searchParams.canComment"
+            clearable
+            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            dense
+            outlined
+            item-text="label"
+            item-value="value"
+            hide-details="auto"
+            :label="$t('article.canComment')"
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          lg="3"
+          md="4"
+        >
+          <v-select
             v-model="searchParams.canReward"
             clearable
             :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
@@ -227,6 +244,9 @@
           </v-chip>
         </template>
         <span v-else>无</span>
+      </template>
+      <template #[`item.canComment`]="{ item }">
+        <v-simple-checkbox v-model="item.canComment" disabled />
       </template>
       <template #[`item.canReward`]="{ item }">
         <v-simple-checkbox v-model="item.canReward" disabled />
@@ -335,6 +355,7 @@ export default {
       title: null,
       summary: null,
       content: null,
+      canComment: null,
       canReward: null,
       original: null,
       status: 'DRAFT'
@@ -386,12 +407,19 @@ export default {
         },
         {
           text: this.$t('article.typeName'),
-          value: 'typeName'
+          value: 'typeName',
+          sortable: false
         },
         {
           text: this.$t('article.tagNames'),
           value: 'tagNames',
+          sortable: false,
           width: 300
+        },
+        {
+          text: this.$t('article.canComment'),
+          value: 'canComment',
+          width: 120
         },
         {
           text: this.$t('article.canReward'),

@@ -31,6 +31,7 @@
         <v-row
           v-for="(comment) in blogArticleComments.records"
           :key="comment.uuid"
+          no-gutters
           class="d-block"
         >
           <or-blog-comment-item
@@ -38,9 +39,10 @@
             @clickReply="onClickReply"
           />
         </v-row>
-        <v-row justify="center" no-gutters class="mt-6">
+        <v-row justify="center" no-gutters>
           <or-load-more-footer
             ref="loadMoreFooter"
+            class="mt-4"
             :no-more-data="blogArticleComments.pages === 0 || blogArticleComments.current === blogArticleComments.pages"
             @loadMore="onLoadMore"
           />
