@@ -38,7 +38,9 @@
           style="min-width: 100px; max-width: 100%;"
         >
           <div style="min-height: 36px">
-            <div class="d-flex align-center">
+            <div
+              class="d-flex align-center flex-wrap"
+            >
               <!-- 用户名 -->
               <v-hover>
                 <template #default="{ hover }">
@@ -60,7 +62,6 @@
             <div
               style="min-height: 36px"
               class="d-flex align-center"
-              :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
             >
               <div class="d-flex align-center mr-auto">
                 <!-- IP归属地 -->
