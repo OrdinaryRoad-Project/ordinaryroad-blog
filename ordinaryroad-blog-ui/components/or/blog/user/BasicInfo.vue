@@ -36,7 +36,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title
-            class="d-flex justify-center align-center"
+            class="d-flex justify-center align-center flex-wrap"
           >
             <span
               v-if="usernameLinkDisabled"
