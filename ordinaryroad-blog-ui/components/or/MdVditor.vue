@@ -119,6 +119,12 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    focus () {
+      this.instance && this.instance.focus()
+    },
+    blur () {
+      this.instance && this.instance.blur()
+    },
     setPlaceholder (val) {
       if (!this.readOnly) {
         const byClassName = this.$refs.vditor.getElementsByClassName('vditor-reset')

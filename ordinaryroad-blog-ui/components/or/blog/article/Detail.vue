@@ -894,6 +894,8 @@ export default {
       this.commentOptions.parentComment = parentComment
       this.commentOptions.parentId = parentComment.uuid
       this.commentOptions.showAlert = true
+      this.$vuetify.goTo(this.$refs.commentsContainer)
+      this.$refs.commentVditor.focus()
     },
     postComment () {
       if (!this.$access.checkLogin()) {
