@@ -37,7 +37,7 @@
       :items="articlePageItems.records"
       :options="options"
       :ssr="{columns: 1}"
-      @append="autoLoadMore&&getArticles()"
+      @append="append"
     >
       <template #default="{item}">
         <template v-if="item">
@@ -97,6 +97,11 @@ export default {
       current: 1
     },
 
+    /**
+     * 最近append加载时间
+     */
+    lastAppendTime: 0,
+
     tagName: null,
     title: null,
     summary: null,
@@ -129,7 +134,10 @@ export default {
   mounted () {
   },
   created () {
-    this.autoLoadMore && this.getArticles(false)
+    if (this.autoLoadMore) {
+      this.lastAppendTime = new Date().getTime()
+      this.getArticles(false)
+    }
   },
   methods: {
     getArticles (loadMore = true) {
@@ -182,9 +190,7 @@ export default {
             this.loadMoreOptions.noMoreData = true
             // console.log('没有更多数据啦')
           }
-          setTimeout(() => {
-            this.loadMoreOptions.loading = false
-          }, 1000)
+          this.loadMoreOptions.loading = false
         } else {
           this.articlePageItems = data
           this.loadMoreOptions = {
@@ -194,16 +200,24 @@ export default {
           this.$emit('loadFinish')
         }
         this.$emit('update:loading', false)
+        if (this.autoLoadMore) {
+          this.lastAppendTime = new Date().getTime()
+        }
       })
         .catch(() => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
-            setTimeout(() => {
-              this.loadMoreOptions.loading = false
-            }, 1000)
+            this.loadMoreOptions.loading = false
           }
           this.$emit('update:loading', false)
         })
+    },
+    append () {
+      if (this.autoLoadMore) {
+        if (new Date().getTime() - this.lastAppendTime >= 1000) {
+          this.getArticles()
+        }
+      }
     }
   }
 }
