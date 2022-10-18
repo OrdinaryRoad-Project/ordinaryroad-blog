@@ -133,6 +133,12 @@ export default {
       }
     }
   },
+  created () {
+    this.$apis.blog.article.count(this.blogUser.uuid)
+      .then((data) => {
+        this.totalArticle = data
+      })
+  },
   mounted () {
   },
   methods: {

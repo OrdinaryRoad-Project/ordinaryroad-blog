@@ -23,17 +23,33 @@
   -->
 
 <template>
-  <span>
-    <span v-if="text">
-      <slot />
-    </span>
-    <a v-else :href="href" :target="target" style="text-decoration: none; cursor: auto">
-      <slot /><span><v-icon
-        v-if="!hideIcon&&target==='_blank'"
-        x-small
-      >mdi-arrow-top-right-bold-box-outline</v-icon></span>
-    </a>
-  </span>
+  <v-hover :disabled="!hoverAble">
+    <template #default="{ hover }">
+      <span
+        :class="hover?'primary--text':null"
+      >
+        <span
+          v-if="text"
+          class="transition-swing"
+        >
+          <slot />
+        </span>
+        <a
+          v-else
+          :href="href"
+          class="transition-swing"
+          :target="target"
+          :class="hoverAble?(hover?'primary--text':'text--primary'):null"
+          style="text-decoration: none;"
+        >
+          <slot /><span><v-icon
+            v-if="!hideIcon&&target==='_blank'"
+            x-small
+          >mdi-arrow-top-right-bold-box-outline</v-icon></span>
+        </a>
+      </span>
+    </template>
+  </v-hover>
 </template>
 
 <script>
@@ -56,6 +72,10 @@ export default {
       default: '_blank'
     },
     hideIcon: {
+      type: Boolean,
+      default: false
+    },
+    hoverAble: {
       type: Boolean,
       default: false
     }

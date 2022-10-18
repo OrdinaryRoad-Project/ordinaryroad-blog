@@ -1,4 +1,10 @@
 {
+  "user": {
+    "basicInfo": {
+      "articlesCount": "Articles",
+      "commentsCount": "Comments"
+    }
+  },
   "closeCatalogue": "Close Catalogue",
   "catalogue": "Catalogue",
   "authorizedHint": "Authorization passed, obtaining user information...",

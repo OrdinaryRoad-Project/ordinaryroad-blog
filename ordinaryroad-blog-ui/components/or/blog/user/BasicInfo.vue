@@ -32,7 +32,7 @@
         :avatar="$apis.blog.getFileUrl(user.avatar)"
       />
     </template>
-    <v-list>
+    <v-list class="pa-0">
       <!-- 身份信息 -->
       <v-list-item>
         <v-list-item-content>
@@ -62,6 +62,36 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-row justify="center">
+            <v-col>
+              <or-link
+                hide-icon
+                :hover-able="!usernameLinkDisabled"
+                :text="usernameLinkDisabled"
+                :href="`/${user.uuid}?tab=article`"
+              >
+                <v-row justify="center" class="text-h6">
+                  {{ $t('user.basicInfo.articlesCount') }}
+                </v-row>
+                <v-row justify="center" class="text-subtitle-1">
+                  {{ articlesCountOptions.loading ? '-' : articlesCountOptions.data }}
+                </v-row>
+              </or-link>
+            </v-col>
+            <v-col>
+              <v-row justify="center" class="text-h6">
+                {{ $t('user.basicInfo.commentsCount') }}
+              </v-row>
+              <v-row justify="center" class="text-subtitle-1">
+                {{ commentsCountOptions.loading ? '-' : commentsCountOptions.data }}
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </base-material-card>
 </template>
@@ -78,6 +108,34 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data: () => ({
+    articlesCountOptions: {
+      loading: true,
+      data: null
+    },
+    commentsCountOptions: {
+      loading: true,
+      data: null
+    }
+  }),
+  created () {
+    this.$apis.blog.article.count(this.user.uuid)
+      .then((data) => {
+        this.articlesCountOptions.loading = false
+        this.articlesCountOptions.data = data
+      })
+      .catch(() => {
+        this.articlesCountOptions.loading = false
+      })
+    this.$apis.blog.comment.count(this.user.uuid)
+      .then((data) => {
+        this.commentsCountOptions.loading = false
+        this.commentsCountOptions.data = data
+      })
+      .catch(() => {
+        this.commentsCountOptions.loading = false
+      })
   },
   methods: {
     onClickUsername (user) {

@@ -1,4 +1,10 @@
 {
+  "user": {
+    "basicInfo": {
+      "articlesCount": "文章",
+      "commentsCount": "评论"
+    }
+  },
   "closeCatalogue": "开启目录",
   "catalogue": "目录",
   "authorizedHint": "授权通过，正在获取用户信息...",
