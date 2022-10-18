@@ -179,6 +179,13 @@ export default {
         method: 'get'
       })
     },
+    getPinnedArticles ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/pinned?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
     countDailyPosts ({ startDateTime = '', endDateTime = '', userId }) {
       const params = { startDateTime, endDateTime, userId }
       return $axios({

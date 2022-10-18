@@ -26,7 +26,7 @@
   <v-hover :disabled="!editable">
     <template #default="{ hover }">
       <v-avatar
-        style="border:1px solid;"
+        style="border: 1px solid;"
         :size="size"
         :class="avatarClass"
         color="grey"

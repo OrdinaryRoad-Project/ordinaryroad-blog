@@ -950,6 +950,30 @@ class BlogArticleResource {
     //region TODO 开发中
 
     /**
+     * 获取固定在个人首页的文章
+     */
+    @GET
+    @Path("pinned")
+    fun getPinnedArticles(
+        @Valid @NotBlank(message = "userId不能为空")
+        @Size(max = 32, message = "userId长度不能大于32") @RestQuery userId: String
+    ): List<BlogArticlePreviewVO> {
+        val list = ArrayList<BlogArticlePreviewVO>()
+        val browsedTopN = this.getBrowsedTopN(BlogArticleTopNRequest().apply {
+            this.userId = userId
+            this.n = 4
+        })
+        for (map in browsedTopN) {
+            val articleId = map["uuid"]
+            val findById = articleService.findById(articleId)
+            if (findById != null) {
+                list.add(articleMapStruct.transferPreview(findById))
+            }
+        }
+        return list
+    }
+
+    /**
      * 查询上一篇/下一篇文章
      */
     @GET

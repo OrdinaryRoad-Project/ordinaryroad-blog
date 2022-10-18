@@ -25,17 +25,16 @@
 <template>
   <v-container fluid>
     <v-card>
-      <v-list v-if="top6Articles">
-        <v-list-item
-          v-for="item in top6Articles"
-          :key="item.uuid"
-        >
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ item.browsed_count }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <vue-masonry-wall
+        v-if="pinnedArticles.data&&pinnedArticles.data.length"
+        :items="pinnedArticles.data"
+        :options="{default:2,padding:1,width:500}"
+        :ssr="{columns: 2}"
+      >
+        <template #default="{ item }">
+          <or-blog-article-item :item="item" />
+        </template>
+      </vue-masonry-wall>
 
       <or-blog-article-daily-posts-chart
         :outlined="false"
@@ -46,8 +45,13 @@
 </template>
 
 <script>
+import VueMasonryWall from 'vue-masonry-wall'
+
 export default {
   name: 'OrBlogUserOverview',
+  components: {
+    VueMasonryWall
+  },
   props: {
     userId: {
       type: String,
@@ -55,16 +59,23 @@ export default {
     }
   },
   data: () => ({
-    top6Articles: null
+    pinnedArticles: {
+      loading: true,
+      data: []
+    }
   }),
   created () {
-    // TODO this.getTop6Articles()
+    this.getTop6Articles()
   },
   methods: {
     getTop6Articles () {
-      this.$apis.blog.article.getTopNBrowsed({ n: 6, userId: this.userId })
+      this.$apis.blog.article.getPinnedArticles({ userId: this.userId })
         .then((data) => {
-          this.top6Articles = data
+          this.pinnedArticles.loading = false
+          this.pinnedArticles.data = data
+        })
+        .catch(() => {
+          this.pinnedArticles.loading = false
         })
     }
   }
