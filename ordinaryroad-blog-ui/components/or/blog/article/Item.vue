@@ -87,7 +87,7 @@
           </v-card-subtitle>
 
           <!-- 标题 -->
-          <v-card-title class="py-0 text-justify tow-lines-text">
+          <v-card-title class="py-0 text-justify tow-lines-text font-weight-bold">
             {{ item.title }}
           </v-card-title>
 
@@ -100,7 +100,7 @@
               <!-- 摘要 -->
               <v-card-subtitle
                 v-if="item.summary !== undefined && item.summary !== ''"
-                class="py-0 my-0 text-justify font-weight-light four-lines-text"
+                class="py-0 my-0 text-justify four-lines-text"
               >
                 {{ item.summary }}
               </v-card-subtitle>
