@@ -79,6 +79,7 @@
 
       <!-- 搜索 -->
       <or-search
+        disable-hot-key
         :focused.sync="searchInputFocused"
         :auto-expand="false"
         solo-inverted

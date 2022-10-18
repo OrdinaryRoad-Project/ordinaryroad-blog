@@ -33,6 +33,7 @@
     <!-- 搜索 -->
     <or-search
       v-if="$route.name!=='search-input'"
+      :disable-hot-key="!$store.getters['app/getSearchInputHotKeyEnabled']"
       :focused.sync="searchInputFocused"
     />
 

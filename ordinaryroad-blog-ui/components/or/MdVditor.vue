@@ -293,6 +293,12 @@ export default {
         },
         input: (value) => {
           this.$emit('update:transferContent', value)
+        },
+        focus: (value) => {
+          this.$emit('focus')
+        },
+        blur: (value) => {
+          this.$emit('blur')
         }
       })
     },

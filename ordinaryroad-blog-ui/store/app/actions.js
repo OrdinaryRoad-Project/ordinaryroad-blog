@@ -23,6 +23,9 @@
  */
 
 export default {
+  setSearchInputHotKeyEnabled ({ commit }, image) {
+    commit('SET_SEARCH_INPUT_HOT_KEY_ENABLED', image)
+  },
   setImage ({ commit }, image) {
     commit('SET_IMAGE', image)
   },

@@ -26,6 +26,7 @@ import { setSelectedThemeOption } from 'static/js/utils/cookie/vuex/app'
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  SET_SEARCH_INPUT_HOT_KEY_ENABLED: (state, value) => (state.searchInputHotKeyEnabled = value),
   SET_IMAGE: (state, value) => (state.image = value),
   SET_TITLE_KEY: (state, value) => (state.titleKey = value),
   SET_SELECTED_THEME_OPTION (state, {

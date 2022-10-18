@@ -23,6 +23,10 @@
  */
 
 export default {
+  getSearchInputHotKeyEnabled (state) {
+    return state.searchInputHotKeyEnabled
+  },
+
   getDashboardMenuItems (state) {
     return state.dashboardMenuItems
   },

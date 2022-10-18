@@ -23,6 +23,10 @@
  */
 
 export default () => ({
+  /**
+   * 正在输入时禁用搜索快捷键
+   */
+  searchInputHotKeyEnabled: true,
   dashboardDrawerModel: true,
   rightDrawerModel: false,
   selectedThemeOption: 0,
