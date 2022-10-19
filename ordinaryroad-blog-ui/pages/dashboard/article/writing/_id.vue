@@ -303,6 +303,7 @@ export default {
     firstValid: true,
 
     article: {
+      status: 'DRAFT',
       coverImage: '',
       title: '',
       summary: '',

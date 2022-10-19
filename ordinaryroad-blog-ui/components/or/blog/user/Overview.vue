@@ -24,9 +24,10 @@
 
 <template>
   <v-container fluid>
-    <v-card>
+    <div>
       <vue-masonry-wall
         v-if="pinnedArticles.data&&pinnedArticles.data.length"
+        class="mb-2"
         :items="pinnedArticles.data"
         :options="{default:2,padding:1,width:500}"
         :ssr="{columns: 2}"
@@ -37,10 +38,9 @@
       </vue-masonry-wall>
 
       <or-blog-article-daily-posts-chart
-        :outlined="false"
         :create-by="userId"
       />
-    </v-card>
+    </div>
   </v-container>
 </template>
 
