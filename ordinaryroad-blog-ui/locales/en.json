@@ -57,7 +57,9 @@
       "directlyPublish": "Directly Publish",
       "like": "Like Article",
       "unlike": "Unlike Article",
-      "edit": "Edit Article"
+      "edit": "Edit Article",
+      "moveToTrash": "Move Article To Trash",
+      "recoverFromTrash": "Restore Article To Draft"
     },
     "startWritingHint": "Start Writing Now",
     "restoreReadingStatusHint": "Reading position, day and night mode parameters have been automatically restored",

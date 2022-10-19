@@ -80,12 +80,12 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
 
         if (blogArticle.firstId != blogArticle.uuid) {
             // 查询第一个 PUBLISH_INHERIT 版本
-            val byPreIdAndStatus = findFirstOrLastByFirstIdAndStatus(
+            val byFirstIdAndStatus = findFirstOrLastByFirstIdAndStatus(
                 blogArticle.firstId,
                 BlogArticleStatus.PUBLISH_INHERIT
             )
-            if (byPreIdAndStatus != null) {
-                createdTime = byPreIdAndStatus.createdTime
+            if (byFirstIdAndStatus != null) {
+                createdTime = byFirstIdAndStatus.createdTime
                 updateTime = blogArticle.createdTime
             }
         }
@@ -255,7 +255,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
-     * 根据PreId和状态查询最新的或最旧的文章
+     * 根据FirstId和状态查询最新的或最旧的文章
      */
     fun findFirstOrLastByFirstIdAndStatus(
         firstId: String,
@@ -271,9 +271,9 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
-     * 根据PreId和状态查询用户创建的文章
+     * 根据FirstId和状态查询用户创建的文章
      */
-    fun findByPreIdAndStatusAndCreatedBy(firstId: String, status: BlogArticleStatus, createBy: String): BlogArticle? {
+    fun findByFirstIdAndStatusAndCreatedBy(firstId: String, status: BlogArticleStatus, createBy: String): BlogArticle? {
         val wrapper = Wrappers.query<BlogArticle>()
         wrapper.eq("first_id", firstId)
         wrapper.eq("status", status)
@@ -289,6 +289,22 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         wrapper.eq("status", status)
         wrapper.eq("create_by", createBy)
         return super.dao.selectList(wrapper)
+    }
+
+    /**
+     * 根据状态和创建者查询最新的或最旧的文章
+     */
+    fun findFirstOrLastByStatusAndCreatedBy(
+        status: BlogArticleStatus,
+        createBy: String,
+        first: Boolean = true
+    ): BlogArticle? {
+        val wrapper = ChainWrappers.queryChain(super.dao)
+        wrapper.eq("status", status)
+        wrapper.eq("create_by", createBy)
+        wrapper.orderBy(true, first, "created_time")
+        val page = wrapper.page(Page(1, 1, 1))
+        return page.records.firstOrNull()
     }
 
     /**

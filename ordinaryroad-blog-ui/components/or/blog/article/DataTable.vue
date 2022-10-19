@@ -283,6 +283,35 @@
         >
           <v-icon>mdi-restore</v-icon>
         </v-btn>
+
+        <or-base-menu
+          v-if="['DRAFT'].includes(item.status)"
+          offset-y
+          open-on-hover
+        >
+          <template #activator="{ on, attrs }">
+            <v-btn
+              class="ml-2"
+              color="primary"
+              dark
+              v-bind="attrs"
+              icon
+              v-on="on"
+            >
+              <v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item
+              v-if="['DRAFT'].includes(item.status)"
+              @click="onPublishArticle(item)"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ $t('article.actions.directlyPublish') }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </or-base-menu>
       </template>
     </or-base-data-table>
   </v-container>
@@ -480,17 +509,18 @@ export default {
     },
     onInsertItem () {
       this.selectedIndex = -1
-      this.$router.push('/dashboard/article/writing')
+      this.$router.push('/dashboard/article/writing/new')
     },
     onDeleteItem (item) {
       this.$dialog({
-        content: '确定移动到垃圾箱？',
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.moveToTrash')]),
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$apis.blog.article.moveToTrash(item.uuid)
             .then(() => {
-              this.$snackbar.success('操作成功')
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
             })
@@ -502,13 +532,33 @@ export default {
     },
     onRestoreItem (item) {
       this.$dialog({
-        content: '确定恢复该文章？',
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.recoverFromTrash')]),
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$apis.blog.article.recoverFromTrash(item.uuid)
             .then(() => {
-              this.$snackbar.success('已恢复至草稿箱')
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.recoverFromTrash')]))
+              this.$refs.dataTable.getItems()
+              dialog.cancel()
+            })
+            .catch(() => {
+              dialog.cancel()
+            })
+        }
+      })
+    },
+    onPublishArticle (item) {
+      this.$dialog({
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.directlyPublish')]),
+        loading: true
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$apis.blog.article.publish(item)
+            .then(() => {
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
             })

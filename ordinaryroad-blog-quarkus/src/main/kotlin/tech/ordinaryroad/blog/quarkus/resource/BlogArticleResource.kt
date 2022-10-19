@@ -131,29 +131,6 @@ class BlogArticleResource {
     }
 
     /**
-     * 查询最新的草稿
-     */
-    @GET
-    @Path("draft")
-    fun getDraft(): BlogArticleDTO? {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
-        val userId = StpUtil.getLoginIdAsString()
-
-        val allByStatusAndCreateBy = articleService.findAllByStatusAndCreatedBy(BlogArticleStatus.DRAFT, userId)
-
-        if (CollUtil.isEmpty(allByStatusAndCreateBy)) {
-            return null
-        } else {
-            val firstArticle = allByStatusAndCreateBy.first()
-            val dto = dtoService.transfer(firstArticle, BlogArticleDTO::class.java)
-
-            return dto
-        }
-    }
-
-    /**
      * 用户手动保存草稿
      */
     @POST
@@ -208,40 +185,32 @@ class BlogArticleResource {
         }
 
         if (firstId.isNullOrBlank()) {
-            val allFirstArticleByStatusAndCreatedBy =
-                articleService.findAllFirstArticleByStatusAndCreateBy(BlogArticleStatus.DRAFT, userId)
-
-            if (allFirstArticleByStatusAndCreatedBy.isEmpty()) {
-                /* 直接创建草稿 */
-                val draft = articleService.create(
-                    BlogArticle(
-                        request.title,
-                        request.coverImage,
-                        request.summary,
-                        request.content,
-                        BlogArticleStatus.DRAFT,
-                        request.canComment,
-                        request.canReward,
-                        request.original,
-                        "",
-                        typeId,
-                        tagIds
-                    )
+            /* 直接创建草稿 */
+            val draft = articleService.create(
+                BlogArticle(
+                    request.title,
+                    request.coverImage,
+                    request.summary,
+                    request.content,
+                    BlogArticleStatus.DRAFT,
+                    request.canComment,
+                    request.canReward,
+                    request.original,
+                    "",
+                    typeId,
+                    tagIds
                 )
-                // 将FirstId更新为当前Id
-                val draftUpdate = articleService.update(
-                    BlogArticle().apply {
-                        this.uuid = draft.uuid
-                        this.firstId = draft.uuid
-                    })
+            )
+            // 将FirstId更新为当前Id
+            val draftUpdate = articleService.update(
+                BlogArticle().apply {
+                    this.uuid = draft.uuid
+                    this.firstId = draft.uuid
+                })
 
-                val dto = dtoService.transfer(draftUpdate, BlogArticleDTO::class.java)
+            val dto = dtoService.transfer(draftUpdate, BlogArticleDTO::class.java)
 
-                return Response.ok(dto).build()
-            } else {
-                /* 需要传FirstId */
-                return Response.status(Response.Status.BAD_REQUEST).build()
-            }
+            return Response.ok(dto).build()
         } else {
             val byIdAndCreatedBy = articleService.findByIdAndCreatedBy(firstId, userId)
             if (byIdAndCreatedBy == null) {
@@ -353,38 +322,31 @@ class BlogArticleResource {
 
         // 代表没有草稿直接发布
         if (firstId.isNullOrBlank()) {
-            /* 判断是否存在草稿 */
-            val countByStatusAndCreatedBy = articleService.countByStatusAndCreatedBy(BlogArticleStatus.DRAFT, userId)
-            if (countByStatusAndCreatedBy != 0L) {
-                /* 存在草稿但是没有传过来 */
-                return Response.status(Response.Status.BAD_REQUEST).build()
-            } else {
-                /* 不存在草稿，直接发布 */
-                val publish = articleService.create(
-                    BlogArticle(
-                        request.title,
-                        request.coverImage,
-                        request.summary,
-                        request.content,
-                        BlogArticleStatus.PUBLISH,
-                        request.canComment,
-                        request.canReward,
-                        request.original,
-                        "",
-                        typeId,
-                        tagIds
-                    )
+            /* 直接发布 */
+            val publish = articleService.create(
+                BlogArticle(
+                    request.title,
+                    request.coverImage,
+                    request.summary,
+                    request.content,
+                    BlogArticleStatus.PUBLISH,
+                    request.canComment,
+                    request.canReward,
+                    request.original,
+                    "",
+                    typeId,
+                    tagIds
                 )
-                val publishUpdate = articleService.update(
-                    BlogArticle().apply {
-                        this.uuid = publish.uuid
-                        this.firstId = publish.uuid
-                    })
+            )
+            val publishUpdate = articleService.update(
+                BlogArticle().apply {
+                    this.uuid = publish.uuid
+                    this.firstId = publish.uuid
+                })
 
-                val dto = dtoService.transfer(publishUpdate, BlogArticleDTO::class.java)
+            val dto = dtoService.transfer(publishUpdate, BlogArticleDTO::class.java)
 
-                return Response.ok(dto).build()
-            }
+            return Response.ok(dto).build()
         } else {
             val byIdAndCreatedBy = articleService.findByIdAndCreatedBy(firstId, userId)
             if (byIdAndCreatedBy == null) {
@@ -711,6 +673,50 @@ class BlogArticleResource {
 
             return dto
         }
+    }
+
+    /**
+     * 根据文章id查询用户自己能够编辑的文章
+     * id为空时获取第一个draft
+     * 否则，根据id查询为draft或者publish的
+     */
+    @GET
+    @Path("own/writing")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findOwnWritingById(
+        @Valid @Size(max = 32, message = "id长度不能大于32")
+        @DefaultValue(StrUtil.EMPTY) @RestQuery id: String
+    ): BlogArticleDTO? {
+        /* 登录校验 */
+        StpUtil.checkLogin()
+
+        val userId = StpUtil.getLoginIdAsString()
+
+        if (StrUtil.isBlank(id)) {
+            val firstDraft = articleService.findFirstOrLastByStatusAndCreatedBy(BlogArticleStatus.DRAFT, userId)
+            if (firstDraft == null) {
+                return null
+            } else {
+                return dtoService.transfer(firstDraft, BlogArticleDTO::class.java)
+            }
+        } else {
+            val article = articleService.validateOwn(id)
+            val articleDraft =
+                articleService.findByFirstIdAndStatusAndCreatedBy(article.firstId, BlogArticleStatus.DRAFT, userId)
+            if (articleDraft != null) {
+                return dtoService.transfer(articleDraft, BlogArticleDTO::class.java)
+            } else {
+                val articlePublish = articleService.findByFirstIdAndStatusAndCreatedBy(
+                    article.firstId,
+                    BlogArticleStatus.PUBLISH,
+                    userId
+                )
+                if (articlePublish != null) {
+                    return dtoService.transfer(articlePublish, BlogArticleDTO::class.java)
+                }
+            }
+        }
+        return null
     }
 
     /**

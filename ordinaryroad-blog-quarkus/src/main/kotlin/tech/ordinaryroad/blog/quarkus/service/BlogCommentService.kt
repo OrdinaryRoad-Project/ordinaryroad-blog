@@ -37,6 +37,7 @@ import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogCommentDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.*
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
@@ -94,7 +95,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             // 校验articleId
             if (request.articleId.isBlank()) {
                 request.articleId = parentComment.articleId
-                article = articleService.findById(request.articleId)
+                article = validateArticle(request.articleId)
             } else {
                 if (request.articleId != parentComment.articleId) {
                     // 父评论文章和传入的不一致
@@ -245,13 +246,14 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     /**
-     * 校验文章是否存在
+     * 校验文章是否存在并发布
      */
     fun validateArticle(articleId: String?): BlogArticle {
         if (articleId.isNullOrBlank()) {
             BlogArticleNotValidException().throws()
         }
-        return articleService.findById(articleId) ?: throw BlogArticleNotFoundException()
+        return articleService.findFirstOrLastByFirstIdAndStatus(articleId!!, BlogArticleStatus.PUBLISH, false)
+            ?: throw BlogArticleNotFoundException()
     }
 
     /**
@@ -265,7 +267,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
                 return null
             }
         }
-        return findById(originalId) ?: throw BlogCommentNotFoundException()
+        return super.findById(originalId) ?: throw BlogCommentNotFoundException()
     }
     //endregion
 

@@ -72,9 +72,9 @@ export default {
         method: 'get'
       })
     },
-    getDraft: () => {
+    findOwnWritingById: (id = '') => {
       return $axios({
-        url: '/blog/article/draft',
+        url: `/blog/article/own/writing?id=${id}`,
         method: 'get'
       })
     },

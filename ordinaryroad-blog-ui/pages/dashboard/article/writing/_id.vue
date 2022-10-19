@@ -364,8 +364,8 @@ export default {
   },
   created () {
     const id = (this.$route.params.id || '').trim()
-    if (id !== '') {
-      this.$apis.blog.article.findOwnById(id)
+    if (id !== 'new') {
+      this.$apis.blog.article.findOwnWritingById(id)
         .then((data) => {
           this.initData(data)
         })
@@ -382,16 +382,6 @@ export default {
               this.$router.back()
             }
           })
-        })
-    } else {
-      // 查询是否存在未发布的草稿，存在返回，不存在返回默认
-      this.$apis.blog.article.getDraft()
-        .then((data) => {
-          if (data) {
-            this.$router.replace(`/dashboard/article/writing/${data.uuid}`, () => {
-              this.$router.go(0)
-            })
-          }
         })
     }
   },
@@ -606,7 +596,7 @@ export default {
           .then((data) => {
             this.article = data
             this.draftSaving = false
-            this.$snackbar.success(this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.saveDraft')])))
+            this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.saveDraft')]))
           })
           .catch(() => {
             this.draftSaving = false

@@ -54,7 +54,7 @@
       </v-menu>
       <v-btn
         v-if="!$vuetify.breakpoint.smAndDown"
-        to="/dashboard/article/writing"
+        to="/dashboard/article/writing/new"
         depressed
         :text="transparent"
         :color="transparent?'white':startWritingColor"

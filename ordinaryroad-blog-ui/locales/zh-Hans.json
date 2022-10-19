@@ -57,7 +57,9 @@
       "directlyPublish": "直接发布",
       "like": "点赞",
       "unlike": "取消点赞",
-      "edit": "编辑"
+      "edit": "编辑",
+      "moveToTrash": "移动该文章到垃圾箱",
+      "recoverFromTrash": "恢复文章到草稿箱"
     },
     "startWritingHint": "开始写作吧",
     "restoreReadingStatusHint": "已自动恢复阅读位置、日/夜间模式参数",
