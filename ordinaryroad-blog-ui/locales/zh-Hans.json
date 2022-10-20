@@ -29,7 +29,7 @@
       },
       "readingTimeHint": {
         "prefix": "友情提示：",
-        "hint": "此篇文章大约需要阅读"
+        "hint": "此篇文章大约需要阅读 "
       }
     },
     "title": "标题",
