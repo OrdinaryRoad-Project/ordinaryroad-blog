@@ -15,6 +15,7 @@
   "all": "全部",
   "appName": "OR博客",
   "article": {
+    "pinned": "热门文章",
     "cannotCommentHint": "楼主暂时不想被别人评论哦～",
     "likedTime": "点赞时间：{0}",
     "browsedTime": "浏览时间：{0}",

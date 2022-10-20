@@ -25,17 +25,23 @@
 <template>
   <v-container fluid>
     <div>
-      <vue-masonry-wall
-        v-if="pinnedArticles.data&&pinnedArticles.data.length"
+      <v-sheet
+        outlined
+        rounded
         class="mb-2"
-        :items="pinnedArticles.data"
-        :options="{default:2,padding:1,width:500}"
-        :ssr="{columns: 2}"
       >
-        <template #default="{ item }">
-          <or-blog-article-item :item="item" />
-        </template>
-      </vue-masonry-wall>
+        <v-card-title>{{ $t('article.pinned') }}</v-card-title>
+        <vue-masonry-wall
+          v-if="pinnedArticles.data&&pinnedArticles.data.length"
+          :items="pinnedArticles.data"
+          :options="{default:2,padding:1,width:500}"
+          :ssr="{columns: 2}"
+        >
+          <template #default="{ item }">
+            <or-blog-article-item :item="item" />
+          </template>
+        </vue-masonry-wall>
+      </v-sheet>
 
       <or-blog-article-daily-posts-chart :create-by="userId" />
     </div>

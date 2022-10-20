@@ -15,6 +15,7 @@
   "all": "All",
   "appName": "OR BLOG",
   "article": {
+    "pinned": "Popular Articles",
     "cannotCommentHint": "The owner does not want to be commented by others for the time being~",
     "likedTime": "Like Time: {0}",
     "browsedTime": "Browse Time: {0}",
