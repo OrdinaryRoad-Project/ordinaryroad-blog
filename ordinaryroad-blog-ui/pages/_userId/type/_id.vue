@@ -32,7 +32,7 @@
       <div class="category font-weight-thin">
         <or-link
           hide-icon
-          :href="`/${type.creatorId}`"
+          :href="`/${type.creatorUid}`"
         >
           <span style="color: white">{{ type.createBy }}</span>
         </or-link>
@@ -50,23 +50,32 @@
 
 <script>
 export default {
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  },
   asyncData ({
     route,
     $apis,
     store,
-    error
+    error,
+    redirect
   }) {
     // 判断分类是否存在
-    const userId = route.params.userId || ''
+    const userId = Number(route.params.userId || 0)
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       return $apis.blog.type.findById(id)
         .then((data) => {
-          if (!data || data.creatorId !== userId) {
+          if (!data) {
             error({ statusCode: 404, message: '分类不存在' })
-          } else {
-            return { type: data }
           }
+          if (data.creatorUid !== userId) {
+            redirect(`/${userId}`)
+          }
+          return { type: data }
         })
         .catch(() => {
           error({ statusCode: 404, message: '分类不存在' })

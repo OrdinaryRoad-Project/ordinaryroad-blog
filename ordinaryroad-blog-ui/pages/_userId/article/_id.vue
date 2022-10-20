@@ -31,7 +31,12 @@
 <script>
 
 export default {
-  layout: 'empty',
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  },
   async asyncData ({
     route,
     $apis,
@@ -41,18 +46,18 @@ export default {
   }) {
     const tokenValue = store.getters['user/getTokenValue']
     // 判断文章是否存在
-    const userId = route.params.userId || ''
+    const userId = Number(route.params.userId || 0)
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       try {
         const article = await $apis.blog.article.findPublishById(tokenValue, id)
-        if (article === null) {
+        if (!article) {
           error({ statusCode: 404, message: '文章不存在' })
         }
         if (article.firstId !== id) {
           redirect(`/${userId}/article/${article.firstId}`)
         }
-        if (article.user.uuid !== userId) {
+        if (article.user.uid !== userId) {
           redirect(`/${userId}`)
         }
 

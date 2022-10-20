@@ -123,7 +123,7 @@ export default {
   methods: {
     logout ({ titleKey }) {
       if (titleKey === 'userMenuTitles.space') {
-        window.open(`/${this.userInfo.user.uuid}`, '_blank')
+        window.open(`/${this.userInfo.user.uid}`, '_blank')
       } else {
         this.$dialog({
           persistent: false,

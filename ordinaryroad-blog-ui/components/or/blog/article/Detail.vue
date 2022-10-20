@@ -70,7 +70,7 @@
 
       <!-- 编辑 -->
       <v-btn
-        v-if="userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
+        v-if="userInfo&&blogArticle.user.uid===userInfo.user.uud"
         icon
         :to="`/dashboard/article/writing/${blogArticle.uuid}`"
       >
@@ -872,7 +872,7 @@ export default {
         })
     },
     onClickUsername () {
-      window.open(`/${this.blogArticle.user.uuid}`, '_blank')
+      window.open(`/${this.blogArticle.user.uid}`, '_blank')
     },
     onClickToolbarTitle () {
       if (this.showScrollToTopFab) {
@@ -882,7 +882,7 @@ export default {
       }
     },
     onClickType (type) {
-      window.open(`/${this.blogArticle.user.uuid}/type/${type.uuid}`, '_blank')
+      window.open(`/${this.blogArticle.user.uid}/type/${type.uuid}`, '_blank')
     },
     onClickTag (tag) {
       window.open(`/search/${tag.name}`, '_blank')

@@ -204,7 +204,7 @@ export default {
     commentContent () {
       let prefix = ''
       if (this.blogComment.parent && this.blogComment.parent.uuid !== this.blogComment.originalId) {
-        prefix = `[@${this.blogComment.parent.user.username}](/${this.blogComment.parent.user.uuid}) `
+        prefix = `[@${this.blogComment.parent.user.username}](/${this.blogComment.parent.user.uid}) `
       }
       return `${prefix}${this.blogComment.content}`
     }
@@ -214,7 +214,7 @@ export default {
   },
   methods: {
     onClickUsername (user) {
-      window.open(`/${user.uuid}`, '_blank')
+      window.open(`/${user.uid}`, '_blank')
     },
     /**
      * 加载回复

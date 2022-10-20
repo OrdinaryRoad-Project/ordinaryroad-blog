@@ -193,7 +193,7 @@
         <or-link
           hover-able
           :text="item.status!=='PUBLISH'"
-          :href="`/${item.creatorId}/article/${item.uuid}`"
+          :href="`/${item.creatorUid}/article/${item.uuid}`"
         >
           {{ item.title }}
         </or-link>

@@ -70,6 +70,12 @@ export default {
         url: `/blog/user/${id}`,
         method: 'get'
       })
+    },
+    findByUid: (uid) => {
+      return $axios({
+        url: `/blog/user/uid/${uid}`,
+        method: 'get'
+      })
     }
   }
 }

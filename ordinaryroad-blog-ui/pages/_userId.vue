@@ -23,59 +23,36 @@
   -->
 
 <template>
-  <v-container fluid>
-    <div>
-      <vue-masonry-wall
-        v-if="pinnedArticles.data&&pinnedArticles.data.length"
-        class="mb-2"
-        :items="pinnedArticles.data"
-        :options="{default:2,padding:1,width:500}"
-        :ssr="{columns: 2}"
-      >
-        <template #default="{ item }">
-          <or-blog-article-item :item="item" />
-        </template>
-      </vue-masonry-wall>
-
-      <or-blog-article-daily-posts-chart :create-by="userId" />
-    </div>
-  </v-container>
+  <nuxt-child :user="user" />
 </template>
 
 <script>
-import VueMasonryWall from 'vue-masonry-wall'
-
 export default {
-  name: 'OrBlogUserOverview',
-  components: {
-    VueMasonryWall
-  },
-  props: {
-    userId: {
-      type: String,
-      required: true
+  layout ({ route }) {
+    const routeName = route.name
+    if (routeName === 'userId-article-id') {
+      return 'empty'
+    } else {
+      return 'default'
     }
+  },
+  validate ({ params, query, store }) {
+    return /^\d+$/.test(params.userId)
+  },
+  asyncData ({ route, $apis, error }) {
+    const userId = Number(route.params.userId || 0)
+    return $apis.blog.user.findByUid(userId)
+      .then((data) => {
+        return { user: data }
+      })
+      .catch(() => {
+        error({ statusCode: 404, message: '用户不存在' })
+      })
   },
   data: () => ({
-    pinnedArticles: {
-      loading: true,
-      data: []
-    }
+    user: null
   }),
   created () {
-    this.getTop6Articles()
-  },
-  methods: {
-    getTop6Articles () {
-      this.$apis.blog.article.getPinnedArticles({ userId: this.userId })
-        .then((data) => {
-          this.pinnedArticles.loading = false
-          this.pinnedArticles.data = data
-        })
-        .catch(() => {
-          this.pinnedArticles.loading = false
-        })
-    }
   }
 }
 </script>

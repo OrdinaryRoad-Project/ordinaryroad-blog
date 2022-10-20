@@ -45,13 +45,16 @@ public class BlogTypeVO {
 
     private String createBy;
 
+    private BlogUserVO user;
+
     public BlogTypeVO() {
     }
 
-    public BlogTypeVO(String uuid, String name, String createBy) {
+    public BlogTypeVO(String uuid, String name, String createBy, BlogUserVO user) {
         this.uuid = uuid;
         this.name = name;
         this.createBy = createBy;
+        this.user = user;
     }
 
     public String getUuid() {
@@ -76,5 +79,13 @@ public class BlogTypeVO {
 
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
+    }
+
+    public BlogUserVO getUser() {
+        return user;
+    }
+
+    public void setUser(BlogUserVO user) {
+        this.user = user;
     }
 }

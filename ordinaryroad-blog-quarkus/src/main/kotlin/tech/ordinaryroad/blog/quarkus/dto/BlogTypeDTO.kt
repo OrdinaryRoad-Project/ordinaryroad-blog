@@ -42,10 +42,11 @@ data class BlogTypeDTO(
 
     override fun parse(baseDo: BlogType) {
         name = baseDo.name
+        deleted = baseDo.deleted
     }
 
     companion object {
-        private const val serialVersionUID: Long = -9147899731383164515L
+        private const val serialVersionUID: Long = -8744383965054639496L
     }
 
 }

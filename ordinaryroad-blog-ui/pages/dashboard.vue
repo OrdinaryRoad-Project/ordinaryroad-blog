@@ -49,9 +49,7 @@
 
 export default {
   middleware: ['userInfo'],
-
   data: () => ({}),
-
   computed: {
     items () {
       const path = this.$route.path

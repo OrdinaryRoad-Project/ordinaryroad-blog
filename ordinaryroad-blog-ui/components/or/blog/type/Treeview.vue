@@ -34,7 +34,7 @@
       <v-list-item
         v-for="item in typeInfoPageItems.records"
         :key="item.uuid"
-        :to="`/${item.createBy}/type/${item.uuid}`"
+        :to="`/${item.user.uid}/type/${item.uuid}`"
         target="_blank"
       >
         <v-list-item-content>

@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.dal.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
@@ -32,17 +33,46 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class BlogUser extends BaseBlogDO {
 
-    private static final long serialVersionUID = 3030160973436107151L;
+    private static final long serialVersionUID = 4939904543080813651L;
 
+    /**
+     * uid
+     */
+    private Long uid;
+
+    /**
+     * 用户名
+     */
     private String username;
 
+    /**
+     * 头像地址
+     */
     private String avatar;
 
+    /**
+     * 邮箱
+     */
     private String email;
 
+    /**
+     * 是否启用
+     */
     private Boolean enabled;
 
+    /**
+     * 是否删除
+     */
+    @TableLogic(value = "false", delval = "true")
     private Boolean deleted;
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+    }
 
     public String getUsername() {
         return username;

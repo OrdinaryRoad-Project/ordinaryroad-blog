@@ -26,6 +26,7 @@ package tech.ordinaryroad.blog.quarkus.mapstruct;
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType;
@@ -40,8 +41,10 @@ public interface BlogTypeMapStruct extends BaseBlogMapStruct {
 
     BlogTypeMapStruct INSTANCE = Mappers.getMapper(BlogTypeMapStruct.class);
 
+    @Mapping(source = "createBy", target = "user")
     BlogTypeVO transfer(BlogType type);
 
+    @Mapping(source = "createBy", target = "user")
     BlogTypeInfoVO transferInfo(BlogType type);
 
     @AfterMapping

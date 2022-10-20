@@ -70,7 +70,7 @@
       <template #actions="{ item }">
         <v-btn
           icon
-          :to="`/${item.creatorId}/type/${item.uuid}`"
+          :to="`/${item.creatorUid}/type/${item.uuid}`"
           target="_blank"
           color="primary"
           class="me-2"

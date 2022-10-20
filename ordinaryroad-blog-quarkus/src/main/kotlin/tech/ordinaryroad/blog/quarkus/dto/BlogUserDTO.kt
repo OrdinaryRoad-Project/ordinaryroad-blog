@@ -36,17 +36,19 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 @JsonPropertyOrder
 @RegisterForReflection
 data class BlogUserDTO(
+    var uid: Long = 0L,
     var username: String = StrUtil.EMPTY,
     var avatar: String = StrUtil.EMPTY
 ) : BaseBlogModelDTO<BlogUser>() {
 
     override fun parse(baseDo: BlogUser) {
+        uid = baseDo.uid
         username = baseDo.username
         avatar = StrUtil.nullToEmpty(baseDo.avatar)
     }
 
     companion object {
-        private const val serialVersionUID: Long = 4207886970841786022L
+        private const val serialVersionUID: Long = 7681997427678380513L
     }
 
 }

@@ -49,12 +49,12 @@
         <v-tabs-items v-model="tabModel">
           <v-tab-item>
             <or-blog-user-overview
-              :user-id="blogUser.uuid"
+              :user-id="user.uuid"
             />
           </v-tab-item>
           <v-tab-item>
             <or-blog-user-articles
-              :user-id="blogUser.uuid"
+              :user-id="user.uuid"
               :total.sync="totalArticle"
             />
           </v-tab-item>
@@ -72,13 +72,13 @@
           class="sticky-top"
         >
           <!-- 用户基本资料 -->
-          <or-blog-user-basic-info :user="blogUser" username-link-disabled />
+          <or-blog-user-basic-info :user="user" username-link-disabled />
 
           <div class="mt-14" />
           <!-- 用户创建的分类 -->
           <base-material-card :title="$t('typeCount',[`${totalTypes?$t('parentheses',[totalTypes]):''}`])">
             <or-blog-type-treeview
-              :create-by="blogUser.uuid"
+              :create-by="user.uuid"
               :total.sync="totalTypes"
             />
           </base-material-card>
@@ -91,30 +91,26 @@
 <script>
 
 export default {
-  props: {},
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  },
   asyncData ({
     route,
     error,
     $apis
   }) {
     const tabItems = ['overview', 'article']
-    const userId = route.params.userId
     const tab = route.query.tab
     const indexOf = tab ? tabItems.indexOf(tab) : 0
-    return $apis.blog.user.findById(userId)
-      .then((data) => {
-        return {
-          tabModel: indexOf === -1 ? 0 : indexOf,
-          blogUser: data
-        }
-      })
-      .catch(() => {
-        error({ statusCode: 404, message: '用户不存在' })
-      })
+    return {
+      tabModel: indexOf === -1 ? 0 : indexOf
+    }
   },
   data () {
     return {
-      blogUser: null,
       totalArticle: null,
       totalTypes: null,
 
@@ -134,7 +130,7 @@ export default {
     }
   },
   created () {
-    this.$apis.blog.article.count(this.blogUser.uuid)
+    this.$apis.blog.article.count(this.user.uuid)
       .then((data) => {
         this.totalArticle = data
       })

@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
@@ -99,12 +100,21 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
     }
 
     /**
-     * 根据OAuthUser Id查询主账号BlogUser Id
+     * 根据OAuthUser Id查询主账号BlogUser
      */
     fun findByOAuthUserId(oAuthUserId: String): BlogUser? {
         val userId = userOAuthUsersService.findUserIdByOAuthUserId(oAuthUserId)
         userId == null && return null
         return super.findById(userId)
+    }
+
+    /**
+     * 根据uid查询用户
+     */
+    fun findByUid(uid: Long): BlogUser? {
+        val wrapper = Wrappers.query<BlogUser>()
+        wrapper.eq("uid", uid)
+        return super.dao.selectOne(wrapper)
     }
     //endregion
 

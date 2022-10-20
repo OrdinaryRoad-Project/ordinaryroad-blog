@@ -71,7 +71,7 @@
                 hide-icon
                 :hover-able="!usernameLinkDisabled"
                 :text="usernameLinkDisabled"
-                :href="`/${user.uuid}?tab=article`"
+                :href="`/${user.uid}?tab=article`"
               >
                 <v-row justify="center" class="text-h6">
                   {{ $t('user.basicInfo.articlesCount') }}
@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     onClickUsername (user) {
-      window.open(`/${user.uuid}`, '_blank')
+      window.open(`/${user.uid}`, '_blank')
     }
   }
 }

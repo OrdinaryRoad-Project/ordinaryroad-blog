@@ -47,6 +47,7 @@ import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Positive
 import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -74,6 +75,22 @@ class BlogUserResource {
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): BlogUserVO {
         val blogUser = userService.findById(id)
+
+        if (blogUser == null) {
+            throw BlogUserNotFoundException()
+        } else {
+            return userMapStruct.transfer(blogUser)
+        }
+    }
+
+    /**
+     * 根据uid查询用户
+     */
+    @GET
+    @Path("uid/{uid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findByUid(@Valid @Positive(message = "uid不能小于零") @RestPath uid: Long): BlogUserVO {
+        val blogUser = userService.findByUid(uid)
 
         if (blogUser == null) {
             throw BlogUserNotFoundException()
