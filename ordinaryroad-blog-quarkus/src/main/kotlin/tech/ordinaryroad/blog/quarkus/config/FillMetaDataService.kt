@@ -57,7 +57,7 @@ class FillMetaDataService : IFillMetaFieldService {
 
         if (t is BlogUser) {
             val wrapper = Wrappers.query<BlogUser>()
-            wrapper.orderBy(true, false, "created_time")
+            wrapper.orderBy(true, false, "uid")
             val blogUser = userService.dao.selectOne(wrapper)
             var uid = 10000L
             if (blogUser != null) {
