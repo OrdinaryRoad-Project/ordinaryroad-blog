@@ -70,7 +70,7 @@
 
       <!-- 编辑 -->
       <v-btn
-        v-if="userInfo&&blogArticle.user.uid===userInfo.user.uud"
+        v-if="userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
         icon
         :to="`/dashboard/article/writing/${blogArticle.uuid}`"
       >
