@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class BlogArticleUserLiked extends BaseDO {
 
-    private static final long serialVersionUID = -5264052975972546712L;
+    private static final long serialVersionUID = -3132842813179320473L;
 
     /**
      * 标题
@@ -73,6 +73,11 @@ public class BlogArticleUserLiked extends BaseDO {
     private Boolean original;
 
     /**
+     * 文章firstId
+     */
+    private String firstId;
+
+    /**
      * 分类Id
      */
     private String typeId;
@@ -95,13 +100,14 @@ public class BlogArticleUserLiked extends BaseDO {
     public BlogArticleUserLiked() {
     }
 
-    public BlogArticleUserLiked(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String typeId, List<String> tagIds, LocalDateTime likedTime) {
+    public BlogArticleUserLiked(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String firstId, String typeId, List<String> tagIds, LocalDateTime likedTime) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
         this.content = content;
         this.canReward = canReward;
         this.original = original;
+        this.firstId = firstId;
         this.typeId = typeId;
         this.tagIds = tagIds;
         this.likedTime = likedTime;
@@ -153,6 +159,14 @@ public class BlogArticleUserLiked extends BaseDO {
 
     public void setOriginal(Boolean original) {
         this.original = original;
+    }
+
+    public String getFirstId() {
+        return firstId;
+    }
+
+    public void setFirstId(String firstId) {
+        this.firstId = firstId;
     }
 
     public String getTypeId() {

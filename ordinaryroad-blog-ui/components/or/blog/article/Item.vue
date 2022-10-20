@@ -220,11 +220,7 @@ export default {
       summaryShow: false
     }
   },
-  computed: {
-    articlePath () {
-      return `/${this.item.user.uid}/article/${this.item.uuid}`
-    }
-  },
+  computed: {},
   watch: {},
   created () {
   },

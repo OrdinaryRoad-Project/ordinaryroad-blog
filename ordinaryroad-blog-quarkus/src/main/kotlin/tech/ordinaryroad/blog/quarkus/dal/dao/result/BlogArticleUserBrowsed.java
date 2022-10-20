@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class BlogArticleUserBrowsed extends BaseDO {
 
-    private static final long serialVersionUID = 7663230835173080251L;
+    private static final long serialVersionUID = 6774417142338139691L;
 
     /**
      * 标题
@@ -73,6 +73,11 @@ public class BlogArticleUserBrowsed extends BaseDO {
     private Boolean original;
 
     /**
+     * 文章firstId
+     */
+    private String firstId;
+
+    /**
      * 分类Id
      */
     private String typeId;
@@ -97,21 +102,27 @@ public class BlogArticleUserBrowsed extends BaseDO {
      */
     private LocalDateTime lastBrowsedTime;
 
+    /**
+     * 累计浏览次数
+     */
+    private Long count;
 
     public BlogArticleUserBrowsed() {
     }
 
-    public BlogArticleUserBrowsed(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String typeId, List<String> tagIds, LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime) {
+    public BlogArticleUserBrowsed(String title, String coverImage, String summary, String content, Boolean canReward, Boolean original, String firstId, String typeId, List<String> tagIds, LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime, Long count) {
         this.title = title;
         this.coverImage = coverImage;
         this.summary = summary;
         this.content = content;
         this.canReward = canReward;
         this.original = original;
+        this.firstId = firstId;
         this.typeId = typeId;
         this.tagIds = tagIds;
         this.firstBrowsedTime = firstBrowsedTime;
         this.lastBrowsedTime = lastBrowsedTime;
+        this.count = count;
     }
 
     public String getTitle() {
@@ -162,6 +173,14 @@ public class BlogArticleUserBrowsed extends BaseDO {
         this.original = original;
     }
 
+    public String getFirstId() {
+        return firstId;
+    }
+
+    public void setFirstId(String firstId) {
+        this.firstId = firstId;
+    }
+
     public String getTypeId() {
         return typeId;
     }
@@ -192,5 +211,13 @@ public class BlogArticleUserBrowsed extends BaseDO {
 
     public void setLastBrowsedTime(LocalDateTime lastBrowsedTime) {
         this.lastBrowsedTime = lastBrowsedTime;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

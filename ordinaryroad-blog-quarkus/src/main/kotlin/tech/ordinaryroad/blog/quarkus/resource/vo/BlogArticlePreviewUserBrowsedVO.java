@@ -42,12 +42,15 @@ public class BlogArticlePreviewUserBrowsedVO extends BlogArticlePreviewVO {
 
     private LocalDateTime lastBrowsedTime;
 
+    private Long count;
+
     public BlogArticlePreviewUserBrowsedVO() {
     }
 
-    public BlogArticlePreviewUserBrowsedVO(LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime) {
+    public BlogArticlePreviewUserBrowsedVO(LocalDateTime firstBrowsedTime, LocalDateTime lastBrowsedTime, Long count) {
         this.firstBrowsedTime = firstBrowsedTime;
         this.lastBrowsedTime = lastBrowsedTime;
+        this.count = count;
     }
 
     public LocalDateTime getFirstBrowsedTime() {
@@ -64,5 +67,13 @@ public class BlogArticlePreviewUserBrowsedVO extends BlogArticlePreviewVO {
 
     public void setLastBrowsedTime(LocalDateTime lastBrowsedTime) {
         this.lastBrowsedTime = lastBrowsedTime;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

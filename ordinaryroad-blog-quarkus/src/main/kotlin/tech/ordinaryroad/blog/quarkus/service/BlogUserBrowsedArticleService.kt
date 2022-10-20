@@ -82,6 +82,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
             if (byIpAndArticleId == null) {
                 // 创建
                 super.create(BlogUserBrowsedArticle().apply {
+                    count = 1
                     setIp(ip)
                     setArticleId(firstArticleById.uuid)
                     lastBrowsedTime = LocalDateTime.now()
@@ -89,6 +90,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
             } else {
                 // 更新上次浏览时间，不支持删除，所以不用更新deleted字段
                 super.update(BlogUserBrowsedArticle().apply {
+                    count = byIpAndArticleId.count + 1
                     uuid = byIpAndArticleId.uuid
                     lastBrowsedTime = LocalDateTime.now()
                 })
@@ -98,6 +100,7 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
             if (byUserIdAndIpAndArticleId == null) {
                 // 创建
                 super.create(BlogUserBrowsedArticle().apply {
+                    count = 1
                     setIp(ip)
                     setArticleId(firstArticleById.uuid)
                     lastBrowsedTime = LocalDateTime.now()
@@ -106,13 +109,15 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
                 // 更新
                 if (byUserIdAndIpAndArticleId.deleted) {
                     super.update(BlogUserBrowsedArticle().apply {
+                        count = byUserIdAndIpAndArticleId.count + 1
                         uuid = byUserIdAndIpAndArticleId.uuid
                         deleted = false
                         lastBrowsedTime = LocalDateTime.now()
                     })
                 } else {
-                    // 更新上次浏览时间
+                    // 更新上次浏览时间 增加浏览次数
                     super.update(BlogUserBrowsedArticle().apply {
+                        count = byUserIdAndIpAndArticleId.count + 1
                         uuid = byUserIdAndIpAndArticleId.uuid
                         lastBrowsedTime = LocalDateTime.now()
                     })

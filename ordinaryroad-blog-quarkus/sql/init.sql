@@ -23,8 +23,8 @@
  */
 
 # DROP DATABASE IF EXISTS or_blog_dev;
-CREATE DATABASE or_blog_pro_temp;
-USE or_blog_pro_temp;
+CREATE DATABASE or_blog_dev;
+USE or_blog_dev;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -355,6 +355,7 @@ CREATE TABLE `blog_user_browsed_article`
     `ip`                varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
     `article_id`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '文章ID',
     `last_browsed_time` datetime                                                       NULL     DEFAULT NULL COMMENT '上次浏览时间',
+    `count`             bigint(20)                                                     NULL     DEFAULT 1 COMMENT '累计浏览次数',
     `deleted`           bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_user_browsed_article_uuid_uindex` (`uuid`) USING BTREE

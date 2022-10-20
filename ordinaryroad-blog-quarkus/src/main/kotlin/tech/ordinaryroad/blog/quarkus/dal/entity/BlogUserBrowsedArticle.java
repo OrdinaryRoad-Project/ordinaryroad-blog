@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 @RegisterForReflection
 public class BlogUserBrowsedArticle extends BaseDO {
 
-    private static final long serialVersionUID = -5161856062500747666L;
+    private static final long serialVersionUID = -1645302105363120457L;
 
     private String ip;
 
@@ -43,15 +43,21 @@ public class BlogUserBrowsedArticle extends BaseDO {
 
     private LocalDateTime lastBrowsedTime;
 
+    /**
+     * 累计浏览次数
+     */
+    private Long count;
+
     private Boolean deleted;
 
     public BlogUserBrowsedArticle() {
     }
 
-    public BlogUserBrowsedArticle(String ip, String articleId, LocalDateTime lastBrowsedTime, Boolean deleted) {
+    public BlogUserBrowsedArticle(String ip, String articleId, LocalDateTime lastBrowsedTime, Long count, Boolean deleted) {
         this.ip = ip;
         this.articleId = articleId;
         this.lastBrowsedTime = lastBrowsedTime;
+        this.count = count;
         this.deleted = deleted;
     }
 
@@ -77,6 +83,14 @@ public class BlogUserBrowsedArticle extends BaseDO {
 
     public void setLastBrowsedTime(LocalDateTime lastBrowsedTime) {
         this.lastBrowsedTime = lastBrowsedTime;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 
     public Boolean getDeleted() {
