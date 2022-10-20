@@ -189,6 +189,70 @@
         GROUP BY date
     </select>
 
+    <select id="countMonthlyPosts" resultType="map">
+        SELECT DATE_FORMAT(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time), '%Y-%m') date,
+        COUNT(ba.uuid) count
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        AND ba.created_time BETWEEN #{startDateTime} AND #{endDateTime}
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="countYearlyPosts" resultType="map">
+        SELECT YEAR(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time)) date,
+        COUNT(ba.uuid) count
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        AND ba.created_time BETWEEN #{startDateTime} AND #{endDateTime}
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="getArticlePublishedDays" resultType="list">
+        SELECT DISTINCT(DATE(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="getArticlePublishedMonths" resultType="list">
+        SELECT DISTINCT(DATE_FORMAT(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time), '%Y-%m')) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="getArticlePublishedYears" resultType="list">
+        SELECT DISTINCT(YEAR(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
     <select id="pageLiked" resultMap="ArticleUserLikedResultMap">
         SELECT bula.created_time liked_time, ba.*
         FROM blog_user_liked_article bula
@@ -295,5 +359,4 @@
             </otherwise>
         </choose>
     </select>
-
 </mapper>

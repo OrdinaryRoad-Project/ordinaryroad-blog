@@ -70,17 +70,46 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
     fun getTopNBrowsedByUserId(@Param("n") n: Int, @Param("userId") userId: String): List<Map<String, String>>
 
     /**
-     * 获取每日发表数
+     * 获取每日文章发表数
      *
      * @param startDateTime 统计开始时间
      * @param endDateTime 统计结束时间
      * @param userId 用户Id
      */
-    fun countDailyPosts(
-        @Param("startDateTime") startDateTime: String,
-        @Param("endDateTime") endDateTime: String,
-        @Param("userId") userId: String
-    ): List<Map<String, String>>
+    fun countDailyPosts(startDateTime: String, endDateTime: String, userId: String): List<Map<String, String>>
+
+    /**
+     * 获取每月文章发表数
+     *
+     * @param startDateTime 统计开始时间
+     * @param endDateTime 统计结束时间
+     * @param userId 用户Id
+     */
+    fun countMonthlyPosts(startDateTime: String, endDateTime: String, userId: String): List<Map<String, String>>
+
+    /**
+     * 获取每年文章发表数
+     *
+     * @param startDateTime 统计开始时间
+     * @param endDateTime 统计结束时间
+     * @param userId 用户Id
+     */
+    fun countYearlyPosts(startDateTime: String, endDateTime: String, userId: String): List<Map<String, String>>
+
+    /**
+     * 获取有发表文章的日期数组
+     */
+    fun getArticlePublishedDays(userId: String): List<String>
+
+    /**
+     * 获取有发表文章的月份数组
+     */
+    fun getArticlePublishedMonths(userId: String): List<String>
+
+    /**
+     * 获取有发表文章的年份数组
+     */
+    fun getArticlePublishedYears(userId: String): List<String>
 
     /**
      * 分页查询点赞的文章

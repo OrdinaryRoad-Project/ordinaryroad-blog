@@ -25,11 +25,15 @@
 package tech.ordinaryroad.blog.quarkus.util
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.date.DatePattern
+import cn.hutool.core.date.LocalDateTimeUtil
 import cn.hutool.core.io.resource.ResourceUtil
 import cn.hutool.core.net.NetUtil
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
 import io.vertx.core.json.Json
 import org.lionsoul.ip2region.xdb.Searcher
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import java.time.LocalDateTime
 import javax.enterprise.inject.spi.CDI
 
 /**
@@ -127,6 +131,39 @@ object BlogUtils {
             }
         }
         return ipRegion
+    }
+
+    /**
+     * 解析时间范围
+     */
+    fun parseDateRange(startDateTime: LocalDateTime?, endDateTime: LocalDateTime?): Pair<String, String> {
+        val normDatetimeFormatter = DatePattern.NORM_DATETIME_FORMATTER
+        val startDateTimeString: String
+        val endDateTimeString: String
+        if (startDateTime == null || endDateTime == null) {
+            val now = LocalDateTime.now()
+            val currentYear = now.year
+            startDateTimeString = if (startDateTime == null) {
+                "${currentYear}-01-01 00:00:00"
+            } else {
+                LocalDateTimeUtil.format(startDateTime, normDatetimeFormatter)
+            }
+            endDateTimeString = if (endDateTime == null) {
+                "${currentYear}-12-31 23:59:59"
+            } else {
+                LocalDateTimeUtil.format(endDateTime, normDatetimeFormatter)
+            }
+        } else {
+            if (endDateTime.isBefore(startDateTime)) {
+                throw BaseBlogException("结束时间不能小于开始时间")
+            } else if (startDateTime.isAfter(endDateTime)) {
+                throw BaseBlogException("开始时间不能大于开始时间")
+            } else {
+                startDateTimeString = LocalDateTimeUtil.format(startDateTime, normDatetimeFormatter)
+                endDateTimeString = LocalDateTimeUtil.format(endDateTime, normDatetimeFormatter)
+            }
+        }
+        return Pair(startDateTimeString, endDateTimeString)
     }
 
     @JvmStatic

@@ -778,14 +778,16 @@ class BlogArticleResource {
             message = "userId长度不能大于32"
         ) @DefaultValue("") @RestQuery userId: String
     ): Long {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
-                BlogUserNotFoundException().throws()
-            }
+        if (userId.isBlank()) {
+            return 0
         }
+        if (userService.findById(userId) == null) {
+            BlogUserNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogArticle>()
             .eq("status", BlogArticleStatus.PUBLISH)
-            .eq(userId.isNotBlank(), "create_by", userId)
+            .eq("create_by", userId)
         return articleService.dao.selectCount(wrapper)
     }
 
@@ -800,14 +802,16 @@ class BlogArticleResource {
             message = "userId长度不能大于32"
         ) @DefaultValue("") @RestQuery userId: String
     ): Long {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
-                BlogUserNotFoundException().throws()
-            }
+        if (userId.isBlank()) {
+            return 0
         }
+        if (userService.findById(userId) == null) {
+            BlogUserNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserBrowsedArticle>()
             .eq("deleted", false)
-            .eq(userId.isNotBlank(), "create_by", userId)
+            .eq("create_by", userId)
         return userBrowsedArticleService.dao.selectCount(wrapper)
     }
 
@@ -822,13 +826,15 @@ class BlogArticleResource {
             message = "userId长度不能大于32"
         ) @DefaultValue("") @RestQuery userId: String
     ): Long {
-        if (userId.isNotBlank()) {
-            if (userService.findById(userId) == null) {
-                BlogUserNotFoundException().throws()
-            }
+        if (userId.isBlank()) {
+            return 0L
         }
+        if (userService.findById(userId) == null) {
+            BlogUserNotFoundException().throws()
+        }
+
         val wrapper = Wrappers.query<BlogUserLikedArticle>()
-            .eq(userId.isNotBlank(), "create_by", userId)
+            .eq("create_by", userId)
         return userLikedArticleService.dao.selectCount(wrapper)
     }
 
@@ -875,20 +881,114 @@ class BlogArticleResource {
     }
 
     /**
-     * 获取用户每日发表数
+     * 获取有文章发表的日期数组
+     */
+    @GET
+    @Path("article/published/days")
+    fun getArticlePublishedDays(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+    ): List<String> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        return articleService.dao.getArticlePublishedDays(userId)
+    }
+
+    /**
+     * 获取有文章发表的月份数组
+     */
+    @GET
+    @Path("article/published/months")
+    fun getArticlePublishedMonths(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+    ): List<String> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        return articleService.dao.getArticlePublishedMonths(userId)
+    }
+
+    /**
+     * 获取有文章发表的年份数组
+     */
+    @GET
+    @Path("article/published/years")
+    fun getArticlePublishedYears(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+    ): List<String> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        return articleService.dao.getArticlePublishedYears(userId)
+    }
+
+    /**
+     * 获取每日文章发表数
      */
     @GET
     @Path("count/daily/posts")
     fun countDailyPosts(
         @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
-        @RestQuery fromTime: LocalDateTime?,
-        @RestQuery endTime: LocalDateTime?,
+        @RestQuery startDateTime: LocalDateTime?,
+        @RestQuery endDateTime: LocalDateTime?,
     ): List<Map<String, String>> {
-        val now = LocalDateTime.now()
-        val currentYear = now.year
-        val startDateTime = "${currentYear}-01-01 00:00:00"
-        val endDateTime = "${currentYear}-12-31 23:59:59"
-        return articleService.dao.countDailyPosts(startDateTime, endDateTime, userId)
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        val (startDateTimeString, endDateTimeString) = BlogUtils.parseDateRange(startDateTime, endDateTime)
+        return articleService.dao.countDailyPosts(startDateTimeString, endDateTimeString, userId)
+    }
+
+    /**
+     * 获取每月文章发表数
+     */
+    @GET
+    @Path("count/monthly/posts")
+    fun countMonthlyPosts(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @RestQuery startDateTime: LocalDateTime?,
+        @RestQuery endDateTime: LocalDateTime?,
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        val (startDateTimeString, endDateTimeString) = BlogUtils.parseDateRange(startDateTime, endDateTime)
+        return articleService.dao.countMonthlyPosts(startDateTimeString, endDateTimeString, userId)
+    }
+
+    /**
+     * 获取每年文章发表数
+     */
+    @GET
+    @Path("count/yearly/posts")
+    fun countYearlyPosts(
+        @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
+        @RestQuery startDateTime: LocalDateTime?,
+        @RestQuery endDateTime: LocalDateTime?,
+    ): List<Map<String, String>> {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+
+        val (startDateTimeString, endDateTimeString) = BlogUtils.parseDateRange(startDateTime, endDateTime)
+        return articleService.dao.countYearlyPosts(startDateTimeString, endDateTimeString, userId)
     }
 
     /**
