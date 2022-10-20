@@ -884,7 +884,7 @@ class BlogArticleResource {
      * 获取有文章发表的日期数组
      */
     @GET
-    @Path("article/published/days")
+    @Path("days/published")
     fun getArticlePublishedDays(
         @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
     ): List<String> {
@@ -901,7 +901,7 @@ class BlogArticleResource {
      * 获取有文章发表的月份数组
      */
     @GET
-    @Path("article/published/months")
+    @Path("months/published")
     fun getArticlePublishedMonths(
         @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
     ): List<String> {
@@ -918,7 +918,7 @@ class BlogArticleResource {
      * 获取有文章发表的年份数组
      */
     @GET
-    @Path("article/published/years")
+    @Path("years/published")
     fun getArticlePublishedYears(
         @Valid @Size(max = 32, message = "userId长度不能大于32") @DefaultValue("") @RestQuery userId: String,
     ): List<String> {

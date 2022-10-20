@@ -186,10 +186,45 @@ export default {
         method: 'get'
       })
     },
+    getArticlePublishedDays ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/days/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    getArticlePublishedMonths ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/months/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    getArticlePublishedYears ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/years/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
     countDailyPosts ({ startDateTime = '', endDateTime = '', userId }) {
       const params = { startDateTime, endDateTime, userId }
       return $axios({
-        url: `/blog/article/count/daily/posts?1=1${urlEncode(params)}`,
+        url: `/blog/article/count/daily/posts?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    countMonthlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/monthly/posts?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    countYearlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/yearly/posts?${urlEncode(params).slice(1)}`,
         method: 'get'
       })
     },

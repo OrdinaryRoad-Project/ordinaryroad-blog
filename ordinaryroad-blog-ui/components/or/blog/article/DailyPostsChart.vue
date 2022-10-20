@@ -24,7 +24,19 @@
 
 <template>
   <v-card :loading="loading" flat :outlined="outlined">
-    <v-card-title>{{ $t('myStats.charts.dailyPosts') }}</v-card-title>
+    <v-card-title>
+      {{ $t('myStats.charts.dailyPosts') }}
+      <v-spacer />
+      <v-select
+        v-model="selectedYear"
+        outlined
+        style="position: absolute; top: 12px; right: 20px; width: 150px"
+        hide-details
+        dense
+        :items="articlePublishedYearsOption.data"
+        :loading="articlePublishedYearsOption.loading"
+      />
+    </v-card-title>
     <div
       v-if="!loading"
       ref="div"
@@ -66,6 +78,11 @@ export default {
   },
   data: () => ({
     loading: true,
+    selectedYear: null,
+    articlePublishedYearsOption: {
+      loading: true,
+      data: []
+    },
     dailyPostsCount: [],
     chart: undefined,
     options: {
@@ -89,7 +106,7 @@ export default {
         right: 10,
         bottom: 30,
         cellSize: ['auto', 'auto'],
-        range: new Date().getFullYear(),
+        range: null,
         itemStyle: {
           borderWidth: 0.5
         },
@@ -113,10 +130,24 @@ export default {
         this.updateOptionsOrient(val)
         this.chart.setOption(this.options)
       }
+    },
+    selectedYear (val) {
+      this.options.calendar.range = val
+      this.getData()
     }
   },
   created () {
-    this.getData()
+    this.$apis.blog.article.getArticlePublishedYears({ userId: this.createBy })
+      .then((data) => {
+        this.articlePublishedYearsOption.loading = false
+        this.articlePublishedYearsOption.data = data
+        if (data.length) {
+          this.selectedYear = data[data.length - 1]
+        }
+      })
+      .catch(() => {
+        this.articlePublishedYearsOption.loading = false
+      })
   },
   mounted () {
   },
@@ -132,7 +163,11 @@ export default {
       this.options.calendar.bottom = vertical ? 10 : 30
     },
     getData () {
-      this.$apis.blog.article.countDailyPosts({ userId: this.createBy || this.userInfo.user.uuid })
+      this.$apis.blog.article.countDailyPosts({
+        startDateTime: `${this.selectedYear}-01-01T00:00:00`,
+        endDateTime: `${this.selectedYear}-12-31T23:59:59`,
+        userId: this.createBy || this.userInfo.user.uuid
+      })
         .then((data) => {
           this.options.series.data = []
           let maxCount = 0

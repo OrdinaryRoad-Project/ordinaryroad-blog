@@ -217,7 +217,7 @@
         GROUP BY date
     </select>
 
-    <select id="getArticlePublishedDays" resultType="list">
+    <select id="getArticlePublishedDays" resultType="string">
         SELECT DISTINCT(DATE(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
         FROM blog_article ba
         LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
@@ -226,10 +226,9 @@
         <if test="userId != null and userId != ''">
             AND ba.create_by = #{userId}
         </if>
-        GROUP BY date
     </select>
 
-    <select id="getArticlePublishedMonths" resultType="list">
+    <select id="getArticlePublishedMonths" resultType="string">
         SELECT DISTINCT(DATE_FORMAT(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time), '%Y-%m')) date
         FROM blog_article ba
         LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
@@ -238,10 +237,9 @@
         <if test="userId != null and userId != ''">
             AND ba.create_by = #{userId}
         </if>
-        GROUP BY date
     </select>
 
-    <select id="getArticlePublishedYears" resultType="list">
+    <select id="getArticlePublishedYears" resultType="string">
         SELECT DISTINCT(YEAR(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
         FROM blog_article ba
         LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
@@ -250,7 +248,6 @@
         <if test="userId != null and userId != ''">
             AND ba.create_by = #{userId}
         </if>
-        GROUP BY date
     </select>
 
     <select id="pageLiked" resultMap="ArticleUserLikedResultMap">

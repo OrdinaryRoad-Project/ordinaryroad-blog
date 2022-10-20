@@ -43,7 +43,10 @@
         </vue-masonry-wall>
       </v-sheet>
 
-      <or-blog-article-daily-posts-chart :create-by="userId" />
+      <or-blog-article-daily-posts-chart
+        :vertical="$vuetify.breakpoint.smAndDown"
+        :create-by="userId"
+      />
     </div>
   </v-container>
 </template>
