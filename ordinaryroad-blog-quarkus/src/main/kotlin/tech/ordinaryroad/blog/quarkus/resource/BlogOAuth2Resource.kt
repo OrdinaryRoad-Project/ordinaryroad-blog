@@ -31,7 +31,6 @@ import io.vertx.core.json.JsonObject
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.chain.oauth2.OAuth2ProviderChain
-import tech.ordinaryroad.blog.quarkus.chain.oauth2.provider.OrdinaryRoadOAuth2Source
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
@@ -40,7 +39,6 @@ import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.service.*
-import java.time.LocalDate
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -64,6 +62,9 @@ class BlogOAuth2Resource {
 
     @Inject
     protected lateinit var roleService: BlogRoleService
+
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
 
     @Inject
     protected lateinit var dtoService: BlogDtoService
@@ -190,16 +191,6 @@ class BlogOAuth2Resource {
             setDevice(device)
             setIsLastingCookie(true)
         })
-
-        // 2023年之前通过ordinaryroad账号登录赋予SSSSSSVIP角色
-        if (LocalDate.now().isBefore(LocalDate.of(2023, 1, 1))) {
-            if (provider == OrdinaryRoadOAuth2Source.NAME) {
-                if (roleService.findAllByUserId(userId).isEmpty()) {
-                    val role = roleService.findByRoleCode("SSSSSSVIP")!!
-                    userService.updateRoles(userId, arrayListOf(role.uuid))
-                }
-            }
-        }
 
         val roleDtoList = roleService.findAllByUserId(userId)
             .stream()
