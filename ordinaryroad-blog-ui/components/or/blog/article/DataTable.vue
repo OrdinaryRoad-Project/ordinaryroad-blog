@@ -191,7 +191,7 @@
 
       <template #[`item.title`]="{ item }">
         <or-link
-          hover-able
+          :hover-able="item.status==='PUBLISH'"
           :text="item.status!=='PUBLISH'"
           :href="`/${item.creatorUid}/article/${item.uuid}`"
         >
