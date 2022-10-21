@@ -72,7 +72,7 @@ export default {
     },
     roleOutlined () {
       return (roleCode) => {
-        return !['DEVELOPER', 'ADMIN', 'SSSSSSVIP'].includes(roleCode)
+        return !['DEVELOPER'].includes(roleCode)
       }
     }
   }

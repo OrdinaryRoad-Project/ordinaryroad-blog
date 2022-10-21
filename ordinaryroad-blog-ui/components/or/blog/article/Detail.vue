@@ -414,15 +414,28 @@
 
         <div class="d-flex justify-space-around align-center mb-4">
           <!-- 点赞 -->
-          <v-btn
-            v-if="$access.isLogged()"
-            fab
-            :color="likeOptions.liked?'primary':null"
-            :loading="likeOptions.loading"
-            @click="onClickLike"
+          <v-badge
+            :value="blogArticle.likesCount&&hoverLikeButton"
+            color="accent"
+            offset-x="18"
+            offset-y="18"
+            overlap
+            bordered
+            :content="blogArticle.likesCount"
+            transition="slide-y-reverse-transition"
           >
-            <v-icon>mdi-thumb-up</v-icon>
-          </v-btn>
+            <v-hover v-model="hoverLikeButton">
+              <v-btn
+                :disabled="!$access.isLogged()"
+                fab
+                :color="likeOptions.liked?'primary':null"
+                :loading="likeOptions.loading"
+                @click="onClickLike"
+              >
+                <v-icon>mdi-thumb-up</v-icon>
+              </v-btn>
+            </v-hover>
+          </v-badge>
 
           <!-- 赞赏 -->
           <div v-if="false&&blogArticle.canReward">
@@ -601,6 +614,7 @@ export default {
     }
   },
   data: () => ({
+    hoverLikeButton: false,
     drawer: false,
     showScrollToTopFab: false,
     snackbar: false,
