@@ -31,12 +31,17 @@ spec:
             - name: MYSQL_PORT
               value: "3306"
             - name: MYSQL_USERNAME
-              value: "ordinaryroad"
+              value: "ordinaryroad_blog"
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: blog-secrets
                   key: MYSQL_PASSOWRD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: MYSQL_DATABASE
             - name: REDIS_HOST
               value: "redis.or-pro"
             - name: REDIS_PORT
