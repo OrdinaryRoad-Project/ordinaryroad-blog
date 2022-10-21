@@ -29,12 +29,15 @@
     >
       加载失败
     </v-row>
-    <v-list v-else>
+
+    <or-empty v-else-if="userPageItems&&userPageItems.total===0" />
+
+    <v-list v-else-if="userPageItems&&userPageItems.records.length">
       <v-list-item
         v-for="item in userPageItems.records"
         :key="item.uuid"
         target="_blank"
-        :to="`/${item.uuid}`"
+        :to="`/${item.uid}`"
       >
         <v-list-item-avatar>
           <or-avatar
@@ -50,6 +53,7 @@
     </v-list>
 
     <or-load-more-footer
+      v-if="userPageItems.total!==0"
       ref="loadMoreFooter"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"

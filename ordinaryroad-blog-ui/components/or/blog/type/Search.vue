@@ -27,11 +27,14 @@
     <v-row v-if="typeInfoPageItems==null">
       加载失败
     </v-row>
-    <v-list v-else>
+
+    <or-empty v-else-if="typeInfoPageItems&&typeInfoPageItems.total===0" />
+
+    <v-list v-else-if="typeInfoPageItems&&typeInfoPageItems.records.length">
       <v-list-item
         v-for="item in typeInfoPageItems.records"
         :key="item.uuid"
-        :to="`/${item.createBy}/type/${item.uuid}`"
+        :to="`/${item.user.uid}/type/${item.uuid}`"
         target="_blank"
       >
         <v-list-item-content>
@@ -43,7 +46,9 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+
     <or-load-more-footer
+      v-if="typeInfoPageItems.total!==0"
       ref="loadMoreFooter"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
