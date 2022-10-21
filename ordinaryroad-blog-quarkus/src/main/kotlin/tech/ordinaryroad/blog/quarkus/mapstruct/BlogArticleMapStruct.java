@@ -27,6 +27,7 @@ package tech.ordinaryroad.blog.quarkus.mapstruct;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.vertx.core.json.JsonObject;
+import kotlin.Pair;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,6 +42,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.*;
 import tech.ordinaryroad.blog.quarkus.service.*;
 
 import javax.enterprise.inject.spi.CDI;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -123,7 +125,9 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
         }
 
         BlogUserBrowsedArticleService userBrowsedArticleService = CDI.current().select(BlogUserBrowsedArticleService.class).get();
-        vo.setPv(userBrowsedArticleService.getBrowsedCount(articleUuid));
+        Pair<Long, BigDecimal> articleUvAndPv = userBrowsedArticleService.getArticleUvAndPv(articleUuid);
+        vo.setUv(articleUvAndPv.getFirst());
+        vo.setPv(articleUvAndPv.getSecond());
 
         BlogUserLikedArticleService userLikedArticleService = CDI.current().select(BlogUserLikedArticleService.class).get();
         vo.setLikesCount(userLikedArticleService.getLikesCount(articleUuid));

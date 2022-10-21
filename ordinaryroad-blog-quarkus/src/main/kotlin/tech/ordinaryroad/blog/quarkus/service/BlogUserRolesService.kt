@@ -46,4 +46,26 @@ class BlogUserRolesService : BaseService<BlogUserRolesDAO, BlogUserRoles>() {
         return super.dao.selectList(wrapper)
     }
 
+    /**
+     * 根据角色Id和用户Id查询关联关系
+     */
+    fun findByRoleIdAndUserId(roleId: String, userId: String): BlogUserRoles? {
+        val wrapper = Wrappers.query<BlogUserRoles>()
+        wrapper.eq("role_id", roleId)
+        wrapper.eq("user_id", userId)
+        return super.dao.selectOne(wrapper)
+    }
+
+    /**
+     * 根据角色Id和用户Id删除关联关系
+     */
+    fun deleteByRoleIdsAndUserId(roleIds: List<String>, userId: String): Int {
+        if (roleIds.isEmpty()) {
+            return 0
+        }
+        val wrapper = Wrappers.query<BlogUserRoles>()
+        wrapper.`in`("role_id", roleIds)
+        wrapper.eq("user_id", userId)
+        return super.dao.delete(wrapper)
+    }
 }

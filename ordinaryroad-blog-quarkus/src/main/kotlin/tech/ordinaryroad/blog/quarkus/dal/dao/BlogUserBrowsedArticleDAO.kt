@@ -25,10 +25,14 @@
 package tech.ordinaryroad.blog.quarkus.dal.dao
 
 import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Select
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserBrowsedArticle
 import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 
 @Mapper
 interface BlogUserBrowsedArticleDAO : IBaseMapper<BlogUserBrowsedArticle> {
+
+    @Select("SELECT COUNT(*) uv, SUM(count) pv FROM blog_user_browsed_article WHERE article_id = #{articleId} GROUP BY article_id")
+    fun getArticleUvAndPv(articleId: String): Map<String, Number>?
 
 }

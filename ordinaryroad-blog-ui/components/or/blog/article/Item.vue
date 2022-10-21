@@ -145,7 +145,14 @@
                   </v-icon>
                   <span>{{ item.likesCount }}</span>
                 </v-col>
-
+                <!-- 浏览量uv -->
+                <div class="d-inline-flex align-center me-3">
+                  <v-icon left small>
+                    mdi-account-eye
+                  </v-icon>
+                  <span>{{ item.uv }}</span>
+                </div>
+                <!-- 浏览量pv -->
                 <v-col class="d-inline-flex align-center me-3">
                   <v-icon left small>
                     mdi-eye

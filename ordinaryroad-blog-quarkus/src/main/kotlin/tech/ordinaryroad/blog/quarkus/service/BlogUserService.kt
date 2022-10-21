@@ -67,7 +67,7 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
         val roleIdListToDelete = lists[0]
         val roleIdListToAdd = lists[1]
 
-        userRolesService.deleteByIdList(roleIdListToDelete)
+        userRolesService.deleteByRoleIdsAndUserId(roleIdListToDelete, id)
         roleIdListToAdd.forEach {
             val role = roleService.findById(it)
             if (role == null) {

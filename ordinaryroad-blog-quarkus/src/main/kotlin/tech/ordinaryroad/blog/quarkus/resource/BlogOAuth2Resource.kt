@@ -43,6 +43,7 @@ import tech.ordinaryroad.blog.quarkus.service.*
 import java.time.LocalDate
 import java.util.stream.Collectors
 import javax.inject.Inject
+import javax.transaction.Transactional
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -89,6 +90,7 @@ class BlogOAuth2Resource {
     @GET
     @Path("callback/{provider}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     fun callback(@RestPath provider: String, @RestQuery code: String, @RestQuery state: String): JsonObject {
         // 回掉方式 login|add|update
         val type = state.split("_")[3]

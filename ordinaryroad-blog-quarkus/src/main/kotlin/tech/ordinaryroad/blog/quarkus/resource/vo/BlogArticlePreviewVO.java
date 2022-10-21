@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -61,7 +62,9 @@ public class BlogArticlePreviewVO {
 
     private List<BlogTagVO> tags;
 
-    private Long pv;
+    private Long uv;
+
+    private BigDecimal pv;
 
     private Long likesCount;
 
@@ -70,7 +73,7 @@ public class BlogArticlePreviewVO {
     public BlogArticlePreviewVO() {
     }
 
-    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, String firstId, BlogTypeVO type, List<BlogTagVO> tags, Long pv, Long likesCount, Long commentsCount) {
+    public BlogArticlePreviewVO(String uuid, String coverImage, String title, String summary, Boolean original, BlogUserVO user, LocalDateTime createdTime, LocalDateTime updateTime, String firstId, BlogTypeVO type, List<BlogTagVO> tags, Long uv, BigDecimal pv, Long likesCount, Long commentsCount) {
         this.uuid = uuid;
         this.coverImage = coverImage;
         this.title = title;
@@ -82,6 +85,7 @@ public class BlogArticlePreviewVO {
         this.firstId = firstId;
         this.type = type;
         this.tags = tags;
+        this.uv = uv;
         this.pv = pv;
         this.likesCount = likesCount;
         this.commentsCount = commentsCount;
@@ -175,11 +179,19 @@ public class BlogArticlePreviewVO {
         this.tags = tags;
     }
 
-    public Long getPv() {
+    public Long getUv() {
+        return uv;
+    }
+
+    public void setUv(Long uv) {
+        this.uv = uv;
+    }
+
+    public BigDecimal getPv() {
         return pv;
     }
 
-    public void setPv(Long pv) {
+    public void setPv(BigDecimal pv) {
         this.pv = pv;
     }
 

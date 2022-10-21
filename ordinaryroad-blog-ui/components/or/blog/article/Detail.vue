@@ -265,7 +265,14 @@
           </v-icon>
           <span>{{ blogArticle.likesCount }}</span>
         </div>
-        <!-- 浏览量 -->
+        <!-- 浏览量uv -->
+        <div class="d-flex align-center me-2">
+          <v-icon left small>
+            mdi-account-eye
+          </v-icon>
+          <span>{{ blogArticle.uv }}</span>
+        </div>
+        <!-- 浏览量pv -->
         <div class="d-flex align-center me-2">
           <v-icon left small>
             mdi-eye

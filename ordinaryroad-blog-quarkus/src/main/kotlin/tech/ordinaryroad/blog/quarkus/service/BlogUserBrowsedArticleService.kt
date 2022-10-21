@@ -30,6 +30,7 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserBrowsedArticle
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -55,6 +56,10 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
     /**
      * 获取文章浏览量
      */
+    @Deprecated(
+        message = "由于增加了pv区分uv和pv，因此该方法启用",
+        replaceWith = ReplaceWith("getArticleUvAndPv(articleId)")
+    )
     fun getBrowsedCount(articleId: String): Long {
         val firstArticleById = articleService.getFirstById(articleId)
         if (firstArticleById == null) {
@@ -65,6 +70,23 @@ class BlogUserBrowsedArticleService : BaseService<BlogUserBrowsedArticleDAO, Blo
             .eq("article_id", firstArticleById!!.uuid)
 
         return super.dao.selectCount(wrapper)
+    }
+
+    /**
+     * 获取文章uv和pv
+     */
+    fun getArticleUvAndPv(articleId: String): Pair<Long, BigDecimal> {
+        val firstArticleById = articleService.getFirstById(articleId)
+        if (firstArticleById == null) {
+            BlogArticleNotFoundException().throws()
+        }
+
+        val articleUvAndPv = super.dao.getArticleUvAndPv(firstArticleById!!.uuid)
+        return if (articleUvAndPv == null) {
+            Pair(0L, BigDecimal.ZERO)
+        } else {
+            Pair(articleUvAndPv["uv"] as Long, articleUvAndPv["pv"] as BigDecimal)
+        }
     }
 
     /**

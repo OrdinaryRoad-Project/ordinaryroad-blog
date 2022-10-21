@@ -41,6 +41,7 @@
             <or-blog-article-item :item="item" />
           </template>
         </vue-masonry-wall>
+        <or-empty v-if="!pinnedArticles.data.length" />
       </v-sheet>
 
       <or-blog-article-daily-posts-chart

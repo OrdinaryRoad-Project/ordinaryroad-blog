@@ -192,7 +192,7 @@ class BlogUserResource {
      * 解封用户
      */
     @GET
-    @Path("untieDisable")
+    @Path("disable/untie")
     fun untieDisable(
         @Valid @Size(max = 32, message = "userId长度不能大于32")
         @NotBlank(message = "userId不能为空") @RestQuery userId: String
@@ -209,9 +209,9 @@ class BlogUserResource {
         return StpUtil.getDisableTime(userId)
     }
 
-    //region 开发中（管理员）
     @PUT
-    @Path("{id}")
+    @Path("roles/{id}")
+    @Transactional
     fun updateRoles(
         @Valid @NotBlank(message = "Id不能为空")
         @RestPath id: String,
@@ -221,6 +221,8 @@ class BlogUserResource {
 
         userService.updateRoles(id, roleIds)
     }
+
+    //region 开发中（管理员）
     //endregion
 
 }

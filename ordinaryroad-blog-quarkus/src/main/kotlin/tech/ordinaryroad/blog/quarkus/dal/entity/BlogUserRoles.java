@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.dal.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 
@@ -33,11 +34,17 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO;
 @RegisterForReflection
 public class BlogUserRoles extends BaseDO {
 
-    private static final long serialVersionUID = -7283530400336022320L;
+    private static final long serialVersionUID = 8070264519674548825L;
 
     private String userId;
 
     private String roleId;
+
+    /**
+     * 是否删除
+     */
+    @TableLogic(value = "false", delval = "true")
+    private Boolean deleted;
 
     public String getUserId() {
         return userId;
@@ -53,5 +60,13 @@ public class BlogUserRoles extends BaseDO {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
