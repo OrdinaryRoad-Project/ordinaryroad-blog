@@ -1,5 +1,8 @@
 {
   "user": {
+    "space": {
+      "of": "{0}的个人空间"
+    },
     "basicInfo": {
       "articlesCount": "文章",
       "commentsCount": "评论"

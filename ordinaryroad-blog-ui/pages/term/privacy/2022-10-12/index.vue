@@ -150,10 +150,7 @@
 
 <script>
 export default {
-  layout: 'empty',
-  head: {
-    title: '隐私政策'
-  }
+  layout: 'empty'
 }
 </script>
 

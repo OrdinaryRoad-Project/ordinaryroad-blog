@@ -50,6 +50,12 @@
 export default {
   middleware: ['userInfo'],
   data: () => ({}),
+  head () {
+    return {
+      title: this.$t(this.items[this.items.length - 1].text),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   computed: {
     items () {
       const path = this.$route.path

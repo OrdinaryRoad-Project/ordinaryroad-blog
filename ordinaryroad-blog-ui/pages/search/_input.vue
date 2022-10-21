@@ -99,7 +99,8 @@ export default {
   }),
   head () {
     return {
-      title: this.$t('search')
+      title: (this.input ? `${this.input} - ` : '') + this.$t('search'),
+      titleTemplate: `%s - ${this.$t('appName')}`
     }
   },
   computed: {

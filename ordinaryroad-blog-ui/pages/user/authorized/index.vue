@@ -81,6 +81,12 @@ export default {
       userInfo: null
     }
   },
+  head () {
+    return {
+      title: this.$t('authorizedHint'),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   mounted () {
     if (this.success) {
       this.$store.commit('user/SET_TOKEN_INFO', { value: this.token })

@@ -1,5 +1,8 @@
 {
   "user": {
+    "space": {
+      "of": "User Space Of {0}"
+    },
     "basicInfo": {
       "articlesCount": "Articles",
       "commentsCount": "Comments"

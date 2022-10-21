@@ -53,8 +53,11 @@ export default {
     selectedPrivacyModel: null,
     privacyItems: ['2022-10-12']
   }),
-  head: {
-    title: '隐私政策'
+  head () {
+    return {
+      title: this.$t('term.privacy'),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
   },
   methods: {
     onInput (val) {

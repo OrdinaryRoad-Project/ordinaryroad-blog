@@ -82,6 +82,7 @@ export default {
   head () {
     return {
       title: this.article.title,
+      titleTemplate: `%s - ${this.$t('appName')}`,
       meta: [
         { name: 'keywords', content: this.keywords },
         { hid: 'description', name: 'description', content: this.article.summary }

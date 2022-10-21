@@ -107,6 +107,12 @@ export default {
       redirect: '/'
     }
   },
+  head () {
+    return {
+      title: this.$t('login'),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   methods: {
     login (provider) {
       if (!this.agree) {

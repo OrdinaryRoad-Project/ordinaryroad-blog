@@ -117,6 +117,12 @@ export default {
       tabModel: 0
     }
   },
+  head () {
+    return {
+      title: this.$t('user.space.of', [this.user.username]),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   watch: {
     tabModel (val) {
       // ignore

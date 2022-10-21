@@ -88,6 +88,12 @@ export default {
     type: null,
     totalArticle: null
   }),
+  head () {
+    return {
+      title: this.type.name,
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   mounted () {
     if (this.type == null) {
       this.$dialog({
