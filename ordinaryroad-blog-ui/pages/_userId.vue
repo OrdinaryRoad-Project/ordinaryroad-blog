@@ -40,7 +40,7 @@ export default {
     return /^\d+$/.test(params.userId)
   },
   asyncData ({ route, $apis, error }) {
-    const userId = Number(route.params.userId || 0)
+    const userId = route.params.userId || ''
     return $apis.blog.user.findByUid(userId)
       .then((data) => {
         return { user: data }

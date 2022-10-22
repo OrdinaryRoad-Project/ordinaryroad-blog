@@ -64,7 +64,7 @@ export default {
     redirect
   }) {
     // 判断分类是否存在
-    const userId = Number(route.params.userId || 0)
+    const userId = route.params.userId || ''
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       return $apis.blog.type.findById(id)

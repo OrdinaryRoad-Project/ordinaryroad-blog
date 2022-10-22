@@ -46,7 +46,7 @@ export default {
   }) {
     const tokenValue = store.getters['user/getTokenValue']
     // 判断文章是否存在
-    const userId = Number(route.params.userId || 0)
+    const userId = route.params.userId || ''
     const id = route.params.id || ''
     if (id && id.trim() !== '') {
       try {
