@@ -1,17 +1,7 @@
 {
-  "systemHint": "系统提示",
-  "error": {
-    "back": "返回上一级",
-    "home": "返回首页",
-    "404": "抱歉，您访问的资源不存在。"
-  },
-  "allRightsReserved": "版权所有",
-  "term": {
-    "agreeHint": "请勾选同意《隐私政策》",
-    "privacy": "《隐私政策》"
-  },
   "add": "添加",
   "agree": "同意",
+  "allRightsReserved": "版权所有",
   "areYouSureToDoWhat": "确定{0}？",
   "attention": "注意",
   "back": "返回",
@@ -31,6 +21,11 @@
     "content": "确定删除uuid为 {0} 的数据？删除后无法恢复。"
   },
   "deleteSuccess": "删除成功",
+  "error": {
+    "back": "返回上一级",
+    "home": "返回首页",
+    "404": "抱歉，您访问的资源不存在。"
+  },
   "insert": "新增",
   "language": "语言",
   "login": "登录",
@@ -43,6 +38,7 @@
   "ordinaryroad": "Ordinary Road",
   "parentheses": "（{0}）",
   "parenthesesWithSpace": "（{0}）",
+  "pleaseLogin": "请先登录",
   "punctuation": {
     "colon": "：",
     "colonWithPrefixSpace": "：",
@@ -59,6 +55,11 @@
   },
   "search": "搜索",
   "settings": "设置",
+  "systemHint": "系统提示",
+  "term": {
+    "agreeHint": "请勾选同意《隐私政策》",
+    "privacy": "《隐私政策》"
+  },
   "theme": "主题",
   "time": {
     "aMoment": "一瞬间～",

@@ -1,17 +1,7 @@
 {
-  "systemHint": "System Hint",
-  "error": {
-    "back": "Back",
-    "home": "Home",
-    "404": "Sorry, the resource you accessed does not exist."
-  },
-  "allRightsReserved": "All Rights Reserved",
-  "term": {
-    "agreeHint": "Please tick to agree \"Privacy Policy\"",
-    "privacy": " \"Privacy Policy\""
-  },
   "add": "Add",
   "agree": "Agree",
+  "allRightsReserved": "All Rights Reserved",
   "areYouSureToDoWhat": "Are you sure to {0}?",
   "attention": "Attention",
   "back": "Back",
@@ -31,6 +21,11 @@
     "content": "Are you sure you want to delete the data with uuid {0}? Once deleted, it cannot be recovered."
   },
   "deleteSuccess": "Successfully deleted.",
+  "error": {
+    "back": "Back",
+    "home": "Home",
+    "404": "Sorry, the resource you accessed does not exist."
+  },
   "insert": "Insert",
   "language": "Language",
   "login": "Log in",
@@ -43,6 +38,7 @@
   "ordinaryroad": "Ordinary Road",
   "parentheses": "({0})",
   "parenthesesWithSpace": " ({0})",
+  "pleaseLogin": "Please login first",
   "punctuation": {
     "colon": ":",
     "colonWithPrefixSpace": " :",
@@ -59,6 +55,11 @@
   },
   "search": "Search",
   "settings": "Settings",
+  "systemHint": "System Hint",
+  "term": {
+    "agreeHint": "Please tick to agree \"Privacy Policy\"",
+    "privacy": " \"Privacy Policy\""
+  },
   "theme": "Theme",
   "time": {
     "aMoment": "a moment~",

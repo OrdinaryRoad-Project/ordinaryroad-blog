@@ -23,33 +23,40 @@
   -->
 
 <template>
-  <div>
+  <v-container>
+    <v-row v-if="blogArticleComments==null">
+      加载失败
+    </v-row>
+
     <div
-      v-if="blogArticleComments!==null"
+      v-else-if="blogArticleComments&&blogArticleComments.records.length>0"
     >
-      <v-container>
-        <v-row
-          v-for="(comment) in blogArticleComments.records"
-          :key="comment.uuid"
-          no-gutters
-          class="d-block"
-        >
-          <or-blog-comment-item
-            :item="comment"
-            @clickReply="onClickReply"
-          />
-        </v-row>
-        <v-row justify="center" no-gutters>
-          <or-load-more-footer
-            ref="loadMoreFooter"
-            class="mt-4"
-            :no-more-data="blogArticleComments.pages === 0 || blogArticleComments.current === blogArticleComments.pages"
-            @loadMore="onLoadMore"
-          />
-        </v-row>
-      </v-container>
+      <v-row
+        v-for="(comment) in blogArticleComments.records"
+        :key="comment.uuid"
+        no-gutters
+        class="d-block"
+      >
+        <or-blog-comment-item
+          :item="comment"
+          @clickReply="onClickReply"
+        />
+      </v-row>
     </div>
-  </div>
+
+    <v-row
+      v-if="blogArticleComments.total>0"
+      justify="center"
+      no-gutters
+    >
+      <or-load-more-footer
+        ref="loadMoreFooter"
+        class="mt-4"
+        :no-more-data="blogArticleComments.pages === 0 || blogArticleComments.current === blogArticleComments.pages"
+        @loadMore="onLoadMore"
+      />
+    </v-row>
+  </v-container>
 </template>
 
 <script>

@@ -426,7 +426,6 @@
           >
             <v-hover v-model="hoverLikeButton">
               <v-btn
-                :disabled="!$access.isLogged()"
                 fab
                 :color="likeOptions.liked?'primary':null"
                 :loading="likeOptions.loading"
@@ -468,7 +467,7 @@
               <!-- 撰写评论 -->
               <v-row
                 v-if="$access.isLogged()"
-                class="mx-2"
+                no-gutters
               >
                 <or-avatar
                   class="mb-auto"
@@ -525,7 +524,7 @@
             >
               <span class="pa-2">{{ $t('article.cannotCommentHint') }}</span>
             </v-sheet>
-            <v-row class="d-block mt-6 mx-2">
+            <v-row class="d-block mt-6" no-gutters>
               <v-alert
                 v-model="commentOptions.showAlert"
                 transition="slide-y-reverse-transition"
