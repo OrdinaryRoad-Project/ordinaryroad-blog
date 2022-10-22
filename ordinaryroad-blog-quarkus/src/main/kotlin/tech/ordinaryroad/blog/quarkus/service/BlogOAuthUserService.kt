@@ -25,9 +25,9 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dao.BlogOAuthUserDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogOAuthUserDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
@@ -38,6 +38,22 @@ class BlogOAuthUserService : BaseService<BlogOAuthUserDAO, BlogOAuthUser>() {
 
     @Inject
     protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
+
+    override fun getEntityClass(): Class<BlogOAuthUser> {
+        return BlogOAuthUser::class.java
+    }
+
+    /**
+     * 删除用户关联的OAuth用户和关联关系
+     */
+    fun removeUserOAuthUser(oAuthUserId: String, userId: String) {
+        super.dao.deleteById(oAuthUserId)
+
+        val wrapper = Wrappers.query<BlogUserOAuthUsers>()
+        wrapper.eq("user_id", userId)
+        wrapper.eq("oauth_user_id", oAuthUserId)
+        userOAuthUsersService.dao.delete(wrapper)
+    }
 
     fun findAllByUserId(userId: String): List<BlogOAuthUser> {
         val userOAuthUsers = userOAuthUsersService.findAllByUserId(userId)
@@ -51,6 +67,10 @@ class BlogOAuthUserService : BaseService<BlogOAuthUserDAO, BlogOAuthUser>() {
         wrapper.eq("openid", openid)
         wrapper.eq("provider", provider)
         return super.dao.selectOne(wrapper)
+    }
+
+    fun findByUserIdAndProvider(userId: String, provider: String): BlogOAuthUser? {
+        return super.dao.selectByUserIdAndProvider(userId, provider)
     }
 
 }

@@ -33,18 +33,18 @@
     >
       <OrBaseTreeList
         :nav="true"
-        :items="dashboardMenuItems"
+        :items="accessibleDashboardMenuItems"
       />
     </v-navigation-drawer>
 
     <!-- 设置 -->
-    <or-settings-drawer />
+    <or-settings-drawer :show-i18n-setting="$vuetify.breakpoint.smAndDown" />
 
     <!-- 标题 用户名 -->
     <or-header />
 
     <v-main>
-      <v-container>
+      <v-container :fluid="['index','userId'].includes($route.name)" :class="$route.name==='index'?'pa-0':null">
         <nuxt />
       </v-container>
     </v-main>
@@ -75,7 +75,6 @@
 <script>
 // Utilities
 import { mapActions, mapGetters } from 'vuex'
-import { updateTheme } from 'static/js/utils/vuetify'
 
 export default {
   data () {
@@ -86,7 +85,7 @@ export default {
   head () {
     return {
       htmlAttrs: {
-        lang: this.$i18n.locale
+        lang: this.$i18n.locale === 'zh-Hans' ? 'zh-CN' : this.$i18n.locale
       }
     }
   },
@@ -95,8 +94,7 @@ export default {
       dashboardDrawerModel: 'getDashboardDrawerModel',
       rightDrawerModel: 'getRightDrawerModel',
       titleKey: 'getTitleKey',
-      userMenuItems: 'getUserMenuItems',
-      dashboardMenuItems: 'getDashboardMenuItems'
+      accessibleDashboardMenuItems: 'getAccessibleDashboardMenuItems'
     }),
     localDashboardDrawerModel: {
       get () {
@@ -107,9 +105,22 @@ export default {
       }
     }
   },
+  created () {
+    this.localDashboardDrawerModel = !this.$vuetify.breakpoint.mdAndDown
+  },
   mounted () {
     this.$nextTick(() => {
-      updateTheme(this.$store.getters['app/getSelectedThemeOption'], this.$vuetify)
+      this.$store.commit('app/UPDATE_THEME', {
+        value: this.$store.getters['app/getSelectedThemeOption'],
+        $vuetify: this.$vuetify
+      })
+      this.$store.commit('i18n/UPDATE_LANG', {
+        value: this.$store.getters['i18n/getLocale'],
+        $i18n: this.$i18n,
+        $vuetify: this.$vuetify,
+        $dayjs: this.$dayjs
+      })
+
       window.addEventListener('scroll', this.handleScroll)
     })
   },

@@ -25,13 +25,26 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import tech.ordinaryroad.blog.quarkus.dao.BlogUserOAuthUsersDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserOAuthUsersDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class BlogUserOAuthUsersService : BaseService<BlogUserOAuthUsersDAO, BlogUserOAuthUsers>() {
+
+    override fun getEntityClass(): Class<BlogUserOAuthUsers> {
+        return BlogUserOAuthUsers::class.java
+    }
+
+    /**
+     * 查询用户关联的OAuth用户
+     */
+    fun selectCountByUserId(userId: String): Long {
+        val wrapper = Wrappers.query<BlogUserOAuthUsers>()
+        wrapper.eq("user_id", userId)
+        return super.dao.selectCount(wrapper)
+    }
 
     /**
      * 根据用户Id查询所有关联关系

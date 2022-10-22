@@ -24,17 +24,228 @@
 
 <template>
   <div>
-    <base-material-card
-      title="控制台"
-      subtitle="开发中..."
-    >
-      <v-img src="https://api.ixiaowai.cn/gqapi/gqapi.php" />
+    <base-material-card :title="$t('userMenuTitles.dashboard')">
+      <v-row>
+        <v-col>
+          <v-card outlined>
+            <v-card-title>{{ $t('myStats.title') }}</v-card-title>
+            <v-row class="ma-1">
+              <v-col
+                v-for="countOption in countOptions"
+                :key="countOption.to"
+                cols="12"
+                sm="12"
+                md="6"
+                lg="3"
+                xl="3"
+              >
+                <v-hover :disabled="!countOption.to">
+                  <template #default="{ hover }">
+                    <v-card
+                      :outlined="!countOption.to"
+                      :elevation="hover?4:countOption.to?2:0"
+                      class="transition-swing"
+                      :to="countOption.to"
+                    >
+                      <v-card-title>
+                        <v-icon
+                          v-if="countOption.icon"
+                          left
+                          color="primary"
+                        >
+                          {{ countOption.icon }}
+                        </v-icon>
+                        {{ $t(countOption.title) }}
+                        <v-spacer />
+                        <v-slide-x-reverse-transition>
+                          <span
+                            v-if="!hover"
+                            class="text-h4 font-weight-bold primary--text"
+                            style="position: absolute; right: 16px"
+                          >{{ countOption.loading ? '-' : countOption.data }}</span>
+                          <v-icon
+                            v-else
+                            style="position: absolute; right: 16px"
+                            size="24"
+                            class="ma-2"
+                          >
+                            mdi-chevron-right
+                          </v-icon>
+                        </v-slide-x-reverse-transition>
+                      </v-card-title>
+                    </v-card>
+                  </template>
+                </v-hover>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col
+          cols="8"
+          sm="6"
+          md="12"
+          lg="12"
+          xl="8"
+          order="10"
+          order-md="0"
+        >
+          <or-blog-article-daily-posts-chart
+            :vertical="$vuetify.breakpoint.smAndDown"
+            :create-by="userInfo.user.uuid"
+          />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          lg="6"
+          xl="5"
+        >
+          <or-blog-type-top-n-chart />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          lg="6"
+          xl="5"
+        >
+          <or-blog-article-top-n-comments-chart />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          lg="6"
+          xl="5"
+        >
+          <or-blog-article-top-n-liked-chart />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          lg="6"
+          xl="5"
+        >
+          <or-blog-article-top-n-browsed-chart />
+        </v-col>
+      </v-row>
     </base-material-card>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+
+export default {
+  data: () => ({
+    countOptions: [],
+    articlesCountOptions: {
+      title: 'myStats.publishedArticlesCount',
+      to: '/dashboard/article/status/PUBLISH',
+      icon: 'mdi-file-document-multiple',
+      loading: true,
+      data: null
+    },
+    articlesCountBrowsedOptions: {
+      title: 'myStats.browsedArticlesCount',
+      to: '/dashboard/article/browsed',
+      icon: 'mdi-history',
+      loading: true,
+      data: null
+    },
+    articlesCountLikedOptions: {
+      title: 'myStats.likedArticlesCount',
+      to: '/dashboard/article/liked',
+      icon: 'mdi-thumb-up',
+      loading: true,
+      data: null
+    },
+    typesCountOptions: {
+      title: 'myStats.typesCount',
+      to: '/dashboard/type',
+      icon: 'mdi-view-list',
+      loading: true,
+      data: null
+    },
+    commentsCountOptions: {
+      title: 'myStats.postedCommentsCount',
+      to: null,
+      icon: null,
+      loading: true,
+      data: null
+    }
+  }),
+  computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    })
+  },
+  created () {
+    this.countOptions.push(this.articlesCountOptions, this.articlesCountBrowsedOptions, this.articlesCountLikedOptions, this.typesCountOptions, this.commentsCountOptions)
+    this.countArticles()
+    this.countArticlesBrowsed()
+    this.countArticlesLiked()
+    this.countTypes()
+    this.countComments()
+  },
+  methods: {
+    countArticles () {
+      this.$apis.blog.article.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountOptions.loading = false
+          this.articlesCountOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountOptions.loading = false
+        })
+    },
+    countArticlesBrowsed () {
+      this.$apis.blog.article.countBrowsed(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountBrowsedOptions.loading = false
+          this.articlesCountBrowsedOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountBrowsedOptions.loading = false
+        })
+    },
+    countArticlesLiked () {
+      this.$apis.blog.article.countLiked(this.userInfo.user.uuid)
+        .then((data) => {
+          this.articlesCountLikedOptions.loading = false
+          this.articlesCountLikedOptions.data = data
+        })
+        .catch(() => {
+          this.articlesCountLikedOptions.loading = false
+        })
+    },
+    countTypes () {
+      this.$apis.blog.type.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.typesCountOptions.loading = false
+          this.typesCountOptions.data = data
+        })
+        .catch(() => {
+          this.typesCountOptions.loading = false
+        })
+    },
+    countComments () {
+      this.$apis.blog.comment.count(this.userInfo.user.uuid)
+        .then((data) => {
+          this.commentsCountOptions.loading = false
+          this.commentsCountOptions.data = data
+        })
+        .catch(() => {
+          this.commentsCountOptions.loading = false
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

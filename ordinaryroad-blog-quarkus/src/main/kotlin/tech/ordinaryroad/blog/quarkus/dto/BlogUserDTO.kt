@@ -24,21 +24,31 @@
 package tech.ordinaryroad.blog.quarkus.dto
 
 import cn.hutool.core.util.StrUtil
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.commons.core.quarkus.base.dto.BaseModelDTO
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
+import io.quarkus.runtime.annotations.RegisterForReflection
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 
 /**
  * 博客用户DTO类
  */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
 data class BlogUserDTO(
-    var username: String,
-    var avatar: String
-) : BaseModelDTO() {
-    companion object {
-        private const val serialVersionUID: Long = -3412865025705755482L
+    var uid: String = StrUtil.EMPTY,
+    var username: String = StrUtil.EMPTY,
+    var avatar: String = StrUtil.EMPTY
+) : BaseBlogModelDTO<BlogUser>() {
 
-        fun BlogUser.transfer(): BlogUserDTO {
-            return BlogUserDTO(username, StrUtil.nullToEmpty(avatar))
-        }
+    override fun parse(baseDo: BlogUser) {
+        uid = baseDo.uid
+        username = StrUtil.nullToEmpty(baseDo.username)
+        avatar = StrUtil.nullToEmpty(baseDo.avatar)
     }
+
+    companion object {
+        private const val serialVersionUID: Long = 7681997427678380513L
+    }
+
 }

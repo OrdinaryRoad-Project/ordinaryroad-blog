@@ -47,58 +47,208 @@ export default {
   apis: {
     saveDraft: (article) => {
       return $axios({
-        url: '/api/blog/article/draft',
+        url: '/blog/article/draft',
         method: 'post',
         data: article
       })
     },
     publish: (article) => {
       return $axios({
-        url: '/api/blog/article/publish',
+        url: '/blog/article/publish',
         method: 'post',
         data: article
       })
     },
-    findPublishById: (id) => {
+    findPublishById: (token, id) => {
       return $axios({
-        url: `/api/blog/article/publish/${id}`,
-        method: 'get'
+        url: `/blog/article/publish/${id}`,
+        method: 'get',
+        headers: { 'or-blog-token': token }
       })
     },
     findOwnById: (id) => {
       return $axios({
-        url: `/api/blog/article/own/${id}`,
+        url: `/blog/article/own/${id}`,
         method: 'get'
       })
     },
-    getDraft: () => {
+    findOwnWritingById: (id = '') => {
       return $axios({
-        url: '/api/blog/article/draft',
+        url: `/blog/article/own/writing?id=${id}`,
         method: 'get'
       })
     },
-    pagePublish: (page, { createBy }) => {
-      const data = { createBy }
+    pagePublish: (page, {
+      createBy,
+      tagName = '',
+      title = '',
+      summary = '',
+      content = '',
+      typeId = '',
+      sortBy = ['firstId'],
+      sortDesc = [true]
+    }) => {
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
       return $axios({
-        url: `/api/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
+        url: `/blog/article/page/publish/${page}/20?1=1${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    searchPublish: (page, {
+      createBy,
+      tagName = '',
+      title = '',
+      summary = '',
+      content = '',
+      typeId = '',
+      sortBy = ['firstId'],
+      sortDesc = [true]
+    }) => {
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
+      return $axios({
+        url: `/blog/article/search/publish/${page}/20?1=1${urlEncode(data)}`,
         method: 'get'
       })
     },
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
-        url: `/api/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        url: `/blog/article/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
+    pageOwnLiked: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/article/page/own/liked/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
+    pageOwnBrowsed: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/article/page/own/browsed/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },
     moveToTrash: (id) => {
       return $axios({
-        url: `/api/blog/article/move_to_trash/${id}`,
+        url: `/blog/article/move_to_trash/${id}`,
         method: 'post'
       })
     },
     recoverFromTrash: (id) => {
       return $axios({
-        url: `/api/blog/article/recover_from_trash/${id}`,
+        url: `/blog/article/recover_from_trash/${id}`,
+        method: 'post'
+      })
+    },
+    count: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count?userId=${userId}`,
+        method: 'get'
+      })
+    },
+    countBrowsed: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count/browsed?userId=${userId}`,
+        method: 'get'
+      })
+    },
+    countLiked: (userId = '') => {
+      return $axios({
+        url: `/blog/article/count/liked?userId=${userId}`,
+        method: 'get'
+      })
+    },
+    getTopNComments ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/comment?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getTopNLiked ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/liked?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getTopNBrowsed ({ n = 10, userId }) {
+      const params = { n, userId }
+      return $axios({
+        url: `/blog/article/top/browsed?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getPinnedArticles ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/pinned?1=1${urlEncode(params)}`,
+        method: 'get'
+      })
+    },
+    getArticlePublishedDays ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/days/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    getArticlePublishedMonths ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/months/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    getArticlePublishedYears ({ userId }) {
+      const params = { userId }
+      return $axios({
+        url: `/blog/article/years/published?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    countDailyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/daily/posts?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    countMonthlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/monthly/posts?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    countYearlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
+      return $axios({
+        url: `/blog/article/count/yearly/posts?${urlEncode(params).slice(1)}`,
+        method: 'get'
+      })
+    },
+    likesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/likes/${id}`,
+        method: 'post'
+      })
+    },
+    unlikesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/unlikes/${id}`,
+        method: 'post'
+      })
+    },
+    getLiked: (id) => {
+      return $axios({
+        url: `/blog/article/liked/${id}`,
+        method: 'get'
+      })
+    },
+    unBrowsesArticle: (id) => {
+      return $axios({
+        url: `/blog/article/un_browses/${id}`,
         method: 'post'
       })
     }

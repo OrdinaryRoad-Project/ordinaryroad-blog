@@ -47,12 +47,13 @@
     @click:row="onClickRow"
     @item-selected="onItemSelected"
     @toggle-select-all="onToggleSelectAll"
+    @current-items="onCurrentItems"
   >
     <template #top>
-      <slot name="searchFormBefore"/>
+      <slot name="searchFormBefore" />
       <v-form ref="searchForm">
         <v-row align="center">
-          <slot name="searchFormBody"/>
+          <slot name="searchFormBody" />
           <v-col
             cols="6"
             lg="3"
@@ -64,7 +65,9 @@
               outlined
               @click="options={...options,page:1}"
             >
-              <v-icon>mdi-magnify</v-icon>
+              <v-icon left>
+                mdi-magnify
+              </v-icon>
               {{ $t('search') }}
             </v-btn>
             <v-btn
@@ -72,7 +75,9 @@
               outlined
               @click="resetSearch"
             >
-              <v-icon>mdi-refresh</v-icon>
+              <v-icon left>
+                mdi-refresh
+              </v-icon>
               {{ $t('reset') }}
             </v-btn>
           </v-col>
@@ -91,7 +96,9 @@
               dark
               @click="insertItem"
             >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon left>
+                mdi-plus
+              </v-icon>
               {{ $t('insert') }}
             </v-btn>
           </slot>
@@ -102,14 +109,16 @@
             dark
             @click="getItems"
           >
-            <v-icon>mdi-reload</v-icon>
+            <v-icon left>
+              mdi-reload
+            </v-icon>
             {{ $t('refresh') }}
           </v-btn>
 
-          <slot name="actionsTopAfter"/>
+          <slot name="actionsTopAfter" />
         </v-col>
       </v-row>
-      <v-divider class="mt-2"/>
+      <v-divider class="mt-2" />
     </template>
 
     <template
@@ -123,7 +132,7 @@
 
     <!-- 动态生成插槽 -->
     <template v-for="slot in itemSlotNames" #[slot]="{ item }">
-      <slot :name="slot" :item="item"/>
+      <slot :name="slot" :item="item" />
     </template>
 
     <template #[`item.createdTime`]="{ item }">
@@ -140,7 +149,7 @@
           :$vuetify.theme.dark ?'v-sheet theme--dark elevation-1 d-flex'
             :'v-sheet theme--light elevation-1 d-flex'"
       >
-        <slot name="actionsBefore" :item="item"/>
+        <slot name="actionsBefore" :item="item" />
 
         <slot name="actions" :item="item">
           <v-btn
@@ -162,7 +171,7 @@
           </v-btn>
         </slot>
 
-        <slot name="actionsAfter" :item="item"/>
+        <slot name="actionsAfter" :item="item" />
 
         <or-base-menu
           v-if="$scopedSlots.moreActions"
@@ -182,7 +191,7 @@
             </v-btn>
           </template>
           <v-list dense>
-            <slot name="moreActions" :item="item"/>
+            <slot name="moreActions" :item="item" />
           </v-list>
         </or-base-menu>
       </div>
@@ -228,6 +237,10 @@ export default {
     sortDesc: {
       type: Array,
       default: () => []
+    },
+    showUpdateHeaders: {
+      type: Boolean,
+      default: true
     },
 
     tableHeaders: {
@@ -295,18 +308,22 @@ export default {
             text: this.$t('createBy'),
             value: 'createBy',
             width: '100'
-          },
-          {
-            text: this.$t('updateTime'),
-            value: 'updateTime',
-            width: '220'
-          },
-          {
-            text: this.$t('updateBy'),
-            value: 'updateBy',
-            width: '100'
           }
         )
+        if (this.showUpdateHeaders) {
+          headers.push(
+            {
+              text: this.$t('updateTime'),
+              value: 'updateTime',
+              width: '220'
+            },
+            {
+              text: this.$t('updateBy'),
+              value: 'updateBy',
+              width: '100'
+            }
+          )
+        }
       }
 
       // 操作headers
@@ -339,6 +356,9 @@ export default {
   mounted () {
   },
   methods: {
+    onCurrentItems (items) {
+      this.$emit('currentItems', items)
+    },
     onClickRow (item, { isSelected }) {
       this.showSelect && this.select({
         item,

@@ -69,3 +69,111 @@ Easily start your Reactive RESTful Web Services
 
 docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=root -e REDIS_HOST=192.168.5.127 -e REDIS_PORT=6379 ordinaryroad-blog-quarkus
 ```
+
+```shell
+
+docker run -p 8080:8080 -e MYSQL_HOST=192.168.5.127 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=root -e REDIS_HOST=192.168.5.127 -e REDIS_PORT=6379 ordinaryroad-blog-quarkus
+```
+
+# OrdinaryRoad博客设计
+
+## 导航
+
+## 用户
+
+支持多用户
+
+主账号：OrdinaryRoad账号
+
+第三方账号：
+
+- GitHub
+- Gitee
+
+## 文章
+
+- [x] Markdown格式
+- [ ] 文章归档
+
+### 浏览记录
+
+已登录：
+
+userId, articleId
+
+未登录：
+
+ip, articleId
+
+## 分类
+
+每个文章对应一个分类
+
+分类为每个用户私有的
+
+## 标签
+
+每个文章对应多个标签
+
+标签为每个用户公有的
+
+## 评论
+
+## 数据统计
+
+- 已发布文章
+- 已浏览文章
+- 已点赞文章
+- 分类数
+- 评论发表数
+- 文章发布热力图
+- 分类文章数Top10
+- 文章评论数Top10
+- 文章点赞数Top10
+- 文章浏览数Top10
+
+# 使用容器进行Maven构建
+
+```shell
+
+docker run -it --rm --name ordinaryroad-blog \
+--platform=linux/amd64 \
+-v /Users/ordinaryroad/Environment/maven/repo:/root/.m2/repository \
+-v "$(pwd)":/usr/src/mymaven \
+-w /usr/src/mymaven \
+maven:3.8.6-jdk-11 \
+mvn install
+
+```
+
+# 构建镜像
+
+> jvm
+
+```shell
+
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/ordinaryroad-blog-quarkus-jvm .
+
+```
+
+> 运行测试
+
+```shell
+
+docker run -i --rm -p 8080:8080 -e ORDINARYROAD_OAUTH2_CLIENT_ID=xxx -e ORDINARYROAD_OAUTH2_CLIENT_SECRET=xxx -e MAIL_QQ_PASSWORD=xxxxxx -e MYSQL_HOST=192.168.6.231 -e MYSQL_PORT=3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=Root123. -e REDIS_HOST=192.168.6.231 -e REDIS_PORT=6379 quarkus/ordinaryroad-blog-quarkus-jvm
+
+```
+
+> 修改tag并push
+
+```shell
+
+docker tag quarkus/ordinaryroad-blog-quarkus-jvm ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220902_6
+
+```
+
+```shell
+
+docker push ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-pro/ordinaryroad-blog:20220902_6
+
+```

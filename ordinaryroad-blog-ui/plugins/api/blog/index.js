@@ -27,17 +27,25 @@ import oauthUserApis from './oauth_user'
 import articleApis from './article'
 import commentApis from './comment'
 import userApis from './user'
+import typeApis from './type'
+import tagApis from './tag'
+import logApis from './log'
 
 let $axios = null
+let $config = null
 
 export default {
-  initAxios (axios) {
+  initAxios (axios, config) {
     $axios = $axios || axios
+    $config = $config || config
     oauth2Apis.initAxios(axios)
     oauthUserApis.initAxios(axios)
     articleApis.initAxios(axios)
     commentApis.initAxios(axios)
     userApis.initAxios(axios)
+    typeApis.initAxios(axios)
+    tagApis.initAxios(axios)
+    logApis.initAxios(axios)
   },
   apis: {
     oauth2: oauth2Apis.apis,
@@ -45,6 +53,9 @@ export default {
     article: articleApis.apis,
     comment: commentApis.apis,
     user: userApis.apis,
+    type: typeApis.apis,
+    tag: tagApis.apis,
+    log: logApis.apis,
     /**
      * 获取文件全路径
      * @param url
@@ -55,19 +66,19 @@ export default {
       if (!url || url === '') {
         return defaultUrl
       } else if (url.startsWith('/ordinaryroad-')) {
-        return `https://api.ordinaryroad.tech/upms/file/download${url}`
+        return `${$config.FILE_DOWNLOAD_BASE_URL}${url}`
       } else {
         return url
       }
     },
     logout: () => {
-      return $axios.get('/api/blog/common/logout')
+      return $axios.get('/blog/common/logout')
     },
     upload: (file) => {
       const data = new FormData()
       data.append('file', file)
       return $axios({
-        url: '/api/blog/common/upload',
+        url: '/blog/common/upload',
         method: 'post',
         data
       })

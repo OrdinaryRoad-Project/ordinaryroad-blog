@@ -31,10 +31,53 @@ export default ({
     const userInfo = store.getters['user/getUserInfo']
     return userInfo != null
   }
+  const checkLogin = () => {
+    const logged = isLogged()
+    if (!logged) {
+      app.$dialog({
+        persistent: false,
+        content: app.i18n.$t('pleaseLogin'),
+        confirmText: app.i18n.$t('login')
+      }).then(({ isConfirm }) => {
+        if (isConfirm) {
+          app.router.push({
+            path: '/user/login',
+            query: { redirect: route.fullPath }
+          })
+        }
+      })
+    }
+    return logged
+  }
+  const hasRolesOr = (roles) => {
+    const logged = isLogged()
+    if (!logged) {
+      return false
+    }
+    if (roles.length === 0) {
+      return true
+    }
+    let hasRole = false
+    if (logged) {
+      const userRoleCodes = store.getters['user/getRoleCodes']
+      for (let i = 0; i < roles.length; i++) {
+        const role = roles[i]
+        if (userRoleCodes.includes(role)) {
+          hasRole = true
+          break
+        }
+      }
+    }
+    return hasRole
+  }
   inject('access', {
     has: (permissionCode) => {
-      return true
+      // if (permissionCode === 'blog:type:create') {
+      // return hasRolesOr(['DEVELOPER', 'ADMIN'])
+      // }
       // const userInfo = store.getters['user/getUserInfo']
+      // console.log('hasAccess', permissionCode, userInfo)
+      return true
       // let permissions = []
       // if (userInfo && userInfo.permissions) {
       //   permissions = userInfo.permissions
@@ -42,22 +85,12 @@ export default ({
       // return permissions.includes(permissionCode)
     },
     isLogged,
-    checkLogin: () => {
-      const logged = isLogged()
-      if (!logged) {
-        app.$dialog({
-          persistent: false,
-          content: '请登录'
-        }).then(({ isConfirm }) => {
-          if (isConfirm) {
-            app.router.push({
-              path: '/user/login',
-              query: { redirect: route.fullPath }
-            })
-          }
-        })
-      }
-      return logged
-    }
+    checkLogin,
+    /**
+     * 判断当前用户是否拥有角色中的一个
+     *
+     * @param roles {String[]} 角色列表
+     */
+    hasRolesOr
   })
 }

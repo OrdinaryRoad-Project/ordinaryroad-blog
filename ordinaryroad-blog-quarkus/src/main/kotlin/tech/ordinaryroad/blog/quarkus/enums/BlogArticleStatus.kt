@@ -25,11 +25,14 @@
 package tech.ordinaryroad.blog.quarkus.enums
 
 import cn.hutool.core.util.EnumUtil
+import com.baomidou.mybatisplus.annotation.IEnum
 
 /**
  * 文章状态
+ *
+ * https://blog.csdn.net/yiyuzz/article/details/126121615
  */
-enum class BlogArticleStatus {
+enum class BlogArticleStatus : IEnum<String> {
     //region 使用中的状态
     /**
      * 草稿
@@ -80,6 +83,10 @@ enum class BlogArticleStatus {
      */
     PRIVATE,
     ;
+
+    override fun getValue(): String {
+        return EnumUtil.toString(this)
+    }
 
     override fun toString(): String {
         return EnumUtil.toString(this)

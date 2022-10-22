@@ -126,6 +126,23 @@
           md="4"
         >
           <v-select
+            v-model="searchParams.canComment"
+            clearable
+            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            dense
+            outlined
+            item-text="label"
+            item-value="value"
+            hide-details="auto"
+            :label="$t('article.canComment')"
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          lg="3"
+          md="4"
+        >
+          <v-select
             v-model="searchParams.canReward"
             clearable
             :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
@@ -157,16 +174,30 @@
       </template>
 
       <template #actionsTop>
-        <v-btn
-          outlined
-          color="primary"
-          dark
-          @click="$refs.dataTable.insertItem()"
-        >
-          开始写作
-        </v-btn>
+        <slot name="actionsTop">
+          <v-btn
+            outlined
+            color="primary"
+            dark
+            @click="$refs.dataTable.insertItem()"
+          >
+            <v-icon left>
+              mdi-pencil
+            </v-icon>
+            {{ $t('article.actions.writing') }}
+          </v-btn>
+        </slot>
       </template>
 
+      <template #[`item.title`]="{ item }">
+        <or-link
+          :hover-able="item.status==='PUBLISH'"
+          :text="item.status!=='PUBLISH'"
+          :href="`/${item.creatorUid}/article/${item.uuid}`"
+        >
+          {{ item.title }}
+        </or-link>
+      </template>
       <template #[`item.status`]="{ item }">
         <v-chip
           label
@@ -196,6 +227,27 @@
           {{ item.summary }}
         </span>
         <span v-else>无</span>
+      </template>
+      <template #[`item.typeName`]="{ item }">
+        <v-chip v-if="item.typeName" label>
+          {{ item.typeName }}
+        </v-chip>
+        <span v-else>无</span>
+      </template>
+      <template #[`item.tagNames`]="{ item }">
+        <template v-if="item.tagNames && item.tagNames.length">
+          <v-chip
+            v-for="(tagName, index) in item.tagNames"
+            :key="tagName"
+            :class="index===item.tagNames.length-1?null:'me-1'"
+          >
+            {{ tagName }}
+          </v-chip>
+        </template>
+        <span v-else>无</span>
+      </template>
+      <template #[`item.canComment`]="{ item }">
+        <v-simple-checkbox v-model="item.canComment" disabled />
       </template>
       <template #[`item.canReward`]="{ item }">
         <v-simple-checkbox v-model="item.canReward" disabled />
@@ -231,12 +283,42 @@
         >
           <v-icon>mdi-restore</v-icon>
         </v-btn>
+
+        <or-base-menu
+          v-if="['DRAFT'].includes(item.status)"
+          offset-y
+          open-on-hover
+        >
+          <template #activator="{ on, attrs }">
+            <v-btn
+              class="ml-2"
+              color="primary"
+              dark
+              v-bind="attrs"
+              icon
+              v-on="on"
+            >
+              <v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item
+              v-if="['DRAFT'].includes(item.status)"
+              @click="onPublishArticle(item)"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ $t('article.actions.directlyPublish') }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </or-base-menu>
       </template>
     </or-base-data-table>
   </v-container>
 </template>
 
 <script>
+
 export default {
   name: 'OrBlogArticleDataTable',
   props: {
@@ -303,6 +385,7 @@ export default {
       title: null,
       summary: null,
       content: null,
+      canComment: null,
       canReward: null,
       original: null,
       status: 'DRAFT'
@@ -351,6 +434,22 @@ export default {
           text: this.$t('article.summary'),
           value: 'summary',
           width: 400
+        },
+        {
+          text: this.$t('article.typeName'),
+          value: 'typeName',
+          sortable: false
+        },
+        {
+          text: this.$t('article.tagNames'),
+          value: 'tagNames',
+          sortable: false,
+          width: 300
+        },
+        {
+          text: this.$t('article.canComment'),
+          value: 'canComment',
+          width: 120
         },
         {
           text: this.$t('article.canReward'),
@@ -404,23 +503,24 @@ export default {
      * @param status 新的文章状态
      */
     onSearchParamsStatusChange (status) {
-      this.$router.replace(`/dashboard/article/box/${status}`)
+      this.$router.replace(`/dashboard/article/status/${status}`)
     },
     onResetSearch () {
     },
     onInsertItem () {
       this.selectedIndex = -1
-      this.$router.push('/dashboard/article')
+      this.$router.push('/dashboard/article/writing/new')
     },
     onDeleteItem (item) {
       this.$dialog({
-        content: '确定移动到垃圾箱？',
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.moveToTrash')]),
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$apis.blog.article.moveToTrash(item.uuid)
             .then(() => {
-              this.$snackbar.success('操作成功')
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
             })
@@ -432,13 +532,33 @@ export default {
     },
     onRestoreItem (item) {
       this.$dialog({
-        content: '确定恢复该文章？',
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.recoverFromTrash')]),
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$apis.blog.article.recoverFromTrash(item.uuid)
             .then(() => {
-              this.$snackbar.success('已恢复至草稿箱')
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.recoverFromTrash')]))
+              this.$refs.dataTable.getItems()
+              dialog.cancel()
+            })
+            .catch(() => {
+              dialog.cancel()
+            })
+        }
+      })
+    },
+    onPublishArticle (item) {
+      this.$dialog({
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.directlyPublish')]),
+        loading: true
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$apis.blog.article.publish(item)
+            .then(() => {
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
             })
@@ -453,8 +573,8 @@ export default {
       index
     }) {
       this.selectedIndex = index
-      // TODO 编辑
-      this.$router.push(`/dashboard/article/${item.uuid}`)
+      // 编辑
+      this.$router.push(`/dashboard/article/writing/${item.uuid}`)
     },
     onGetItems ({
       options,

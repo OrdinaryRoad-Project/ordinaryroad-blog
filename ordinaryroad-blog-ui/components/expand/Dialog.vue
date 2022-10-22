@@ -43,7 +43,7 @@
         <v-icon class="me-3">
           {{ params.icon || 'mdi-information' }}
         </v-icon>
-        {{ params.title || i18n.messages[i18n.locale].attention }}
+        {{ params.title || i18n.$t('attention') }}
       </v-card-title>
       <v-card-text class="text-subtitle-1" style="white-space: pre-line">
         {{ params.content }}
@@ -57,7 +57,7 @@
           text
           @click="cancel"
         >
-          {{ params.cancelText || i18n.messages[i18n.locale].cancel }}
+          {{ params.cancelText || i18n.$t('cancel') }}
         </v-btn>
         <v-btn
           v-show="!params.hideConfirm"
@@ -66,7 +66,7 @@
           text
           @click="confirm"
         >
-          {{ params.confirmText || i18n.messages[i18n.locale].confirm }}
+          {{ params.confirmText || i18n.$t('confirm') }}
         </v-btn>
       </v-card-actions>
     </v-card>

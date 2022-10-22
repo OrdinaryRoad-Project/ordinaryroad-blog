@@ -54,6 +54,10 @@ export default {
       type: Boolean,
       default: false
     },
+    lang: {
+      type: String,
+      default: 'zh-Hans'
+    },
     /**
      * 计算标题出现时到顶部的偏移量
      */
@@ -71,6 +75,16 @@ export default {
     headingElements: []
   }),
   watch: {
+    lang (val) {
+      try {
+        if (this.readOnly) {
+          this.updatePreviewerLang(val)
+        } else {
+          this.updateEditorLang(val)
+        }
+      } catch (e) {
+      }
+    },
     dark (val) {
       try {
         if (this.readOnly) {
@@ -78,6 +92,12 @@ export default {
         } else {
           this.updateEditorTheme(val)
         }
+      } catch (e) {
+      }
+    },
+    placeholder (val) {
+      try {
+        this.setPlaceholder(val)
       } catch (e) {
       }
     }
@@ -99,6 +119,12 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    focus () {
+      this.instance && this.instance.focus()
+    },
+    blur () {
+      this.instance && this.instance.blur()
+    },
     setPlaceholder (val) {
       if (!this.readOnly) {
         const byClassName = this.$refs.vditor.getElementsByClassName('vditor-reset')
@@ -126,6 +152,13 @@ export default {
         // this.initEditor(null)
       }
     },
+    updateEditorLang (lang) {
+      // todo
+      if (this.instance) {
+        // this.instance.destroy()
+        // this.initEditor()
+      }
+    },
     updateEditorTheme (dark) {
       if (this.instance) {
         let editorTheme = 'classic'
@@ -139,6 +172,9 @@ export default {
         this.instance.setTheme(editorTheme, theme, codeTheme)
       }
     },
+    updatePreviewerLang (lang) {
+      // todo
+    },
     updatePreviewerTheme (dark) {
       // TODO 夜间模式链接颜色不对
       let theme = 'light'
@@ -148,10 +184,11 @@ export default {
         codeTheme = 'dracula'
       }
       Vditor.setCodeTheme(codeTheme)
-      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.15/dist/css/content-theme')
+      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.17/dist/css/content-theme')
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
+        lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
         placeholder: this.placeholder,
         toolbarConfig: {
           hide: this.commentMode,
@@ -207,7 +244,7 @@ export default {
         },
         upload: {
           max: 30 * 1024 * 1024,
-          url: '/api/blog/common/upload',
+          url: '/blog/common/upload',
           // 跨站点访问控制。默认值: false
           withCredentials: true,
           headers: {},
@@ -216,10 +253,10 @@ export default {
           fieldName: 'file',
           setHeaders: () => {
             return {
-              or_blog_token: this.$store.getters['user/getTokenInfo']
+              'or-blog-token': this.$store.getters['user/getTokenValue']
             }
           },
-          // linkToImgUrl: '/api/blog/upload/{url}',
+          // linkToImgUrl: '/blog/upload/{url}',
           // linkToImgFormat: (responseText) => {
           //   const response = JSON.parse(responseText)
           //   response.code = 0
@@ -262,6 +299,12 @@ export default {
         },
         input: (value) => {
           this.$emit('update:transferContent', value)
+        },
+        focus: (value) => {
+          this.$emit('focus')
+        },
+        blur: (value) => {
+          this.$emit('blur')
         }
       })
     },
@@ -286,7 +329,11 @@ export default {
       }
       Vditor.preview(previewElement, content,
         {
+          lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
           markdown: {
+            autoSpace: true,
+            paragraphBeginningSpace: true,
+            toc: false,
             fixTermTypo: true
           },
           mode,
@@ -294,9 +341,11 @@ export default {
             style: codeTheme,
             lineNumber: true
           },
+          anchor: 1,
           theme: {
             current: theme
           },
+          icon: 'material',
           speech: {
             enable: true
           },
@@ -327,7 +376,7 @@ export default {
             this.updatePreviewerTheme(this.dark)
             previewElement.addEventListener('click', (event) => {
               if (event.target.tagName === 'IMG') {
-                Vditor.previewImage(event.target, null, this.$vuetify.theme.dark ? 'dark' : 'light')
+                Vditor.previewImage(event.target, this.$i18n.locale === 'en' ? 'en_US' : 'zh_CN', this.$vuetify.theme.dark ? 'dark' : 'light')
               }
             })
 
@@ -335,31 +384,44 @@ export default {
               // 评论不需要目录
               return
             }
+
             // 无效
             // Vditor.outlineRender(
             //   previewElement,
             //   document.getElementById('outline')
             // )
-            const headingElements = []
-            const toc = []
             // console.log(previewElement.querySelectorAll('h1,h2,h3,h4,h5,h6'));
             const elementNodeListOf = previewElement.querySelectorAll('h1,h2,h3,h4,h5,h6')
-            if (elementNodeListOf.length) {
+            if (elementNodeListOf.length && elementNodeListOf.length > 0) {
+              const toc = []
+              const headingElements = []
               for (let i = 0; i < elementNodeListOf.length; i++) {
                 const element = elementNodeListOf[i]
                 headingElements.push(element)
-                element.setAttribute('id', 'blog-toc-id' + '-' + i)
+                element.setAttribute('id', 'h' + '-' + i)
                 // console.log(element.tagName.charAt(1))
                 // console.log(element.textContent)
                 // console.log('\n')
+
+                let headString
+                let headHtml = element.innerHTML
+                const vditorAnchor = element.getElementsByTagName('a')
+                if (vditorAnchor && vditorAnchor[0]) {
+                  headString = vditorAnchor[0].getAttribute('id').slice(13)
+                  headHtml = headHtml.replace(vditorAnchor[0].outerHTML, '')
+                } else {
+                  headString = element.textContent
+                }
+
                 toc.push({
                   id: i,
                   index: element.tagName.charAt(1) - 1,
-                  headString: element.textContent
+                  headString,
+                  headHtml
                 })
               }
               this.$emit('update:previewToc', toc)
-              // console.log('toc', toc)
+              console.log('toc', toc)
 
               this.$emit('update:currentTocIndex', 0)
               // console.log('MdVditor 需要激活的目录', 0)
@@ -384,6 +446,7 @@ export default {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         if (this.scrollingOptions.currentScrollTop === scrollTop) {
           // console.log("滚动结束")
+          let currentTocIndex = headingElements.length - 1
           for (let i = 0; i < headingElements.length; i++) {
             // 找到 屏幕上 离offset最近的 元素
             const offset = this.headingsOffsetTop
@@ -391,7 +454,7 @@ export default {
             const currentTop = element.getBoundingClientRect().top
             if (currentTop >= offset) {
               if (currentTop === offset) {
-                this.$emit('update:currentTocIndex', i)
+                currentTocIndex = i
                 // console.log('MdVditor 滑动后需要激活的目录', i)
               } else if (i > 1) {
                 const preElement = headingElements[i - 1]
@@ -399,24 +462,24 @@ export default {
                 const distance = currentTop - preTop
                 if (distance < offset) {
                   // 间距过小，直接设置当前的位置
-                  this.$emit('update:currentTocIndex', i)
+                  currentTocIndex = i
                   // console.log('MdVditor 滑动后需要激活的目录 distance < offset', i)
                 } else if (currentTop - offset < 3) {
                   // 当前紧靠offset位置
-                  this.$emit('update:currentTocIndex', i)
+                  currentTocIndex = i
                   // console.log('MdVditor 滑动后需要激活的目录 currentTop - offset < 3', i)
                 } else {
                   // 上一部分还没完全遮住
-                  this.$emit('update:currentTocIndex', i - 1)
+                  currentTocIndex = i - 1
                   // console.log('MdVditor 滑动后需要激活的目录', i - 1)
                 }
               } else {
-                this.$emit('update:currentTocIndex', 0)
-                // console.log('MdVditor 滑动后需要激活的目录', 0)
+                currentTocIndex = 0
               }
               break
             }
           }
+          this.$emit('update:currentTocIndex', currentTocIndex)
         }
       }, 100)
     }

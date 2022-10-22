@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2021 苗锦洲
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.ordinaryroad.blog.quarkus.dal.dao.BlogArticleDAO">
+
+    <sql id="whereConditions">
+        <if test="title != null and title != ''">
+            AND #{alias}.title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="summary != null and summary != ''">
+            AND #{alias}.summary LIKE CONCAT('%', #{summary}, '%')
+        </if>
+        <if test="content != null and content != ''">
+            AND #{alias}.content LIKE CONCAT('%', #{content}, '%')
+        </if>
+        <if test="canReward != null">
+            AND #{alias}.can_reward = ${canReward}
+        </if>
+        <if test="original != null">
+            AND #{alias}.original = ${original}
+        </if>
+        <if test="status != null and status != ''">
+            AND #{alias}.status = ${status}
+        </if>
+        <if test="firstId != null and firstId != ''">
+            AND #{alias}.first_id = ${firstId}
+        </if>
+    </sql>
+
+    <resultMap id="BaseDOResultMap" type="tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO">
+        <id column="id" property="id"/>
+        <result column="uuid" property="uuid"/>
+        <result column="create_by" property="createBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle"
+               extends="BaseDOResultMap">
+        <result column="title" property="title"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="status" property="status"/>
+        <result column="can_reward" property="canReward"/>
+        <result column="original" property="original"/>
+        <result column="first_id" property="firstId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_ids" property="tagIds"
+                typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="ArticleUserLikedResultMap" type="tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked"
+               extends="BaseDOResultMap">
+        <result column="title" property="title"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="can_reward" property="canReward"/>
+        <result column="original" property="original"/>
+        <result column="first_id" property="firstId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_ids" property="tagIds"
+                typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+        <result column="liked_time" property="likedTime"/>
+    </resultMap>
+
+    <resultMap id="ArticleUserBrowsedResultMap"
+               type="tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed"
+               extends="BaseDOResultMap">
+        <result column="title" property="title"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="can_reward" property="canReward"/>
+        <result column="original" property="original"/>
+        <result column="first_id" property="firstId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_ids" property="tagIds"
+                typeHandler="tech.ordinaryroad.commons.mybatis.quarkus.type.StringListTypeHandler"/>
+        <result column="first_browsed_time" property="firstBrowsedTime"/>
+        <result column="last_browsed_time" property="lastBrowsedTime"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <select id="selectAllPublishByType">
+
+
+    </select>
+
+    <select id="getTopNCommentsByUserId" resultType="map">
+        SELECT ba.uuid, ba.title, COUNT(ba.uuid) comment_count, ba.create_by
+        FROM blog_article ba
+        INNER JOIN (SELECT uuid, article_id FROM blog_comment WHERE deleted = 0) bc ON bc.article_id = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY ba.uuid
+        ORDER BY comment_count DESC
+        LIMIT
+        <choose>
+            <when test="n != null and n >= 0 and n &lt;= 50">
+                ${n}
+            </when>
+            <otherwise>
+                10
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getTopNLikedByUserId" resultType="map">
+        SELECT ba.uuid, ba.title, COUNT(ba.uuid) liked_count, ba.create_by
+        FROM blog_article ba
+        INNER JOIN (SELECT uuid, article_id FROM blog_user_liked_article) bula ON bula.article_id = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY ba.uuid
+        ORDER BY liked_count DESC
+        LIMIT
+        <choose>
+            <when test="n != null and n >= 0 and n &lt;= 50">
+                ${n}
+            </when>
+            <otherwise>
+                10
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getTopNBrowsedByUserId" resultType="map">
+        SELECT ba.uuid, ba.title, COUNT(ba.uuid) browsed_count, ba.create_by
+        FROM blog_article ba
+        INNER JOIN (SELECT uuid, article_id FROM blog_user_browsed_article) buba ON buba.article_id = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY ba.uuid
+        ORDER BY browsed_count DESC
+        LIMIT
+        <choose>
+            <when test="n != null and n >= 0 and n &lt;= 50">
+                ${n}
+            </when>
+            <otherwise>
+                10
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countDailyPosts" resultType="map">
+        SELECT DATE(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time)) date,
+        COUNT(ba.uuid) count
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        AND ba.created_time BETWEEN #{startDateTime} AND #{endDateTime}
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="countMonthlyPosts" resultType="map">
+        SELECT DATE_FORMAT(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time), '%Y-%m') date,
+        COUNT(ba.uuid) count
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        AND ba.created_time BETWEEN #{startDateTime} AND #{endDateTime}
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="countYearlyPosts" resultType="map">
+        SELECT YEAR(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time)) date,
+        COUNT(ba.uuid) count
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        AND ba.created_time BETWEEN #{startDateTime} AND #{endDateTime}
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+        GROUP BY date
+    </select>
+
+    <select id="getArticlePublishedDays" resultType="string">
+        SELECT DISTINCT(DATE(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+    </select>
+
+    <select id="getArticlePublishedMonths" resultType="string">
+        SELECT DISTINCT(DATE_FORMAT(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time), '%Y-%m')) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+    </select>
+
+    <select id="getArticlePublishedYears" resultType="string">
+        SELECT DISTINCT(YEAR(IF(ISNULL(lj_ba.created_time), ba.created_time, lj_ba.created_time))) date
+        FROM blog_article ba
+        LEFT JOIN (SELECT uuid, created_time FROM blog_article WHERE status = 'PUBLISH_INHERIT') AS lj_ba
+        ON ba.first_id != ba.uuid AND lj_ba.uuid = ba.first_id
+        WHERE ba.status = 'PUBLISH'
+        <if test="userId != null and userId != ''">
+            AND ba.create_by = #{userId}
+        </if>
+    </select>
+
+    <select id="pageLiked" resultMap="ArticleUserLikedResultMap">
+        SELECT bula.created_time liked_time, ba.*
+        FROM blog_user_liked_article bula
+        INNER JOIN (SELECT * FROM blog_article
+        <where>
+            status = 'PUBLISH'
+            <if test="params.title != null and params.title != ''">
+                AND title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params.summary != null and params.summary != ''">
+                AND summary LIKE CONCAT('%', #{params.summary}, '%')
+            </if>
+            <if test="params.content != null and params.content != ''">
+                AND content LIKE CONCAT('%', #{params.content}, '%')
+            </if>
+            <if test="params.canReward != null">
+                AND can_reward = ${params.canReward}
+            </if>
+            <if test="params.original != null">
+                AND original = ${params.original}
+            </if>
+            <if test="params.createBy != null and params.createBy != ''">
+                AND create_by = #{params.createBy}
+            </if>
+        </where>
+        ) ba ON (ba.first_id = bula.article_id)
+
+        WHERE bula.create_by = #{userId}
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                bula.created_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="pageBrowsed" resultMap="ArticleUserBrowsedResultMap">
+        SELECT buba.created_time first_browsed_time, buba.last_browsed_time, buba.count, ba.*
+        FROM blog_user_browsed_article buba
+        INNER JOIN (SELECT * FROM blog_article
+        <where>
+            status = 'PUBLISH'
+            <if test="params.title != null and params.title != ''">
+                AND title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params.summary != null and params.summary != ''">
+                AND summary LIKE CONCAT('%', #{params.summary}, '%')
+            </if>
+            <if test="params.content != null and params.content != ''">
+                AND content LIKE CONCAT('%', #{params.content}, '%')
+            </if>
+            <if test="params.canReward != null">
+                AND can_reward = ${params.canReward}
+            </if>
+            <if test="params.original != null">
+                AND original = ${params.original}
+            </if>
+            <if test="params.createBy != null and params.createBy != ''">
+                AND create_by = #{params.createBy}
+            </if>
+        </where>
+        ) ba ON (ba.first_id = buba.article_id)
+
+        WHERE buba.create_by = #{userId}
+        AND buba.deleted = 0
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                buba.last_browsed_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="searchPublish" resultMap="BaseResultMap">
+        SELECT *
+        FROM blog_article
+        WHERE status = 'PUBLISH'
+        <if test="(title != null and title != '') or (tagId != null and tagId != '')">
+            AND (
+            <if test="title != null and title != ''">
+                `title` LIKE #{title}
+            </if>
+            <if test="tagId != null and tagId != ''">
+                OR `tag_ids` LIKE #{tagId}
+            </if>
+            )
+        </if>
+
+        ORDER BY
+        <choose>
+            <when test="orderBySql != null and orderBySql != ''">
+                ${orderBySql}
+            </when>
+            <otherwise>
+                `created_time` DESC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

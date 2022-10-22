@@ -30,11 +30,11 @@ import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.jboss.resteasy.reactive.MultipartForm
 import org.jboss.resteasy.reactive.RestHeader
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.OrUpmsApi
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO.Companion.transfer
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserinfoDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
+import tech.ordinaryroad.blog.quarkus.properties.OAuth2Properties
 import tech.ordinaryroad.blog.quarkus.request.FileUploadRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.commons.base.exception.BaseException
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -44,41 +44,42 @@ import javax.ws.rs.core.Response
 @Path("common")
 class BlogResource {
 
+    @Inject
+    protected lateinit var oAuth2Properties: OAuth2Properties
+
     @RestClient
     lateinit var orUpmsApi: OrUpmsApi
 
     @Inject
     protected lateinit var userService: BlogUserService
 
+    @Inject
+    protected lateinit var blogService: BlogService
+
     /**
      * 获取用户信息 username avatar email
      */
     @GET
-    @Path("userinfo")
+    @Path("user_info")
     @Produces(MediaType.APPLICATION_JSON)
-    fun userinfo(): BlogUserinfoDTO {
-        val userId = StpUtil.getLoginIdAsString()
-
-        val user = userService.findById(userId)!!
-
-        val userinfoDTO = BlogUserinfoDTO(user.transfer())
-
-        return userinfoDTO
+    fun userinfo(): BlogUserInfoDTO {
+        return blogService.userInfo()
     }
 
+    /**
+     * 用户上传文件
+     */
     @POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     fun upload(
         @MultipartForm request: FileUploadRequest,
-        @RestHeader("or_blog_token") token: String
+        @RestHeader("or-blog-token") token: String
     ): Response {
-        // 报错
-        // StpUtil.checkLogin()
-
-        // TODO 统一异常处理
-        StpUtil.getLoginIdByToken(token) ?: throw BaseException("UserId 为空")
+        if (StpUtil.getLoginIdByToken(token) == null) {
+            BlogArticleResource.throwBadRequest()
+        }
 
         val fileUpload = request.file
 
@@ -89,10 +90,12 @@ class BlogResource {
 
         val renamedFile = FileUtil.rename(srcFile, fileName, true)
 
+        val ordinaryroadOAuth2Property = oAuth2Properties.providers()["ordinaryroad"]!!
+
         val jsonObject =
             orUpmsApi.upload(tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.FileUploadRequest().apply {
-                clientId = "ordinaryroad-blog"
-                clientSecret = "g8DxQweDHm4CAtda"
+                clientId = ordinaryroadOAuth2Property["client-id"]!! as String
+                clientSecret = ordinaryroadOAuth2Property["client-secret"]!! as String
                 file = renamedFile
             })
 
@@ -106,7 +109,7 @@ class BlogResource {
     @GET
     @Path("loginTest")
     fun loginTest() {
-        StpUtil.login("41acab7734074dae9da0f40aca5294ca")
+        // StpUtil.login("41acab7734074dae9da0f40aca5294ca")
     }
 
     @GET

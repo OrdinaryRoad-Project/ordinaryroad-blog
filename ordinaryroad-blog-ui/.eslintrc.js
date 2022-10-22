@@ -29,8 +29,7 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: '@babel/eslint-parser',
-    requireConfigFile: false
+    parser: 'babel-eslint'
   },
   extends: [
     '@nuxtjs',

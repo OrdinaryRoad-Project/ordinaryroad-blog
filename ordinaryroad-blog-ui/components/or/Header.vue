@@ -30,48 +30,21 @@
 
     <v-spacer />
 
+    <!-- 搜索 -->
+    <or-search
+      v-if="$route.name!=='search-input'"
+      :disable-hot-key="!$store.getters['app/getSearchInputHotKeyEnabled']"
+      :focused.sync="searchInputFocused"
+    />
+
     <!-- 用户信息 -->
-    <div v-if="userInfo">
-      <v-menu offset-y open-on-hover>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            large
-            depressed
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-list-item-avatar>
-              <v-img :src="avatarPath" style="border: 1px solid">
-                <template #placeholder>
-                  <v-skeleton-loader type="image" />
-                </template>
-              </v-img>
-            </v-list-item-avatar>
-            <v-list-item-title>
-              {{ username }}
-            </v-list-item-title>
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-        <or-base-tree-list
-          :nav="false"
-          :items="userMenuItems"
-          @clickListItem="logout"
-        />
-      </v-menu>
-    </div>
-    <div v-else>
-      <v-btn text color="primary" :to="`/user/login?redirect=${$route.path}`">
-        {{ $t('login') }}
-        <v-icon>mdi-login</v-icon>
-      </v-btn>
-    </div>
+    <or-user-info-menu v-if="!$vuetify.breakpoint.smAndDown||!searchInputFocused" />
 
     <!-- 国际化 -->
-    <or-i18n-menu />
+    <or-i18n-menu v-if="!$vuetify.breakpoint.smAndDown" />
     <!-- 设置 -->
     <v-btn icon @click="$store.dispatch('app/toggleRightDrawerModel')">
-      <v-icon>mdi-cog</v-icon>
+      <v-icon>mdi-dots-horizontal</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
@@ -81,18 +54,18 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'OrHeader',
+  data: () => ({
+    searchInputFocused: false
+  }),
   computed: {
     ...mapGetters('app', {
       selectedThemeOption: 'getSelectedThemeOption',
       themeOptions: 'getThemeOptions',
-      titleKey: 'getTitleKey',
-      userMenuItems: 'getUserMenuItems',
-      dashboardMenuItems: 'getDashboardMenuItems'
+      titleKey: 'getTitleKey'
     }),
     ...mapGetters('user', {
       userInfo: 'getUserInfo',
-      username: 'getUsername',
-      avatarPath: 'getAvatarPath'
+      username: 'getUsername'
     }),
     selectedThemeOptionModel: {
       get () {
@@ -101,6 +74,10 @@ export default {
       set (val) {
         // ignore
       }
+    },
+
+    showSearch () {
+      return this.$vuetify.breakpoint.mdAndUp
     }
 
   },
@@ -108,22 +85,6 @@ export default {
     ...mapActions('app', {
       setSelectedThemeOption: 'setSelectedThemeOption'
     }),
-
-    logout () {
-      this.$dialog({
-        persistent: false,
-        content: this.$i18n.t('confirmLogout'),
-        loading: true
-      }).then((dialog) => {
-        if (dialog.isConfirm) {
-          this.$store.dispatch('user/logout', {
-            $apis: this.$apis,
-            $router: this.$router,
-            $route: this.$route
-          }).then(() => dialog.cancel())
-        }
-      })
-    },
 
     click (index) {
       this.setSelectedThemeOption({

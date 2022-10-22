@@ -26,44 +26,58 @@ package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.SaLoginModel
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.IdUtil
 import io.vertx.core.json.JsonObject
-import org.eclipse.microprofile.rest.client.inject.RestClient
-import tech.ordinaryroad.blog.quarkus.client.gitee.oauth2.GiteeOAuth2Service
-import tech.ordinaryroad.blog.quarkus.client.github.oauth2.GithubOAuth2Service
-import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.auth.AuthService
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO.Companion.transfer
-import tech.ordinaryroad.blog.quarkus.dto.BlogUserinfoDTO
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.request.OAuth2CallbackRequest
-import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
-import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import org.jboss.resteasy.reactive.RestPath
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.chain.oauth2.OAuth2ProviderChain
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dto.BlogRoleDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
+import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.service.*
+import java.util.stream.Collectors
 import javax.inject.Inject
-import javax.ws.rs.BeanParam
-import javax.ws.rs.POST
+import javax.transaction.Transactional
+import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status
+
 
 @Path("oauth2")
 class BlogOAuth2Resource {
 
-    @RestClient
-    lateinit var orAuthService: AuthService
-
-    @RestClient
-    lateinit var githubOAuth2Service: GithubOAuth2Service
-
-    @RestClient
-    lateinit var giteeOAuth2Service: GiteeOAuth2Service
+    @Inject
+    protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
     @Inject
     protected lateinit var oAuthUserService: BlogOAuthUserService
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
+
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
+    @Inject
+    protected lateinit var oAuth2ProviderChain: OAuth2ProviderChain
+
+    @GET
+    @Path("authorize")
+    @Produces(MediaType.TEXT_PLAIN)
+    fun authorize(@RestQuery provider: String, @RestQuery state: String): String {
+        return oAuth2ProviderChain.authorize(provider, state)
+    }
 
     /**
      * OAuth授权成功后的回调
@@ -74,133 +88,124 @@ class BlogOAuth2Resource {
      * 3.2 未登录判断是否关联了主账号BlogUser，找不到则创建主账号并更新关联关系表，然后StpUtil.login(BlogUser.id)
      * 4. 返回userinfo和token
      */
-    @POST
+    @GET
     @Path("callback/{provider}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun callback(@BeanParam request: OAuth2CallbackRequest): Response {
-        val authorization = request.authorization
-        val provider = request.provider
-        val device = request.device
-
-        var openid = ""
-        // 是否成功
-        var success = false
-
-        // 成功时的返回体
-        val responseObject = JsonObject()
-
-        // 通过API获取的 OAuth User
-        val responseOAuthUser = BlogOAuthUser().apply {
-            setProvider(provider)
-        }
-
-        when (provider) {
-            "ordinaryroad" -> {
-                openid = request.openid
-                // 获取OR用户信息
-                val userinfo = orAuthService.userinfo(authorization)
-                if (userinfo.getBoolean("success")) {
-                    success = true
-                    // username avatar email
-                    val jsonObject = userinfo.getJsonObject("data")
-                    responseOAuthUser.apply {
-                        setOpenid(openid)
-                        username = jsonObject.getString("username")
-                        avatar = jsonObject.getString("avatar")
-                        email = jsonObject.getString("email")
-                    }
+    @Transactional
+    fun callback(@RestPath provider: String, @RestQuery code: String, @RestQuery state: String): JsonObject {
+        // 回掉方式 login|add|update
+        val type = state.split("_")[3]
+        when (type) {
+            "login" -> {
+                // 已经登录则需要退出登录
+                if (StpUtil.isLogin()) {
+                    throw BaseBlogException("请先退出登录")
                 }
             }
 
-            "github" -> {
-                // 获取GitHub用户信息
-                val response = githubOAuth2Service.user(authorization)
-                if (response.status == Status.OK.statusCode) {
-                    success = true
-                    val userinfo = response.readEntity(JsonObject::class.java)
-                    openid = userinfo.getNumber("id").toString()
-                    // username avatar email
-                    responseOAuthUser.apply {
-                        setOpenid(openid)
-                        username = userinfo.getString("name")
-                        avatar = userinfo.getString("avatar_url")
-                        email = userinfo.getString("email")
-                    }
-                }
-            }
-
-            "gitee" -> {
-                // 获取Gitee用户信息
-                val response = giteeOAuth2Service.user(authorization)
-//                val response = giteeOAuth2Service.user("token ${authorization.split(" ")[1]}")
-                if (response.status == Status.OK.statusCode) {
-                    success = true
-                    val userinfo = response.readEntity(JsonObject::class.java)
-                    openid = userinfo.getNumber("id").toString()
-                    // username avatar email
-                    responseOAuthUser.apply {
-                        setOpenid(openid)
-                        username = userinfo.getString("name")
-                        avatar = userinfo.getString("avatar_url")
-                        email = userinfo.getString("email")
-                    }
-                }
-            }
-
-            "qq" -> {
-                // TODO 调用QQ的getUserinfo接口
-                success = true
-                val username = "用户名——QQ"
-                val avatar =
-                    "https://img1.baidu.com/it/u=2940939222,1035762201&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1656954000&t=e9d10fdfde1d55bee41507fcbee3b66d"
-
-                responseOAuthUser.apply {
-                    setUsername(username)
-                    setAvatar(avatar)
+            "add", "update" -> {
+                // 未登录则需要登录
+                if (!StpUtil.isLogin()) {
+                    throw BaseBlogException("请先登录")
                 }
             }
 
             else -> {
+                throw BaseBlogException("暂不支持的操作")
             }
         }
 
-        if (success) {
-            var oAuthUser = oAuthUserService.findByOpenidAndProvider(openid, provider)
-            if (oAuthUser == null) {
-                oAuthUser = oAuthUserService.create(responseOAuthUser)!!
-            }
+        val device = "PC"
 
-            var user: BlogUser?
-            if (StpUtil.isLogin()) {
-                val userId = StpUtil.getLoginIdAsString()
-                user = userService.findById(userId)!!
-            } else {
+        // 成功时的返回体
+        val responseObject = JsonObject()
+
+        // 获取OAuth2的UserInfo
+        val responseOAuthUser = oAuth2ProviderChain.userInfo(provider, code, state)
+        val openid = responseOAuthUser.openid
+        // openid和provider确定唯一用户
+        var oAuthUser = oAuthUserService.findByOpenidAndProvider(openid, provider)
+
+        // 主账号
+        var user: BlogUser? = null
+        when (type) {
+            "login" -> {
+                if (oAuthUser == null) {
+                    // 不存在则创建，用于创建关联关系
+                    oAuthUser = oAuthUserService.create(responseOAuthUser)!!
+                }
+
+                // 根据OAuth2用户Id查询Blog主账号
                 user = userService.findByOAuthUserId(oAuthUser.uuid)
                 if (user == null) {
-                    user = userService.create(BlogUser().apply {
-                        username = oAuthUser.username
-                        avatar = oAuthUser.avatar
-                        email = oAuthUser.email
-                    }, oAuthUser)
+                    // 不存在则创建
+                    user = userService.create(
+                        BlogUser().apply {
+                            username = oAuthUser!!.username ?: "U_${IdUtil.fastSimpleUUID()}"
+                            avatar = oAuthUser!!.avatar
+                            email = oAuthUser!!.email
+                        }, oAuthUser
+                    )
                 }
             }
 
-            StpUtil.login(user.uuid, SaLoginModel().apply {
-                setDevice(device)
-                setIsLastingCookie(true)
-            })
+            "add" -> {
+                if (oAuthUser == null) {
+                    // 不存在则创建，用于创建关联关系
+                    oAuthUser = oAuthUserService.create(responseOAuthUser)!!
+                }
 
-            responseObject.put("userinfo", BlogUserinfoDTO(user.transfer()))
+                user = userService.findById(StpUtil.getLoginIdAsString())
+                userService.findByOAuthUserId(oAuthUser.uuid)?.let {
+                    throw BaseBlogException("该账号已注册，请先注销账号（开发中...）")
+                }
+                userOAuthUsersService.create(
+                    BlogUserOAuthUsers().apply {
+                        userId = user!!.uuid
+                        oAuthUserId = oAuthUser.uuid
+                    })
+            }
 
-            val tokenValue = StpUtil.getTokenValue()
-            responseObject.put("token", tokenValue)
-            return Response.ok()
-                .entity(responseObject)
-                .build()
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                .build()
+            "update" -> {
+                if (oAuthUser == null) {
+                    BaseBlogException("参数无效").throws()
+                }
+                responseOAuthUser.uuid = oAuthUser!!.uuid
+
+                // 根据OAuth2用户Id查询Blog主账号
+                user = userService.findByOAuthUserId(oAuthUser.uuid)
+                if (user == null || user.uuid != StpUtil.getLoginIdAsString()) {
+                    // 更新时需要有正确的关联关系
+                    BaseBlogException("参数无效").throws()
+                }
+                oAuthUserService.update(responseOAuthUser)
+            }
+
+            else -> {
+                BaseBlogException("不支持的操作").throws()
+            }
         }
+        val userId = user!!.uuid
+
+        StpUtil.login(userId, SaLoginModel().apply {
+            setDevice(device)
+            setIsLastingCookie(true)
+        })
+
+        val roleDtoList = roleService.findAllByUserId(userId)
+            .stream()
+            .map {
+                return@map dtoService.transfer(it, BlogRoleDTO::class.java)
+            }
+            .collect(Collectors.toList())
+
+        val userDto = dtoService.transfer(user, BlogUserDTO::class.java)
+
+        responseObject.put("userInfo", BlogUserInfoDTO(userDto, roleDtoList))
+
+        val tokenValue = StpUtil.getTokenValue()
+        responseObject.put("token", tokenValue)
+        return responseObject
     }
 
 }

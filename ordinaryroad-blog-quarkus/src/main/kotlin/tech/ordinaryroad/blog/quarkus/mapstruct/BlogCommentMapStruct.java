@@ -24,21 +24,63 @@
 
 package tech.ordinaryroad.blog.quarkus.mapstruct;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-import tech.ordinaryroad.blog.quarkus.entity.BlogComment;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment;
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest;
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO;
-import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO;
+import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO;
+import tech.ordinaryroad.blog.quarkus.service.BlogCommentService;
+
+import javax.enterprise.inject.spi.CDI;
+import java.util.Collections;
 
 @Mapper
-public interface BlogCommentMapStruct {
+public interface BlogCommentMapStruct extends BaseBlogMapStruct {
 
     BlogCommentMapStruct INSTANCE = Mappers.getMapper(BlogCommentMapStruct.class);
 
-    BlogComment request2do(BlogCommentPostRequest request);
+    BlogComment transfer(BlogCommentPostRequest request);
 
-    BlogArticleCommentVO do2ArticleVo(BlogComment comment);
+    @Mapping(source = "createBy", target = "user")
+    BlogArticleCommentVO transferArticle(BlogComment comment);
 
-    BlogSubCommentVO do2SubVo(BlogComment comment);
+    @Mapping(source = "createBy", target = "user")
+    @Mapping(source = "parentId", target = "parent")
+    BlogSubCommentVO transferSub(BlogComment comment);
+
+    @AfterMapping
+    default void fillReplies(BlogComment comment, @MappingTarget BlogArticleCommentVO vo) {
+        BlogCommentService commentService = CDI.current().select(BlogCommentService.class).get();
+
+        BlogCommentQueryRequest blogCommentQueryRequest = new BlogCommentQueryRequest();
+        blogCommentQueryRequest.setArticleId(comment.getArticleId());
+        blogCommentQueryRequest.setOriginalId(comment.getUuid());
+        blogCommentQueryRequest.setSize(5L);
+        blogCommentQueryRequest.setSortBy(Collections.singletonList("createdTime"));
+        blogCommentQueryRequest.setSortDesc(Collections.singletonList(true));
+        Page<BlogSubCommentVO> replies = commentService.pageSubComment(blogCommentQueryRequest);
+
+        vo.setReplies(replies);
+    }
+
+    default BlogSubCommentVO string2Parent(String parentId) {
+        if (StrUtil.isBlank(parentId)) {
+            return null;
+        }
+
+        BlogCommentService commentService = CDI.current().select(BlogCommentService.class).get();
+
+        BlogComment parentComment = commentService.findById(parentId);
+        // 防止死循环
+        parentComment.setParentId(null);
+        return this.transferSub(parentComment);
+    }
+
 }

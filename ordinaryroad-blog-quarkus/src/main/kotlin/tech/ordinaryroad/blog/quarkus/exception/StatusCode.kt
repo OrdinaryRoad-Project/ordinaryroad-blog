@@ -30,12 +30,21 @@ enum class StatusCode(
     private val code: Int,
     private val message: String
 ) : IStatusCode {
-    BLOG_ARTICLE_NOT_FOUND(404, "BLOG_ARTICLE_NOT_FOUND"),
-    BLOG_ARTICLE_NOT_VALID(400, "BLOG_ARTICLE_NOT_VALID"),
+    BLOG_ARTICLE_NOT_FOUND(404, "文章不存在"),
+    BLOG_ARTICLE_NOT_VALID(400, "文章无效"),
+    BLOG_ARTICLE_CANNOT_COMMENT(400, "文章不允许评论"),
     BLOG_ARTICLE_RECOVER_FROM_TRASH_CONFLICT(400, "本地存在未发布草稿"),
-    BLOG_COMMENT_NOT_FOUND(404, "BLOG_COMMENT_NOT_FOUND"),
-    BLOG_USER_NOT_FOUND(404, "BLOG_USER_NOT_FOUND"),
-    BLOG_COMMENT_NOT_VALID(400, "BLOG_COMMENT_NOT_VALID"),
+    BLOG_COMMENT_NOT_FOUND(404, "评论不存在"),
+    BLOG_COMMENT_NOT_VALID(400, "评论无效"),
+    BLOG_USER_NOT_FOUND(404, "用户不存在"),
+    BLOG_TYPE_NOT_FOUND(404, "分类不存在"),
+    BLOG_TYPE_NOT_VALID(400, "分类无效"),
+    BLOG_TYPE_NAME_ALREADY_EXIST(400, "分类名已存在"),
+    BLOG_TAG_NOT_FOUND(404, "标签不存在"),
+    BLOG_TAG_NOT_VALID(400, "标签无效"),
+    BLOG_TAG_NAME_ALREADY_EXIST(400, "标签名已存在"),
+    BLOG_ROLE_NOT_FOUND(404, "角色不存在"),
+    BLOG_ROLE_NOT_VALID(400, "角色无效"),
     ;
 
     override fun getCode(): Int {

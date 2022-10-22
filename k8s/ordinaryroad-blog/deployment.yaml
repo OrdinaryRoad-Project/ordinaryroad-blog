@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog
+  namespace: or-pro
+spec:
+  selector:
+    matchLabels:
+      tier: blog
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        tier: blog
+    spec:
+      containers:
+        - name: blog
+          image: 10.0.12.13:5000/ordinaryroad-blog
+          ports:
+            - containerPort: 8080
+              name: blog
+          env:
+            - name: MYSQL_HOST
+              value: "mysql.or-pro"
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USERNAME
+              value: "ordinaryroad_blog"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: MYSQL_PASSOWRD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: MYSQL_DATABASE
+            - name: REDIS_HOST
+              value: "redis.or-pro"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: MAIL_QQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: MAIL_QQ_PASSWORD
+            - name: OAUTH2_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: OAUTH2_REDIRECT_URI
+            - name: CLIENT_SECRET_ORDINARYROAD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: CLIENT_SECRET_ORDINARYROAD
+            - name: CLIENT_SECRET_GITHUB
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: CLIENT_SECRET_GITHUB
+            - name: CLIENT_SECRET_GITEE
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: CLIENT_SECRET_GITEE

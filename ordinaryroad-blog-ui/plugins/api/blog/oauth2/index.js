@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
+
 let $axios = null
 
 export default {
@@ -29,17 +31,36 @@ export default {
     $axios = $axios || axios
   },
   apis: {
-    callback: (provider, authorization, openid) => {
-      let newAuthorization = authorization
-      if (provider === 'github') {
-        newAuthorization = `token ${authorization.split(' ')[1]}`
-      }
+    /**
+     * 获取OAuth2认证链接
+     *
+     * @param provider {String} ordinaryroad|github|gitee
+     * @param state {String} State
+     * @returns {Promise} URL String
+     */
+    authorize: (provider, state) => {
+      const data = { provider, state }
       return $axios({
-        url: `/api/blog/oauth2/callback/${provider}?openid=${openid}&device=PC`,
-        method: 'post',
-        headers: {
-          Authorization: newAuthorization
-        }
+        url: `/blog/oauth2/authorize?1=1${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    /**
+     * 回掉后端服务
+     *
+     * @param token 回掉时的token
+     * @param provider {String} ordinaryroad|github|gitee
+     * @param code {String} Authorization Code
+     * @param state {String} State
+     * @returns {Promise} {token,userInfo}
+     */
+    callback: (token, provider, code, state) => {
+      const data = { code, state }
+      return $axios({
+        url: `/blog/oauth2/callback/${provider}?1=1${urlEncode(data)}`,
+        method: 'get',
+        // 在server端调用的方法必须手动设置header，因为获取不到client的cookie
+        headers: { 'or-blog-token': token }
       })
     }
   }

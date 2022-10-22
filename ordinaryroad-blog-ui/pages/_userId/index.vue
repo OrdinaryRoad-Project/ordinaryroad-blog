@@ -24,55 +24,129 @@
 
 <template>
   <div>
-    <div>用户首页</div>
-    <base-material-card avatar="true">
-      <template #avatar>
-        <or-avatar
-          class="v-card--material__avatar elevation-6"
-          size="128"
-          :avatar="$apis.blog.getFileUrl(blogUser.avatar)"
-          :username="blogUser.username"
-        />
-        <div class="text-center font-weight-bold">
-          {{ blogUser.username }}
-        </div>
-      </template>
-    </base-material-card>
+    <v-row>
+      <v-col
+        md="8"
+        cols="12"
+        order="2"
+        order-md="1"
+        class="pa-0"
+      >
+        <v-tabs
+          v-model="tabModel"
+          class="sticky-top"
+          style="z-index: 2"
+          :style="`top :${$vuetify.breakpoint.smAndDown?'56px':'64px'} !important;`"
+        >
+          <v-tab @click="onClickTab()">
+            {{ $t('overview') }}
+          </v-tab>
+          <v-tab @click="onClickTab('article')">
+            {{ $t('articleCount', [`${totalArticle ? $t('parentheses', [totalArticle]) : ''}`]) }}
+          </v-tab>
+        </v-tabs>
 
-    <base-material-card :title="`文章${totalArticle?`（${totalArticle}）`:''}`">
-      <or-blog-article-list
-        :total.sync="totalArticle"
-        :create-by="blogUser.uuid"
-      />
-    </base-material-card>
+        <v-tabs-items v-model="tabModel">
+          <v-tab-item>
+            <or-blog-user-overview
+              :user-id="user.uuid"
+            />
+          </v-tab-item>
+          <v-tab-item>
+            <or-blog-user-articles
+              :user-id="user.uuid"
+              :total.sync="totalArticle"
+            />
+          </v-tab-item>
+        </v-tabs-items>
+      </v-col>
+
+      <v-col
+        md="4"
+        cols="12"
+        order="1"
+        order-md="2"
+      >
+        <div
+          style="top: 108px !important;"
+          class="sticky-top"
+        >
+          <!-- 用户基本资料 -->
+          <or-blog-user-basic-info :user="user" username-link-disabled />
+
+          <div class="mt-14" />
+          <!-- 用户创建的分类 -->
+          <base-material-card :title="$t('typeCount',[`${totalTypes?$t('parentheses',[totalTypes]):''}`])">
+            <or-blog-type-treeview
+              :create-by="user.uuid"
+              :total.sync="totalTypes"
+            />
+          </base-material-card>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+
 export default {
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  },
   asyncData ({
     route,
-    redirect,
+    error,
     $apis
   }) {
-    const userId = route.params.userId
-    return $apis.blog.user.findById(userId)
-      .then((data) => {
-        return {
-          blogUser: data
-        }
-      })
-      .catch(() => {
-        redirect('/404')
-      })
+    const tabItems = ['overview', 'article']
+    const tab = route.query.tab
+    const indexOf = tab ? tabItems.indexOf(tab) : 0
+    return {
+      tabModel: indexOf === -1 ? 0 : indexOf
+    }
   },
   data () {
     return {
-      blogUser: null,
-      totalArticle: null
+      totalArticle: null,
+      totalTypes: null,
+
+      tabModel: 0
     }
   },
+  head () {
+    return {
+      title: this.$t('user.space.of', [this.user.username]),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
+  watch: {
+    tabModel (val) {
+      // ignore
+      switch (val) {
+        case 0:
+          break
+        case 1:
+          break
+        default:
+      }
+    }
+  },
+  created () {
+    this.$apis.blog.article.count(this.user.uuid)
+      .then((data) => {
+        this.totalArticle = data
+      })
+  },
   mounted () {
+  },
+  methods: {
+    onClickTab (tab) {
+      this.$router.replace({ path: this.$route.path, query: { tab } })
+    }
   }
 }
 </script>

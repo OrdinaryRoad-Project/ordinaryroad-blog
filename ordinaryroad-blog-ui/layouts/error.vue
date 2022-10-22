@@ -23,14 +23,16 @@
   -->
 
 <template>
-  <v-container fluid class="pa-0 fill-height">
-    <div v-if="error.statusCode === 404 ">
-      <NotFound />
-    </div>
-    <div v-else>
-      <p>{{ otherError }}</p>
-    </div>
-  </v-container>
+  <v-app>
+    <v-main>
+      <v-container fluid class="pa-0">
+        <or-not-found v-if="error.statusCode === 404" :error="error" />
+        <p v-else>
+          {{ otherError }}
+        </p>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -49,17 +51,28 @@ export default {
     }
   },
   head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
       title
     }
+  },
+  mounted () {
+    // dom初始化完成再初始化主题
+    this.$nextTick(() => {
+      this.$store.commit('app/UPDATE_THEME', {
+        value: this.$store.getters['app/getSelectedThemeOption'],
+        $vuetify: this.$vuetify
+      })
+      this.$store.commit('i18n/UPDATE_LANG', {
+        value: this.$store.getters['i18n/getLocale'],
+        $i18n: this.$i18n,
+        $vuetify: this.$vuetify,
+        $dayjs: this.$dayjs
+      })
+    })
   }
 }
 </script>
 
 <style scoped>
-h1 {
-  font-size: 20px;
-}
 </style>

@@ -23,31 +23,36 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row
       v-if="articlePageItems==null"
     >
-      加载失败，点我重试
+      加载失败
     </v-row>
+
+    <or-empty v-else-if="articlePageItems&&articlePageItems.total===0" />
+
     <vue-masonry-wall
-      v-else-if="articlePageItems.records.length > 0"
+      v-else-if="articlePageItems&&articlePageItems.records.length>0"
       :items="articlePageItems.records"
       :options="options"
-      :ssr="{columns: 2}"
-      @append="autoLoadMore&&appendArticles()"
+      :ssr="{columns: 1}"
+      @append="append"
     >
       <template #default="{item}">
-        <v-lazy>
+        <template v-if="item">
           <or-blog-article-item :item="item" />
-        </v-lazy>
+        </template>
       </template>
     </vue-masonry-wall>
 
     <or-load-more-footer
+      v-if="articlePageItems.total!==0"
       ref="loadMoreFooter"
+      :show-down-icon="!autoLoadMore"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
-      @loadMore="!autoLoadMore&&appendArticles()"
+      @loadMore="!autoLoadMore&&getArticles()"
     />
   </v-container>
 </template>
@@ -61,13 +66,25 @@ export default {
     VueMasonryWall
   },
   props: {
+    useSearchApi: {
+      type: Boolean,
+      default: false
+    },
     createBy: {
+      type: String,
+      default: null
+    },
+    typeId: {
       type: String,
       default: null
     },
     autoLoadMore: {
       type: Boolean,
       default: false
+    },
+    itemWidth: {
+      type: Number,
+      default: 500
     }
   },
   data: () => ({
@@ -80,14 +97,35 @@ export default {
       current: 1
     },
 
-    options: {
-      width: 500,
-      padding: {
-        // 1: 1,
+    /**
+     * 最近append加载时间
+     */
+    lastAppendTime: 0,
+
+    tagName: null,
+    title: null,
+    summary: null,
+    content: null
+  }),
+  computed: {
+    options () {
+      const padding = {
         default: 1
       }
+      /* if (this.$vuetify.breakpoint.xs) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.smAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.mdAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.lgAndDown) {
+        width = 500
+      } else if (this.$vuetify.breakpoint.xl) {
+        width = 500
+      } */
+      return { width: this.itemWidth, padding }
     }
-  }),
+  },
   watch: {
     'articlePageItems.total' () {
       this.$emit('update:total', this.articlePageItems.total)
@@ -96,33 +134,53 @@ export default {
   mounted () {
   },
   created () {
-    this.$apis.blog.article.pagePublish(1, { createBy: this.createBy })
-      .then((data) => {
-        this.articlePageItems = data
-        this.loadMoreOptions = {
-          loading: false,
-          noMoreData: data.pages === 0 || data.current === data.pages
-        }
-      })
+    if (this.autoLoadMore) {
+      this.lastAppendTime = new Date().getTime()
+      this.getArticles(false)
+    }
   },
   methods: {
-    appendArticles () {
-      if (this.loadMoreOptions.noMoreData) {
-        console.log('没有更多数据啦')
-        return
+    getArticles (loadMore = true) {
+      if (loadMore) {
+        if (this.loadMoreOptions.noMoreData) {
+          // console.log('没有更多数据啦')
+          return
+        }
+        if (this.loadMoreOptions.loading) {
+          // console.log('正在加载，请等待')
+          return
+        }
+        // 加载更多
+        this.$refs.loadMoreFooter.startLoading(true)
+        this.loadMoreOptions.loading = true
       }
-      if (this.loadMoreOptions.loading) {
-        console.log('正在加载，请等待')
-        return
+      // console.log('开始加载', this.articlePageItems.current + 1)
+      this.$emit('update:loading', true)
+      const page = loadMore ? this.articlePageItems.current + 1 : 1
+      let promise
+      if (this.useSearchApi) {
+        promise = this.$apis.blog.article.searchPublish(page, {
+          typeId: this.typeId,
+          createBy: this.createBy,
+          tagName: this.tagName,
+          title: this.title,
+          summary: this.summary,
+          content: this.content
+        })
+      } else {
+        promise = this.$apis.blog.article.pagePublish(page, {
+          typeId: this.typeId,
+          createBy: this.createBy,
+          tagName: this.tagName,
+          title: this.title,
+          summary: this.summary,
+          content: this.content
+        })
       }
-      // TODO 加载更多
-      this.$refs.loadMoreFooter.startLoading(true)
-      this.loadMoreOptions.loading = true
-      console.log('开始加载', this.articlePageItems.current + 1)
-      this.$apis.blog.article.pagePublish(this.articlePageItems.current + 1, { createBy: this.createBy })
-        .then((data) => {
+      promise.then((data) => {
+        if (loadMore) {
           this.$refs.loadMoreFooter.finishLoad()
-          console.log('加载完成', data.current)
+          // console.log('加载完成', data.current)
           const newRecords = this.articlePageItems.records.concat(data.records)
           this.articlePageItems = {
             ...data,
@@ -130,18 +188,36 @@ export default {
           }
           if (this.articlePageItems.current === this.articlePageItems.pages) {
             this.loadMoreOptions.noMoreData = true
-            console.log('没有更多数据啦')
+            // console.log('没有更多数据啦')
           }
-          setTimeout(() => {
-            this.loadMoreOptions.loading = false
-          }, 1000)
-        })
+          this.loadMoreOptions.loading = false
+        } else {
+          this.articlePageItems = data
+          this.loadMoreOptions = {
+            loading: false,
+            noMoreData: data.pages === 0 || data.current === data.pages
+          }
+          this.$emit('loadFinish')
+        }
+        this.$emit('update:loading', false)
+        if (this.autoLoadMore) {
+          this.lastAppendTime = new Date().getTime()
+        }
+      })
         .catch(() => {
-          this.$refs.loadMoreFooter.finishLoad()
-          setTimeout(() => {
+          if (loadMore) {
+            this.$refs.loadMoreFooter.finishLoad()
             this.loadMoreOptions.loading = false
-          }, 1000)
+          }
+          this.$emit('update:loading', false)
         })
+    },
+    append () {
+      if (this.autoLoadMore) {
+        if (new Date().getTime() - this.lastAppendTime >= 1000) {
+          this.getArticles()
+        }
+      }
     }
   }
 }

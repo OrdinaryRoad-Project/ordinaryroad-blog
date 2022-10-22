@@ -27,7 +27,10 @@ package tech.ordinaryroad.blog.quarkus.config
 import cn.dev33.satoken.stp.StpInterface
 import io.quarkus.arc.DefaultBean
 import io.quarkus.arc.Unremovable
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -53,6 +56,9 @@ class StpInterfaceImpl : StpInterface {
     @Inject
     protected lateinit var userService: BlogUserService
 
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
     /**
      * 返回一个账号所拥有的权限码集合
      */
@@ -64,12 +70,13 @@ class StpInterfaceImpl : StpInterface {
      * 返回一个账号所拥有的角色标识集合
      */
     override fun getRoleList(loginId: Any, loginType: String): List<String> {
-        val user = userService.findById(loginId.toString())
-        // TODO 角色列表
-        return if (user.id == 1L) {
-            listOf("admin", "super-admin")
-        } else {
-            listOf()
-        }
+        val userId = loginId as String
+
+        val roleCodeList = roleService.findAllByUserId(userId)
+            .stream()
+            .map(BlogRole::getRoleCode)
+            .collect(Collectors.toList())
+
+        return roleCodeList
     }
 }

@@ -28,13 +28,15 @@ import org.jboss.resteasy.reactive.RestForm;
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import javax.ws.rs.PathParam;
 
 public class BlogArticleUpdateCoverImageRequest extends BaseRequest {
 
-    private static final long serialVersionUID = -7702436602948156684L;
+    private static final long serialVersionUID = -4791991336064219961L;
 
     @NotBlank(message = "ID不能为空")
+    @Size(max = 32, message = "id长度不能大于32")
     @PathParam("id")
     public String uuid;
 

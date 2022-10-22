@@ -28,7 +28,10 @@ import cn.hutool.core.util.StrUtil
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.service.BlogTagService
+import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
+import javax.enterprise.inject.spi.CDI
 
 /**
  * 博客文章DTO类
@@ -41,23 +44,40 @@ data class BlogArticleDTO(
     var title: String = StrUtil.EMPTY,
     var summary: String = StrUtil.EMPTY,
     var content: String = StrUtil.EMPTY,
-    var original: Boolean = false,
+    var canComment: Boolean = true,
     var canReward: Boolean = false,
+    var original: Boolean = false,
     var status: String = StrUtil.EMPTY,
-    var firstId: String = StrUtil.EMPTY
+    var firstId: String = StrUtil.EMPTY,
+    var typeName: String = StrUtil.EMPTY,
+    var tagNames: List<String> = emptyList(),
 ) : BaseBlogModelDTO<BlogArticle>() {
     override fun parse(baseDo: BlogArticle) {
         coverImage = StrUtil.nullToEmpty(baseDo.coverImage)
         title = StrUtil.nullToEmpty(baseDo.title)
         summary = StrUtil.nullToEmpty(baseDo.summary)
         content = StrUtil.nullToEmpty(baseDo.content)
-        original = BooleanUtil.isTrue(baseDo.original)
+        canComment = BooleanUtil.isTrue(baseDo.canComment)
         canReward = BooleanUtil.isTrue(baseDo.canReward)
+        original = BooleanUtil.isTrue(baseDo.original)
         status = baseDo.status.name
         firstId = StrUtil.nullToEmpty(baseDo.firstId)
+
+        val typeId = baseDo.typeId
+        if (!typeId.isNullOrBlank()) {
+            val typeService = CDI.current().select(BlogTypeService::class.java).get()
+            typeService.findById(typeId)?.let {
+                typeName = it.name
+            }
+        }
+        val tagIds = baseDo.tagIds
+        if (!tagIds.isNullOrEmpty()) {
+            val tagService = CDI.current().select(BlogTagService::class.java).get()
+            tagNames = tagService.dao.selectNameListByUuidIn(tagIds)
+        }
     }
 
     companion object {
-        private const val serialVersionUID: Long = -4547090514200728360L
+        private const val serialVersionUID: Long = -1010217906295586636L
     }
 }

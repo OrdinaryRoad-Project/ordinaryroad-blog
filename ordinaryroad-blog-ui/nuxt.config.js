@@ -4,10 +4,10 @@ import zhHans from 'vuetify/lib/locale/zh-Hans'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - ordinaryroad-blog-ui',
-    title: 'ordinaryroad-blog-ui',
+    titleTemplate: '%s - OR博客',
+    title: 'OR博客',
     htmlAttrs: {
-      lang: 'zh-Hans'
+      lang: 'zh-CN'
     },
     meta: [
       { charset: 'utf-8' },
@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: ''
+        content: 'OR博客，一个Markdown多人博客'
       },
       {
         name: 'format-detection',
@@ -36,9 +36,8 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '@/assets/css/ordinaryroad.css'
-  ],
-  less: [
+    '@/assets/css/ordinaryroad.css',
+    '@/assets/jv-viewer.scss',
     '@/assets/vditor-custom.less'
   ],
 
@@ -61,6 +60,9 @@ export default {
     '~/plugins/i18n/index.js',
     // 自定义常量 工具类等
     '~/plugins/ordinaryroad/index.js',
+    // 路由插件
+    '~/plugins/router/statistics/index.js',
+    { src: '~/plugins/router/access.js', mode: 'client' },
     // vuetify client mode
     {
       src: '~/plugins/vuetify/index.js',
@@ -88,9 +90,10 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
+    // debug: true,
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    // baseURL: '/',
-    // prefix: '/api',
+    // baseURL: process.env.DOMAIN,
+    prefix: '/api',
     // https://axios.nuxtjs.org/options/#proxy
     proxy: true // Can be also an object with default options
   },
@@ -118,6 +121,12 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    theme: {
+      options: {
+        // https://vuetifyjs.com/zh-Hans/features/theme/#section-81ea5b9a4e495c5e6027
+        customProperties: true
+      }
+    },
     lang: {
       locales: {
         en,
@@ -144,48 +153,19 @@ export default {
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
 
     OAUTH2: {
-      // TODO REDIRECT_URI: 'https://blog.ordinaryroad.tech/authorized',
-      REDIRECT_URI: 'http://blog.ordinaryroad.tech:3000/user/authorized',
-      /*       ordinaryroad: {
-              CLIENT_ID: 'ordinaryroad-blog',
-              SCOPE: 'openid,userinfo',
-              AUTHORIZE_ENDPOINT: 'http://ordinaryroad-auth-server:9302/oauth2/authorize?response_type=code',
-              ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
-            }, */
-      ordinaryroad: {
-        CLIENT_ID: 'ordinaryroad-blog',
-        SCOPE: 'openid,userinfo',
-        AUTHORIZE_ENDPOINT: `${process.env.AUTH_BASE_URL}/oauth2/authorize?response_type=code`,
-        ACCESS_TOKEN_ENDPOINT: '/api/auth/oauth2/token'
-      },
-      github: {
-        CLIENT_ID: 'c0615d2a28cfb7a20a84',
-        SCOPE: 'read:user',
-        AUTHORIZE_ENDPOINT: 'https://github.com/login/oauth/authorize?1=1',
-        ACCESS_TOKEN_ENDPOINT: 'https://github.com/login/oauth/access_token'
-      },
-      gitee: {
-        CLIENT_ID: 'f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882',
-        SCOPE: 'user_info',
-        AUTHORIZE_ENDPOINT: 'https://gitee.com/oauth/authorize?response_type=code',
-        ACCESS_TOKEN_ENDPOINT: 'https://gitee.com/oauth/token?grant_type=authorization_code'
-      }
-    }
+      PROVIDERS: ['ordinaryroad', 'github', 'gitee']
+    },
 
-  },
-  privateRuntimeConfig: {
-    OAUTH2: {
-      ordinaryroad: {
-        CLIENT_SECRET: 'g8DxQweDHm4CAtda'
-      },
-      github: {
-        CLIENT_SECRET: 'ed77e156befab6fdd8bac32840b78b829ad89e1f'
-      },
-      gitee: {
-        CLIENT_SECRET: 'eef8d98731611f2af7fb638aee03020cc9812461deaeceb537e69315fac0b57f'
+    APP_VERSION: require('./package.json').version,
+
+    CI: {
+      VERSION: {
+        FRONTEND: process.env.CI_VERSION_FTONTEND,
+        BACKEND: process.env.CI_VERSION_BACKEND
       }
     }
   },
+  privateRuntimeConfig: {},
 
   // https://www.nuxtjs.cn/api/configuration-env
   env: {},
@@ -193,7 +173,7 @@ export default {
   // https://www.nuxtjs.cn/api/configuration-router
   router: {
     extendRoutes (routes, resolve) {
-      console.log('extendRoutes', routes)
+      // console.log('extendRoutes', routes)
     }
   }
 }

@@ -23,14 +23,21 @@
  */
 
 export default {
+  setSearchInputHotKeyEnabled ({ commit }, image) {
+    commit('SET_SEARCH_INPUT_HOT_KEY_ENABLED', image)
+  },
   setImage ({ commit }, image) {
     commit('SET_IMAGE', image)
   },
   setTitleKey ({ commit }, value) {
     commit('SET_TITLE_KEY', value)
   },
-  setSelectedThemeOption ({ commit }, values) {
-    commit('SET_SELECTED_THEME_OPTION', values)
+  setSelectedThemeOption ({ commit }, { value, $vuetify }) {
+    commit('SET_SELECTED_THEME_OPTION', { value, $vuetify })
+    commit('UPDATE_THEME', { value, $vuetify })
+  },
+  updateTheme ({ commit }, { value, $vuetify }) {
+    commit('UPDATE_THEME', { value, $vuetify })
   },
   setMenuItems ({ commit }, menuItems) {
     commit('SET_MENU_ITEMS', menuItems)

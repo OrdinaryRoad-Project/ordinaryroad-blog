@@ -25,15 +25,19 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
-import tech.ordinaryroad.blog.quarkus.facade.BlogCommentFacade
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
-import tech.ordinaryroad.blog.quarkus.service.BlogCommentTransferService
-import tech.ordinaryroad.blog.quarkus.vo.BlogArticleCommentVO
-import tech.ordinaryroad.blog.quarkus.vo.BlogSubCommentVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
+import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -42,13 +46,12 @@ import javax.ws.rs.core.Response
 class BlogCommentResource {
 
     @Inject
-    protected lateinit var commentFacade: BlogCommentFacade
+    protected lateinit var commentService: BlogCommentService
 
     @Inject
-    protected lateinit var commentTransferService: BlogCommentTransferService
+    protected lateinit var userService: BlogUserService
 
-    //region 开发中
-
+    //region 已测试
     /**
      * 用户发布评论
      */
@@ -57,7 +60,7 @@ class BlogCommentResource {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun post(@Valid request: BlogCommentPostRequest): Response {
-        return commentFacade.post(request)
+        return commentService.post(request)
     }
 
     /**
@@ -66,7 +69,7 @@ class BlogCommentResource {
     @GET
     @Path("page/sub/{originalId}/{page}/{size}")
     fun pageSubComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogSubCommentVO> {
-        return commentFacade.pageSubComment(request)
+        return commentService.pageSubComment(request)
     }
 
     /**
@@ -75,8 +78,38 @@ class BlogCommentResource {
     @GET
     @Path("page/article/{articleId}/{page}/{size}")
     fun pageArticleComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
-        return commentFacade.pageArticleComment(request)
+        return commentService.pageArticleComment(request)
     }
-    //endregion
 
+    /**
+     * 用户分页查询所有评论
+     */
+    @GET
+    @Path("page/{page}/{size}")
+    fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
+        throw BadRequestException()
+
+        return commentService.page(request)
+    }
+
+    /**
+     * 获取评论发表数
+     */
+    @GET
+    @Path("count")
+    fun countPost(
+        @Valid @Size(
+            max = 32,
+            message = "userId长度不能大于32"
+        ) @DefaultValue("") @RestQuery userId: String
+    ): Long {
+        if (userId.isNotBlank()) {
+            if (userService.findById(userId) == null) {
+                BlogUserNotFoundException().throws()
+            }
+        }
+        return commentService.countByUserId(userId)
+    }
+    //region 开发中
+    //endregion
 }

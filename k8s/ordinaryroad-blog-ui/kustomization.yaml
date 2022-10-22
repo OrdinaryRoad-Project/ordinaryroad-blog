@@ -1,0 +1,4 @@
+# /root/ordinaryroad/ordinaryroad-ui/kustomization.yaml
+resources:
+  - deployment.yaml
+  - service.yaml

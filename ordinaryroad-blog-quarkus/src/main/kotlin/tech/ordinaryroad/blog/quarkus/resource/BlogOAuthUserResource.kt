@@ -25,10 +25,15 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.service.BlogOAuthUserService
+import tech.ordinaryroad.blog.quarkus.service.BlogUserOAuthUsersService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
+import javax.ws.rs.DELETE
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -44,6 +49,9 @@ class BlogOAuthUserResource {
     @Inject
     protected lateinit var oAuthUserService: BlogOAuthUserService
 
+    @Inject
+    protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
+
     @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +61,32 @@ class BlogOAuthUserResource {
         val list = oAuthUserService.findAllByUserId(user.uuid)
 
         return list
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    fun delete(@RestQuery provider: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        val oAuthUser = oAuthUserService.findByUserIdAndProvider(userId, provider)
+        if (oAuthUser == null) {
+            BaseBlogException("参数无效").throws()
+        }
+        // 根据OAuth2用户Id查询Blog主账号
+        val oAuthUserId = oAuthUser!!.uuid
+        val user = userService.findByOAuthUserId(oAuthUserId)
+        if (user == null || user.uuid != userId) {
+            // 删除时需要有正确的关联关系
+            BaseBlogException("参数无效").throws()
+        }
+        val countByUserId = userOAuthUsersService.selectCountByUserId(userId)
+        if (countByUserId == 1L) {
+            // 必须保留一个账号
+            BaseBlogException("必须保留一个账号").throws()
+        } else if (countByUserId == 0L) {
+            BaseBlogException("参数无效").throws()
+        }
+
+        oAuthUserService.removeUserOAuthUser(oAuthUserId, userId)
     }
 
 }

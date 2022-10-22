@@ -1,9 +1,0 @@
-# /root/ordinaryroad/ordinaryroad-blog/kustomization.yaml
-secretGenerator:
-  - name: blog-mysql-pass
-    namespace: or-pro
-    literals:
-      - password=%*v^YD%hYedkXkM8
-resources:
-  - deployment.yaml
-  - service.yaml

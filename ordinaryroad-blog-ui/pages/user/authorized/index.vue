@@ -27,67 +27,48 @@
     <v-card class="mx-auto">
       <v-card-text>
         <v-progress-circular indeterminate color="primary" class="me-2" />
-        授权通过，正在获取用户信息...
+        {{ $t('authorizedHint') }}
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import { TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
+import { getObjectFromCookie } from '@/store'
+
 export default {
   layout: 'empty',
   async asyncData ({
     $apis,
-    store,
     route,
+    store,
+    req,
     redirect
   }) {
-    const oAuth2State = store.getters['user/getOAuth2State']
-    console.log(oAuth2State)
-    if (oAuth2State == null) {
-      // 返回登录页面
-      redirect('/user/login')
-    } else {
-      const stateFromServer = route.query.state
-      const redirectFromLogin = decodeURIComponent(oAuth2State).split('_')[1]
-      const provider = decodeURIComponent(oAuth2State).split('_')[2]
-      try {
-        if (decodeURIComponent(stateFromServer) !== decodeURIComponent(oAuth2State)) {
-          // state不一致
-          throw new Error('state不一致')
-        } else {
-          const code = route.query.code
-          const tokenData = await $apis.oauth.token(provider, code)
-          console.log('tokenData', tokenData)
-          // OrdinaryRoad Error
-          if (tokenData.success !== undefined && !tokenData.success) {
-            throw new Error(tokenData.msg)
-          }
-          // GitHub Error
-          if (tokenData.error !== undefined && tokenData.error !== '') {
-            throw new Error(tokenData.error_description)
-          }
+    const stateFromServer = route.query.state
+    const redirectFromLogin = decodeURIComponent(stateFromServer).split('_')[1]
+    const provider = decodeURIComponent(stateFromServer).split('_')[2]
 
-          const openid = tokenData.openid || ''
-          const accessToken = tokenData.access_token
-          const tokenType = tokenData.token_type
+    try {
+      const code = route.query.code
 
-          // 调用callback接口，换取用户信息和token
-          const data = await $apis.blog.oauth2.callback(provider, `${tokenType} ${accessToken}`, openid)
-          return {
-            success: true,
-            token: data.token,
-            // userinfoDTO (user, ...)
-            userinfo: data.userinfo,
-            redirect: redirectFromLogin
-          }
-        }
-      } catch (e) {
-        console.log(e)
-        return {
-          redirect: redirectFromLogin,
-          msg: e.message
-        }
+      let tokenValue = ''
+      const cookieString = req.headers.cookie
+      const tokenInfo = getObjectFromCookie(cookieString, TOKEN_INFO_KEY, store.getters['user/getTokenInfo'])
+      tokenValue = tokenInfo && tokenInfo.value ? tokenInfo.value : ''
+      // 调用callback接口，换取用户信息和token
+      const data = await $apis.blog.oauth2.callback(tokenValue, provider, code, stateFromServer)
+      return {
+        success: true,
+        token: data.token,
+        userInfo: data.userInfo,
+        redirect: redirectFromLogin
+      }
+    } catch (e) {
+      return {
+        redirect: redirectFromLogin,
+        msg: e
       }
     }
   },
@@ -97,24 +78,33 @@ export default {
       redirect: '',
       msg: '失败',
       token: null,
-      userinfo: null
+      userInfo: null
+    }
+  },
+  head () {
+    return {
+      title: this.$t('authorizedHint'),
+      titleTemplate: `%s - ${this.$t('appName')}`
     }
   },
   mounted () {
     if (this.success) {
-      this.$store.commit('user/REMOVE_OAUTH2_STATE')
-      this.$store.commit('user/SET_TOKEN_INFO', this.token)
-      this.$store.commit('user/SET_USER_INFO', this.userinfo)
+      this.$store.commit('user/SET_TOKEN_INFO', { value: this.token })
+      this.$store.commit('user/SET_USER_INFO', this.userInfo)
+      this.$store.commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', this.$access)
+      this.$store.commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', this.$access)
       this.$router.replace(this.redirect)
     } else {
       this.$dialog({
         persistent: true,
-        title: '系统提示',
-        content: '失败，请重试。\n' + this.msg,
-        confirmText: '确定'
+        title: this.$t('systemHint'),
+        content: this.msg,
+        cancelText: this.$t('error.home')
       }).then((dialog) => {
         if (dialog.isConfirm) {
           this.$router.replace(`/user/login?redirect=${this.redirect}`)
+        } else {
+          this.$router.replace('/')
         }
       })
     }

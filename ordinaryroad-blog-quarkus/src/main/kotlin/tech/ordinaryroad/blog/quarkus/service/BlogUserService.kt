@@ -24,39 +24,98 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import tech.ordinaryroad.blog.quarkus.dao.BlogUserDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogOAuthUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.entity.BlogUserOAuthUsers
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogUserDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogOAuthUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserOAuthUsers
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserRoles
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogRoleNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogRoleNotValidException
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.differ
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 @ApplicationScoped
 class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
 
+    override fun getEntityClass(): Class<BlogUser> {
+        return BlogUser::class.java
+    }
+
     @Inject
     protected lateinit var userOAuthUsersService: BlogUserOAuthUsersService
 
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
+
+    @Inject
+    protected lateinit var roleService: BlogRoleService
+
+    //region 业务相关
+    fun updateRoles(id: String, roleIdList: List<String>) {
+        val oldRoleIdList = userRolesService.findAllByUserId(id)
+            .stream()
+            .map(BlogUserRoles::getRoleId)
+            .collect(Collectors.toList())
+
+        val lists = oldRoleIdList.differ(roleIdList)
+
+        val roleIdListToDelete = lists[0]
+        val roleIdListToAdd = lists[1]
+
+        userRolesService.deleteByRoleIdsAndUserId(roleIdListToDelete, id)
+        roleIdListToAdd.forEach {
+            val role = roleService.findById(it)
+            if (role == null) {
+                BlogRoleNotFoundException().throws()
+            }
+            if (!role.enabled) {
+                BlogRoleNotValidException().throws()
+            }
+            userRolesService.create(BlogUserRoles().apply {
+                userId = id
+                roleId = it
+            })
+        }
+    }
+    //endregion
+
+
+    //region SQL相关
     /**
      * 创建主账号，并关联OAuth用户
      */
     fun create(user: BlogUser, oAuthUser: BlogOAuthUser): BlogUser {
         val create = super.create(user)
-        userOAuthUsersService.create(BlogUserOAuthUsers().apply {
-            userId = create.uuid
-            oAuthUserId = oAuthUser.uuid
-        })
+        userOAuthUsersService.create(
+            BlogUserOAuthUsers().apply {
+                userId = create.uuid
+                oAuthUserId = oAuthUser.uuid
+            })
         return create
     }
 
     /**
-     * 根据OAuthUser Id查询主账号BlogUser Id
+     * 根据OAuthUser Id查询主账号BlogUser
      */
     fun findByOAuthUserId(oAuthUserId: String): BlogUser? {
         val userId = userOAuthUsersService.findUserIdByOAuthUserId(oAuthUserId)
         userId == null && return null
         return super.findById(userId)
     }
+
+    /**
+     * 根据uid查询用户
+     */
+    fun findByUid(uid: Long): BlogUser? {
+        val wrapper = Wrappers.query<BlogUser>()
+        wrapper.eq("uid", uid)
+        return super.dao.selectOne(wrapper)
+    }
+    //endregion
 
 }

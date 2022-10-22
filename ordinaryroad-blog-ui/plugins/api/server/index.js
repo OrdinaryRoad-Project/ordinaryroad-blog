@@ -29,12 +29,12 @@ export default function ({
   // $apisServer
   inject('apisServer', {
     blog: {
-      userinfo: (token) => {
+      userInfo: (token) => {
         return $axios({
-          url: '/api/blog/common/userinfo',
+          url: '/blog/common/user_info',
           method: 'get',
           // 在server端调用的方法必须手动设置header，因为获取不到client的cookie
-          headers: { or_blog_token: token }
+          headers: { 'or-blog-token': token }
         })
       }
     }

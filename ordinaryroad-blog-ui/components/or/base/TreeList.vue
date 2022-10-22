@@ -60,7 +60,9 @@
           <v-list-item-action v-if="item.icon">
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-title>{{ $t(item.titleKey) }}</v-list-item-title>
+          <v-list-item-content>
+            <v-list-item-title>{{ $t(item.titleKey) }}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </template>
       <v-list-item

@@ -28,9 +28,11 @@ import constants from './constants/index'
 /* 自定义工具类 */
 import util from './utils/index'
 import rules from './rules/index'
+import echarts from './echarts/index'
 
 Vue.prototype.$constants = constants
 Vue.prototype.$util = util
+Vue.prototype.$echarts = echarts
 
 export default function (context, inject) {
   const { app } = context

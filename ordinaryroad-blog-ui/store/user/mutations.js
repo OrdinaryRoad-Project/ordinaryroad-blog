@@ -22,24 +22,16 @@
  * SOFTWARE.
  */
 
-import { removeOAuth2State, removeTokenInfo, setOAuth2State, setTokenInfo } from 'static/js/utils/cookie/vuex/user'
+import { removeTokenInfo, setTokenInfo } from 'static/js/utils/cookie/vuex/user'
 
 export default {
-  REMOVE_OAUTH2_STATE (state) {
-    state.oAuth2State = null
-    removeOAuth2State()
-  },
-  SET_OAUTH2_STATE (state, oAuth2State) {
-    state.oAuth2State = oAuth2State
-    setOAuth2State(oAuth2State)
-  },
   REMOVE_TOKEN_INFO (state) {
     state.tokenInfo = null
     removeTokenInfo()
   },
   SET_TOKEN_INFO (state, tokenInfo) {
     state.tokenInfo = tokenInfo
-    setTokenInfo({ value: tokenInfo })
+    setTokenInfo(tokenInfo)
   },
   REMOVE_USER_INFO (state) {
     state.userInfo = null

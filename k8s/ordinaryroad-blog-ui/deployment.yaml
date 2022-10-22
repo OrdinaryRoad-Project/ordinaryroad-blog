@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-ui
+  namespace: or-pro
+spec:
+  selector:
+    matchLabels:
+      tier: blog-ui
+  replicas: 1
+  minReadySeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        tier: blog-ui
+    spec:
+      containers:
+        - name: ui
+          image: 10.0.12.13:5000/ordinaryroad-blog-ui
+          ports:
+            - containerPort: 3000
+              name: blog-ui

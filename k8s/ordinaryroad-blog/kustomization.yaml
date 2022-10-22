@@ -1,0 +1,9 @@
+# /root/ordinaryroad/ordinaryroad-blog/kustomization.yaml
+secretGenerator:
+  - name: blog-secrets
+    namespace: or-pro
+    envs:
+      - .env
+resources:
+  - deployment.yaml
+  - service.yaml

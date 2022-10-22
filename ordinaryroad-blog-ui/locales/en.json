@@ -1,33 +1,162 @@
 {
+  "user": {
+    "space": {
+      "of": "User Space Of {0}"
+    },
+    "basicInfo": {
+      "articlesCount": "Articles",
+      "commentsCount": "Comments"
+    }
+  },
+  "closeCatalogue": "Close Catalogue",
+  "catalogue": "Catalogue",
+  "authorizedHint": "Authorization passed, obtaining user information...",
+  "clearAvatar": "Clear Avatar",
+  "loginHint": "Currently, only account unbinding is supported, and canceling is not supported. After successful login, you can bind other accounts by unbinding",
+  "understandAnd": "Understand And {0}",
+  "oauthAccountAlreadyRegisteredHint": "The account has been registered, please cancel the account first (under development...)",
+  "all": "All",
+  "appName": "OR BLOG",
   "article": {
+    "pinned": "Popular Articles",
+    "cannotCommentHint": "The owner does not want to be commented by others for the time being~",
+    "likedTime": "Like Time: {0}",
+    "browsedTime": "Browse Time: {0}",
+    "firstBrowsedTime": "First Browse Time: {0}",
+    "detail": {
+      "copyrightStatement": {
+        "title": "Copyright Statement: ",
+        "statementPrefix": "This article is an original article by OrdinaryRoad blogger {0}, following the",
+        "statementSuffix": "license agreement, please attach a link to this article and this statement for reprinting.",
+        "link": "Link to this article: ",
+        "author": "Author: "
+      },
+      "readingTimeHint": {
+        "prefix": "Friendly Reminder: ",
+        "hint": "This article needs to be read about "
+      }
+    },
     "title": "Title",
     "coverImage": "Cover Image",
     "summary": "Summary",
     "content": "Content",
     "status": "Status",
+    "typeName": "Type",
+    "tagNames": "Tags",
+    "canComment": "Can Comment",
     "canReward": "Can Reward",
-    "original": "Original"
+    "original": "Original",
+    "originalOptions": {
+      "original": "Original",
+      "reprint": "Reprint"
+    },
+    "actions": {
+      "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
+      "publish": "Publish",
+      "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
+      "selectionOfHistoricalVersions": "Selection Of Historical Versions",
+      "historicVersion": "Historic Version",
+      "writing": "Start Writing",
+      "saveDraft": "Save As Draft",
+      "directlyPublish": "Directly Publish",
+      "like": "Like Article",
+      "unlike": "Unlike Article",
+      "edit": "Edit Article",
+      "moveToTrash": "Move Article To Trash",
+      "recoverFromTrash": "Restore Article To Draft"
+    },
+    "startWritingHint": "Start Writing Now",
+    "restoreReadingStatusHint": "Reading position, day and night mode parameters have been automatically restored",
+    "top": "Top"
   },
-  "appName": "OR BLOG",
+  "articleCount": "Articles {0}",
+  "avatar": "Avatar",
+  "commentCount": "Comments {0}",
+  "continueReadingOnOtherDevices": "Continue reading on other devices",
+  "copied": "Copied",
+  "copy": "Copy",
+  "createWhat": "Create {0}",
   "dashboardMenuTitles": {
-    "dashboardTitle": "Dashboard",
     "dashboard": {
-      "articleTitle": "Writing",
+      "title": "Dashboard",
+      "userProfileTitle": "User Profile",
+      "userSpaceTitle": "User Space",
       "article": {
-        "box": {
+        "title": "Article Management",
+        "writing": "Writing",
+        "status": {
           "draft": "Draft",
           "publish": "Publish",
           "trash": "Trash"
         },
-        "boxTitle": "Article Management"
+        "liked": "Liked Article",
+        "browsed": "Browsed Article"
+      },
+      "type": {
+        "title": "Type Management"
+      },
+      "tag": {
+        "title": "Tag Management"
+      },
+      "systemTitle": "System Management",
+      "system": {
+        "log": "Operation Log"
       }
     }
   },
+  "feedback": "Feedback",
+  "focusSearchInputTip": "Press '/' to start input",
+  "focusSearchInputTipWhenFocused": "Enter to search, ESC to cancel",
+  "log": {
+    "ip": "Ip",
+    "path": "Path",
+    "method": "Method",
+    "headers": "Headers",
+    "cookies": "Cookies",
+    "pathParams": "PathParams",
+    "queryParams": "QueryParams",
+    "request": "Request",
+    "status": "Status",
+    "responseHeaders": "ResponseHeaders",
+    "responseCookies": "ResponseCookies",
+    "response": "Response",
+    "consumedTime": "ConsumedTime",
+    "type": "Type"
+  },
   "loginFormTitle": "Login To OR BLOG",
+  "loginToFeedbackTip": " for a better experience~",
+  "myStats": {
+    "title": "My Stats",
+    "publishedArticlesCount": "Published Articles Count",
+    "browsedArticlesCount": "Browsed Articles Count",
+    "likedArticlesCount": "Liked Articles Count",
+    "typesCount": "Types Count",
+    "postedCommentsCount": "Posted Comments Count",
+    "charts": {
+      "dailyPosts": "Article Publishing Heatmap",
+      "topNTypesArticle": "Types Top 10 Articles Chart",
+      "topNCommentsArticle": "Comments Top 10 Articles Chart",
+      "topNLikedArticle": "Top 10 Liked Articles Chart",
+      "topNBrowsedArticle": "Top 10 Browsed Articles Chart"
+    }
+  },
+  "oAuthUser": {
+    "actions": {
+      "update": "Update",
+      "add": "Bind",
+      "remove": "Unbind"
+    }
+  },
+  "other": "Other",
+  "overview": "Overview",
+  "selectVersion": "Select Version",
   "status": {
     "article": {
       "notFound": "Failed to get article information, please try again or return"
     }
+  },
+  "tag": {
+    "name": "Tag Name"
   },
   "themeTitles": {
     "light": "Light",
@@ -35,8 +164,38 @@
     "hunk": "Hunk",
     "system": "Dark Hunk"
   },
+  "titles": {
+    "form": {
+      "type": "Type",
+      "tag": "Tag"
+    }
+  },
+  "type": {
+    "name": "Type Name"
+  },
+  "typeCount": "Types {0}",
+  "typeTitle": "Type",
+  "updateWhat": "Update {0}",
+  "userCount": "Users {0}",
   "userMenuTitles": {
+    "space": "User Space",
     "dashboard": "Dashboard",
-    "profile": "User Profile"
+    "profile": "User Profile",
+    "article": "Articles",
+    "type": "Types",
+    "tag": "Tags",
+    "log": "Operation Logs"
+  },
+  "userProfile": {
+    "allAccounts": "All Accounts"
+  },
+  "comment": {
+    "totalRepliesCount": "{0} Replies",
+    "actions": {
+      "send": "Send",
+      "reply": "Reply",
+      "viewOriginal": "Original Comment",
+      "placeholder": "Practice makes perfect."
+    }
   }
 }

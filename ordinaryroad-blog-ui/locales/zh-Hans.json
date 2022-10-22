@@ -1,33 +1,162 @@
 {
+  "user": {
+    "space": {
+      "of": "{0}的个人空间"
+    },
+    "basicInfo": {
+      "articlesCount": "文章",
+      "commentsCount": "评论"
+    }
+  },
+  "closeCatalogue": "开启目录",
+  "catalogue": "目录",
+  "authorizedHint": "授权通过，正在获取用户信息...",
+  "clearAvatar": "清空头像",
+  "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",
+  "understandAnd": "我知道了，继续{0}",
+  "oauthAccountAlreadyRegisteredHint": "该账号已注册，请先注销账号（开发中...）",
+  "all": "全部",
+  "appName": "OR博客",
   "article": {
+    "pinned": "热门文章",
+    "cannotCommentHint": "楼主暂时不想被别人评论哦～",
+    "likedTime": "点赞时间：{0}",
+    "browsedTime": "浏览时间：{0}",
+    "firstBrowsedTime": "首次浏览时间：{0}",
+    "detail": {
+      "copyrightStatement": {
+        "title": "版权声明：",
+        "statementPrefix": "本文为OrdinaryRoad博客博主 {0} 的原创文章，遵循",
+        "statementSuffix": "许可协议，转载请附上本文链接及本声明。",
+        "link": "本文链接：",
+        "author": "本文作者："
+      },
+      "readingTimeHint": {
+        "prefix": "友情提示：",
+        "hint": "此篇文章大约需要阅读 "
+      }
+    },
     "title": "标题",
     "coverImage": "封面",
     "summary": "摘要",
     "content": "内容",
     "status": "状态",
+    "typeName": "分类",
+    "tagNames": "标签",
+    "canComment": "允许评论",
     "canReward": "允许打赏",
-    "original": "是否原创"
+    "original": "是否原创",
+    "originalOptions": {
+      "original": "原创",
+      "reprint": "转载"
+    },
+    "actions": {
+      "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
+      "publish": "发布",
+      "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",
+      "selectionOfHistoricalVersions": "历史版本选择",
+      "historicVersion": "历史版本",
+      "writing": "开始写作",
+      "saveDraft": "保存草稿",
+      "directlyPublish": "直接发布",
+      "like": "点赞",
+      "unlike": "取消点赞",
+      "edit": "编辑",
+      "moveToTrash": "移动该文章到垃圾箱",
+      "recoverFromTrash": "恢复文章到草稿箱"
+    },
+    "startWritingHint": "开始写作吧",
+    "restoreReadingStatusHint": "已自动恢复阅读位置、日/夜间模式参数",
+    "top": "从头开始"
   },
+  "articleCount": "文章{0}",
+  "avatar": "头像",
+  "commentCount": "评论{0}",
+  "continueReadingOnOtherDevices": "在其他设备上继续阅读",
+  "copied": "已复制",
+  "copy": "复制",
+  "createWhat": "创建{0}",
   "dashboardMenuTitles": {
-    "dashboardTitle": "首页",
     "dashboard": {
-      "articleTitle": "写作",
+      "title": "控制台",
+      "userProfileTitle": "个人中心",
+      "userSpaceTitle": "个人空间",
       "article": {
-        "boxTitle": "文章管理",
-        "box": {
+        "title": "文章管理",
+        "writing": "写作",
+        "status": {
           "draft": "草稿箱",
           "publish": "已发布",
           "trash": "垃圾箱"
-        }
+        },
+        "liked": "已点赞",
+        "browsed": "已浏览"
+      },
+      "type": {
+        "title": "分类管理"
+      },
+      "tag": {
+        "title": "标签管理"
+      },
+      "systemTitle": "系统管理",
+      "system": {
+        "log": "操作日志"
       }
     }
   },
-  "appName": "OR博客",
+  "feedback": "反馈",
+  "focusSearchInputTip": "按 '/' 开始输入",
+  "focusSearchInputTipWhenFocused": "回车搜索，ESC取消",
+  "log": {
+    "ip": "IP",
+    "path": "请求路径",
+    "method": "请求方法",
+    "headers": "请求头",
+    "cookies": "请求Cookie",
+    "pathParams": "路径参数",
+    "queryParams": "查询参数",
+    "request": "请求体",
+    "status": "状态",
+    "responseHeaders": "响应头",
+    "responseCookies": "响应Cookie",
+    "response": "响应体",
+    "consumedTime": "耗时",
+    "type": "类型"
+  },
   "loginFormTitle": "登录到OR博客",
+  "loginToFeedbackTip": "后体验更佳～",
+  "myStats": {
+    "title": "我的统计",
+    "publishedArticlesCount": "已发布文章",
+    "browsedArticlesCount": "已浏览文章",
+    "likedArticlesCount": "已点赞文章",
+    "typesCount": "分类个数",
+    "postedCommentsCount": "评论发表数",
+    "charts": {
+      "dailyPosts": "文章发布热力图",
+      "topNTypesArticle": "分类文章数Top10",
+      "topNCommentsArticle": "文章评论数Top10",
+      "topNLikedArticle": "文章点赞数Top10",
+      "topNBrowsedArticle": "文章浏览数Top10"
+    }
+  },
+  "oAuthUser": {
+    "actions": {
+      "update": "更新",
+      "add": "绑定",
+      "remove": "解绑"
+    }
+  },
+  "other": "其他",
+  "overview": "概览",
+  "selectVersion": "选择版本",
   "status": {
     "article": {
       "notFound": "获取文章信息失败，请重试或返回"
     }
+  },
+  "tag": {
+    "name": "标签名称"
   },
   "themeTitles": {
     "light": "浅色主题",
@@ -35,8 +164,39 @@
     "hunk": "猛男配色",
     "system": "深色猛男"
   },
+  "titles": {
+    "form": {
+      "type": "分类",
+      "tag": "标签",
+      "log": "日志"
+    }
+  },
+  "type": {
+    "name": "分类名称"
+  },
+  "typeCount": "分类{0}",
+  "typeTitle": "分类",
+  "updateWhat": "更新{0}",
+  "userCount": "用户{0}",
   "userMenuTitles": {
+    "space": "个人空间",
     "dashboard": "控制台",
-    "profile": "个人中心"
+    "profile": "个人中心",
+    "article": "文章管理",
+    "type": "分类管理",
+    "tag": "标签管理",
+    "log": "操作日志"
+  },
+  "userProfile": {
+    "allAccounts": "所有账号"
+  },
+  "comment": {
+    "totalRepliesCount": "共{0}条回复",
+    "actions": {
+      "send": "发送",
+      "reply": "回复",
+      "viewOriginal": "查看原评论",
+      "placeholder": "有志者，事竟成。"
+    }
   }
 }

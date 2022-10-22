@@ -27,7 +27,18 @@
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="$store.dispatch('app/toggleDashboardDrawerModel')" />
       <v-toolbar-title>
-        <v-breadcrumbs :items="items" />
+        <v-breadcrumbs :items="items">
+          <template #item="{ item }">
+            <span class="text-subtitle-2">
+              <span v-if="item.disabled">{{ $t(item.text) }}</span>
+              <or-link
+                v-else
+                :href="item.href==='/dashboard/article'?'/dashboard/article/status/DRAFT':item.href"
+                target="_self"
+              >{{ $t(item.text) }}</or-link>
+            </span>
+          </template>
+        </v-breadcrumbs>
       </v-toolbar-title>
     </v-toolbar>
     <nuxt-child />
@@ -38,39 +49,52 @@
 
 export default {
   middleware: ['userInfo'],
-
   data: () => ({}),
-
+  head () {
+    return {
+      title: this.$t(this.items[this.items.length - 1].text),
+      titleTemplate: `%s - ${this.$t('appName')}`
+    }
+  },
   computed: {
     items () {
       const path = this.$route.path
-      const split = path.split('/')
       const items = []
-      for (let i = 0; i < split.length; i++) {
-        // 因为第0个是空
-        if (i === 0) {
-          continue
-        }
-        if (i === 1) {
-          const string = split[i]
+
+      const accessibleDashboardMenuItems = this.$store.getters['app/getAccessibleDashboardMenuItems']
+      for (let i = 0; i < accessibleDashboardMenuItems.length; i++) {
+        const menuItem = accessibleDashboardMenuItems[i]
+        if (menuItem.to === path || path.startsWith(menuItem.to)) {
           items.push({
-            text: `/${string}`,
+            text: menuItem.titleKey,
             disable: false,
-            href: `/${string}`
+            href: menuItem.to
           })
-        } else {
-          const preItem = items[i - 1 - 1]
-          const string = preItem.href + '/' + split[i]
-          items.push({
-            text: string,
-            disable: false,
-            href: string
-          })
+          for (let j = 0; j < menuItem.children.length; j++) {
+            const menuItem2 = menuItem.children[j]
+            if (menuItem2.to === path) {
+              items.push({
+                text: menuItem2.titleKey,
+                disable: false,
+                href: menuItem2.to
+              })
+            }
+          }
         }
       }
+
+      if (this.$route.name === 'dashboard-article-writing-id') {
+        items.push({
+          text: 'article.actions.writing',
+          disable: false,
+          href: this.$route.path
+        })
+      }
+
       if (items.length !== 0) {
         items[items.length - 1].disabled = true
       }
+
       return items
     }
   },

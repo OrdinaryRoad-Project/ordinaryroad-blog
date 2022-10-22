@@ -25,11 +25,21 @@
 package tech.ordinaryroad.blog.quarkus.config
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.IdUtil
+import tech.ordinaryroad.blog.quarkus.dal.entity.BaseBlogDO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils
+import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 import tech.ordinaryroad.commons.mybatis.quarkus.service.IFillMetaFieldService
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 @ApplicationScoped
 class FillMetaDataService : IFillMetaFieldService {
+
+    @Inject
+    protected lateinit var userService: BlogUserService
 
     override fun generateCreateBy(): String? {
         return StpUtil.getLoginIdDefaultNull()?.toString()
@@ -37,6 +47,16 @@ class FillMetaDataService : IFillMetaFieldService {
 
     override fun generateUpdateBy(): String? {
         return StpUtil.getLoginIdDefaultNull()?.toString()
+    }
+
+    override fun <T : BaseDO?> beforeInsert(t: T) {
+        if (t is BaseBlogDO) {
+            t.ip = BlogUtils.getClientIp()
+        }
+
+        if (t is BlogUser) {
+            t.uid = IdUtil.getSnowflake().nextIdStr()
+        }
     }
 
 }

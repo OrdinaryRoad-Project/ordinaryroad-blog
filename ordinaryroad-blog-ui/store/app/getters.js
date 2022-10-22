@@ -23,8 +23,16 @@
  */
 
 export default {
+  getSearchInputHotKeyEnabled (state) {
+    return state.searchInputHotKeyEnabled
+  },
+
   getDashboardMenuItems (state) {
     return state.dashboardMenuItems
+  },
+
+  getAccessibleDashboardMenuItems (state) {
+    return state.accessibleDashboardMenuItems
   },
 
   getImage (state) {
@@ -45,6 +53,10 @@ export default {
 
   getUserMenuItems (state) {
     return state.userMenuItems
+  },
+
+  getAccessibleUserMenuItems (state) {
+    return state.accessibleUserMenuItems
   },
 
   getDashboardDrawerModel (state) {

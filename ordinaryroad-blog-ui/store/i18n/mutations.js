@@ -25,7 +25,7 @@
 import { setSelectedLangOption } from 'static/js/utils/cookie/vuex/i18n'
 
 export default {
-  SET_LANG (state, {
+  UPDATE_LANG (state, {
     value,
     $i18n,
     $vuetify,
@@ -40,6 +40,10 @@ export default {
 
       state.locale = value
     }
+  },
+  SET_SELECTED_LANG_OPTION (state, { value }) {
+    state.locale = value
+    setSelectedLangOption(value)
   },
   SET_LOCALE_OPTIONS (state, localeOptions) {
     state.localeOptions = localeOptions

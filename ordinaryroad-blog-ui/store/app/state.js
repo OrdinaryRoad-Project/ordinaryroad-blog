@@ -23,37 +23,99 @@
  */
 
 export default () => ({
+  /**
+   * 正在输入时禁用搜索快捷键
+   */
+  searchInputHotKeyEnabled: true,
   dashboardDrawerModel: true,
   rightDrawerModel: false,
   selectedThemeOption: 0,
   dashboardMenuItems: [
     {
       to: '/dashboard',
-      titleKey: 'dashboardMenuTitles.dashboardTitle',
+      titleKey: 'dashboardMenuTitles.dashboard.title',
+      icon: 'mdi-view-dashboard',
       children: []
     },
     {
-      titleKey: 'dashboardMenuTitles.dashboard.article.boxTitle',
+      to: '/dashboard/user/profile',
+      titleKey: 'dashboardMenuTitles.dashboard.userProfileTitle',
+      icon: 'mdi-account',
+      children: []
+    },
+    {
+      to: '/dashboard/article',
+      titleKey: 'dashboardMenuTitles.dashboard.article.title',
+      icon: 'mdi-file-document-multiple',
       children: [
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.draft',
-          to: '/dashboard/article/box/DRAFT',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.draft',
+          to: '/dashboard/article/status/DRAFT',
           children: []
         },
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.publish',
-          to: '/dashboard/article/box/PUBLISH',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.publish',
+          to: '/dashboard/article/status/PUBLISH',
           children: []
         },
         {
-          titleKey: 'dashboardMenuTitles.dashboard.article.box.trash',
-          to: '/dashboard/article/box/TRASH',
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.trash',
+          to: '/dashboard/article/status/TRASH',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.liked',
+          to: '/dashboard/article/liked',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.browsed',
+          to: '/dashboard/article/browsed',
           children: []
         }
       ]
+    },
+    {
+      to: '/dashboard/type',
+      titleKey: 'dashboardMenuTitles.dashboard.type.title',
+      icon: 'mdi-view-list',
+      children: []
+    },
+    {
+      to: '/dashboard/tag',
+      titleKey: 'dashboardMenuTitles.dashboard.tag.title',
+      icon: 'mdi-tag-multiple',
+      children: []
+    },
+    {
+      to: '/dashboard/system/log',
+      titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
+      icon: 'mdi-cog',
+      children: [
+        {
+          to: '/dashboard/system/log',
+          titleKey: 'dashboardMenuTitles.dashboard.system.log',
+          icon: 'mdi-text-box-multiple',
+          children: [],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        }
+      ],
+      meta: {
+        roles: {
+          or: ['ADMIN', 'DEVELOPER']
+        }
+      }
     }
   ],
   userMenuItems: [
+    {
+      titleKey: 'userMenuTitles.space',
+      icon: 'mdi-earth'
+    },
     {
       titleKey: 'userMenuTitles.dashboard',
       to: '/dashboard',
@@ -65,10 +127,37 @@ export default () => ({
       icon: 'mdi-account'
     },
     {
+      titleKey: 'userMenuTitles.article',
+      to: '/dashboard/article/status',
+      icon: 'mdi-file-document-multiple'
+    },
+    {
+      titleKey: 'userMenuTitles.type',
+      to: '/dashboard/type',
+      icon: 'mdi-view-list'
+    },
+    {
+      titleKey: 'userMenuTitles.tag',
+      to: '/dashboard/tag',
+      icon: 'mdi-tag-multiple'
+    },
+    {
+      titleKey: 'userMenuTitles.log',
+      to: '/dashboard/system/log',
+      icon: 'mdi-text-box-multiple',
+      meta: {
+        roles: {
+          or: ['ADMIN', 'DEVELOPER']
+        }
+      }
+    },
+    {
       titleKey: 'logout',
       icon: 'mdi-logout'
     }
   ],
+  accessibleDashboardMenuItems: [],
+  accessibleUserMenuItems: [],
   titleKey: null,
   image: 'http://rekryt.ru/files/sidebar-2.32103624.jpg',
   themeOptions: [

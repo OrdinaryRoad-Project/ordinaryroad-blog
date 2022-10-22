@@ -1,0 +1,80 @@
+quarkus:
+  application:
+    name: ordinaryroad-blog-quarkus
+  log:
+    level: INFO
+  datasource:
+    jdbc:
+      driver: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USERNAME}
+  http:
+    access-log:
+      enabled: false
+      pattern: long
+    cors: true
+    cors.access-control-allow-credentials: true
+    port: 8080
+  mybatis:
+    configuration-factory: tech.ordinaryroad.blog.quarkus.config.BlogMyBatisPlusConfigurationFactory
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    map-underscore-to-camel-case: true
+    mapper-locations: mapper
+  redisson:
+    codec: org.redisson.codec.JsonJacksonCodec
+    single-server-config:
+      address: redis://${REDIS_HOST}:${REDIS_PORT}
+      database: 0
+  rest-client:
+    gitee-oauth2:
+      scope: javax.inject.Singleton
+      url: https://gitee.com/api/v5
+    github-oauth2:
+      scope: javax.inject.Singleton
+      url: https://api.github.com
+    ordinaryroad:
+      scope: javax.inject.Singleton
+      url: https://api.ordinaryroad.tech
+    ordinaryroad-auth:
+      scope: javax.inject.Singleton
+      url: https://auth.ordinaryroad.tech
+  resteasy-json:
+    default-json: false
+  # Mailer
+  mailer:
+    from: or-mjz@qq.com
+    host: smtp.qq.com
+    port: 465
+    ssl: true
+    username: or-mjz@qq.com
+    password: ${MAIL_QQ_PASSWORD}
+    mock: false
+    start-tls: REQUIRED
+    auth-methods: DIGEST-MD5 CRAM-SHA256 CRAM-SHA1 CRAM-MD5 PLAIN LOGIN
+sa-token:
+  token-name: or-blog-token
+  is-log: false
+  annotation-intercepted-enabled: true
+  activity-timeout: 43200
+# OrdinaryRoad
+ordinaryroad:
+  oauth2:
+    redirect-uri: ${OAUTH2_REDIRECT_URI}
+    providers:
+      ordinaryroad:
+        client-id: ordinaryroad-blog
+        client-secret: ${CLIENT_SECRET_ORDINARYROAD}
+        scopes: openid,userinfo
+        base-url: ${quarkus.rest-client.ordinaryroad-auth.url}
+        authorize-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/authorize
+        access-token-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/token
+        user-info-endpoint: ${ordinaryroad.oauth2.providers.ordinaryroad.base-url}/oauth2/userinfo/wrapped
+      github:
+        client-id: c0615d2a28cfb7a20a84
+        client-secret: ${CLIENT_SECRET_GITHUB}
+        scopes: read:user
+      gitee:
+        client-id: f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882
+        client-secret: ${CLIENT_SECRET_GITEE}
+        scopes: user_info

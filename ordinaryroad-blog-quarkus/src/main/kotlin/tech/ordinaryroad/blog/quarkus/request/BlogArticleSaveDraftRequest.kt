@@ -42,6 +42,8 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @NotBlank(message = "内容不能为空")
     var content: String = ""
 
+    var canComment: Boolean? = null
+
     var canReward: Boolean? = null
 
     var original: Boolean? = null
@@ -49,8 +51,14 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @Size(max = 32, message = "First Id长度不能超过32")
     var firstId: String? = null
 
+    @Size(max = 100, message = "分类名称长度不能超过100")
+    var typeName: String? = null
+
+    @Size(max = 10, message = "标签个数不能超过10")
+    var tagNames: List<String> = emptyList()
+
     companion object {
-        private const val serialVersionUID: Long = 2658640234458110403L
+        private const val serialVersionUID: Long = 5912248006931435075L
     }
 
 }

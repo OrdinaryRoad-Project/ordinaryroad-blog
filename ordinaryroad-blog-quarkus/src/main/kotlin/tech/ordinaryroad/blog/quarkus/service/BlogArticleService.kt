@@ -24,18 +24,200 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
-import tech.ordinaryroad.blog.quarkus.dao.BlogArticleDAO
-import tech.ordinaryroad.blog.quarkus.entity.BlogArticle
+import io.vertx.core.json.JsonObject
+import tech.ordinaryroad.blog.quarkus.dal.dao.BlogArticleDAO
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canMoveToTrash
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecoverFromTrash
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 @ApplicationScoped
 class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
 
+    override fun getEntityClass(): Class<BlogArticle> {
+        return BlogArticle::class.java
+    }
+
+    @Inject
+    protected lateinit var userLikedArticleService: BlogUserLikedArticleService
+
+    @Inject
+    protected lateinit var userBrowsedArticleService: BlogUserBrowsedArticleService
+
+    //region 业务相关
+    /**
+     * 根据Id获取已发布文章的创建时间和更新时间
+     * @return
+     * (first: createdTime, second: updateTime)
+     * }
+     */
+    fun getPublishCreatedTimeAndUpdateTimeById(id: String): JsonObject {
+        val blogArticle = findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
+
+        if (blogArticle == null) {
+            BlogArticleNotFoundException().throws()
+        } else {
+            if (blogArticle.status != BlogArticleStatus.PUBLISH) {
+                // 必须是已发布的文章
+                BlogArticleNotValidException().throws()
+            }
+        }
+
+        var createdTime: LocalDateTime = blogArticle!!.createdTime
+        var updateTime: LocalDateTime? = null
+
+        if (blogArticle.firstId != blogArticle.uuid) {
+            // 查询第一个 PUBLISH_INHERIT 版本
+            val byFirstIdAndStatus = findFirstOrLastByFirstIdAndStatus(
+                blogArticle.firstId,
+                BlogArticleStatus.PUBLISH_INHERIT
+            )
+            if (byFirstIdAndStatus != null) {
+                createdTime = byFirstIdAndStatus.createdTime
+                updateTime = blogArticle.createdTime
+            }
+        }
+        val jsonObject = JsonObject()
+        jsonObject.put("createdTime", createdTime)
+        jsonObject.put("updateTime", updateTime)
+        return jsonObject
+    }
+
+    /**
+     * 移动至废纸篓
+     */
+    fun moveToTrash(id: String) {
+        val blogArticle = validateOwn(id)
+
+        // 只能删除草稿和已发布文章
+        if (blogArticle.status.canMoveToTrash()) {
+            updateStatusById(id, BlogArticleStatus.TRASH)
+        } else {
+            BlogArticleNotValidException().throws()
+        }
+    }
+
+    /**
+     * 从废纸篓恢复
+     */
+    fun recoverFromTrash(id: String) {
+        val blogArticle = validateOwn(id)
+
+        // 只能从垃圾箱中恢复
+        if (blogArticle.status.canRecoverFromTrash()) {
+            updateStatusById(id, BlogArticleStatus.DRAFT)
+        } else {
+            BlogArticleNotValidException().throws()
+        }
+    }
+
+    /**
+     * 用户点赞文章
+     */
+    fun likesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userLikedArticleService.getLiked(userId, id)) {
+            BaseBlogException("已经赞过了...").throws()
+        } else {
+            userLikedArticleService.likesArticle(id)
+        }
+    }
+
+    /**
+     * 用户取消点赞文章
+     */
+    fun unlikesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userLikedArticleService.getLiked(userId, id)) {
+            userLikedArticleService.unlikesArticle(userId, id)
+        } else {
+            BaseBlogException("还未点赞...").throws()
+        }
+    }
+
+    /**
+     * 获取用户是否点赞
+     */
+    fun getLiked(id: String): Boolean {
+        val userId = StpUtil.getLoginIdAsString()
+        return userLikedArticleService.getLiked(userId, id)
+    }
+
+    /**
+     * 用户删除文章浏览记录
+     */
+    fun unBrowsesArticle(id: String) {
+        val userId = StpUtil.getLoginIdAsString()
+        if (userBrowsedArticleService.getBrowsed(userId, id)) {
+            userBrowsedArticleService.unBrowseArticle(userId, id)
+        } else {
+            BaseBlogException("还未浏览...").throws()
+        }
+    }
+
+    /**
+     * 获取用户是否浏览
+     */
+    fun getBrowsed(id: String): Boolean {
+        val userId = StpUtil.getLoginIdAsString()
+        return userBrowsedArticleService.getBrowsed(userId, id)
+    }
+
+    /**
+     *
+     */
+    fun getPreAndNextArticle(id: String): JsonObject {
+        // TODO("Not yet implemented")
+        return JsonObject()
+    }
+
+    /**
+     * 根据Id获取最初版本的文章
+     */
+    fun getFirstById(id: String): BlogArticle? {
+        if (id.isBlank()) {
+            return null
+        }
+        val findById = super.findById(id) ?: return null
+        return if (findById.firstId == findById.uuid) {
+            findById
+        } else {
+            super.findById(findById.firstId)
+        }
+    }
+
+    /**
+     * 校验文章是否属于自己
+     *
+     * @param id 文章Id
+     * @return BlogArticle 文章
+     */
+    fun validateOwn(id: String): BlogArticle {
+        val userId = StpUtil.getLoginIdAsString()
+        if (id.isBlank()) {
+            BlogArticleNotFoundException().throws()
+        }
+        val blogArticle = findById(id) ?: throw BlogArticleNotFoundException()
+        if (blogArticle.createBy != userId) {
+            BlogArticleNotValidException().throws()
+        }
+        return blogArticle
+    }
+    //endregion
+
+    //region SQL相关
     /**
      * 根据状态查询所有最初版本的文章
      */
@@ -73,7 +255,7 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
-     * 根据PreId和状态查询最新的或最旧的文章
+     * 根据FirstId和状态查询最新的或最旧的文章
      */
     fun findFirstOrLastByFirstIdAndStatus(
         firstId: String,
@@ -89,9 +271,9 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
-     * 根据PreId和状态查询用户创建的文章
+     * 根据FirstId和状态查询用户创建的文章
      */
-    fun findByPreIdAndStatusAndCreatedBy(firstId: String, status: BlogArticleStatus, createBy: String): BlogArticle? {
+    fun findByFirstIdAndStatusAndCreatedBy(firstId: String, status: BlogArticleStatus, createBy: String): BlogArticle? {
         val wrapper = Wrappers.query<BlogArticle>()
         wrapper.eq("first_id", firstId)
         wrapper.eq("status", status)
@@ -107,6 +289,22 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         wrapper.eq("status", status)
         wrapper.eq("create_by", createBy)
         return super.dao.selectList(wrapper)
+    }
+
+    /**
+     * 根据状态和创建者查询最新的或最旧的文章
+     */
+    fun findFirstOrLastByStatusAndCreatedBy(
+        status: BlogArticleStatus,
+        createBy: String,
+        first: Boolean = true
+    ): BlogArticle? {
+        val wrapper = ChainWrappers.queryChain(super.dao)
+        wrapper.eq("status", status)
+        wrapper.eq("create_by", createBy)
+        wrapper.orderBy(true, first, "created_time")
+        val page = wrapper.page(Page(1, 1, 1))
+        return page.records.firstOrNull()
     }
 
     /**
@@ -147,4 +345,15 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
         }, wrapper)
     }
 
+    /**
+     * 查询某个分类下的已发布文章的个数
+     */
+    fun countPublishByTypeId(typeId: String): Long {
+        val wrapper = Wrappers.query<BlogArticle>()
+            .eq("type_id", typeId)
+            .eq("status", BlogArticleStatus.PUBLISH)
+
+        return super.dao.selectCount(wrapper)
+    }
+    //endregion
 }

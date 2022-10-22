@@ -25,20 +25,6 @@
 import Cookies from 'js-cookie'
 
 export const TOKEN_INFO_KEY = 'tokenInfo'
-export const OAUTH2_STATE_KEY = 'oAuth2State'
-
-export function getOAuth2State () {
-  const fromCookie = Cookies.get(OAUTH2_STATE_KEY)
-  return fromCookie || undefined
-}
-
-export function setOAuth2State (oAuth2State) {
-  Cookies.set(OAUTH2_STATE_KEY, oAuth2State)
-}
-
-export function removeOAuth2State () {
-  Cookies.remove(OAUTH2_STATE_KEY)
-}
 
 export function getTokenInfo () {
   const fromCookie = Cookies.get(TOKEN_INFO_KEY)

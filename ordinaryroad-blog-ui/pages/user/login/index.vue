@@ -35,14 +35,17 @@
       >
         <template #heading>
           <div class="text-center">
-            <h2 class="font-weight-bold mb-2">
-              {{ $t('loginFormTitle') }}
-            </h2>
+            <span class="d-flex justify-center">
+              <h2 class="font-weight-bold mb-2 ms-9">{{ $t('loginFormTitle') }}</h2><span
+                class="text-caption mb-auto ms-1"
+              >{{ $config.APP_VERSION }}</span>
+            </span>
             <v-btn @click="login('ordinaryroad')">
-              使用OR账号登录
+              {{ $t('usingOrNumberLoginHint') }}
             </v-btn>
+
             <br>
-            <br>
+
             <v-btn icon @click="login('github')">
               <v-icon>
                 mdi-github
@@ -51,11 +54,26 @@
             <v-btn icon @click="login('gitee')">
               <simple-icons-gitee />
             </v-btn>
-            <v-btn icon>
+            <v-btn v-if="false" icon>
               <v-icon>
                 mdi-qqchat
               </v-icon>
             </v-btn>
+
+            <br>
+
+            <div class="d-flex text-caption align-center justify-center">
+              <v-simple-checkbox
+                v-model="agree"
+                style="scale: 80%"
+                class="pa-0 ma-0"
+                dark
+              />
+              <span>{{ $t('agree') }}<span v-if="false">《用户协议》和</span>
+                <or-link href="/term/privacy"><span class="white--text">{{
+                  $t('term.privacy')
+                }}</span></or-link></span>
+            </div>
           </div>
         </template>
       </base-material-card>
@@ -64,7 +82,6 @@
 </template>
 
 <script>
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
 
 export default {
   layout: 'empty',
@@ -86,25 +103,35 @@ export default {
   },
   data () {
     return {
-      redirect: undefined
+      agree: false,
+      redirect: '/'
+    }
+  },
+  head () {
+    return {
+      title: this.$t('login'),
+      titleTemplate: `%s - ${this.$t('appName')}`
     }
   },
   methods: {
     login (provider) {
-      const { OAUTH2 } = this.$config
-      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}`
-      this.$store.commit('user/SET_OAUTH2_STATE', state)
-
-      const oauth2Query = {
-        client_id: OAUTH2[provider].CLIENT_ID,
-        scope: OAUTH2[provider].SCOPE,
-        redirect_uri: OAUTH2.REDIRECT_URI,
-        state
+      if (!this.agree) {
+        this.$snackbar.info(this.$t('term.agreeHint'))
+        return
       }
-      // https://github.com/login/oauth/authorize?client_id=c0615d2a28cfb7a20a84&scope=read:user&state=1,1,github&redirect_uri=http://blog.ordinaryroad.tech:3000/user/authorized
-      const loginUrl = `${OAUTH2[provider].AUTHORIZE_ENDPOINT}${urlEncode(oauth2Query)}`
-
-      window.open(loginUrl, '_self')
+      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
+      this.$dialog({
+        content: this.$t('loginHint'),
+        confirmText: this.$t('understandAnd', [this.$t('login')])
+      })
+        .then(({ isConfirm }) => {
+          if (isConfirm) {
+            this.$apis.blog.oauth2.authorize(provider, state)
+              .then((data) => {
+                window.open(data, '_self')
+              })
+          }
+        })
     }
   }
 }
