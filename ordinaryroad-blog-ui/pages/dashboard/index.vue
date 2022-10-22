@@ -94,6 +94,7 @@
         >
           <or-blog-article-daily-posts-chart
             :vertical="$vuetify.breakpoint.smAndDown"
+            :create-by="userInfo.user.uuid"
           />
         </v-col>
         <v-col

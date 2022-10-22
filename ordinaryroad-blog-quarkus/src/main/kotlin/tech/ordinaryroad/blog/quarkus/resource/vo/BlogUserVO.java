@@ -43,7 +43,7 @@ public class BlogUserVO {
 
     private String uuid;
 
-    private Long uid;
+    private String uid;
 
     private String username;
 
@@ -54,7 +54,7 @@ public class BlogUserVO {
     public BlogUserVO() {
     }
 
-    public BlogUserVO(String uuid, Long uid, String username, String avatar, List<BlogRoleVO> roles) {
+    public BlogUserVO(String uuid, String uid, String username, String avatar, List<BlogRoleVO> roles) {
         this.uuid = uuid;
         this.uid = uid;
         this.username = username;
@@ -70,11 +70,11 @@ public class BlogUserVO {
         this.uuid = uuid;
     }
 
-    public Long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

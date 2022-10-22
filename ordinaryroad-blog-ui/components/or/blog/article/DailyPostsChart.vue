@@ -143,6 +143,8 @@ export default {
         this.articlePublishedYearsOption.data = data
         if (data.length) {
           this.selectedYear = data[data.length - 1]
+        } else {
+          this.loading = false
         }
       })
       .catch(() => {

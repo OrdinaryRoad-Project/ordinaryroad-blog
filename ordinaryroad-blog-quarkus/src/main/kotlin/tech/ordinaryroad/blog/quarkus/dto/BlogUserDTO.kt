@@ -36,14 +36,14 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 @JsonPropertyOrder
 @RegisterForReflection
 data class BlogUserDTO(
-    var uid: Long = 0L,
+    var uid: String = StrUtil.EMPTY,
     var username: String = StrUtil.EMPTY,
     var avatar: String = StrUtil.EMPTY
 ) : BaseBlogModelDTO<BlogUser>() {
 
     override fun parse(baseDo: BlogUser) {
         uid = baseDo.uid
-        username = baseDo.username
+        username = StrUtil.nullToEmpty(baseDo.username)
         avatar = StrUtil.nullToEmpty(baseDo.avatar)
     }
 

@@ -33,12 +33,12 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class BlogUser extends BaseBlogDO {
 
-    private static final long serialVersionUID = 4939904543080813651L;
+    private static final long serialVersionUID = -5313147791308001903L;
 
     /**
      * uid
      */
-    private Long uid;
+    private String uid;
 
     /**
      * 用户名
@@ -66,11 +66,11 @@ public class BlogUser extends BaseBlogDO {
     @TableLogic(value = "false", delval = "true")
     private Boolean deleted;
 
-    public Long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

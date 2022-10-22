@@ -25,7 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.config
 
 import cn.dev33.satoken.stp.StpUtil
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import cn.hutool.core.util.IdUtil
 import tech.ordinaryroad.blog.quarkus.dal.entity.BaseBlogDO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
@@ -34,7 +34,6 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 import tech.ordinaryroad.commons.mybatis.quarkus.service.IFillMetaFieldService
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import kotlin.math.max
 
 @ApplicationScoped
 class FillMetaDataService : IFillMetaFieldService {
@@ -56,14 +55,7 @@ class FillMetaDataService : IFillMetaFieldService {
         }
 
         if (t is BlogUser) {
-            val wrapper = Wrappers.query<BlogUser>()
-            wrapper.orderBy(true, false, "uid")
-            val blogUser = userService.dao.selectOne(wrapper)
-            var uid = 10000L
-            if (blogUser != null) {
-                uid = max(blogUser.uid, uid)
-            }
-            t.uid = uid + 1
+            t.uid = IdUtil.getSnowflake().nextIdStr()
         }
     }
 

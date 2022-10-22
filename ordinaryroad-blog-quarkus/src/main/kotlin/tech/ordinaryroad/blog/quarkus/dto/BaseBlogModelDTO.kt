@@ -30,7 +30,7 @@ import tech.ordinaryroad.commons.mybatis.quarkus.model.BaseDO
 
 abstract class BaseBlogModelDTO<DO : BaseDO> : BaseModelDTO() {
 
-    var creatorUid: Long = 0L
+    var creatorUid: String = StrUtil.EMPTY
 
     var creatorId: String = StrUtil.EMPTY
 

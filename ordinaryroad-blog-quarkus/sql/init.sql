@@ -107,7 +107,7 @@ CREATE TABLE `blog_user`
 
     `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
 
-    `uid`          bigint(20)                                                     NULL DEFAULT NULL COMMENT '自增用户id',
+    `uid`          varchar(64)                                                    NULL DEFAULT NULL COMMENT 'uid',
     `username`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '用户名',
     `avatar`       varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '头像地址',
     `email`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL DEFAULT NULL COMMENT '邮箱',
