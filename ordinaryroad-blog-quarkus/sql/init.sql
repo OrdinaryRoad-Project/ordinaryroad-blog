@@ -245,6 +245,7 @@ CREATE TABLE `blog_user_roles`
 
     `user_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '用户ID',
     `role_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL DEFAULT NULL COMMENT '角色ID',
+    `deleted`      bit(1)                                                       NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_user_roles_uuid_uindex` (`uuid`) USING BTREE
 ) ENGINE = InnoDB
