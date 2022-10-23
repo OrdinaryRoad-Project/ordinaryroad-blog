@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-import {urlEncode} from '~/plugins/ordinaryroad/utils'
+import { urlEncode } from '~/plugins/ordinaryroad/utils'
 
 let $axios = null
 
 export default {
-  initAxios(axios) {
+  initAxios (axios) {
     $axios = $axios || axios
   },
   apis: {
-    create: ({name}) => {
-      const data = {name}
+    create: ({ name }) => {
+      const data = { name }
       return $axios({
         url: '/blog/type/create',
         method: 'post',
@@ -51,15 +51,15 @@ export default {
         method: 'post'
       })
     },
-    updateOwn: ({uuid, name}) => {
-      const data = {uuid, name}
+    updateOwn: ({ uuid, name }) => {
+      const data = { uuid, name }
       return $axios({
         url: '/blog/type/update/own',
         method: 'post',
         data
       })
     },
-    findAllOwn() {
+    findAllOwn () {
       return $axios({
         url: '/blog/type/find/all/own',
         method: 'get'
@@ -71,15 +71,15 @@ export default {
         method: 'get'
       })
     },
-    pageInfo: (page, size, {name, createBy, sortBy, sortDesc}) => {
-      const searchParams = {name, createBy, sortBy, sortDesc}
+    pageInfo: (page, size, { name, createBy, sortBy, sortDesc }) => {
+      const searchParams = { name, createBy, sortBy, sortDesc }
       return $axios({
         url: `/blog/type/page/info/${page}/${size}?${urlEncode(searchParams)}`,
         method: 'get'
       })
     },
-    getTopN({n = 10, userId}) {
-      const params = {n, userId}
+    getTopN ({ n = 10, userId }) {
+      const params = { n, userId }
       return $axios({
         url: `/blog/type/top?${urlEncode(params)}`,
         method: 'get'

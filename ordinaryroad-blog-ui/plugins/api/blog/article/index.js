@@ -36,12 +36,12 @@
  默认情况下，axios将JavaScript对象序列化为JSON。 要以application / x-www-form-urlencoded格式发送数据，您可以使用以下选项之一。
  这里我们是采用的ES6 语法 引入 的qs模块
  */
-import {urlEncode} from '~/plugins/ordinaryroad/utils'
+import { urlEncode } from '~/plugins/ordinaryroad/utils'
 
 let $axios = null
 
 export default {
-  initAxios(axios) {
+  initAxios (axios) {
     $axios = $axios || axios
   },
   apis: {
@@ -63,7 +63,7 @@ export default {
       return $axios({
         url: `/blog/article/publish/${id}`,
         method: 'get',
-        headers: {'or-blog-token': token}
+        headers: { 'or-blog-token': token }
       })
     },
     findOwnById: (id) => {
@@ -85,10 +85,10 @@ export default {
       summary = '',
       content = '',
       typeId = '',
-      sortBy = ['firstId'],
+      sortBy = ['createdTime'],
       sortDesc = [true]
     }) => {
-      const data = {createBy, tagName, title, summary, content, typeId, sortBy, sortDesc}
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
       return $axios({
         url: `/blog/article/page/publish/${page}/20?${urlEncode(data)}`,
         method: 'get'
@@ -104,7 +104,7 @@ export default {
       sortBy = ['firstId'],
       sortDesc = [true]
     }) => {
-      const data = {createBy, tagName, title, summary, content, typeId, sortBy, sortDesc}
+      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
       return $axios({
         url: `/blog/article/search/publish/${page}/20?${urlEncode(data)}`,
         method: 'get'
@@ -158,71 +158,71 @@ export default {
         method: 'get'
       })
     },
-    getTopNComments({n = 10, userId}) {
-      const params = {n, userId}
+    getTopNComments ({ n = 10, userId }) {
+      const params = { n, userId }
       return $axios({
         url: `/blog/article/top/comment?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getTopNLiked({n = 10, userId}) {
-      const params = {n, userId}
+    getTopNLiked ({ n = 10, userId }) {
+      const params = { n, userId }
       return $axios({
         url: `/blog/article/top/liked?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getTopNBrowsed({n = 10, userId}) {
-      const params = {n, userId}
+    getTopNBrowsed ({ n = 10, userId }) {
+      const params = { n, userId }
       return $axios({
         url: `/blog/article/top/browsed?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getPinnedArticles({userId}) {
-      const params = {userId}
+    getPinnedArticles ({ userId }) {
+      const params = { userId }
       return $axios({
         url: `/blog/article/pinned?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getArticlePublishedDays({userId}) {
-      const params = {userId}
+    getArticlePublishedDays ({ userId }) {
+      const params = { userId }
       return $axios({
         url: `/blog/article/days/published?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getArticlePublishedMonths({userId}) {
-      const params = {userId}
+    getArticlePublishedMonths ({ userId }) {
+      const params = { userId }
       return $axios({
         url: `/blog/article/months/published?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    getArticlePublishedYears({userId}) {
-      const params = {userId}
+    getArticlePublishedYears ({ userId }) {
+      const params = { userId }
       return $axios({
         url: `/blog/article/years/published?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    countDailyPosts({startDateTime = '', endDateTime = '', userId}) {
-      const params = {startDateTime, endDateTime, userId}
+    countDailyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
       return $axios({
         url: `/blog/article/count/daily/posts?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    countMonthlyPosts({startDateTime = '', endDateTime = '', userId}) {
-      const params = {startDateTime, endDateTime, userId}
+    countMonthlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
       return $axios({
         url: `/blog/article/count/monthly/posts?${urlEncode(params)}`,
         method: 'get'
       })
     },
-    countYearlyPosts({startDateTime = '', endDateTime = '', userId}) {
-      const params = {startDateTime, endDateTime, userId}
+    countYearlyPosts ({ startDateTime = '', endDateTime = '', userId }) {
+      const params = { startDateTime, endDateTime, userId }
       return $axios({
         url: `/blog/article/count/yearly/posts?${urlEncode(params)}`,
         method: 'get'
