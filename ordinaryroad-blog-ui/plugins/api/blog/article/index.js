@@ -101,7 +101,7 @@ export default {
       summary = '',
       content = '',
       typeId = '',
-      sortBy = ['firstId'],
+      sortBy = ['createdTime'],
       sortDesc = [true]
     }) => {
       const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
