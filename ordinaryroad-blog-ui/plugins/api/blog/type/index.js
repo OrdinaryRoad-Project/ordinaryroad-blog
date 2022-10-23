@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-import { urlEncode } from '~/plugins/ordinaryroad/utils'
+import {urlEncode} from '~/plugins/ordinaryroad/utils'
 
 let $axios = null
 
 export default {
-  initAxios (axios) {
+  initAxios(axios) {
     $axios = $axios || axios
   },
   apis: {
-    create: ({ name }) => {
-      const data = { name }
+    create: ({name}) => {
+      const data = {name}
       return $axios({
         url: '/blog/type/create',
         method: 'post',
@@ -51,15 +51,15 @@ export default {
         method: 'post'
       })
     },
-    updateOwn: ({ uuid, name }) => {
-      const data = { uuid, name }
+    updateOwn: ({uuid, name}) => {
+      const data = {uuid, name}
       return $axios({
         url: '/blog/type/update/own',
         method: 'post',
         data
       })
     },
-    findAllOwn () {
+    findAllOwn() {
       return $axios({
         url: '/blog/type/find/all/own',
         method: 'get'
@@ -67,21 +67,21 @@ export default {
     },
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
-        url: `/blog/type/page/own/${page}/${size}?1=1${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        url: `/blog/type/page/own/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },
-    pageInfo: (page, size, { name, createBy, sortBy, sortDesc }) => {
-      const searchParams = { name, createBy, sortBy, sortDesc }
+    pageInfo: (page, size, {name, createBy, sortBy, sortDesc}) => {
+      const searchParams = {name, createBy, sortBy, sortDesc}
       return $axios({
-        url: `/blog/type/page/info/${page}/${size}?1=1${urlEncode(searchParams)}`,
+        url: `/blog/type/page/info/${page}/${size}?${urlEncode(searchParams)}`,
         method: 'get'
       })
     },
-    getTopN ({ n = 10, userId }) {
-      const params = { n, userId }
+    getTopN({n = 10, userId}) {
+      const params = {n, userId}
       return $axios({
-        url: `/blog/type/top?1=1${urlEncode(params)}`,
+        url: `/blog/type/top?${urlEncode(params)}`,
         method: 'get'
       })
     },
