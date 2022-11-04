@@ -148,6 +148,12 @@ export default {
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {
+    STATISTICS: {
+      BAIDU: {
+        CODE: process.env.STATISTICS_BAIDU_CODE
+      }
+    },
+
     BASE_URL: process.env.BASE_URL,
     // 文件下载地址
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
