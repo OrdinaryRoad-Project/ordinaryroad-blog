@@ -85,7 +85,9 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/dayjs'
+    '@nuxtjs/dayjs',
+    // If you use other modules (eg. nuxt-i18n), always declare the sitemap module at end of array
+    '@nuxtjs/sitemap'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -180,6 +182,23 @@ export default {
   router: {
     extendRoutes (routes, resolve) {
       // console.log('extendRoutes', routes)
+    }
+  },
+
+  sitemap: {
+    path: '/sitemap.xml',
+    hostname: 'https://blog.ordinaryroad.tech',
+    cacheTime: 8 * 3600 * 1000,
+    exclude: [
+      '/user/authorized',
+      '/dashboard',
+      '/dashboard/**'
+    ],
+    gzip: true,
+    routes: async () => {
+      const axios = require('axios')
+      const { data } = await axios.get('https://blog.ordinaryroad.tech/api/blog/common/sitemap')
+      return data
     }
   }
 }
