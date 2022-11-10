@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.StrUtil
 import cn.hutool.json.JSONUtil
 import io.quarkus.arc.Priority
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest
@@ -54,9 +55,13 @@ import javax.ws.rs.ext.Provider
  * @author mjz
  * @date 2022/8/29
  */
-@Priority(Priorities.USER + 1)
+@Priority(Priorities.USER + 1000)
 @Provider
 class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
+
+    companion object {
+        private const val BODY_MAX_LENGTH = 10000000
+    }
 
     private val log = Logger.getLogger(BlogLogFilter::class.java.name)
 
@@ -109,7 +114,10 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         blogLog.cookies = JSONUtil.toJsonStr(requestContext.cookies)
         blogLog.pathParams = JSONUtil.toJsonStr(requestContext.uriInfo.pathParameters)
         blogLog.queryParams = JSONUtil.toJsonStr(requestContext.uriInfo.queryParameters)
-        blogLog.request = String(data, StandardCharsets.UTF_8)
+        if (blogLogTypeEnum != BlogLogTypeEnum.BLOG_UPLOAD) {
+            // 长度最大一百万
+            blogLog.request = StrUtil.subWithLength(String(data, StandardCharsets.UTF_8), 0, BODY_MAX_LENGTH)
+        }
 
         log.debug("ip: ${blogLog.ip}")
         log.debug("path: ${blogLog.path}")
@@ -131,7 +139,8 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
         blogLog.status = responseContext.statusInfo?.toEnum() ?: Response.Status.NOT_IMPLEMENTED
         blogLog.responseHeaders = JSONUtil.toJsonStr(responseContext.headers)
         blogLog.responseCookies = JSONUtil.toJsonStr(responseContext.cookies)
-        blogLog.response = JSONUtil.toJsonStr(responseContext.entity)
+        // 长度最大一百万
+        blogLog.response = StrUtil.subWithLength(JSONUtil.toJsonStr(responseContext.entity), 0, BODY_MAX_LENGTH)
 
         log.debug("response status: ${blogLog.status}")
         log.debug("response headers: ${blogLog.headers}")
