@@ -396,10 +396,12 @@
           <div v-if="blogArticle.original">
             <strong>{{ $t('article.detail.copyrightStatement.author') }}</strong>{{ blogArticle.user.username }}<br>
           </div>
-          <strong>{{ $t('article.detail.copyrightStatement.link') }}</strong>
-          <or-link :href="currentUrl" target="_self">
-            {{ currentUrl }}
-          </or-link>
+          <span>
+            <strong>{{ $t('article.detail.copyrightStatement.link') }}</strong><or-link
+              :href="currentUrl"
+              target="_self"
+            >{{ currentUrl }}</or-link>
+          </span>
           <br>
           <div v-if="blogArticle.original">
             <strong>{{
