@@ -41,7 +41,7 @@ export default {
     }) => {
       const data = { type, method, status, createBy, sortBy, sortDesc }
       return $axios({
-        url: `/blog/log/page/${page}/${size}?1=1${urlEncode(data)}`,
+        url: `/blog/log/page/${page}/${size}?${urlEncode(data)}`,
         method: 'get'
       })
     },

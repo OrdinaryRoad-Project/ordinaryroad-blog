@@ -22,13 +22,6 @@
  * SOFTWARE.
  */
 
-export const baiduCountMobileArr = [
-  {
-    city: '',
-    code: ''
-  }
-]
-
 export function baiduCountAllCode (code) {
   (function () {
     // 会叠加 需要 每次执行前，先移除上次插入的代码

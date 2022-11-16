@@ -22,23 +22,15 @@
  * SOFTWARE.
  */
 
-import { baiduCountAllCode, baiduCountCode, baiduCountMobileArr } from './baidu'
+import { baiduCountAllCode } from './baidu'
 
-export default ({ app: { router }, store }) => {
+export default ({ app: { router }, store, $config }) => {
   // 每次路由变更时进行pv统计
   router.afterEach((to, from) => {
     // 加上try 不然会报错
     try {
-      const city = to.params.city
-      if (city !== '') {
-        baiduCountMobileArr.forEach((value, index) => {
-          if (value.city === city) {
-            baiduCountCode(value.code)
-          }
-        })
-      }
       // 平台主域名统计
-      baiduCountAllCode(baiduCountMobileArr[0].code)
+      $config.STATISTICS.BAIDU.CODE && baiduCountAllCode($config.STATISTICS.BAIDU.CODE)
     } catch (e) {
     }
   })

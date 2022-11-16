@@ -61,7 +61,7 @@ export default {
     page: (page, size, { username }) => {
       const data = { username }
       return $axios({
-        url: `/blog/user/page/${page}/${size}?1=1${urlEncode(data)}`,
+        url: `/blog/user/page/${page}/${size}?${urlEncode(data)}`,
         method: 'get'
       })
     },

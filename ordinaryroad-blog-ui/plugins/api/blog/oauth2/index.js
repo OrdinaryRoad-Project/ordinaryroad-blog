@@ -41,7 +41,7 @@ export default {
     authorize: (provider, state) => {
       const data = { provider, state }
       return $axios({
-        url: `/blog/oauth2/authorize?1=1${urlEncode(data)}`,
+        url: `/blog/oauth2/authorize?${urlEncode(data)}`,
         method: 'get'
       })
     },
@@ -57,7 +57,7 @@ export default {
     callback: (token, provider, code, state) => {
       const data = { code, state }
       return $axios({
-        url: `/blog/oauth2/callback/${provider}?1=1${urlEncode(data)}`,
+        url: `/blog/oauth2/callback/${provider}?${urlEncode(data)}`,
         method: 'get',
         // 在server端调用的方法必须手动设置header，因为获取不到client的cookie
         headers: { 'or-blog-token': token }

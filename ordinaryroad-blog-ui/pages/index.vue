@@ -66,7 +66,10 @@ export default {
   head () {
     return {
       title: this.$t('appName'),
-      titleTemplate: '%s'
+      titleTemplate: '%s',
+      meta: [
+        { name: 'sogou_site_verification', content: 'zBDjR0e24C' }
+      ]
     }
   },
   computed: {

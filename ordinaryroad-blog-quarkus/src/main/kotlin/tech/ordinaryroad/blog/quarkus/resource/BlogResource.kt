@@ -25,14 +25,21 @@
 package tech.ordinaryroad.blog.quarkus.resource
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.date.DatePattern
 import cn.hutool.core.io.FileUtil
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import io.vertx.core.json.JsonArray
+import io.vertx.core.json.JsonObject
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.jboss.resteasy.reactive.MultipartForm
 import org.jboss.resteasy.reactive.RestHeader
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.OrUpmsApi
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.properties.OAuth2Properties
+import tech.ordinaryroad.blog.quarkus.request.BlogArticleQueryRequest
 import tech.ordinaryroad.blog.quarkus.request.FileUploadRequest
+import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
 import tech.ordinaryroad.blog.quarkus.service.BlogService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import javax.inject.Inject
@@ -52,6 +59,9 @@ class BlogResource {
 
     @Inject
     protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var articleService: BlogArticleService
 
     @Inject
     protected lateinit var blogService: BlogService
@@ -104,6 +114,53 @@ class BlogResource {
         } else {
             Response.status(Response.Status.BAD_REQUEST).build()
         }
+    }
+
+    /**
+     * 获取sitemap
+     */
+    @GET
+    @Path("sitemap")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun sitemap(): JsonArray {
+        val sitemapList = JsonArray()
+        val allUser = userService.findAll()
+        if (!allUser.isNullOrEmpty()) {
+            val blogArticleQueryRequest = BlogArticleQueryRequest()
+            blogArticleQueryRequest.size = 1L.coerceAtLeast(50000L / allUser.size)
+            allUser.forEach { blogUser ->
+                val userSpacePath = "/${blogUser.uid}"
+                val sitemap = JsonObject()
+                sitemap.put("url", userSpacePath)
+                sitemap.put("changefreq", "always")
+                sitemap.put("priority", 0.9)
+                if (blogUser.updateTime != null) {
+                    sitemap.put("lastmod", blogUser.updateTime.format(DatePattern.NORM_DATETIME_FORMATTER))
+                }
+                sitemapList.add(sitemap)
+
+                blogArticleQueryRequest.createBy = blogUser.uuid
+                val wrapper = ChainWrappers.queryChain(articleService.dao)
+                    .eq("status", BlogArticleStatus.PUBLISH)
+                val page = articleService.page(blogArticleQueryRequest, wrapper)
+                page.records.forEach { blogArticle ->
+                    val userArticleSitemap = sitemap.copy()
+                    userArticleSitemap.put("url", "$userSpacePath/article/${blogArticle.firstId}")
+                    userArticleSitemap.put("changefreq", "always")
+                    sitemap.put("priority", 1.0)
+                    if (blogUser.updateTime != null) {
+                        userArticleSitemap.put(
+                            "lastmod",
+                            blogArticle.createdTime.format(DatePattern.NORM_DATETIME_FORMATTER)
+                        )
+                    }
+                    sitemapList.add(userArticleSitemap)
+                }
+
+
+            }
+        }
+        return sitemapList
     }
 
     @GET
