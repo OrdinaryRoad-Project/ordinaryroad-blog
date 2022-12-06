@@ -178,6 +178,12 @@
     <template #[`footer.page-text`]="props">
       <slot name="`footer.page-text`" :props="props" />
     </template>
+
+    <template #no-data>
+      <slot name="no-data">
+        <or-empty />
+      </slot>
+    </template>
   </v-data-iterator>
 </template>
 

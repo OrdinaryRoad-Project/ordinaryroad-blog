@@ -196,6 +196,12 @@
         </or-base-menu>
       </div>
     </template>
+
+    <template #no-data>
+      <slot name="no-data">
+        <or-empty />
+      </slot>
+    </template>
   </v-data-table>
 </template>
 
