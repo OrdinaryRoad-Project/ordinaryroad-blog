@@ -222,19 +222,21 @@ export default {
         },
         {
           text: this.$t('article.typeName'),
-          value: 'typeName'
+          value: 'typeName',
+          sortable: false
         },
         {
           text: this.$t('article.tagNames'),
-          value: 'tagNames'
+          value: 'tagNames',
+          sortable: false
         },
         {
           text: this.$t('article.canReward'),
-          value: 'typeName'
+          value: 'canReward'
         },
         {
           text: this.$t('article.original'),
-          value: 'tagNames'
+          value: 'original'
         }
       ]
 
