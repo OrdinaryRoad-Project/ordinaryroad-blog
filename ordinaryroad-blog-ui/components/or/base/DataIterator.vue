@@ -69,7 +69,7 @@
                 flat
                 item-value="value"
                 item-text="text"
-                :items="headers"
+                :items="sortItems"
                 :label="$vuetify.lang.t('$vuetify.dataTable.sortBy')"
                 @click:clear="getItems"
               >
@@ -291,6 +291,11 @@ export default {
         }
       )
       return headers
+    },
+    sortItems () {
+      return this.headers.filter((value) => {
+        return !Object.keys(value).includes('sortable') || value.sortable
+      })
     },
     action () {
       return this.selectedIndex === -1 ? 'create' : 'update'
