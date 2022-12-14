@@ -37,9 +37,10 @@ import tech.ordinaryroad.blog.quarkus.config.RequestDataHelper
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogCommentDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
-import tech.ordinaryroad.blog.quarkus.exception.*
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogArticleCannotCommentException
+import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
+import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
@@ -67,10 +68,27 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     protected lateinit var pushService: BlogPushService
 
     @Inject
+    protected lateinit var validateService: BlogValidateService
+
+    @Inject
     protected lateinit var sqlSessionFactory: SqlSessionFactory
 
     override fun getEntityClass(): Class<BlogComment> {
         return BlogComment::class.java
+    }
+
+    /**
+     * 删除自己的评论
+     */
+    fun deleteOwn(id: String) {
+        val comment = validateService.validateOwnComment(id)
+
+        // 只能删除未被删除的
+        if (!comment.deleted) {
+            super.delete(id)
+        } else {
+            BlogCommentNotValidException().throws()
+        }
     }
 
     //region 业务相关
@@ -95,13 +113,13 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
             // 校验articleId
             if (request.articleId.isBlank()) {
                 request.articleId = parentComment.articleId
-                article = validateArticle(request.articleId)
+                article = validateService.validatePublishByArticleFirstId(request.articleId)
             } else {
                 if (request.articleId != parentComment.articleId) {
                     // 父评论文章和传入的不一致
                     throw BlogCommentNotValidException()
                 } else {
-                    article = validateArticle(request.articleId)
+                    article = validateService.validatePublishByArticleFirstId(request.articleId)
                     // 只关联最初版本的文章Id
                     if (article.uuid != article.firstId) {
                         comment.articleId = article.firstId
@@ -116,7 +134,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
                 parentComment.originalId
             }
         } else {
-            article = validateArticle(request.articleId)
+            article = validateService.validatePublishByArticleFirstId(request.articleId)
             // 只关联最初版本的文章Id
             if (article.uuid != article.firstId) {
                 comment.articleId = article.firstId
@@ -160,11 +178,10 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     fun pageArticleComment(request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
-        val article = validateArticle(request.articleId)
-        val articleId = article.firstId
+        val firstArticleById = validateService.validateFirstVersionArticle(request.articleId)
 
         val wrapper = ChainWrappers.queryChain(dao)
-            .eq("article_id", articleId)
+            .eq("article_id", firstArticleById.uuid)
             .eq("original_id", "")
 
         val page = page(request, wrapper)
@@ -234,26 +251,12 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
      * 获取文章评论量
      */
     fun getCommentsCount(articleId: String): Long {
-        val firstArticleById = articleService.getFirstById(articleId)
-        if (firstArticleById == null) {
-            BlogArticleNotFoundException().throws()
-        }
+        val firstArticleById = validateService.validateFirstVersionArticle(articleId)
 
         val wrapper = Wrappers.query<BlogComment>()
-            .eq("article_id", firstArticleById!!.uuid)
+            .eq("article_id", firstArticleById.uuid)
 
         return super.dao.selectCount(wrapper)
-    }
-
-    /**
-     * 校验文章是否存在并发布
-     */
-    fun validateArticle(articleId: String?): BlogArticle {
-        if (articleId.isNullOrBlank()) {
-            BlogArticleNotValidException().throws()
-        }
-        return articleService.findFirstOrLastByFirstIdAndStatus(articleId!!, BlogArticleStatus.PUBLISH, false)
-            ?: throw BlogArticleNotFoundException()
     }
 
     /**

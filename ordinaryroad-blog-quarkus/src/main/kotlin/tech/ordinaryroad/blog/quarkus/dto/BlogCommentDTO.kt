@@ -21,28 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.request
 
-import org.jboss.resteasy.reactive.RestPath
-import org.jboss.resteasy.reactive.RestQuery
-import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
+package tech.ordinaryroad.blog.quarkus.dto
 
-class BlogCommentQueryRequest : BaseQueryRequest() {
+import cn.hutool.core.util.StrUtil
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
+import io.quarkus.runtime.annotations.RegisterForReflection
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 
-    @RestQuery
-    var content: String? = null
-
-    @RestPath
-    var articleId: String = ""
-
-    @RestQuery
-    var parentId: String? = null
-
-    @RestPath
-    var originalId: String? = null
-
-    companion object {
-        private const val serialVersionUID: Long = 4650657847049901662L
+/**
+ * 评论DTO类
+ *
+ * @author mjz
+ * @date 2022/12/14
+ */
+@JsonInclude
+@JsonPropertyOrder
+@RegisterForReflection
+data class BlogCommentDTO(
+    var content: String = StrUtil.EMPTY,
+    var articleId: String = StrUtil.EMPTY,
+    var parentId: String = StrUtil.EMPTY,
+    var originalId: String = StrUtil.EMPTY,
+) : BaseBlogModelDTO<BlogComment>() {
+    override fun parse(baseDo: BlogComment) {
+        content = baseDo.content
+        articleId = baseDo.articleId
+        parentId = baseDo.parentId
+        originalId = baseDo.originalId
     }
 
+    companion object {
+        private const val serialVersionUID: Long = -3701560342094602092L
+    }
 }

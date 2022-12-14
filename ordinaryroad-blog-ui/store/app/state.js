@@ -88,6 +88,12 @@ export default () => ({
       children: []
     },
     {
+      to: '/dashboard/comment',
+      titleKey: 'dashboardMenuTitles.dashboard.comment.title',
+      icon: 'mdi-comment-multiple',
+      children: []
+    },
+    {
       to: '/dashboard/system/log',
       titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
       icon: 'mdi-cog',

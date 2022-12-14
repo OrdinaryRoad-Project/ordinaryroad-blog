@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import { urlEncode } from '@/plugins/ordinaryroad/utils'
+
 let $axios = null
 
 export default {
@@ -42,6 +44,18 @@ export default {
           content,
           parentId: parentId || ''
         }
+      })
+    },
+    deleteOwn: (id) => {
+      return $axios({
+        url: `/blog/comment/delete/own/${id}`,
+        method: 'delete'
+      })
+    },
+    pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/comment/page/own/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
       })
     },
     pageArticle: (articleId, page) => {

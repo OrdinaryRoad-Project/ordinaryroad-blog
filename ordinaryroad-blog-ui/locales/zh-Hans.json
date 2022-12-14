@@ -101,6 +101,9 @@
       "systemTitle": "系统管理",
       "system": {
         "log": "操作日志"
+      },
+      "comment": {
+        "title": "评论"
       }
     }
   },
@@ -191,8 +194,10 @@
     "allAccounts": "所有账号"
   },
   "comment": {
+    "content": "内容",
     "totalRepliesCount": "共{0}条回复",
     "actions": {
+      "deleteForever": "删除",
       "send": "发送",
       "reply": "回复",
       "viewOriginal": "查看原评论",

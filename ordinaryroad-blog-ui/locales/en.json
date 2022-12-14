@@ -101,6 +101,9 @@
       "systemTitle": "System Management",
       "system": {
         "log": "Operation Log"
+      },
+      "comment": {
+        "title": "Comments"
       }
     }
   },
@@ -190,8 +193,10 @@
     "allAccounts": "All Accounts"
   },
   "comment": {
+    "content": "Content",
     "totalRepliesCount": "{0} Replies",
     "actions": {
+      "deleteForever": "Delete",
       "send": "Send",
       "reply": "Reply",
       "viewOriginal": "Original Comment",
