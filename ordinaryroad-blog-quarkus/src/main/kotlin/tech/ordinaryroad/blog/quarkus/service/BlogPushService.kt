@@ -84,12 +84,12 @@ class BlogPushService {
         var contentTemplate = NEW_COMMENT_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)
         contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
+        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
         contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
+        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
 
         mailer.send(
             Mail().apply {
@@ -117,12 +117,12 @@ class BlogPushService {
         var contentTemplate = USER_LIKES_ARTICLE_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)
         contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
+        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
         contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
+        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
 
         if (fromUser.uuid == toUser.uuid) {
             // 跳过本人操作
