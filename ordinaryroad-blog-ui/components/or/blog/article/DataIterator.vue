@@ -88,7 +88,7 @@
           <v-select
             v-model="searchParams.canReward"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"
@@ -105,7 +105,7 @@
           <v-select
             v-model="searchParams.original"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"

@@ -128,7 +128,7 @@
           <v-select
             v-model="searchParams.canComment"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"
@@ -145,7 +145,7 @@
           <v-select
             v-model="searchParams.canReward"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"
@@ -162,7 +162,7 @@
           <v-select
             v-model="searchParams.original"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"
@@ -180,13 +180,13 @@
           <v-select
             v-model="searchParams.own"
             clearable
-            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
             dense
             outlined
             item-text="label"
             item-value="value"
             hide-details="auto"
-            label="只查看自己的"
+            :label="$t('article.onlyViewOwn')"
           />
         </v-col>
       </template>
@@ -722,7 +722,7 @@ export default {
       if (this.$refs.auditFailedDialog.validate()) {
         this.$apis.blog.article.auditFailed(this.selectedItem.uuid, reason)
           .then((data) => {
-            this.$snackbar.success('操作成功')
+            this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.dataTable.getItems()
             this.$refs.auditFailedDialog.close()
           })
@@ -741,7 +741,7 @@ export default {
       if (this.$refs.articleViolationDialog.validate()) {
         this.$apis.blog.article.articleViolation(this.selectedItem.uuid, reason)
           .then((data) => {
-            this.$snackbar.success('操作成功')
+            this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.dataTable.getItems()
             this.$refs.articleViolationDialog.close()
           })
@@ -760,7 +760,7 @@ export default {
       if (this.$refs.articleAppealDialog.validate()) {
         this.$apis.blog.article.articleAppeal(this.selectedItem.uuid, reason)
           .then((data) => {
-            this.$snackbar.success('操作成功')
+            this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.dataTable.getItems()
             this.$refs.articleAppealDialog.close()
           })

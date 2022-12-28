@@ -50,6 +50,7 @@
       "original": "原创",
       "reprint": "转载"
     },
+    "onlyViewOwn": "只查看自己的",
     "actions": {
       "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
       "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",

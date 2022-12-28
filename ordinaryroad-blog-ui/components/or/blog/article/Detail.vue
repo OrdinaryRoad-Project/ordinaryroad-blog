@@ -916,7 +916,7 @@ export default {
       if (this.$refs.articleAppealDialog.validate()) {
         this.$apis.blog.article.articleAppeal(this.blogArticle.uuid, reason)
           .then((data) => {
-            this.$snackbar.success('操作成功')
+            this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.articleAppealDialog.close()
             this.$router.replace('/dashboard/article/status/ON_APPEAL')
           })
@@ -936,7 +936,7 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.auditApproved(this.blogArticle.uuid)
             .then((data) => {
-              this.$snackbar.success('操作成功')
+              this.$snackbar.success(this.$t('operationSucceeded'))
               dialog.cancel()
               this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
             })
@@ -947,7 +947,7 @@ export default {
       if (this.$refs.auditFailedDialog.validate()) {
         this.$apis.blog.article.auditFailed(this.blogArticle.uuid, reason)
           .then((data) => {
-            this.$snackbar.success('操作成功')
+            this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.auditFailedDialog.close()
             this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
           })

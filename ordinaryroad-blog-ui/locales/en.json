@@ -50,6 +50,7 @@
       "original": "Original",
       "reprint": "Reprint"
     },
+    "onlyViewOwn": "Only View Own",
     "actions": {
       "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
       "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
