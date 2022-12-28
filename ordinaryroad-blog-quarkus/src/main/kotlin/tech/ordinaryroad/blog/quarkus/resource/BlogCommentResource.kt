@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
@@ -65,6 +66,7 @@ class BlogCommentResource {
     /**
      * 用户发布评论
      */
+    @SaCheckLogin
     @POST
     @Path("post")
     @Transactional
@@ -76,6 +78,7 @@ class BlogCommentResource {
     /**
      * 用户删除自己的评论
      */
+    @SaCheckLogin
     @DELETE
     @Path("delete/own/{id}")
     @Transactional
@@ -83,21 +86,16 @@ class BlogCommentResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         commentService.deleteOwn(id)
     }
 
     /**
      * 用户分页查询所有自己的评论
      */
+    @SaCheckLogin
     @GET
     @Path("page/own/{page}/{size}")
     fun pageOwn(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         val wrapper = ChainWrappers.queryChain(commentService.dao)

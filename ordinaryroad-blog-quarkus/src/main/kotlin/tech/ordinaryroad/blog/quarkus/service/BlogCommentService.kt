@@ -24,7 +24,6 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor
 import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler
@@ -93,8 +92,6 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
-        // 校验登录
-        StpUtil.checkLogin()
         val fromUser = blogService.currentUser()
 
         // 先转换，后面需要填充

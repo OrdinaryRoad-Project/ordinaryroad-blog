@@ -24,7 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
-import cn.dev33.satoken.stp.StpUtil
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestQuery
@@ -85,14 +85,12 @@ class BlogTagResource {
     /**
      * 用户创建标签
      */
+    @SaCheckLogin
     @POST
     @Path("create")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun create(@Valid request: BlogTagSaveRequest): BlogTagDTO {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val name = request.name
 
         /* 唯一性校验 */
@@ -112,13 +110,11 @@ class BlogTagResource {
     /**
      * 分页查询所有标签
      */
+    @SaCheckLogin
     @GET
     @Path("page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogTagQueryRequest): Page<BlogTagDTO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val wrapper = ChainWrappers.queryChain(tagService.dao)
             .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
 

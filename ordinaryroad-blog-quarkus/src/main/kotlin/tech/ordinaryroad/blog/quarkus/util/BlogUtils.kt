@@ -24,7 +24,6 @@
 
 package tech.ordinaryroad.blog.quarkus.util
 
-import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.date.DatePattern
 import cn.hutool.core.date.LocalDateTimeUtil
 import cn.hutool.core.io.resource.ResourceUtil
@@ -71,10 +70,6 @@ object BlogUtils {
         }
 
         return arrayListOf(listToDelete, listToAdd)
-    }
-
-    fun checkAdminOrDeveloper() {
-        StpUtil.checkRoleOr("DEVELOPER", "ADMIN")
     }
 
     /**
