@@ -29,6 +29,10 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.quarkus.runtime.annotations.RegisterForReflection
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.service.BlogArticleService
+import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
+import javax.enterprise.inject.spi.CDI
 
 /**
  * 评论DTO类
@@ -42,6 +46,7 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 data class BlogCommentDTO(
     var content: String = StrUtil.EMPTY,
     var articleId: String = StrUtil.EMPTY,
+    var article: BlogArticleDTO? = null,
     var parentId: String = StrUtil.EMPTY,
     var originalId: String = StrUtil.EMPTY,
 ) : BaseBlogModelDTO<BlogComment>() {
@@ -50,9 +55,15 @@ data class BlogCommentDTO(
         articleId = baseDo.articleId
         parentId = baseDo.parentId
         originalId = baseDo.originalId
+
+        val blogArticleService = CDI.current().select(BlogArticleService::class.java).get()
+        val blogDtoService = CDI.current().select(BlogDtoService::class.java).get()
+        blogArticleService.findFirstOrLastByFirstIdAndStatus(baseDo.articleId, BlogArticleStatus.PUBLISH, false)?.let {
+            article = blogDtoService.transfer(it, BlogArticleDTO::class.java)
+        }
     }
 
     companion object {
-        private const val serialVersionUID: Long = -3701560342094602092L
+        private const val serialVersionUID: Long = -2020140267967251262L
     }
 }

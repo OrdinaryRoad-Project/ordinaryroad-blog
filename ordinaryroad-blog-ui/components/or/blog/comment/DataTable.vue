@@ -67,6 +67,15 @@
         <span class="tow-lines-text">{{ item.content }}</span>
       </template>
 
+      <template #[`item.article`]="{ item }">
+        <or-link
+          hover-able
+          :href="`/${item.article.creatorUid}/article/${item.article.firstId}`"
+        >
+          {{ item.article.title }}
+        </or-link>
+      </template>
+
       <template #actions="{ item }">
         <v-btn
           icon
@@ -144,22 +153,12 @@ export default {
         {
           text: this.$t('comment.content'),
           value: 'content',
-          width: 100
+          width: 400
         },
         {
-          text: this.$t('comment.articleId'),
-          value: 'articleId',
-          width: 100
-        },
-        {
-          text: this.$t('comment.parentId'),
-          value: 'parentId',
-          width: 100
-        },
-        {
-          text: this.$t('comment.originalId'),
-          value: 'originalId',
-          width: 100
+          text: this.$t('comment.article'),
+          value: 'article',
+          width: 200
         }
       ]
       return headers

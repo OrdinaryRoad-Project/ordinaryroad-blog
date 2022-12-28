@@ -203,6 +203,7 @@
   },
   "comment": {
     "content": "内容",
+    "article": "文章",
     "totalRepliesCount": "共{0}条回复",
     "actions": {
       "deleteForever": "删除",
