@@ -43,10 +43,13 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 - 评论文章
 - 回复评论
+- 评论删除
 
 ### 日志模块
 
-- 请求、响应、耗时
+- 请求
+- 响应
+- 耗时
 
 ### 搜索模块
 
