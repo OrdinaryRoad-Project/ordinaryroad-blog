@@ -300,6 +300,8 @@ VALUES (1, '1', null, null, null, null, '站长', 'DEVELOPER', b'1');
 INSERT INTO `blog_role`
 VALUES (2, '2', null, null, null, null, '管理员', 'ADMIN', b'1');
 INSERT INTO `blog_role`
+VALUES (3, '3', null, null, null, null, '审核员', 'AUDITOR', b'1');
+INSERT INTO `blog_role`
 VALUES (10, 'SSSSSSVIP', null, null, null, null, 'SSSSSSVIP', 'SSSSSSVIP', b'1');
 
 -- ----------------------------

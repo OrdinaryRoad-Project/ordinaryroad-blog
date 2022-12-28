@@ -24,20 +24,21 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckLogin
+import cn.dev33.satoken.annotation.SaCheckRole
 import cn.dev33.satoken.stp.StpUtil
-import cn.hutool.core.collection.CollUtil
-import cn.hutool.core.lang.PatternPool
-import cn.hutool.core.util.ReUtil
 import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpStatus
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import com.fasterxml.jackson.databind.JsonNode
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.handler.HttpException
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
 import tech.ordinaryroad.blog.quarkus.dal.entity.*
@@ -55,6 +56,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewUserBrowsedV
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewUserLikedVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
+import tech.ordinaryroad.blog.quarkus.state.article.context.BlogArticleContext
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.TableInfoUtils
@@ -96,11 +98,135 @@ class BlogArticleResource {
     @Inject
     protected lateinit var userLikedArticleService: BlogUserLikedArticleService
 
+    @Inject
+    protected lateinit var validateService: BlogValidateService
+
     //region 已测试方法
 
     /**
-     * 用户移动至废纸篓
+     * 审核员开始审核文章
      */
+    @SaCheckRole(SaTokenConstants.ROLE_AUDITOR)
+    @POST
+    @Path("start_auditing/{id}")
+    @Transactional
+    fun startAuditing(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
+        val article = articleService.findById(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.startAuditing(article)
+    }
+
+    /**
+     * 审核员文章审核通过
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_AUDITOR)
+    @POST
+    @Path("audit_approved/{id}")
+    @Transactional
+    fun auditApproved(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
+        val article = articleService.findById(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.auditApproved(article)
+    }
+
+    /**
+     * 审核员文章审核失败
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_AUDITOR)
+    @POST
+    @Path("audit_failed/{id}")
+    @Transactional
+    fun auditFailed(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        jsonNode: JsonNode
+    ) {
+        if (!jsonNode.has("reason")) {
+            throw BaseBlogException("请输入打回原因")
+        }
+        val reason = jsonNode.get("reason").asText()
+        if (reason.isBlank()) {
+            throw BaseBlogException("请输入打回原因")
+        }
+        if (reason.length > 500) {
+            throw BaseBlogException("打回原因长度不能大于500")
+        }
+
+        val article = articleService.findById(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.auditFailed(article, reason)
+    }
+
+    /**
+     * 审核员标记文章违规
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_AUDITOR)
+    @POST
+    @Path("article_violation/{id}")
+    @Transactional
+    fun articleViolation(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        jsonNode: JsonNode
+    ) {
+        if (!jsonNode.has("reason")) {
+            throw BaseBlogException("请输入违规原因")
+        }
+        val reason = jsonNode.get("reason").asText()
+        if (reason.isBlank()) {
+            throw BaseBlogException("请输入违规原因")
+        }
+        if (reason.length > 500) {
+            throw BaseBlogException("违规原因长度不能大于500")
+        }
+
+        val article = articleService.findById(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.articleViolation(article, reason)
+    }
+
+    /**
+     * 用户申诉自己的文章
+     */
+    @SaCheckLogin
+    @POST
+    @Path("article_appeal/{id}")
+    @Transactional
+    fun articleAppeal(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        jsonNode: JsonNode
+    ) {
+        if (!jsonNode.has("reason")) {
+            throw BaseBlogException("请输入申诉理由")
+        }
+        val reason = jsonNode.get("reason").asText()
+        if (reason.isBlank()) {
+            throw BaseBlogException("请输入申诉理由")
+        }
+        if (reason.length > 500) {
+            throw BaseBlogException("申诉理由长度不能大于500")
+        }
+
+        val article = validateService.validateOwnArticle(id)
+        val blogArticleContext = BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.articleAppeal(article, reason)
+    }
+
+    /**
+     * 用户将自己的文章移动至废纸篓
+     */
+    @SaCheckLogin
     @POST
     @Path("move_to_trash/{id}")
     @Transactional
@@ -108,15 +234,16 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
-        articleService.moveToTrash(id)
+        val article = validateService.validateOwnArticle(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.moveToTrash(article)
     }
 
     /**
-     * 用户从废纸篓恢复
+     * 用户从废纸篓恢复自己的文章
      */
+    @SaCheckLogin
     @POST
     @Path("recover_from_trash/{id}")
     @Transactional
@@ -124,23 +251,21 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
-        articleService.recoverFromTrash(id)
+        val article = validateService.validateOwnArticle(id)
+        val blogArticleContext =
+            BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+        blogArticleContext.recoverFromTrash(article)
     }
 
     /**
      * 用户手动保存草稿
      */
+    @SaCheckLogin
     @POST
     @Path("draft")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun saveDraft(@Valid request: BlogArticleSaveDraftRequest): Response {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
         val firstId = request.firstId
 
@@ -148,41 +273,8 @@ class BlogArticleResource {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
 
-        var typeId = StrUtil.EMPTY
-        val typeName = request.typeName
-        if (!typeName.isNullOrBlank()) {
-            var type = typeService.findByNameAndCreateBy(typeName, userId)
-            if (Objects.isNull(type)) {
-                // 创建
-                type = typeService.create(BlogType().apply {
-                    name = typeName
-                })
-            }
-            typeId = type!!.uuid
-        }
-
-        val tagIds: List<String>
-        val tagNames = request.tagNames
-        tagIds = if (CollUtil.isEmpty(tagNames)) {
-            arrayListOf()
-        } else {
-            val ids = arrayListOf<String>()
-            tagNames.forEach {
-                if (!ReUtil.isMatch(PatternPool.GENERAL_WITH_CHINESE, it)) {
-                    BaseBlogException("标签名称只能包含中文字、英文字母、数字和下划线").throws()
-                }
-                val wrapper = Wrappers.query<BlogTag>()
-                    .eq("name", it)
-                var tag = tagService.dao.selectOne(wrapper)
-                if (Objects.isNull(tag)) {
-                    tag = tagService.create(BlogTag().apply {
-                        name = it
-                    })
-                }
-                ids.add(tag.uuid)
-            }
-            ids
-        }
+        val typeId = typeService.getOwnIdByNameAndCreateBy(request.typeName, userId)
+        val tagIds = tagService.getIdListByNamesAndCreateBy(request.tagNames, userId)
 
         if (firstId.isNullOrBlank()) {
             /* 直接创建草稿 */
@@ -270,16 +362,54 @@ class BlogArticleResource {
     }
 
     /**
+     * 用户手动保存草稿
+     */
+    @SaCheckLogin
+    @POST
+    @Path("draft_v2")
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    fun saveDraftV2(@Valid request: BlogArticleSaveDraftRequest): Response {
+        val userId = StpUtil.getLoginIdAsString()
+
+        if (request.content.trim() == "\n") {
+            return Response.status(Response.Status.BAD_REQUEST).build()
+        }
+
+        val firstId = request.firstId
+        val article = if (firstId.isNullOrBlank()) {
+            null
+        } else {
+            articleService.findFirstOrLastByFirstIdAndParams(
+                firstId,
+                BlogArticle().apply {
+                    createBy = userId
+                },
+                false
+            ) ?: throw BlogArticleNotValidException()
+        }
+        val blogArticleContext = BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+
+        val draftArticle = if (article == null) {
+            blogArticleContext.saveDraft(request)
+        } else {
+            blogArticleContext.saveDraft(article, request)
+        }
+
+        val dto = dtoService.transfer(draftArticle, BlogArticleDTO::class.java)
+
+        return Response.ok(dto).build()
+    }
+
+    /**
      * 用户发布文章
      */
+    @SaCheckLogin
     @POST
     @Path("publish")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun publish(@Valid request: BlogArticlePublishRequest): Response {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
         val firstId = request.firstId
 
@@ -287,38 +417,8 @@ class BlogArticleResource {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
 
-        var typeId = StrUtil.EMPTY
-        val typeName = request.typeName
-        if (!typeName.isNullOrBlank()) {
-            var type = typeService.findByNameAndCreateBy(typeName, userId)
-            if (Objects.isNull(type)) {
-                // 创建
-                type = typeService.create(BlogType().apply {
-                    name = typeName
-                })
-            }
-            typeId = type!!.uuid
-        }
-
-        val tagIds: List<String>
-        val tagNames = request.tagNames
-        tagIds = if (CollUtil.isEmpty(tagNames)) {
-            arrayListOf()
-        } else {
-            val ids = arrayListOf<String>()
-            tagNames.forEach {
-                val wrapper = Wrappers.query<BlogTag>()
-                    .eq("name", it)
-                var tag = tagService.dao.selectOne(wrapper)
-                if (Objects.isNull(tag)) {
-                    tag = tagService.create(BlogTag().apply {
-                        name = it
-                    })
-                }
-                ids.add(tag.uuid)
-            }
-            ids
-        }
+        val typeId = typeService.getOwnIdByNameAndCreateBy(request.typeName, userId)
+        val tagIds = tagService.getIdListByNamesAndCreateBy(request.tagNames, userId)
 
         // 代表没有草稿直接发布
         if (firstId.isNullOrBlank()) {
@@ -384,7 +484,7 @@ class BlogArticleResource {
                         firstId,
                         userId,
                         BlogArticleStatus.PUBLISH,
-                        BlogArticleStatus.PUBLISH_INHERIT
+                        BlogArticleStatus.INHERIT_PUBLISH
                     )
                 }
                 /* 发布文章 */
@@ -412,17 +512,53 @@ class BlogArticleResource {
     }
 
     /**
-     * 用户分页查询自己的文章
+     * 用户发布文章v2
      */
-    @GET
-    @Path("page/own/{page}/{size}")
+    @SaCheckLogin
+    @POST
+    @Path("publish_v2")
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwn(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
+    fun publishV2(@Valid request: BlogArticlePublishRequest): Response {
         val userId = StpUtil.getLoginIdAsString()
 
+        if (request.content.trim() == "\n") {
+            return Response.status(Response.Status.BAD_REQUEST).build()
+        }
+
+        val firstId = request.firstId
+        val article = if (firstId.isNullOrBlank()) {
+            null
+        } else {
+            articleService.findFirstOrLastByFirstIdAndParams(
+                firstId,
+                BlogArticle().apply {
+                    createBy = userId
+                },
+                false
+            ) ?: throw BlogArticleNotValidException()
+        }
+        val blogArticleContext = BlogArticleContext.generateBlogArticleContext(article, articleService.articleStates)
+
+        val publishedArticle = if (article == null) {
+            blogArticleContext.publishArticle(request)
+        } else {
+            blogArticleContext.publishArticle(article, request)
+        }
+
+        val dto = dtoService.transfer(publishedArticle, BlogArticleDTO::class.java)
+
+        return Response.ok(dto).build()
+    }
+
+    /**
+     * 用户分页查询自己数据权限内能看到的所有文章
+     */
+    @SaCheckLogin
+    @GET
+    @Path("page/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun page(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
         val wrapper = ChainWrappers.queryChain(articleService.dao)
             .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
             .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
@@ -432,7 +568,21 @@ class BlogArticleResource {
             .eq(request.original != null, "original", request.original)
             .`in`(!request.status.isNullOrEmpty(), "status", request.status)
             .eq(!request.firstId.isNullOrBlank(), "first_id", request.firstId)
-            .eq("create_by", userId)
+
+        // 数据权限处理
+        val statusList = request.status
+        val needAddDataScopeStatusSet = setOf(
+            BlogArticleStatus.PENDING.name,
+            BlogArticleStatus.UNDER_REVIEW.name,
+            BlogArticleStatus.ON_APPEAL.name,
+            BlogArticleStatus.PUBLISH.name
+        )
+        if (request.own == true
+            || statusList.intersect(needAddDataScopeStatusSet).isEmpty()
+            || !StpUtil.hasRole(SaTokenConstants.ROLE_AUDITOR)
+        ) {
+            wrapper.eq("create_by", StpUtil.getLoginIdAsString())
+        }
 
         val page = articleService.page(request, wrapper)
 
@@ -446,13 +596,11 @@ class BlogArticleResource {
     /**
      * 用户分页查询自己已点赞的文章
      */
+    @SaCheckLogin
     @GET
     @Path("page/own/liked/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageOwnLiked(@Valid @BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserLikedVO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         var orderBySql = ""
@@ -494,13 +642,11 @@ class BlogArticleResource {
     /**
      * 用户分页查询自己已浏览的文章
      */
+    @SaCheckLogin
     @GET
     @Path("page/own/browsed/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageOwnBrowsed(@Valid @BeanParam request: BlogArticleQueryRequest): PageDTO<BlogArticlePreviewUserBrowsedVO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         var orderBySql = ""
@@ -542,13 +688,11 @@ class BlogArticleResource {
     /**
      * 用户根据FirstId分页查询文章的所有版本
      */
+    @SaCheckLogin
     @GET
     @Path("page/firstId/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageByFirstId(@Valid @BeanParam request: BlogArticleQueryRequest): Response {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         /* 参数校验 */
@@ -652,6 +796,7 @@ class BlogArticleResource {
     /**
      * 查询用户自己创建的文章
      */
+    @SaCheckLogin
     @GET
     @Path("own/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -659,9 +804,6 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): BlogArticleDTO {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         val blogArticle = articleService.findByIdAndCreatedBy(id, userId)
@@ -680,6 +822,7 @@ class BlogArticleResource {
      * id为空时获取第一个draft
      * 否则，根据id查询为draft或者publish的
      */
+    @SaCheckLogin
     @GET
     @Path("own/writing")
     @Produces(MediaType.APPLICATION_JSON)
@@ -687,9 +830,6 @@ class BlogArticleResource {
         @Valid @Size(max = 32, message = "id长度不能大于32")
         @DefaultValue(StrUtil.EMPTY) @RestQuery id: String
     ): BlogArticleDTO? {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         if (StrUtil.isBlank(id)) {
@@ -700,7 +840,7 @@ class BlogArticleResource {
                 return dtoService.transfer(firstDraft, BlogArticleDTO::class.java)
             }
         } else {
-            val article = articleService.validateOwn(id)
+            val article = validateService.validateOwnArticle(id)
             val articleDraft =
                 articleService.findByFirstIdAndStatusAndCreatedBy(article.firstId, BlogArticleStatus.DRAFT, userId)
             if (articleDraft != null) {
@@ -720,6 +860,42 @@ class BlogArticleResource {
     }
 
     /**
+     * 根据Id查询违规的文章
+     *
+     * TODO 自己的 / 审核员
+     */
+    @GET
+    @Path("offend/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findOffendById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): BlogArticleDetailVO {
+        val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.OFFEND)
+            ?: throw BlogArticleNotFoundException()
+
+        return articleMapStruct.transferDetail(blogArticle)
+    }
+
+    /**
+     * 根据Id查询审核中的文章
+     *
+     * TODO 审核员
+     */
+    @GET
+    @Path("under_review/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findUnderReviewById(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): BlogArticleDetailVO {
+        val blogArticle = articleService.findByIdAndStatus(id, BlogArticleStatus.UNDER_REVIEW)
+            ?: throw BlogArticleNotFoundException()
+
+        return articleMapStruct.transferDetail(blogArticle)
+    }
+
+    /**
      * 根据Id查询已发布的文章
      *
      * 会保存浏览记录
@@ -732,22 +908,16 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): BlogArticleDetailVO {
-        var blogArticle = articleService.findById(id)
-        if (blogArticle == null) {
-            throw BlogArticleNotFoundException()
-        }
-        val firstId = blogArticle.firstId
+        var blogArticle: BlogArticle? = articleService.findById(id) ?: throw BlogArticleNotFoundException()
 
-        if (blogArticle.status != BlogArticleStatus.PUBLISH) {
+        if (blogArticle!!.status != BlogArticleStatus.PUBLISH) {
             blogArticle =
                 articleService.findFirstOrLastByFirstIdAndStatus(blogArticle.firstId, BlogArticleStatus.PUBLISH)
-        }
-        if (blogArticle == null) {
-            throw BlogArticleNotFoundException()
+                    ?: throw BlogArticleNotFoundException()
         }
 
         userBrowsedArticleService.browseArticle(
-            firstId,
+            blogArticle.firstId,
             BlogUtils.getClientIp(),
             StpUtil.getLoginIdDefaultNull() as String?
         )
@@ -994,6 +1164,7 @@ class BlogArticleResource {
     /**
      * 用户点赞文章
      */
+    @SaCheckLogin
     @POST
     @Transactional
     @Path("likes/{id}")
@@ -1001,14 +1172,13 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        StpUtil.checkLogin()
-
         articleService.likesArticle(id)
     }
 
     /**
      * 用户取消点赞文章
      */
+    @SaCheckLogin
     @POST
     @Transactional
     @Path("unlikes/{id}")
@@ -1016,14 +1186,13 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        StpUtil.checkLogin()
-
         articleService.unlikesArticle(id)
     }
 
     /**
      * 用户删除文章浏览记录
      */
+    @SaCheckLogin
     @POST
     @Transactional
     @Path("un_browses/{id}")
@@ -1031,14 +1200,13 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        StpUtil.checkLogin()
-
         articleService.unBrowsesArticle(id)
     }
 
     /**
      * 获取用户是否点赞
      */
+    @SaCheckLogin
     @GET
     @Transactional
     @Path("liked/{id}")
@@ -1046,8 +1214,6 @@ class BlogArticleResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ): Boolean {
-        StpUtil.checkLogin()
-
         return articleService.getLiked(id)
     }
 
@@ -1141,23 +1307,6 @@ class BlogArticleResource {
     //endregion
 
     //region 待开发（需要管理员权限）
-
-    /**
-     * 分页查询所有文章
-     */
-    @GET
-    @Path("admin/page/{page}/{size}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun pageAdmin(@Valid @BeanParam request: BlogArticleQueryRequest): Response {
-        throwBadRequest()
-
-        val wrapper = ChainWrappers.queryChain(articleService.dao)
-        val page = articleService.page(request, wrapper)
-        return Response.ok()
-            .entity(page)
-            .build()
-    }
-
     @DELETE
     @Path("/delete/{id}")
     fun deleteById(

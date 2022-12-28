@@ -153,14 +153,14 @@ export default {
     },
     articlesCountBrowsedOptions: {
       title: 'myStats.browsedArticlesCount',
-      to: '/dashboard/article/browsed',
+      to: '/dashboard/browsed_article',
       icon: 'mdi-history',
       loading: true,
       data: null
     },
     articlesCountLikedOptions: {
       title: 'myStats.likedArticlesCount',
-      to: '/dashboard/article/liked',
+      to: '/dashboard/liked_article',
       icon: 'mdi-thumb-up',
       loading: true,
       data: null
@@ -174,8 +174,8 @@ export default {
     },
     commentsCountOptions: {
       title: 'myStats.postedCommentsCount',
-      to: null,
-      icon: null,
+      to: '/dashboard/comment',
+      icon: 'mdi-comment-multiple',
       loading: true,
       data: null
     }

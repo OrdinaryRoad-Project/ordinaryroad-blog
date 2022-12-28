@@ -44,7 +44,7 @@
     <select id="selectAllByUserId" resultMap="BaseResultMap">
         SELECT br.*
         FROM blog_role br
-                 LEFT JOIN blog_user_roles bur ON bur.deleted = 0 AND br.uuid = bur.role_id
+                 LEFT JOIN blog_user_roles bur ON bur.deleted = 0 AND br.uuid = bur.role_id AND br.enabled = 1
         WHERE bur.user_id = #{userId};
     </select>
 

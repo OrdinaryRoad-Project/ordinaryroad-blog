@@ -24,16 +24,18 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckRole
+import cn.dev33.satoken.annotation.SaMode
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
+import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dto.BlogLogDTO
 import tech.ordinaryroad.blog.quarkus.enums.BlogLogTypeEnum
 import tech.ordinaryroad.blog.quarkus.request.BlogLogQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogLogTypeEnumVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogLogService
-import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -56,12 +58,11 @@ class BlogLogResource {
     /**
      * 管理员分页查询日志
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@BeanParam request: BlogLogQueryRequest): Page<BlogLogDTO> {
-        BlogUtils.checkAdminOrDeveloper()
-
         val wrapper = ChainWrappers.queryChain(logService.dao)
             .eq(!request.type.isNullOrBlank(), "type", request.type)
             .eq(request.type.isNullOrBlank() && !request.method.isNullOrBlank(), "method", request.method)
@@ -79,6 +80,7 @@ class BlogLogResource {
     /**
      * 管理员删除日志
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @DELETE
     @Path("delete/{id}")
     @Transactional
@@ -86,19 +88,16 @@ class BlogLogResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        BlogUtils.checkAdminOrDeveloper()
-
         logService.delete(id)
     }
 
     /**
      * 查询所有类型
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("all/types")
     fun findAllTypes(): List<BlogLogTypeEnumVO> {
-        BlogUtils.checkAdminOrDeveloper()
-
         val list = ArrayList<BlogLogTypeEnumVO>()
 
         val enums = BlogLogTypeEnum.values()
@@ -114,11 +113,10 @@ class BlogLogResource {
         return list
     }
 
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("all/status")
     fun findAllStatus(): List<String> {
-        BlogUtils.checkAdminOrDeveloper()
-
         return logService.dao.selectDistinctStatus()
     }
 

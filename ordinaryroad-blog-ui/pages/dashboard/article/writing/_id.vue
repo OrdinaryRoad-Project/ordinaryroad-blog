@@ -61,7 +61,7 @@
                 ref="articleDataTable"
                 show-status-column
                 show-base-headers-when-selecting
-                :preset-status="['PUBLISH', 'INHERIT', 'PUBLISH_INHERIT']"
+                :preset-status="['PUBLISH', 'INHERIT','INHERIT_AUTO', 'INHERIT_PUBLISH']"
                 :preset-first-id="article.firstId"
                 select-return-object
                 show-select
@@ -99,7 +99,7 @@
             color="primary"
             @click="publish"
           >
-            {{ $t('article.actions.directlyPublish') }}
+            {{ $t('article.actions.publish') }}
           </v-btn>
         </v-toolbar>
       </template>
@@ -170,7 +170,6 @@
                   :placeholder="$t('article.startWritingHint')"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
-                  pre-set-content=""
                   :transfer-content.sync="article.content"
                   @focus="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
                   @blur="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
@@ -569,13 +568,11 @@ export default {
           content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.publish')])
         }).then((dialog) => {
           if (dialog.isConfirm) {
-            this.$apis.blog.article.publish(this.article)
+            this.$apis.blog.article.publishV2(this.article)
               .then((data) => {
-                this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
+                this.$snackbar.success(this.$t('whatSuccessfully'))
                 setTimeout(() => {
-                  this.$router.replace(`/dashboard/article/writing/${data.uuid}`, () => {
-                    this.$router.go(0)
-                  })
+                  this.$router.replace('/dashboard/article/status/PENDING')
                   dialog.cancel()
                 }, 300)
               })
@@ -592,7 +589,7 @@ export default {
       if (this.formValid && !this.contentEmpty) {
         this.updateArticleTagNames()
         this.draftSaving = true
-        this.$apis.blog.article.saveDraft(this.article)
+        this.$apis.blog.article.saveDraftV2(this.article)
           .then((data) => {
             this.article = data
             this.draftSaving = false

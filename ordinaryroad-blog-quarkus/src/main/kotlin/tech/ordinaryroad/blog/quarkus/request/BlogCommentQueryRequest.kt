@@ -29,6 +29,9 @@ import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryReques
 
 class BlogCommentQueryRequest : BaseQueryRequest() {
 
+    @RestQuery
+    var content: String? = null
+
     @RestPath
     var articleId: String = ""
 
@@ -39,7 +42,7 @@ class BlogCommentQueryRequest : BaseQueryRequest() {
     var originalId: String? = null
 
     companion object {
-        private const val serialVersionUID: Long = 5700590907391288339L
+        private const val serialVersionUID: Long = 4650657847049901662L
     }
 
 }

@@ -24,11 +24,16 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.hutool.core.lang.PatternPool
+import cn.hutool.core.util.ReUtil
+import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogTagDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotValidException
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 /**
@@ -45,6 +50,36 @@ class BlogTagService : BaseService<BlogTagDAO, BlogTag>() {
     }
 
     //region 业务相关
+    /**
+     * 根据分类名称获取标签列表，不存在则创建
+     */
+    fun getListByNamesAndCreateBy(tagNames: List<String>?, createBy: String): List<BlogTag> {
+        val blogTags = ArrayList<BlogTag>()
+        if (!tagNames.isNullOrEmpty()) {
+            tagNames.forEach {
+                if (!ReUtil.isMatch(PatternPool.GENERAL_WITH_CHINESE, it)) {
+                    BaseBlogException("标签名称只能包含中文字、英文字母、数字和下划线").throws()
+                }
+                val wrapper = Wrappers.query<BlogTag>()
+                    .eq("name", it)
+                var tag = super.dao.selectOne(wrapper)
+                if (Objects.isNull(tag)) {
+                    tag = super.create(BlogTag().apply {
+                        name = it
+                    })
+                }
+                blogTags.add(tag)
+            }
+        }
+
+        return blogTags
+    }
+
+    fun getIdListByNamesAndCreateBy(tagNames: List<String>?, createBy: String): List<String> {
+        val idListByNamesAndCreateBy = getListByNamesAndCreateBy(tagNames, createBy)
+        return idListByNamesAndCreateBy.map(BlogTag::getUuid)
+    }
+
     /**
      * 管理员恢复分类
      */

@@ -1,4 +1,6 @@
 {
+  "yes": "Yes",
+  "no": "No",
   "add": "Add",
   "agree": "Agree",
   "allRightsReserved": "All Rights Reserved",
@@ -75,5 +77,6 @@
   "username": "Username",
   "usingOrNumberLoginHint": "Login with OR account",
   "whatSuccessfully": "{0} successfully.",
-  "whatUpdateSuccessfully": "{0} updated successfully."
+  "whatUpdateSuccessfully": "{0} updated successfully.",
+  "operationSucceeded": "Operation Succeeded"
 }

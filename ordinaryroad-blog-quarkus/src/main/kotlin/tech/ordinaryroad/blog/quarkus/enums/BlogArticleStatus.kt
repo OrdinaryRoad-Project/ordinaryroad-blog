@@ -33,7 +33,6 @@ import com.baomidou.mybatisplus.annotation.IEnum
  * https://blog.csdn.net/yiyuzz/article/details/126121615
  */
 enum class BlogArticleStatus : IEnum<String> {
-    //region 使用中的状态
     /**
      * 草稿
      *
@@ -43,6 +42,14 @@ enum class BlogArticleStatus : IEnum<String> {
     DRAFT,
 
     /**
+     * 自动保存的草稿
+     *
+     * 每个用户可以有多个文章的自动保存的草稿
+     * 但每篇文章只能有一个自动保存的草稿
+     */
+    DRAFT_AUTO,
+
+    /**
      * 历史版本，保存或自动保存时将草稿保存为历史版本
      *
      * 每篇文章可以有多个历史版本
@@ -50,23 +57,20 @@ enum class BlogArticleStatus : IEnum<String> {
     INHERIT,
 
     /**
-     * 已发布
+     * 自动保存的历史版本
+     *
      */
-    PUBLISH,
+    INHERIT_AUTO,
 
     /**
      * 已发布的历史版本
      */
-    PUBLISH_INHERIT,
-    //endregion
+    INHERIT_PUBLISH,
 
     /**
-     * 自动保存的草稿
-     *
-     * 每个用户可以有多个文章的自动保存的草稿
-     * 但每篇文章只能有一个自动保存的草稿
+     * 已发布
      */
-    AUTO_DRAFT,
+    PUBLISH,
 
     /**
      * 待审核
@@ -74,14 +78,24 @@ enum class BlogArticleStatus : IEnum<String> {
     PENDING,
 
     /**
+     * 审核中
+     */
+    UNDER_REVIEW,
+
+    /**
      * 回收站
      */
     TRASH,
 
     /**
-     * 私密
+     * 文章违规
      */
-    PRIVATE,
+    OFFEND,
+
+    /**
+     * 申诉中
+     */
+    ON_APPEAL,
     ;
 
     override fun getValue(): String {
@@ -91,34 +105,6 @@ enum class BlogArticleStatus : IEnum<String> {
     override fun toString(): String {
         return EnumUtil.toString(this)
     }
-
-    companion object {
-        val STATUS_CAN_SAVE_DRAFT = listOf<BlogArticleStatus>(BlogArticleStatus.DRAFT, BlogArticleStatus.PUBLISH)
-        val STATUS_CAN_MOVE_TO_TRASH = listOf<BlogArticleStatus>(BlogArticleStatus.DRAFT, BlogArticleStatus.PUBLISH)
-        val STATUS_CAN_RECOVER_FROM_TRASH = listOf<BlogArticleStatus>(BlogArticleStatus.TRASH)
-
-        /**
-         * 校验文章是否可以存为草稿
-         */
-        fun BlogArticleStatus.canSaveDraft(): Boolean {
-            return STATUS_CAN_MOVE_TO_TRASH.contains(this)
-        }
-
-        /**
-         * 校验文章是否可以移动到垃圾箱
-         */
-        fun BlogArticleStatus.canMoveToTrash(): Boolean {
-            return STATUS_CAN_MOVE_TO_TRASH.contains(this)
-        }
-
-        /**
-         * 校验文章是否可以从垃圾箱恢复
-         */
-        fun BlogArticleStatus.canRecoverFromTrash(): Boolean {
-            return STATUS_CAN_RECOVER_FROM_TRASH.contains(this)
-        }
-    }
-
 
 }
 

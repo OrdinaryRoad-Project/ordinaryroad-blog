@@ -187,6 +187,7 @@ class BlogOAuth2Resource {
         }
         val userId = user!!.uuid
 
+        StpUtil.checkDisable(userId)
         StpUtil.login(userId, SaLoginModel().apply {
             setDevice(device)
             setIsLastingCookie(true)

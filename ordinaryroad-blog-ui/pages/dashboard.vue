@@ -24,23 +24,27 @@
 
 <template>
   <div>
-    <v-toolbar flat>
-      <v-app-bar-nav-icon @click="$store.dispatch('app/toggleDashboardDrawerModel')" />
-      <v-toolbar-title>
-        <v-breadcrumbs :items="items">
-          <template #item="{ item }">
-            <span class="text-subtitle-2">
-              <span v-if="item.disabled">{{ $t(item.text) }}</span>
-              <or-link
-                v-else
-                :href="item.href==='/dashboard/article'?'/dashboard/article/status/DRAFT':item.href"
-                target="_self"
-              >{{ $t(item.text) }}</or-link>
-            </span>
-          </template>
-        </v-breadcrumbs>
-      </v-toolbar-title>
-    </v-toolbar>
+    <div v-if="$route.name === 'dashboard-article-auditing-id'" />
+
+    <div v-else>
+      <v-toolbar flat>
+        <v-app-bar-nav-icon @click="$store.dispatch('app/toggleDashboardDrawerModel')" />
+        <v-toolbar-title>
+          <v-breadcrumbs :items="items">
+            <template #item="{ item }">
+              <span class="text-subtitle-2">
+                <span v-if="item.disabled">{{ $t(item.text) }}</span>
+                <or-link
+                  v-else
+                  :href="item.href==='/dashboard/article'?'/dashboard/article/status/DRAFT':item.href"
+                  target="_self"
+                >{{ $t(item.text) }}</or-link>
+              </span>
+            </template>
+          </v-breadcrumbs>
+        </v-toolbar-title>
+      </v-toolbar>
+    </div>
     <nuxt-child />
   </div>
 </template>
@@ -48,6 +52,14 @@
 <script>
 
 export default {
+  layout ({ route }) {
+    const routeName = route.name
+    if (['dashboard-article-auditing-id', 'dashboard-article-offend-id'].includes(routeName)) {
+      return 'empty'
+    } else {
+      return 'default'
+    }
+  },
   middleware: ['userInfo'],
   data: () => ({}),
   head () {

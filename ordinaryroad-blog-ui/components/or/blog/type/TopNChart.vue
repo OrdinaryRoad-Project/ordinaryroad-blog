@@ -24,12 +24,30 @@
 
 <template>
   <v-card :loading="loading" flat outlined>
-    <v-card-title>{{ $t('myStats.charts.topNTypesArticle') }}</v-card-title>
-    <div
-      v-if="!loading"
-      ref="div"
-      style="width: 100%; height: 400px"
-    />
+    <v-card-title>
+      {{ $t('myStats.charts.topNTypesArticle') }}
+      <v-btn
+        icon
+        small
+        class="ms-2"
+        :loading="loading"
+        @click="getTopN"
+      >
+        <v-icon>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
+    </v-card-title>
+    <div v-if="!loading">
+      <div
+        v-if="options.series[0].data.length"
+        ref="div"
+        style="width: 100%; height: 400px"
+      />
+      <div v-else>
+        <or-empty style="width: 100%; height: 400px" />
+      </div>
+    </div>
     <div v-if="loading">
       <v-skeleton-loader tile height="200" type="image" />
       <v-skeleton-loader tile height="200" type="image" />
@@ -72,6 +90,7 @@ export default {
   },
   methods: {
     getTopN () {
+      this.loading = true
       this.$apis.blog.type.getTopN({ userId: this.userInfo.user.uuid })
         .then((data) => {
           this.options.xAxis.data = []
@@ -83,11 +102,13 @@ export default {
           this.topN = data
           this.loading = false
 
-          this.$nextTick(() => {
-            this.chart = this.$echarts.init(this.$refs.div)
-            window.addEventListener('resize', this.chart.resize, true)
-            this.chart.setOption(this.options)
-          })
+          if (this.options.series[0].data.length) {
+            this.$nextTick(() => {
+              this.chart = this.$echarts.init(this.$refs.div)
+              window.addEventListener('resize', this.chart.resize, true)
+              this.chart.setOption(this.options)
+            })
+          }
         })
         .catch(() => {
           this.loading = false

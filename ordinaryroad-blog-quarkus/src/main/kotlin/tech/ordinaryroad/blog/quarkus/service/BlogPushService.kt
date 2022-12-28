@@ -84,12 +84,12 @@ class BlogPushService {
         var contentTemplate = NEW_COMMENT_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)
         contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
+        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
         contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
+        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
 
         mailer.send(
             Mail().apply {
@@ -117,12 +117,12 @@ class BlogPushService {
         var contentTemplate = USER_LIKES_ARTICLE_TEMPLATE
         contentTemplate = contentTemplate.replace("{title}", title)
         contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uuid)
+        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
         contentTemplate = contentTemplate.replace("{actionString}", actionString)
         contentTemplate = contentTemplate.replace("{content}", content)
         contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
         contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uuid)
+        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
 
         if (fromUser.uuid == toUser.uuid) {
             // 跳过本人操作
@@ -141,6 +141,110 @@ class BlogPushService {
                 html = contentTemplate
             }
         )
+    }
+
+    /**
+     * 文章开始审核通知
+     */
+    fun startAuditingArticle(article: BlogArticle) {
+        // val userId = StpUtil.getLoginIdAsString()
+        // val fromUser = userService.findById(userId)
+        val toUser = userService.findById(article.createBy)
+
+        val title = "文章开始审核通知"
+
+        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
+        contentTemplate = contentTemplate.replace("{title}", title)
+        contentTemplate = contentTemplate.replace(
+            "{articleHref}",
+            "https://blog.ordinaryroad.tech/dashboard/article/auditing/${article.uuid}"
+        )
+        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
+        contentTemplate = contentTemplate.replace("{actionString}", "已经开始审核")
+
+        mailer.send(Mail().apply {
+            to = listOf(toUser.email)
+            subject = title
+            html = contentTemplate
+        })
+    }
+
+    /**
+     * 文章审核通过通知
+     */
+    fun articleAuditApproved(article: BlogArticle) {
+        // val userId = StpUtil.getLoginIdAsString()
+        // val fromUser = userService.findById(userId)
+        val toUser = userService.findById(article.createBy)
+
+        val title = "文章审核通过通知"
+
+        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
+        contentTemplate = contentTemplate.replace("{title}", title)
+        contentTemplate = contentTemplate.replace(
+            "{articleHref}",
+            "https://blog.ordinaryroad.tech/${toUser.uid}/article/${article.uuid}"
+        )
+        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
+        contentTemplate = contentTemplate.replace("{actionString}", "审核通过 已经开放浏览")
+
+        mailer.send(Mail().apply {
+            to = listOf(toUser.email)
+            subject = title
+            html = contentTemplate
+        })
+    }
+
+    /**
+     * 文章审核失败通知
+     */
+    fun articleAuditFailed(article: BlogArticle, reason: String) {
+        // val userId = StpUtil.getLoginIdAsString()
+        // val fromUser = userService.findById(userId)
+        val toUser = userService.findById(article.createBy)
+
+        val title = "文章审核失败通知"
+
+        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
+        contentTemplate = contentTemplate.replace("{title}", title)
+        contentTemplate = contentTemplate.replace(
+            "{articleHref}",
+            "https://blog.ordinaryroad.tech/dashboard/article/writing/${article.uuid}"
+        )
+        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
+        contentTemplate = contentTemplate.replace("{actionString}", "审核失败 原因：$reason")
+
+        mailer.send(Mail().apply {
+            to = listOf(toUser.email)
+            subject = title
+            html = contentTemplate
+        })
+    }
+
+    /**
+     * 文章违规通知
+     */
+    fun articleViolation(article: BlogArticle, reason: String) {
+        // val userId = StpUtil.getLoginIdAsString()
+        // val fromUser = userService.findById(userId)
+        val toUser = userService.findById(article.createBy)
+
+        val title = "文章违规通知"
+
+        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
+        contentTemplate = contentTemplate.replace("{title}", title)
+        contentTemplate = contentTemplate.replace(
+            "{articleHref}",
+            "https://blog.ordinaryroad.tech/dashboard/article/status/OFFEND"
+        )
+        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
+        contentTemplate = contentTemplate.replace("{actionString}", "违规 原因：$reason")
+
+        mailer.send(Mail().apply {
+            to = listOf(toUser.email)
+            subject = title
+            html = contentTemplate
+        })
     }
 
     /**
@@ -184,6 +288,22 @@ class BlogPushService {
             "<div>\n" +
             "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/{articleId}\">{articleTitle}</a>\n" +
             "</div>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>"
+
+    /**
+     * src/main/resources/templates/article-status-changed.html
+     */
+    private final val ARTICLE_STATUS_CHANGED_TEMPLATE = "<!DOCTYPE html>\n" +
+            "<html lang=\"zh\">\n" +
+            "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <title>{title}</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "您的文章 <a href=\"{articleHref}\">{articleTitle}</a> {actionString}\n" +
             "\n" +
             "</body>\n" +
             "</html>"

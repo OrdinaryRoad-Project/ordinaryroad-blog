@@ -23,7 +23,10 @@
   -->
 
 <template>
-  <v-container>
+  <v-container
+    :class="{'ma-0':!blogArticleComments||!blogArticleComments.total,
+             'pa-0':!blogArticleComments||!blogArticleComments.total}"
+  >
     <v-row v-if="blogArticleComments==null">
       加载失败
     </v-row>

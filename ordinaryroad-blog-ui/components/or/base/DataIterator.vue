@@ -69,7 +69,7 @@
                 flat
                 item-value="value"
                 item-text="text"
-                :items="headers"
+                :items="sortItems"
                 :label="$vuetify.lang.t('$vuetify.dataTable.sortBy')"
                 @click:clear="getItems"
               >
@@ -178,6 +178,12 @@
     <template #[`footer.page-text`]="props">
       <slot name="`footer.page-text`" :props="props" />
     </template>
+
+    <template #no-data>
+      <slot name="no-data">
+        <or-empty />
+      </slot>
+    </template>
   </v-data-iterator>
 </template>
 
@@ -285,6 +291,11 @@ export default {
         }
       )
       return headers
+    },
+    sortItems () {
+      return this.headers.filter((value) => {
+        return !Object.keys(value).includes('sortable') || value.sortable
+      })
     },
     action () {
       return this.selectedIndex === -1 ? 'create' : 'update'
