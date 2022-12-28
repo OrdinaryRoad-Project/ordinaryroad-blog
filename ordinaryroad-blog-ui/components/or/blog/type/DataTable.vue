@@ -226,7 +226,7 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.type.deleteOwn(item.uuid)
             .then(() => {
-              this.$snackbar.success('操作成功')
+              this.$snackbar.success(this.$t('operationSucceeded'))
               this.$refs.dataTable.getItems()
               dialog.cancel()
             })

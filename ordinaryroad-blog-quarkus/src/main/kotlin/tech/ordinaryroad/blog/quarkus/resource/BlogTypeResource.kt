@@ -24,6 +24,7 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
@@ -95,14 +96,12 @@ class BlogTypeResource {
     /**
      * 用户创建分类
      */
+    @SaCheckLogin
     @POST
     @Path("create")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun create(@Valid request: BlogTypeSaveRequest): BlogTypeDTO {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         /* 唯一性校验 */
@@ -122,6 +121,7 @@ class BlogTypeResource {
     /**
      * 用户删除自己的分类
      */
+    @SaCheckLogin
     @DELETE
     @Path("delete/own/{id}")
     @Transactional
@@ -129,23 +129,18 @@ class BlogTypeResource {
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         typeService.deleteOwn(id)
     }
 
     /**
      * 用户更新自己的分类
      */
+    @SaCheckLogin
     @POST
     @Path("update/own")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun updateOwn(@Valid request: BlogTypeUpdateRequest): BlogTypeDTO {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         /* 唯一性校验 */
@@ -166,13 +161,11 @@ class BlogTypeResource {
     /**
      * 用户查询自己的所有分类
      */
+    @SaCheckLogin
     @GET
     @Path("find/all/own")
     @Produces(MediaType.APPLICATION_JSON)
     fun findAllOwn(): List<BlogTypeDTO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         val list = typeService.findAllByCreateBy(userId)
@@ -187,13 +180,11 @@ class BlogTypeResource {
     /**
      * 用户分页查询自己的分类
      */
+    @SaCheckLogin
     @GET
     @Path("page/own/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageOwn(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeDTO> {
-        /* 登录校验 */
-        StpUtil.checkLogin()
-
         val userId = StpUtil.getLoginIdAsString()
 
         val wrapper = ChainWrappers.queryChain(typeService.dao)
@@ -216,7 +207,6 @@ class BlogTypeResource {
     @Path("page/info/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
     fun pageInfo(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
-        /* 登录校验 */
         val wrapper = ChainWrappers.queryChain(typeService.dao)
             .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
             .eq(!request.createBy.isNullOrBlank(), "create_by", request.createBy)

@@ -116,6 +116,20 @@ class BlogResource {
         }
     }
 
+
+    /**
+     * 获取sitemap索引
+     */
+    @GET
+    @Path("sitemap_index")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun sitemapIndex(): JsonArray {
+        BlogArticleResource.throwBadRequest()
+
+        val maxCountOfEachSitemap = 50000L
+        return JsonArray()
+    }
+
     /**
      * 获取sitemap
      */
@@ -166,7 +180,7 @@ class BlogResource {
     @GET
     @Path("loginTest")
     fun loginTest() {
-        // StpUtil.login("41acab7734074dae9da0f40aca5294ca")
+        // StpUtil.login("1600048920027762688")
     }
 
     @GET

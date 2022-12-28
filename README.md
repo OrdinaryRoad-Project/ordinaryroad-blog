@@ -27,6 +27,9 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - Markdown
 - 草稿箱、垃圾箱
 - 文章历史版本
+- 文章发布前审核
+- 发布后随机审核
+- 文章违规申诉
 
 ### 分类模块
 
@@ -40,10 +43,13 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 - 评论文章
 - 回复评论
+- 评论删除
 
 ### 日志模块
 
-- 请求、响应、耗时
+- 请求
+- 响应
+- 耗时
 
 ### 搜索模块
 

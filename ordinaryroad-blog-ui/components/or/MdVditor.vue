@@ -48,7 +48,7 @@ export default {
     },
     preSetContent: {
       type: String,
-      required: true
+      default: ''
     },
     dark: {
       type: Boolean,

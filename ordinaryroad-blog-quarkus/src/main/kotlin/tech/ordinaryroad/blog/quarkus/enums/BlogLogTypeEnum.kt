@@ -69,12 +69,19 @@ enum class BlogLogTypeEnum(
     //region BlogArticleResource
     BLOG_ARTICLE_PUBLISH("用户发布文章", 10000, "/article/publish", "POST"),
     BLOG_ARTICLE_SAVE_DRAFT("用户手动保存草稿", 10001, "/article/draft", "POST"),
-    BLOG_ARTICLE_MOVE_TO_TRASH("用户移动至废纸篓", 10002, "/article/move_to_trash/*", "POST"),
-    BLOG_ARTICLE_RECOVER_FROM_TRASH("用户从废纸篓恢复", 10003, "/article/recover_from_trash/*", "POST"),
+    BLOG_ARTICLE_MOVE_TO_TRASH("用户将自己的文章移动至废纸篓", 10002, "/article/move_to_trash/*", "POST"),
+    BLOG_ARTICLE_RECOVER_FROM_TRASH("用户从废纸篓恢复自己的文章", 10003, "/article/recover_from_trash/*", "POST"),
     BLOG_ARTICLE_FIND_PUBLISH("用户浏览文章", 10004, "/article/publish/*", "GET"),
+    BLOG_ARTICLE_ARTICLE_APPEAL("用户申诉自己的文章", 10005, "/article/article_appeal/*", "POST"),
+
     BLOG_ARTICLE_LIKES("用户点赞文章", 11000, "/article/likes/*", "POST"),
     BLOG_ARTICLE_UNLIKES("用户取消点赞", 11001, "/article/unlikes/*", "POST"),
     BLOG_ARTICLE_UN_BROWSES("用户删除浏览记录", 11003, "/article/un_browses/*", "POST"),
+
+    BLOG_ARTICLE_START_AUDITING("审核员开始审核文章", 12000, "/article/start_auditing/*", "POST"),
+    BLOG_ARTICLE_AUDIT_APPROVED("审核员文章审核通过", 12001, "/article/audit_approved/*", "POST"),
+    BLOG_ARTICLE_AUDIT_FAILED("审核员文章审核失败", 12002, "/article/audit_failed/*", "POST"),
+    BLOG_ARTICLE_ARTICLE_VIOLATION("审核员标记文章违规", 12003, "/article/article_violation/*", "POST"),
     //endregion
 
     //region BlogTypeResource

@@ -160,7 +160,7 @@ export default {
       }
     },
     likesArticle () {
-      this.$apis.blog.article.likesArticle(this.selectedItem.uuid)
+      this.$apis.blog.article.likesArticle(this.selectedItem.firstId)
         .then(() => {
           this.$snackbar.success('已撤销')
           this.canceled = true
@@ -176,7 +176,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.unlikesArticle(item.uuid)
+          this.$apis.blog.article.unlikesArticle(item.firstId)
             .then(() => {
               this.snackbarModel = true
               dialog.cancel()

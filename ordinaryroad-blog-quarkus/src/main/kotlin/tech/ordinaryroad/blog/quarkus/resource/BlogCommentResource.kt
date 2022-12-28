@@ -24,8 +24,13 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckLogin
+import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.dto.BlogCommentDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
@@ -33,10 +38,13 @@ import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticleCommentVO
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
+import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -51,16 +59,56 @@ class BlogCommentResource {
     @Inject
     protected lateinit var userService: BlogUserService
 
+    @Inject
+    protected lateinit var dtoService: BlogDtoService
+
     //region 已测试
     /**
      * 用户发布评论
      */
+    @SaCheckLogin
     @POST
     @Path("post")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun post(@Valid request: BlogCommentPostRequest): Response {
         return commentService.post(request)
+    }
+
+    /**
+     * 用户删除自己的评论
+     */
+    @SaCheckLogin
+    @DELETE
+    @Path("delete/own/{id}")
+    @Transactional
+    fun deleteOwn(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ) {
+        commentService.deleteOwn(id)
+    }
+
+    /**
+     * 用户分页查询所有自己的评论
+     */
+    @SaCheckLogin
+    @GET
+    @Path("page/own/{page}/{size}")
+    fun pageOwn(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
+        val userId = StpUtil.getLoginIdAsString()
+
+        val wrapper = ChainWrappers.queryChain(commentService.dao)
+            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
+            .eq("create_by", userId)
+
+        val page = commentService.page(request, wrapper)
+
+        val dtoPage = PageUtils.copyPage(page) { item ->
+            dtoService.transfer(item, BlogCommentDTO::class.java)
+        }
+
+        return dtoPage
     }
 
     /**

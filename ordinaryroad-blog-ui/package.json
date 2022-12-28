@@ -1,6 +1,6 @@
 {
   "name": "ordinaryroad-blog-ui",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "private": true,
   "config": {
     "nuxt": {

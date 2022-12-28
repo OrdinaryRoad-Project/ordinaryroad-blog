@@ -155,9 +155,9 @@ class BlogLogFilter : ContainerRequestFilter, ContainerResponseFilter {
             blogLogService().create(blogLog)
         } else {
             if (requestContext.method != "GET") {
-                log.warn("blogLog.type is null when GET")
+                log.warn("blogLog.type is null when not GET")
             } else {
-                log.debug("skip GET method")
+                log.debug("skip GET method when type is null");
             }
         }
 

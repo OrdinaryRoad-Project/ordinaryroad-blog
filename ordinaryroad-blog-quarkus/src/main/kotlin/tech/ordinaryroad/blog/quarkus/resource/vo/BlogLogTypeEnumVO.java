@@ -41,14 +41,14 @@ public class BlogLogTypeEnumVO {
 
     private String description;
 
-    private int code;
+    private Integer code;
 
     private String method;
 
     public BlogLogTypeEnumVO() {
     }
 
-    public BlogLogTypeEnumVO(String description, int code, String method) {
+    public BlogLogTypeEnumVO(String description, Integer code, String method) {
         this.description = description;
         this.code = code;
         this.method = method;
@@ -62,11 +62,11 @@ public class BlogLogTypeEnumVO {
         this.description = description;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

@@ -164,11 +164,11 @@ export default {
             records.unshift(...this.$refs.articleIterator.$refs.dataIterator.dataIteratorParams.items)
           }
           this.$refs.articleIterator.$refs.dataIterator.loadSuccessfully(records, result.total)
-          this.$refs.loadMoreFooter.finishLoad()
+          this.$refs.loadMoreFooter && this.$refs.loadMoreFooter.finishLoad()
         })
         .catch(() => {
           this.$refs.articleIterator.$refs.dataIterator.loadFinish()
-          this.$refs.loadMoreFooter.finishLoad()
+          this.$refs.loadMoreFooter && this.$refs.loadMoreFooter.finishLoad()
         })
     }
   }

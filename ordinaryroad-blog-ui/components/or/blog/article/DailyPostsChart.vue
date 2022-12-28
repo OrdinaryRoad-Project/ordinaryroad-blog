@@ -26,6 +26,17 @@
   <v-card :loading="loading" flat :outlined="outlined">
     <v-card-title>
       {{ $t('myStats.charts.dailyPosts') }}
+      <v-btn
+        icon
+        small
+        class="ms-2"
+        :loading="refreshing||loading"
+        @click="refresh"
+      >
+        <v-icon>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
       <v-spacer />
       <v-select
         v-model="selectedYear"
@@ -37,15 +48,25 @@
         :loading="articlePublishedYearsOption.loading"
       />
     </v-card-title>
-    <div
-      v-if="!loading"
-      ref="div"
-      :style="{
-        width: '100%',
-        height: vertical?'800px':'200px'
-      }"
-    />
-    <div v-if="loading">
+    <div v-if="!loading">
+      <div
+        v-if="options.series.data.length"
+        ref="div"
+        :style="{
+          width: '100%',
+          height: vertical?'800px':'200px'
+        }"
+      />
+      <div v-else>
+        <or-empty
+          :style="{
+            width: '100%',
+            height: vertical?'800px':'200px'
+          }"
+        />
+      </div>
+    </div>
+    <div v-else>
       <v-skeleton-loader
         v-for="i in vertical?4:1"
         :key="i"
@@ -77,6 +98,7 @@ export default {
     }
   },
   data: () => ({
+    refreshing: false,
     loading: true,
     selectedYear: null,
     articlePublishedYearsOption: {
@@ -154,6 +176,15 @@ export default {
   mounted () {
   },
   methods: {
+    refresh () {
+      this.loading = true
+      this.refreshing = true
+      this.articlePublishedYearsOption.loading = true
+      this.getSelections()
+      if (this.selectedYear) {
+        this.getData()
+      }
+    },
     updateOptionsOrient (vertical) {
       const orient = vertical ? 'vertical' : 'horizontal'
       // this.options.visualMap.showLabel = !vertical
@@ -163,6 +194,23 @@ export default {
       this.options.calendar.orient = orient
       this.options.calendar.top = (vertical ? 50 : 20)
       this.options.calendar.bottom = vertical ? 10 : 30
+    },
+    getSelections () {
+      this.$apis.blog.article.getArticlePublishedYears({ userId: this.createBy })
+        .then((data) => {
+          this.articlePublishedYearsOption.loading = false
+          this.articlePublishedYearsOption.data = data
+          if (data.length) {
+            this.selectedYear = data[data.length - 1]
+          } else {
+            this.loading = false
+          }
+          this.refreshing = false
+        })
+        .catch(() => {
+          this.articlePublishedYearsOption.loading = false
+          this.refreshing = false
+        })
     },
     getData () {
       this.$apis.blog.article.countDailyPosts({
@@ -192,15 +240,19 @@ export default {
           this.updateOptionsOrient(this.vertical)
           this.dailyPostsCount = data
           this.loading = false
+          this.refreshing = false
 
-          this.$nextTick(() => {
-            this.chart = this.$echarts.init(this.$refs.div)
-            window.addEventListener('resize', this.chart.resize, true)
-            this.chart.setOption(this.options)
-          })
+          if (this.options.series.data.length) {
+            this.$nextTick(() => {
+              this.chart = this.$echarts.init(this.$refs.div)
+              window.addEventListener('resize', this.chart.resize, true)
+              this.chart.setOption(this.options)
+            })
+          }
         })
         .catch(() => {
           this.loading = false
+          this.refreshing = false
         })
     }
   }

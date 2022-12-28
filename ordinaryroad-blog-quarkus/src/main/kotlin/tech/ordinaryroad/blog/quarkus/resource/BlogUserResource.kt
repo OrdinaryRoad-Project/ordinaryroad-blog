@@ -24,12 +24,15 @@
 
 package tech.ordinaryroad.blog.quarkus.resource
 
+import cn.dev33.satoken.annotation.SaCheckRole
+import cn.dev33.satoken.annotation.SaMode
 import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
@@ -40,7 +43,6 @@ import tech.ordinaryroad.blog.quarkus.request.BlogUserQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
-import tech.ordinaryroad.blog.quarkus.util.BlogUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -167,6 +169,7 @@ class BlogUserResource {
     /**
      * 封禁用户
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("disable")
     fun disable(
@@ -174,8 +177,6 @@ class BlogUserResource {
         @NotBlank(message = "userId不能为空") @RestQuery userId: String,
         @Valid @RestQuery disableTime: Long
     ): Long {
-        BlogUtils.checkAdminOrDeveloper()
-
         userService.update(BlogUser().apply {
             this.uuid = userId
             this.enabled = disableTime > 0
@@ -191,14 +192,13 @@ class BlogUserResource {
     /**
      * 解封用户
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("disable/untie")
     fun untieDisable(
         @Valid @Size(max = 32, message = "userId长度不能大于32")
         @NotBlank(message = "userId不能为空") @RestQuery userId: String
     ): Long {
-        BlogUtils.checkAdminOrDeveloper()
-
         userService.update(BlogUser().apply {
             this.uuid = userId
             this.enabled = true
@@ -209,6 +209,7 @@ class BlogUserResource {
         return StpUtil.getDisableTime(userId)
     }
 
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @PUT
     @Path("roles/{id}")
     @Transactional
@@ -217,8 +218,6 @@ class BlogUserResource {
         @RestPath id: String,
         @RestQuery roleIds: List<String> = emptyList()
     ) {
-        BlogUtils.checkAdminOrDeveloper()
-
         userService.updateRoles(id, roleIds)
     }
 
