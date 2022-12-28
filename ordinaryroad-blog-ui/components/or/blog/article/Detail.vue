@@ -70,7 +70,7 @@
 
       <!-- 编辑 -->
       <v-btn
-        v-if="userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
+        v-if="!readOnly&&userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
         icon
         :to="`/dashboard/article/writing/${blogArticle.uuid}`"
       >
@@ -417,7 +417,7 @@
         <div class="d-flex justify-space-around align-center mb-4">
           <!-- 点赞 -->
           <v-badge
-            :value="blogArticle.likesCount&&hoverLikeButton"
+            :value="blogArticle.likesCount&&(readOnly||hoverLikeButton)"
             color="accent"
             offset-x="18"
             offset-y="18"
@@ -428,6 +428,7 @@
           >
             <v-hover v-model="hoverLikeButton">
               <v-btn
+                :disabled="readOnly"
                 fab
                 :color="likeOptions.liked?'primary':null"
                 :loading="likeOptions.loading"
@@ -464,7 +465,11 @@
           <v-card-title>
             {{ $t('commentCount', [`${articleComments.total ? $t('parentheses', [articleComments.total]) : ''}`]) }}
           </v-card-title>
-          <v-container ref="commentsContainer">
+          <div ref="commentsContainer" />
+          <v-container
+            v-if="!readOnly"
+            class="mb-2"
+          >
             <div v-if="blogArticle.canComment">
               <!-- 撰写评论 -->
               <v-row
@@ -483,7 +488,6 @@
                     :placeholder="$t('comment.actions.placeholder')"
                     class="mx-2"
                     :dark="$vuetify.theme.dark"
-                    pre-set-content=""
                     comment-mode
                     :read-only="false"
                   />
@@ -516,8 +520,6 @@
               </v-sheet>
             </div>
             <!-- 关闭评论提示 -->
-
-            <!-- 回复提示 -->
             <v-sheet
               v-else
               rounded
@@ -526,7 +528,12 @@
             >
               <span class="pa-2">{{ $t('article.cannotCommentHint') }}</span>
             </v-sheet>
-            <v-row class="d-block mt-6" no-gutters>
+
+            <!-- 回复提示 -->
+            <v-row
+              class="d-block mt-6"
+              no-gutters
+            >
               <v-alert
                 v-model="commentOptions.showAlert"
                 transition="slide-y-reverse-transition"
@@ -545,11 +552,37 @@
           </v-container>
           <or-blog-comment-list
             ref="commentList"
-            class="mt-2"
             :article-id="blogArticle.uuid"
             :article-comments="articleComments"
             @clickReply="onClickReply"
           />
+
+          <!-- 审核按钮 -->
+          <v-card-actions v-if="auditMode||offendMode">
+            <v-spacer />
+            <v-btn
+              v-if="auditMode&&$access.hasAuditorRole()"
+              text
+              color="warning"
+              @click="$refs.auditFailedDialog.show()"
+            >
+              {{ $t('article.actions.auditFailed') }}
+            </v-btn>
+            <v-btn
+              v-if="auditMode&&$access.hasAuditorRole()"
+              color="success"
+              @click="onClickAuditApproved"
+            >
+              {{ $t('article.actions.auditApproved') }}
+            </v-btn>
+            <v-btn
+              v-if="offendMode"
+              color="primary"
+              @click="$refs.articleAppealDialog.show()"
+            >
+              {{ $t('article.actions.articleAppeal') }}
+            </v-btn>
+          </v-card-actions>
         </v-card>
 
         <!-- TODO 上/下一篇 -->
@@ -594,6 +627,16 @@
         </v-progress-circular>
       </v-btn>
     </v-fab-transition>
+    <or-blog-article-input-reason-dialog
+      ref="auditFailedDialog"
+      title="打回"
+      @onConfirm="onClickAuditFailed"
+    />
+    <or-blog-article-input-reason-dialog
+      ref="articleAppealDialog"
+      title="申诉"
+      @onConfirm="onClickArticleAppeal"
+    />
   </v-container>
 </template>
 
@@ -611,7 +654,9 @@ export default {
     },
     presetArticleComments: {
       type: Object,
-      required: true
+      default: () => ({
+        records: []
+      })
     }
   },
   data: () => ({
@@ -648,6 +693,15 @@ export default {
     ...mapGetters('user', {
       userInfo: 'getUserInfo'
     }),
+    auditMode () {
+      return this.article.status === 'UNDER_REVIEW'
+    },
+    offendMode () {
+      return this.article.status === 'OFFEND'
+    },
+    readOnly () {
+      return this.auditMode || this.offendMode
+    },
     commentContentValid () {
       return this.commentOptions.content && this.commentOptions.content !== '' && this.commentOptions.content !== '\n'
     },
@@ -858,6 +912,52 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    onClickArticleAppeal (reason) {
+      if (this.$refs.articleAppealDialog.validate()) {
+        this.$apis.blog.article.articleAppeal(this.blogArticle.uuid, reason)
+          .then((data) => {
+            this.$snackbar.success('操作成功')
+            this.$refs.articleAppealDialog.close()
+            this.$router.replace('/dashboard/article/status/ON_APPEAL')
+          })
+          .catch(() => {
+            this.$refs.articleAppealDialog.cancelLoading()
+          })
+      } else {
+        this.$refs.articleAppealDialog.cancelLoading()
+      }
+    },
+    onClickAuditApproved () {
+      this.$dialog({
+        persistent: false,
+        content: '确定通过？',
+        loading: true
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$apis.blog.article.auditApproved(this.blogArticle.uuid)
+            .then((data) => {
+              this.$snackbar.success('操作成功')
+              dialog.cancel()
+              this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
+            })
+        }
+      })
+    },
+    onClickAuditFailed (reason) {
+      if (this.$refs.auditFailedDialog.validate()) {
+        this.$apis.blog.article.auditFailed(this.blogArticle.uuid, reason)
+          .then((data) => {
+            this.$snackbar.success('操作成功')
+            this.$refs.auditFailedDialog.close()
+            this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
+          })
+          .catch(() => {
+            this.$refs.auditFailedDialog.cancelLoading()
+          })
+      } else {
+        this.$refs.auditFailedDialog.cancelLoading()
+      }
+    },
     updateLiked () {
       this.$apis.blog.article.getLiked(this.blogArticle.uuid)
         .then((data) => {
@@ -875,9 +975,9 @@ export default {
 
       let promise
       if (this.likeOptions.liked) {
-        promise = this.$apis.blog.article.unlikesArticle(this.blogArticle.uuid)
+        promise = this.$apis.blog.article.unlikesArticle(this.blogArticle.firstId)
       } else {
-        promise = this.$apis.blog.article.likesArticle(this.blogArticle.uuid)
+        promise = this.$apis.blog.article.likesArticle(this.blogArticle.firstId)
       }
       promise.then(() => {
         this.likeOptions.loading = false
@@ -913,6 +1013,10 @@ export default {
       originalComment,
       parentComment
     }) {
+      if (this.readOnly) {
+        return
+      }
+
       this.commentOptions.parentComment = parentComment
       this.commentOptions.parentId = parentComment.uuid
       this.commentOptions.showAlert = true

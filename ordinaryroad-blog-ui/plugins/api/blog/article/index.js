@@ -52,11 +52,39 @@ export default {
         data: article
       })
     },
+    saveDraftV2: (article) => {
+      return $axios({
+        url: '/blog/article/draft_v2',
+        method: 'post',
+        data: article
+      })
+    },
     publish: (article) => {
       return $axios({
         url: '/blog/article/publish',
         method: 'post',
         data: article
+      })
+    },
+    publishV2: (article) => {
+      return $axios({
+        url: '/blog/article/publish_v2',
+        method: 'post',
+        data: article
+      })
+    },
+    findOffendById: (token, id = '') => {
+      return $axios({
+        url: `/blog/article/offend/${id}`,
+        method: 'get',
+        headers: { 'or-blog-token': token }
+      })
+    },
+    findUnderReviewById: (token, id = '') => {
+      return $axios({
+        url: `/blog/article/under_review/${id}`,
+        method: 'get',
+        headers: { 'or-blog-token': token }
       })
     },
     findPublishById: (token, id) => {
@@ -110,6 +138,12 @@ export default {
         method: 'get'
       })
     },
+    page: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/article/page/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
     pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
         url: `/blog/article/page/own/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
@@ -134,10 +168,61 @@ export default {
         method: 'post'
       })
     },
+    moveToTrashV2: (id) => {
+      return $axios({
+        url: `/blog/article/move_to_trash_v2/${id}`,
+        method: 'post'
+      })
+    },
     recoverFromTrash: (id) => {
       return $axios({
         url: `/blog/article/recover_from_trash/${id}`,
         method: 'post'
+      })
+    },
+    recoverFromTrashV2: (id) => {
+      return $axios({
+        url: `/blog/article/recover_from_trash_v2/${id}`,
+        method: 'post'
+      })
+    },
+    startAuditing: (id) => {
+      return $axios({
+        url: `/blog/article/start_auditing/${id}`,
+        method: 'post'
+      })
+    },
+    auditApproved: (id) => {
+      return $axios({
+        url: `/blog/article/audit_approved/${id}`,
+        method: 'post'
+      })
+    },
+    auditFailed: (id, reason) => {
+      return $axios({
+        url: `/blog/article/audit_failed/${id}`,
+        method: 'post',
+        data: {
+          reason
+        }
+      })
+    },
+    articleViolation: (id, reason) => {
+      return $axios({
+        url: `/blog/article/article_violation/${id}`,
+        method: 'post',
+        data: {
+          reason
+        }
+      })
+    },
+    articleAppeal: (id, reason) => {
+      return $axios({
+        url: `/blog/article/article_appeal/${id}`,
+        method: 'post',
+        data: {
+          reason
+        }
       })
     },
     count: (userId = '') => {

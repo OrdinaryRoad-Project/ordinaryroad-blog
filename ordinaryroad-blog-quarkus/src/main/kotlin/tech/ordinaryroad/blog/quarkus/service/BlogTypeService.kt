@@ -25,6 +25,7 @@
 package tech.ordinaryroad.blog.quarkus.service
 
 import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.StrUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogTypeDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogType
@@ -33,6 +34,7 @@ import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogTypeNotValidException
 import tech.ordinaryroad.blog.quarkus.resource.BlogArticleResource
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 /**
@@ -49,6 +51,33 @@ class BlogTypeService : BaseService<BlogTypeDAO, BlogType>() {
     }
 
     //region 业务相关
+    /**
+     * 根据分类名称获取自己的分类，不存在则创建
+     */
+    fun getOwnOrCreateByNameAndCreateBy(name: String?, createBy: String): BlogType? {
+        var blogType: BlogType? = null
+        if (!name.isNullOrBlank()) {
+            blogType = this.findByNameAndCreateBy(name, createBy)
+            if (Objects.isNull(blogType)) {
+                // 创建
+                blogType = super.create(BlogType().apply {
+                    this.name = name
+                })
+            }
+        }
+
+        return blogType
+    }
+
+    fun getOwnIdByNameAndCreateBy(name: String?, createBy: String): String {
+        val ownByNameAndCreateBy = getOwnOrCreateByNameAndCreateBy(name, createBy)
+        return if (ownByNameAndCreateBy == null) {
+            StrUtil.EMPTY
+        } else {
+            ownByNameAndCreateBy.uuid
+        }
+    }
+
     /**
      * 删除自己的分类
      */

@@ -27,6 +27,9 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - Markdown
 - 草稿箱、垃圾箱
 - 文章历史版本
+- 文章发布前审核
+- 发布后随机审核
+- 文章违规申诉
 
 ### 分类模块
 

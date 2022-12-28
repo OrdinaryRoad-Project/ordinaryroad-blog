@@ -70,6 +70,21 @@ export default ({
     }
     return hasRole
   }
+  const hasAuditorRole = () => {
+    const logged = isLogged()
+    if (!logged) {
+      return false
+    }
+    let hasRole = false
+    if (logged) {
+      const userRoleCodes = store.getters['user/getRoleCodes']
+      const role = 'AUDITOR'
+      if (userRoleCodes.includes(role)) {
+        hasRole = true
+      }
+    }
+    return hasRole
+  }
   inject('access', {
     has: (permissionCode) => {
       // if (permissionCode === 'blog:type:create') {
@@ -91,6 +106,10 @@ export default ({
      *
      * @param roles {String[]} 角色列表
      */
-    hasRolesOr
+    hasRolesOr,
+    /**
+     * 判断是否拥有审核权限
+     */
+    hasAuditorRole
   })
 }

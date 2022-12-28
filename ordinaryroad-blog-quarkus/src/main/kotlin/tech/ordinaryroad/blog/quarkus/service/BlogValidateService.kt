@@ -72,6 +72,24 @@ class BlogValidateService {
     }
 
     /**
+     * 校验文章是否属于自己
+     *
+     * @param id 文章Id
+     * @return BlogArticle 文章
+     */
+    fun validateOwnArticle(id: String): BlogArticle {
+        val userId = StpUtil.getLoginIdAsString()
+        if (id.isBlank()) {
+            BlogArticleNotFoundException().throws()
+        }
+        val blogArticle = articleService.findById(id) ?: throw BlogArticleNotFoundException()
+        if (blogArticle.createBy != userId) {
+            BlogArticleNotValidException().throws()
+        }
+        return blogArticle
+    }
+
+    /**
      * 校验评论是否属于自己
      *
      * @param id 评论Id

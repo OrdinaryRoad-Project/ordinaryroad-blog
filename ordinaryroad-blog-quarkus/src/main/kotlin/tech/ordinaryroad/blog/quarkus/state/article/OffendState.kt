@@ -22,49 +22,29 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.request;
+package tech.ordinaryroad.blog.quarkus.state.article
 
-import org.jboss.resteasy.reactive.RestQuery;
-import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.state.article.base.ArticleState
+import javax.enterprise.context.ApplicationScoped
 
-import java.util.List;
+/**
+ * 违规文章
+ *
+ * @author mjz
+ * @date 2022/11/23
+ */
+@ApplicationScoped
+class OffendState : ArticleState() {
 
-public class BlogArticleQueryRequest extends BaseQueryRequest {
-
-    private static final long serialVersionUID = 980425530575917204L;
-
-    @RestQuery
-    public String title;
-
-    @RestQuery
-    public String summary;
-
-    @RestQuery
-    public String content;
-
-    @RestQuery
-    public Boolean canComment;
-
-    @RestQuery
-    public Boolean canReward;
-
-    @RestQuery
-    public Boolean original;
-
-    @RestQuery
-    public String firstId;
-
-    @RestQuery
-    public List<String> status;
-
-    @RestQuery
-    public String tagName;
-
-    @RestQuery
-    public String typeId;
-
-    @RestQuery
-    public Boolean own;
-
+    override fun articleAppeal(article: BlogArticle, reason: String) {
+        /* 更新状态 */
+        super.articleService.updateStatusByFirstIdAndCreatedBy(
+            article.firstId,
+            article.createBy,
+            BlogArticleStatus.OFFEND,
+            BlogArticleStatus.ON_APPEAL
+        )
+    }
 }
-

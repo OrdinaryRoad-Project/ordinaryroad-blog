@@ -44,6 +44,18 @@ export default () => ({
       children: []
     },
     {
+      titleKey: 'dashboardMenuTitles.dashboard.article.liked',
+      to: '/dashboard/liked_article',
+      icon: 'mdi-thumb-up',
+      children: []
+    },
+    {
+      titleKey: 'dashboardMenuTitles.dashboard.article.browsed',
+      to: '/dashboard/browsed_article',
+      icon: 'mdi-history',
+      children: []
+    },
+    {
       to: '/dashboard/article',
       titleKey: 'dashboardMenuTitles.dashboard.article.title',
       icon: 'mdi-file-document-multiple',
@@ -54,23 +66,33 @@ export default () => ({
           children: []
         },
         {
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.pending',
+          to: '/dashboard/article/status/PENDING',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.underReview',
+          to: '/dashboard/article/status/UNDER_REVIEW',
+          children: []
+        },
+        {
           titleKey: 'dashboardMenuTitles.dashboard.article.status.publish',
           to: '/dashboard/article/status/PUBLISH',
           children: []
         },
         {
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.offend',
+          to: '/dashboard/article/status/OFFEND',
+          children: []
+        },
+        {
+          titleKey: 'dashboardMenuTitles.dashboard.article.status.onAppeal',
+          to: '/dashboard/article/status/ON_APPEAL',
+          children: []
+        },
+        {
           titleKey: 'dashboardMenuTitles.dashboard.article.status.trash',
           to: '/dashboard/article/status/TRASH',
-          children: []
-        },
-        {
-          titleKey: 'dashboardMenuTitles.dashboard.article.liked',
-          to: '/dashboard/article/liked',
-          children: []
-        },
-        {
-          titleKey: 'dashboardMenuTitles.dashboard.article.browsed',
-          to: '/dashboard/article/browsed',
           children: []
         }
       ]

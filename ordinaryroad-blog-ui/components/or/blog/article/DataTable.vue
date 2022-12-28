@@ -171,6 +171,24 @@
             :label="$t('article.original')"
           />
         </v-col>
+        <v-col
+          v-if="['PENDING', 'UNDER_REVIEW', 'ON_APPEAL', 'PUBLISH'].includes(searchParams.status)"
+          cols="6"
+          lg="3"
+          md="4"
+        >
+          <v-select
+            v-model="searchParams.own"
+            clearable
+            :items="[{label:'是',value:'true'},{label:'否',value:'false'}]"
+            dense
+            outlined
+            item-text="label"
+            item-value="value"
+            hide-details="auto"
+            label="只查看自己的"
+          />
+        </v-col>
       </template>
 
       <template #actionsTop>
@@ -191,9 +209,9 @@
 
       <template #[`item.title`]="{ item }">
         <or-link
-          :hover-able="item.status==='PUBLISH'"
-          :text="item.status!=='PUBLISH'"
-          :href="`/${item.creatorUid}/article/${item.uuid}`"
+          :hover-able="['PUBLISH','UNDER_REVIEW','OFFEND'].includes(item.status)"
+          :text="!['PUBLISH','UNDER_REVIEW','OFFEND'].includes(item.status)"
+          :href="linkOnTitle(item)"
         >
           {{ item.title }}
         </or-link>
@@ -283,6 +301,45 @@
         >
           <v-icon>mdi-restore</v-icon>
         </v-btn>
+        <v-btn
+          v-if="['PENDING','ON_APPEAL'].includes(item.status)&&$access.hasAuditorRole()"
+          text
+          @click="onStartAuditing(item)"
+        >
+          开始审核
+        </v-btn>
+        <v-btn
+          v-if="['UNDER_REVIEW'].includes(item.status)&&$access.hasAuditorRole()"
+          text
+          color="success"
+          @click="onAuditApproved(item)"
+        >
+          {{ $t('article.actions.auditApproved') }}
+        </v-btn>
+        <v-btn
+          v-if="['UNDER_REVIEW'].includes(item.status)&&$access.hasAuditorRole()"
+          text
+          color="warning"
+          @click="onAuditFailed(item)"
+        >
+          {{ $t('article.actions.auditFailed') }}
+        </v-btn>
+        <v-btn
+          v-if="['PUBLISH'].includes(item.status)&&$access.hasAuditorRole()"
+          text
+          color="error"
+          @click="onArticleViolation(item)"
+        >
+          {{ $t('article.actions.articleViolation') }}
+        </v-btn>
+        <v-btn
+          v-if="['OFFEND'].includes(item.status)"
+          text
+          color="primary"
+          @click="onArticleAppeal(item)"
+        >
+          {{ $t('article.actions.articleAppeal') }}
+        </v-btn>
 
         <or-base-menu
           v-if="['DRAFT'].includes(item.status)"
@@ -307,13 +364,28 @@
               @click="onPublishArticle(item)"
             >
               <v-list-item-content>
-                <v-list-item-title>{{ $t('article.actions.directlyPublish') }}</v-list-item-title>
+                <v-list-item-title>{{ $t('article.actions.publish') }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </or-base-menu>
       </template>
     </or-base-data-table>
+    <or-blog-article-input-reason-dialog
+      ref="auditFailedDialog"
+      :title="$t('article.actions.auditFailed')"
+      @onConfirm="onClickAuditFailed"
+    />
+    <or-blog-article-input-reason-dialog
+      ref="articleViolationDialog"
+      :title="$t('article.actions.articleViolation')"
+      @onConfirm="onClickArticleViolation"
+    />
+    <or-blog-article-input-reason-dialog
+      ref="articleAppealDialog"
+      :title="$t('article.actions.articleAppeal')"
+      @onConfirm="onClickArticleAppeal"
+    />
   </v-container>
 </template>
 
@@ -388,9 +460,11 @@ export default {
       canComment: null,
       canReward: null,
       original: null,
+      own: null,
       status: 'DRAFT'
     },
     selectedIndex: -1,
+    selectedItem: null,
     articleStatusOptions: {
       items: [
         {
@@ -399,9 +473,29 @@ export default {
           remark: '手动保存的草稿'
         },
         {
+          label: '待审核',
+          value: 'PENDING',
+          remark: '等待审核的文章'
+        },
+        {
+          label: '审核中',
+          value: 'UNDER_REVIEW',
+          remark: '正在审核中的文章'
+        },
+        {
           label: '已发布',
           value: 'PUBLISH',
           remark: '已发布可供公开查看的文章'
+        },
+        {
+          label: '违规',
+          value: 'OFFEND',
+          remark: '违规文章'
+        },
+        {
+          label: '申诉中',
+          value: 'ON_APPEAL',
+          remark: '正在申诉中的文章'
         },
         {
           label: '已删除',
@@ -477,6 +571,20 @@ export default {
         }
         return ''
       }
+    },
+    linkOnTitle () {
+      return (item) => {
+        switch (item.status) {
+          case 'PUBLISH':
+            return `/${item.creatorUid}/article/${item.uuid}`
+          case 'UNDER_REVIEW':
+            return `/dashboard/article/auditing/${item.uuid}`
+          case 'OFFEND':
+            return `/dashboard/article/offend/${item.uuid}`
+          default:
+            return ''
+        }
+      }
     }
   },
   watch: {
@@ -518,7 +626,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.moveToTrash(item.uuid)
+          this.$apis.blog.article.moveToTrashV2(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
@@ -537,7 +645,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.recoverFromTrash(item.uuid)
+          this.$apis.blog.article.recoverFromTrashV2(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.recoverFromTrash')]))
               this.$refs.dataTable.getItems()
@@ -552,11 +660,11 @@ export default {
     onPublishArticle (item) {
       this.$dialog({
         persistent: false,
-        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.directlyPublish')]),
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.publish')]),
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.publish(item)
+          this.$apis.blog.article.publishV2(item)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
               this.$refs.dataTable.getItems()
@@ -567,6 +675,101 @@ export default {
             })
         }
       })
+    },
+    onStartAuditing (item) {
+      this.$dialog({
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.startAuditing')]),
+        loading: true
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$apis.blog.article.startAuditing(item.uuid)
+            .then(() => {
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.startAuditing')]))
+              this.$refs.dataTable.getItems()
+              dialog.cancel()
+            })
+            .catch(() => {
+              dialog.cancel()
+            })
+        }
+      })
+    },
+    onAuditApproved (item) {
+      this.$dialog({
+        persistent: false,
+        content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.auditApproved')]),
+        loading: true
+      }).then((dialog) => {
+        if (dialog.isConfirm) {
+          this.$apis.blog.article.auditApproved(item.uuid)
+            .then(() => {
+              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.auditApproved')]))
+              this.$refs.dataTable.getItems()
+              dialog.cancel()
+            })
+            .catch(() => {
+              dialog.cancel()
+            })
+        }
+      })
+    },
+    onAuditFailed (item) {
+      this.selectedItem = Object.assign({}, item)
+      this.$refs.auditFailedDialog.show()
+    },
+    onClickAuditFailed (reason) {
+      if (this.$refs.auditFailedDialog.validate()) {
+        this.$apis.blog.article.auditFailed(this.selectedItem.uuid, reason)
+          .then((data) => {
+            this.$snackbar.success('操作成功')
+            this.$refs.dataTable.getItems()
+            this.$refs.auditFailedDialog.close()
+          })
+          .catch(() => {
+            this.$refs.auditFailedDialog.cancelLoading()
+          })
+      } else {
+        this.$refs.auditFailedDialog.cancelLoading()
+      }
+    },
+    onArticleViolation (item) {
+      this.selectedItem = Object.assign({}, item)
+      this.$refs.articleViolationDialog.show()
+    },
+    onClickArticleViolation (reason) {
+      if (this.$refs.articleViolationDialog.validate()) {
+        this.$apis.blog.article.articleViolation(this.selectedItem.uuid, reason)
+          .then((data) => {
+            this.$snackbar.success('操作成功')
+            this.$refs.dataTable.getItems()
+            this.$refs.articleViolationDialog.close()
+          })
+          .catch(() => {
+            this.$refs.articleViolationDialog.cancelLoading()
+          })
+      } else {
+        this.$refs.articleViolationDialog.cancelLoading()
+      }
+    },
+    onArticleAppeal (item) {
+      this.selectedItem = Object.assign({}, item)
+      this.$refs.articleAppealDialog.show()
+    },
+    onClickArticleAppeal (reason) {
+      if (this.$refs.articleAppealDialog.validate()) {
+        this.$apis.blog.article.articleAppeal(this.selectedItem.uuid, reason)
+          .then((data) => {
+            this.$snackbar.success('操作成功')
+            this.$refs.dataTable.getItems()
+            this.$refs.articleAppealDialog.close()
+          })
+          .catch(() => {
+            this.$refs.articleAppealDialog.cancelLoading()
+          })
+      } else {
+        this.$refs.articleAppealDialog.cancelLoading()
+      }
     },
     onEditItem ({
       item,
@@ -590,7 +793,13 @@ export default {
       // 填充searchParams
       this.searchParams.firstId = this.presetFirstId
 
-      this.$apis.blog.article.pageOwn(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
+      let promise
+      if (this.$access.hasAuditorRole()) {
+        promise = this.$apis.blog.article.page(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
+      } else {
+        promise = this.$apis.blog.article.pageOwn(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
+      }
+      promise
         .then((result) => {
           this.$refs.dataTable.loadSuccessfully(result.records, result.total)
         })

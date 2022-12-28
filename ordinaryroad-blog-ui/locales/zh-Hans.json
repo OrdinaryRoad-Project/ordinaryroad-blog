@@ -52,18 +52,22 @@
     },
     "actions": {
       "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
-      "publish": "发布",
       "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",
       "selectionOfHistoricalVersions": "历史版本选择",
       "historicVersion": "历史版本",
       "writing": "开始写作",
       "saveDraft": "保存草稿",
-      "directlyPublish": "直接发布",
+      "publish": "发布",
       "like": "点赞",
       "unlike": "取消点赞",
       "edit": "编辑",
       "moveToTrash": "移动该文章到垃圾箱",
-      "recoverFromTrash": "恢复文章到草稿箱"
+      "recoverFromTrash": "恢复文章到草稿箱",
+      "startAuditing": "开始审核",
+      "auditApproved": "通过",
+      "auditFailed": "打回",
+      "articleViolation": "违规",
+      "articleAppeal": "申诉"
     },
     "startWritingHint": "开始写作吧",
     "restoreReadingStatusHint": "已自动恢复阅读位置、日/夜间模式参数",
@@ -82,21 +86,25 @@
       "userProfileTitle": "个人中心",
       "userSpaceTitle": "个人空间",
       "article": {
-        "title": "文章管理",
+        "title": "文章",
         "writing": "写作",
         "status": {
           "draft": "草稿箱",
+          "pending": "待审核",
+          "underReview": "审核中",
           "publish": "已发布",
+          "offend": "违规",
+          "onAppeal": "申诉中",
           "trash": "垃圾箱"
         },
-        "liked": "已点赞",
-        "browsed": "已浏览"
+        "liked": "赞过的文章",
+        "browsed": "文章浏览记录"
       },
       "type": {
-        "title": "分类管理"
+        "title": "分类"
       },
       "tag": {
-        "title": "标签管理"
+        "title": "标签"
       },
       "systemTitle": "系统管理",
       "system": {
@@ -185,9 +193,9 @@
     "space": "个人空间",
     "dashboard": "控制台",
     "profile": "个人中心",
-    "article": "文章管理",
-    "type": "分类管理",
-    "tag": "标签管理",
+    "article": "文章",
+    "type": "分类",
+    "tag": "标签",
     "log": "操作日志"
   },
   "userProfile": {

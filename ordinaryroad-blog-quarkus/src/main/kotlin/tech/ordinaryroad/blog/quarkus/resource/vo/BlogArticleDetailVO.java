@@ -27,6 +27,7 @@ package tech.ordinaryroad.blog.quarkus.resource.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus;
 
 @JsonInclude
 @JsonPropertyOrder
@@ -37,6 +38,8 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
 
     private String content;
 
+    private BlogArticleStatus status;
+
     private Boolean canComment;
 
     private Boolean canReward;
@@ -44,9 +47,10 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
     public BlogArticleDetailVO() {
     }
 
-    public BlogArticleDetailVO(BlogIpRegionVO ip, String content, Boolean canComment, Boolean canReward) {
+    public BlogArticleDetailVO(BlogIpRegionVO ip, String content, BlogArticleStatus status, Boolean canComment, Boolean canReward) {
         this.ip = ip;
         this.content = content;
+        this.status = status;
         this.canComment = canComment;
         this.canReward = canReward;
     }
@@ -65,6 +69,14 @@ public class BlogArticleDetailVO extends BlogArticlePreviewVO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public BlogArticleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BlogArticleStatus status) {
+        this.status = status;
     }
 
     public Boolean getCanComment() {

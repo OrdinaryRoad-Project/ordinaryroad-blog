@@ -32,19 +32,21 @@ import io.vertx.core.json.JsonObject
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogArticleDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
-import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canMoveToTrash
-import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus.Companion.canRecoverFromTrash
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
-import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
+import tech.ordinaryroad.blog.quarkus.state.article.base.ArticleState
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.inject.Instance
 import javax.inject.Inject
 
 @ApplicationScoped
 class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
+
+    @Inject
+    lateinit var articleStates: Instance<ArticleState>
 
     override fun getEntityClass(): Class<BlogArticle> {
         return BlogArticle::class.java
@@ -59,68 +61,33 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     //region 业务相关
     /**
      * 根据Id获取已发布文章的创建时间和更新时间
-     * @return
-     * (first: createdTime, second: updateTime)
-     * }
+     *
+     * @return {"createdTime":"xxx","updateTime":"xxx"}
      */
     fun getPublishCreatedTimeAndUpdateTimeById(id: String): JsonObject {
-        val blogArticle = findByIdAndStatus(id, BlogArticleStatus.PUBLISH)
+        val blogArticle = findById(id) ?: throw BlogArticleNotFoundException()
 
-        if (blogArticle == null) {
-            BlogArticleNotFoundException().throws()
-        } else {
-            if (blogArticle.status != BlogArticleStatus.PUBLISH) {
-                // 必须是已发布的文章
-                BlogArticleNotValidException().throws()
-            }
-        }
-
-        var createdTime: LocalDateTime = blogArticle!!.createdTime
+        var createdTime: LocalDateTime = blogArticle.createdTime
         var updateTime: LocalDateTime? = null
 
-        if (blogArticle.firstId != blogArticle.uuid) {
-            // 查询第一个 PUBLISH_INHERIT 版本
-            val byFirstIdAndStatus = findFirstOrLastByFirstIdAndStatus(
-                blogArticle.firstId,
-                BlogArticleStatus.PUBLISH_INHERIT
-            )
-            if (byFirstIdAndStatus != null) {
-                createdTime = byFirstIdAndStatus.createdTime
-                updateTime = blogArticle.createdTime
+        // 只处理已发布的文章
+        if (blogArticle.status == BlogArticleStatus.PUBLISH) {
+            if (blogArticle.firstId != blogArticle.uuid) {
+                // 查询第一个 发布的历史版本 版本
+                val byFirstIdAndStatus = findFirstOrLastByFirstIdAndStatus(
+                    blogArticle.firstId,
+                    BlogArticleStatus.INHERIT_PUBLISH
+                )
+                if (byFirstIdAndStatus != null) {
+                    createdTime = byFirstIdAndStatus.createdTime
+                    updateTime = blogArticle.createdTime
+                }
             }
         }
         val jsonObject = JsonObject()
         jsonObject.put("createdTime", createdTime)
         jsonObject.put("updateTime", updateTime)
         return jsonObject
-    }
-
-    /**
-     * 移动至废纸篓
-     */
-    fun moveToTrash(id: String) {
-        val blogArticle = validateOwn(id)
-
-        // 只能删除草稿和已发布文章
-        if (blogArticle.status.canMoveToTrash()) {
-            updateStatusById(id, BlogArticleStatus.TRASH)
-        } else {
-            BlogArticleNotValidException().throws()
-        }
-    }
-
-    /**
-     * 从废纸篓恢复
-     */
-    fun recoverFromTrash(id: String) {
-        val blogArticle = validateOwn(id)
-
-        // 只能从垃圾箱中恢复
-        if (blogArticle.status.canRecoverFromTrash()) {
-            updateStatusById(id, BlogArticleStatus.DRAFT)
-        } else {
-            BlogArticleNotValidException().throws()
-        }
     }
 
     /**
@@ -197,24 +164,6 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
             super.findById(findById.firstId)
         }
     }
-
-    /**
-     * 校验文章是否属于自己
-     *
-     * @param id 文章Id
-     * @return BlogArticle 文章
-     */
-    fun validateOwn(id: String): BlogArticle {
-        val userId = StpUtil.getLoginIdAsString()
-        if (id.isBlank()) {
-            BlogArticleNotFoundException().throws()
-        }
-        val blogArticle = findById(id) ?: throw BlogArticleNotFoundException()
-        if (blogArticle.createBy != userId) {
-            BlogArticleNotValidException().throws()
-        }
-        return blogArticle
-    }
     //endregion
 
     //region SQL相关
@@ -259,12 +208,25 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
      */
     fun findFirstOrLastByFirstIdAndStatus(
         firstId: String,
-        status: BlogArticleStatus,
+        status: BlogArticleStatus? = null,
         first: Boolean = true
     ): BlogArticle? {
         val wrapper = ChainWrappers.queryChain(super.dao)
         wrapper.eq("first_id", firstId)
-        wrapper.eq("status", status)
+        wrapper.eq(status != null, "status", status)
+        wrapper.orderBy(true, first, "created_time")
+        val page = wrapper.page(Page(1, 1, 1))
+        return page.records.firstOrNull()
+    }
+
+    /**
+     * 根据firstId和其他参数（status、create_by）查询最新的或最旧的文章
+     */
+    fun findFirstOrLastByFirstIdAndParams(firstId: String, article: BlogArticle, first: Boolean = true): BlogArticle? {
+        val wrapper = ChainWrappers.queryChain(super.dao)
+        wrapper.eq("first_id", firstId)
+        wrapper.eq(article.status != null, "status", article.status)
+        wrapper.eq(!article.createBy.isNullOrBlank(), "create_by", article.createBy)
         wrapper.orderBy(true, first, "created_time")
         val page = wrapper.page(Page(1, 1, 1))
         return page.records.firstOrNull()

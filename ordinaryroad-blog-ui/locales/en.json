@@ -52,18 +52,22 @@
     },
     "actions": {
       "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
-      "publish": "Publish",
       "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
       "selectionOfHistoricalVersions": "Selection Of Historical Versions",
       "historicVersion": "Historic Version",
       "writing": "Start Writing",
       "saveDraft": "Save As Draft",
-      "directlyPublish": "Directly Publish",
+      "publish": "Publish",
       "like": "Like Article",
       "unlike": "Unlike Article",
       "edit": "Edit Article",
       "moveToTrash": "Move Article To Trash",
-      "recoverFromTrash": "Restore Article To Draft"
+      "recoverFromTrash": "Restore Article To Draft",
+      "startAuditing": "Start Auditing",
+      "auditApproved": "Approved",
+      "auditFailed": "Hit Back",
+      "articleViolation": "Violation",
+      "articleAppeal": "Appeal"
     },
     "startWritingHint": "Start Writing Now",
     "restoreReadingStatusHint": "Reading position, day and night mode parameters have been automatically restored",
@@ -82,21 +86,25 @@
       "userProfileTitle": "User Profile",
       "userSpaceTitle": "User Space",
       "article": {
-        "title": "Article Management",
+        "title": "Articles",
         "writing": "Writing",
         "status": {
           "draft": "Draft",
+          "pending": "Pending",
+          "underReview": "Under Review",
           "publish": "Publish",
+          "offend": "Offend",
+          "onAppeal": "On Appeal",
           "trash": "Trash"
         },
         "liked": "Liked Article",
-        "browsed": "Browsed Article"
+        "browsed": "Article Browsing History"
       },
       "type": {
-        "title": "Type Management"
+        "title": "Types"
       },
       "tag": {
-        "title": "Tag Management"
+        "title": "Tags"
       },
       "systemTitle": "System Management",
       "system": {

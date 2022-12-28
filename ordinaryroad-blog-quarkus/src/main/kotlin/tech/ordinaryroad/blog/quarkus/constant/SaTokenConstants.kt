@@ -22,49 +22,18 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.request;
+package tech.ordinaryroad.blog.quarkus.constant
 
-import org.jboss.resteasy.reactive.RestQuery;
-import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
-
-import java.util.List;
-
-public class BlogArticleQueryRequest extends BaseQueryRequest {
-
-    private static final long serialVersionUID = 980425530575917204L;
-
-    @RestQuery
-    public String title;
-
-    @RestQuery
-    public String summary;
-
-    @RestQuery
-    public String content;
-
-    @RestQuery
-    public Boolean canComment;
-
-    @RestQuery
-    public Boolean canReward;
-
-    @RestQuery
-    public Boolean original;
-
-    @RestQuery
-    public String firstId;
-
-    @RestQuery
-    public List<String> status;
-
-    @RestQuery
-    public String tagName;
-
-    @RestQuery
-    public String typeId;
-
-    @RestQuery
-    public Boolean own;
-
+/**
+ * 权限相关常量
+ *
+ * @author mjz
+ * @date 2022/12/27
+ */
+interface SaTokenConstants {
+    companion object {
+        const val ROLE_DEVELOPER = "DEVELOPER"
+        const val ROLE_ADMIN = "ADMIN"
+        const val ROLE_AUDITOR = "AUDITOR"
+    }
 }
-

@@ -22,49 +22,18 @@
  * SOFTWARE.
  */
 
-package tech.ordinaryroad.blog.quarkus.request;
+package tech.ordinaryroad.blog.quarkus.state.article
 
-import org.jboss.resteasy.reactive.RestQuery;
-import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
+import tech.ordinaryroad.blog.quarkus.state.article.base.ArticleState
+import javax.enterprise.context.ApplicationScoped
 
-import java.util.List;
-
-public class BlogArticleQueryRequest extends BaseQueryRequest {
-
-    private static final long serialVersionUID = 980425530575917204L;
-
-    @RestQuery
-    public String title;
-
-    @RestQuery
-    public String summary;
-
-    @RestQuery
-    public String content;
-
-    @RestQuery
-    public Boolean canComment;
-
-    @RestQuery
-    public Boolean canReward;
-
-    @RestQuery
-    public Boolean original;
-
-    @RestQuery
-    public String firstId;
-
-    @RestQuery
-    public List<String> status;
-
-    @RestQuery
-    public String tagName;
-
-    @RestQuery
-    public String typeId;
-
-    @RestQuery
-    public Boolean own;
-
+/**
+ * 自动保存的历史版本
+ *
+ * @author mjz
+ * @date 2022/11/22
+ */
+@ApplicationScoped
+class InheritAutoState : ArticleState() {
+    // ignore
 }
-
