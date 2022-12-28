@@ -170,7 +170,6 @@
                   :placeholder="$t('article.startWritingHint')"
                   :dark="$vuetify.theme.dark"
                   :read-only="false"
-                  pre-set-content=""
                   :transfer-content.sync="article.content"
                   @focus="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
                   @blur="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
