@@ -594,36 +594,6 @@ class BlogArticleResource {
     }
 
     /**
-     * 用户分页查询自己的文章
-     */
-    @SaCheckLogin
-    @GET
-    @Path("page/own/{page}/{size}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun pageOwn(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
-        val userId = StpUtil.getLoginIdAsString()
-
-        val wrapper = ChainWrappers.queryChain(articleService.dao)
-            .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
-            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
-            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
-            .eq(request.canComment != null, "can_comment", request.canComment)
-            .eq(request.canReward != null, "can_reward", request.canReward)
-            .eq(request.original != null, "original", request.original)
-            .`in`(!request.status.isNullOrEmpty(), "status", request.status)
-            .eq(!request.firstId.isNullOrBlank(), "first_id", request.firstId)
-            .eq("create_by", userId)
-
-        val page = articleService.page(request, wrapper)
-
-        val dtoPage = PageUtils.copyPage(page) { item ->
-            dtoService.transfer(item, BlogArticleDTO::class.java)
-        }
-
-        return dtoPage
-    }
-
-    /**
      * 用户分页查询自己已点赞的文章
      */
     @SaCheckLogin

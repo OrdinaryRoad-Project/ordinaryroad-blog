@@ -576,7 +576,7 @@ export default {
       return (item) => {
         switch (item.status) {
           case 'PUBLISH':
-            return `/${item.creatorUid}/article/${item.uuid}`
+            return `/${item.creatorUid}/article/${item.firstId}`
           case 'UNDER_REVIEW':
             return `/dashboard/article/auditing/${item.uuid}`
           case 'OFFEND':
@@ -793,13 +793,7 @@ export default {
       // 填充searchParams
       this.searchParams.firstId = this.presetFirstId
 
-      let promise
-      if (this.$access.hasAuditorRole()) {
-        promise = this.$apis.blog.article.page(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
-      } else {
-        promise = this.$apis.blog.article.pageOwn(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
-      }
-      promise
+      this.$apis.blog.article.page(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
         .then((result) => {
           this.$refs.dataTable.loadSuccessfully(result.records, result.total)
         })

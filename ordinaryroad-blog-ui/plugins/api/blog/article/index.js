@@ -144,12 +144,6 @@ export default {
         method: 'get'
       })
     },
-    pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
-      return $axios({
-        url: `/blog/article/page/own/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
-        method: 'get'
-      })
-    },
     pageOwnLiked: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
         url: `/blog/article/page/own/liked/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
