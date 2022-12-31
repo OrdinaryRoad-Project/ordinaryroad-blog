@@ -40,7 +40,7 @@
           style="background-color: darkgrey"
           alt=""
           class="or-cover-image"
-          :src="$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')"
+          :src="articleCoverImageUrl(item)"
         >
 
         <!-- 是否原创 -->
@@ -227,7 +227,14 @@ export default {
       summaryShow: false
     }
   },
-  computed: {},
+  computed: {
+    articleCoverImageUrl () {
+      return (item) => {
+        // return this.$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')
+        return this.$apis.blog.getFileUrl(item.coverImage, 'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')
+      }
+    }
+  },
   watch: {},
   created () {
   },
