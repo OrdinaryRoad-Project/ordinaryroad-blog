@@ -96,6 +96,7 @@ enum class BlogLogTypeEnum(
 
     //region BlogCommentResource
     BLOG_COMMENT_POST("用户发布评论", 40000, "/comment/post"),
+    BLOG_COMMENT_DELETE("用户删除自己数据权限内的评论", 40001, "/comment/delete/*", "DELETE"),
     //endregion
     ;
 

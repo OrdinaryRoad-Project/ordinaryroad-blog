@@ -57,6 +57,24 @@
             :label="$t('comment.content')"
           />
         </v-col>
+        <v-col
+          v-if="$access.hasAuditorRole()"
+          cols="6"
+          lg="3"
+          md="4"
+        >
+          <v-select
+            v-model="searchParams.own"
+            clearable
+            :items="[{label:$t('yes'),value:'true'},{label:$t('no'),value:'false'}]"
+            dense
+            outlined
+            item-text="label"
+            item-value="value"
+            hide-details="auto"
+            :label="$t('comment.onlyViewOwn')"
+          />
+        </v-col>
       </template>
 
       <template #actionsTop>
@@ -85,6 +103,7 @@
           <v-icon>mdi-eye</v-icon>
         </v-btn>
         <v-btn
+          v-if="item.creatorId===userInfo.user.uuid||$access.hasAuditorRole()"
           icon
           color="error"
           @click="onDeleteItem(item)"
@@ -109,6 +128,8 @@
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrBlogCommentDataTable',
@@ -142,11 +163,17 @@ export default {
     }
   },
   data: () => ({
-    searchParams: {},
+    searchParams: {
+      content: null,
+      own: null
+    },
     selectedIndex: -1,
     selectedItem: null
   }),
   computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    }),
     // 放在这为了支持国际化，如果放在data下切换语言不会更新
     headers () {
       const headers = [
@@ -186,7 +213,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.comment.deleteOwn(item.uuid)
+          this.$apis.blog.comment.delete(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('comment.actions.deleteForever')]))
               this.$refs.dataTable.getItems()
@@ -211,7 +238,7 @@ export default {
       sortBy,
       sortDesc
     }) {
-      this.$apis.blog.comment.pageOwn(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
+      this.$apis.blog.comment.page(offset / limit + 1, options.itemsPerPage, sortBy, sortDesc, this.searchParams)
         .then((result) => {
           this.$refs.dataTable.loadSuccessfully(result.records, result.total)
         })

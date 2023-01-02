@@ -30,8 +30,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dto.BlogCommentDTO
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentQueryRequest
@@ -40,6 +42,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogSubCommentVO
 import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.service.BlogValidateService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -60,6 +63,9 @@ class BlogCommentResource {
     protected lateinit var userService: BlogUserService
 
     @Inject
+    protected lateinit var validateService: BlogValidateService
+
+    @Inject
     protected lateinit var dtoService: BlogDtoService
 
     //region 已测试
@@ -76,31 +82,57 @@ class BlogCommentResource {
     }
 
     /**
-     * 用户删除自己的评论
+     * 用户删除自己数据权限内的评论
      */
     @SaCheckLogin
     @DELETE
-    @Path("delete/own/{id}")
+    @Path("delete/{id}")
     @Transactional
-    fun deleteOwn(
+    fun delete(
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
     ) {
-        commentService.deleteOwn(id)
+        val comment = validateService.validateComment(id, true)!!
+
+        // 数据权限校验，没有审核权限时不允许删除非自己的评论
+        if (comment.createBy != StpUtil.getLoginIdAsString() && !StpUtil.hasRole(SaTokenConstants.ROLE_AUDITOR)) {
+            BlogCommentNotValidException().throws()
+        }
+
+        // 只能删除未被删除的
+        if (!comment.deleted) {
+            commentService.delete(id)
+            // 删除评论的所有回复
+            if (comment.originalId.isBlank()) {
+                commentService.deleteByOriginalIdAndParentId(comment.uuid)
+            } else {
+                if (comment.parentId == comment.originalId) {
+                    commentService.deleteByOriginalIdAndParentId(comment.originalId, comment.uuid)
+                } else {
+                    commentService.delete(comment.uuid)
+                }
+            }
+        } else {
+            BlogCommentNotValidException().throws()
+        }
     }
 
     /**
-     * 用户分页查询所有自己的评论
+     * 用户分页查询自己数据权限内能看到的所有评论
      */
     @SaCheckLogin
     @GET
-    @Path("page/own/{page}/{size}")
-    fun pageOwn(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
-        val userId = StpUtil.getLoginIdAsString()
-
+    @Path("page/{page}/{size}")
+    fun page(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
         val wrapper = ChainWrappers.queryChain(commentService.dao)
             .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
-            .eq("create_by", userId)
+
+        // 数据权限处理
+        if (request.own == true
+            || !StpUtil.hasRole(SaTokenConstants.ROLE_AUDITOR)
+        ) {
+            wrapper.eq("create_by", StpUtil.getLoginIdAsString())
+        }
 
         val page = commentService.page(request, wrapper)
 
@@ -127,17 +159,6 @@ class BlogCommentResource {
     @Path("page/article/{articleId}/{page}/{size}")
     fun pageArticleComment(@BeanParam request: BlogCommentQueryRequest): Page<BlogArticleCommentVO> {
         return commentService.pageArticleComment(request)
-    }
-
-    /**
-     * 用户分页查询所有评论
-     */
-    @GET
-    @Path("page/{page}/{size}")
-    fun page(@BeanParam request: BlogCommentQueryRequest): Page<Any> {
-        throw BadRequestException()
-
-        return commentService.page(request)
     }
 
     /**
