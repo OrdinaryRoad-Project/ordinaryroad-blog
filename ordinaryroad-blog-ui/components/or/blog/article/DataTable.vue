@@ -631,7 +631,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.moveToTrashV2(item.uuid)
+          this.$apis.blog.article.moveToTrash(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
@@ -650,7 +650,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.recoverFromTrashV2(item.uuid)
+          this.$apis.blog.article.recoverFromTrash(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.recoverFromTrash')]))
               this.$refs.dataTable.getItems()
@@ -669,7 +669,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.publishV2(item)
+          this.$apis.blog.article.publish(item)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
               this.$refs.dataTable.getItems()
