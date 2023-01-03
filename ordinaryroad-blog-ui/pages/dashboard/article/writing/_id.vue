@@ -568,7 +568,7 @@ export default {
           content: this.$t('areYouSureToDoWhat', [this.$t('article.actions.publish')])
         }).then((dialog) => {
           if (dialog.isConfirm) {
-            this.$apis.blog.article.publishV2(this.article)
+            this.$apis.blog.article.publish(this.article)
               .then((data) => {
                 this.$snackbar.success(this.$t('whatSuccessfully'))
                 setTimeout(() => {
@@ -589,7 +589,7 @@ export default {
       if (this.formValid && !this.contentEmpty) {
         this.updateArticleTagNames()
         this.draftSaving = true
-        this.$apis.blog.article.saveDraftV2(this.article)
+        this.$apis.blog.article.saveDraft(this.article)
           .then((data) => {
             this.article = data
             this.draftSaving = false

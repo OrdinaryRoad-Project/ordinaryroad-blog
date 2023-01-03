@@ -41,8 +41,11 @@ class BlogCommentQueryRequest : BaseQueryRequest() {
     @RestPath
     var originalId: String? = null
 
+    @RestQuery
+    var own: Boolean? = null
+
     companion object {
-        private const val serialVersionUID: Long = 4650657847049901662L
+        private const val serialVersionUID: Long = 4114723447082010468L
     }
 
 }

@@ -46,15 +46,15 @@ export default {
         }
       })
     },
-    deleteOwn: (id) => {
+    delete: (id) => {
       return $axios({
-        url: `/blog/comment/delete/own/${id}`,
+        url: `/blog/comment/delete/${id}`,
         method: 'delete'
       })
     },
-    pageOwn: (page, size, sortBy, sortDesc, searchParams) => {
+    page: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
-        url: `/blog/comment/page/own/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        url: `/blog/comment/page/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },

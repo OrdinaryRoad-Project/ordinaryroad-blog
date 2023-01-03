@@ -38,7 +38,6 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleCannotCommentException
-import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
 import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import tech.ordinaryroad.blog.quarkus.mapstruct.BlogCommentMapStruct
 import tech.ordinaryroad.blog.quarkus.request.BlogCommentPostRequest
@@ -76,20 +75,6 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         return BlogComment::class.java
     }
 
-    /**
-     * 删除自己的评论
-     */
-    fun deleteOwn(id: String) {
-        val comment = validateService.validateOwnComment(id)
-
-        // 只能删除未被删除的
-        if (!comment.deleted) {
-            super.delete(id)
-        } else {
-            BlogCommentNotValidException().throws()
-        }
-    }
-
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
         val fromUser = blogService.currentUser()
@@ -105,7 +90,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         var parentComment: BlogComment? = null
         if (isReply) {
             // 回复，直接使用parent的articleId
-            parentComment = validateComment(request.parentId, true)!!
+            parentComment = validateService.validateComment(request.parentId, true)!!
 
             // 校验articleId
             if (request.articleId.isBlank()) {
@@ -159,7 +144,7 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
     }
 
     fun pageSubComment(request: BlogCommentQueryRequest): Page<BlogSubCommentVO> {
-        val originalComment = validateComment(request.originalId, true)!!
+        val originalComment = validateService.validateComment(request.originalId, true)!!
 
         val wrapper = ChainWrappers.queryChain(dao)
             .eq("article_id", originalComment.articleId)
@@ -255,20 +240,6 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
         return super.dao.selectCount(wrapper)
     }
-
-    /**
-     * 校验评论是否存在
-     */
-    fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
-        if (originalId.isNullOrBlank()) {
-            if (must) {
-                BlogCommentNotValidException().throws()
-            } else {
-                return null
-            }
-        }
-        return super.findById(originalId) ?: throw BlogCommentNotFoundException()
-    }
     //endregion
 
     //region SQL相关
@@ -276,6 +247,16 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         val wrapper = Wrappers.query<BlogComment>()
             .eq(userId.isNotBlank(), "create_by", userId)
         return super.dao.selectCount(wrapper)
+    }
+
+    fun deleteByOriginalIdAndParentId(originalId: String, parentId: String? = null) {
+        if (originalId.isBlank()) {
+            return
+        }
+        val wrapper = Wrappers.query<BlogComment>()
+            .eq("original_id", originalId)
+            .eq(!parentId.isNullOrBlank(), "parent_id", parentId)
+        super.dao.delete(wrapper)
     }
     //endregion
 

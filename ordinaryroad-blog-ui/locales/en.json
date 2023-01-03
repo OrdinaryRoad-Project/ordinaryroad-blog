@@ -202,6 +202,7 @@
     "allAccounts": "All Accounts"
   },
   "comment": {
+    "onlyViewOwn": "Only View Own",
     "content": "Content",
     "article": "Article",
     "totalRepliesCount": "{0} Replies",

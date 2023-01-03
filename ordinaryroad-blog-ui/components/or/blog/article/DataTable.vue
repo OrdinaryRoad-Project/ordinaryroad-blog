@@ -172,7 +172,7 @@
           />
         </v-col>
         <v-col
-          v-if="['PENDING', 'UNDER_REVIEW', 'ON_APPEAL', 'PUBLISH'].includes(searchParams.status)"
+          v-if="['PENDING', 'UNDER_REVIEW', 'ON_APPEAL', 'PUBLISH'].includes(searchParams.status)&&$access.hasAuditorRole()"
           cols="6"
           lg="3"
           md="4"
@@ -286,7 +286,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn
-          v-if="['DRAFT', 'PUBLISH'].includes(item.status)"
+          v-if="['DRAFT', 'PUBLISH'].includes(item.status)&&item.creatorId===userInfo.user.uuid"
           icon
           color="error"
           @click="onDeleteItem(item)"
@@ -390,6 +390,8 @@
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrBlogArticleDataTable',
@@ -506,6 +508,9 @@ export default {
     }
   }),
   computed: {
+    ...mapGetters('user', {
+      userInfo: 'getUserInfo'
+    }),
     // 放在这为了支持国际化，如果放在data下切换语言不会更新
     headers () {
       const statusHeader = {
@@ -626,7 +631,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.moveToTrashV2(item.uuid)
+          this.$apis.blog.article.moveToTrash(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
@@ -645,7 +650,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.recoverFromTrashV2(item.uuid)
+          this.$apis.blog.article.recoverFromTrash(item.uuid)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.recoverFromTrash')]))
               this.$refs.dataTable.getItems()
@@ -664,7 +669,7 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.publishV2(item)
+          this.$apis.blog.article.publish(item)
             .then(() => {
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
               this.$refs.dataTable.getItems()
