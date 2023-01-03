@@ -45,14 +45,14 @@ export default {
     $axios = $axios || axios
   },
   apis: {
-    saveDraftV2: (article) => {
+    saveDraft: (article) => {
       return $axios({
         url: '/blog/article/draft',
         method: 'post',
         data: article
       })
     },
-    publishV2: (article) => {
+    publish: (article) => {
       return $axios({
         url: '/blog/article/publish',
         method: 'post',
