@@ -45,30 +45,16 @@ export default {
     $axios = $axios || axios
   },
   apis: {
-    saveDraft: (article) => {
+    saveDraftV2: (article) => {
       return $axios({
         url: '/blog/article/draft',
         method: 'post',
         data: article
       })
     },
-    saveDraftV2: (article) => {
-      return $axios({
-        url: '/blog/article/draft_v2',
-        method: 'post',
-        data: article
-      })
-    },
-    publish: (article) => {
-      return $axios({
-        url: '/blog/article/publish',
-        method: 'post',
-        data: article
-      })
-    },
     publishV2: (article) => {
       return $axios({
-        url: '/blog/article/publish_v2',
+        url: '/blog/article/publish',
         method: 'post',
         data: article
       })
@@ -162,21 +148,9 @@ export default {
         method: 'post'
       })
     },
-    moveToTrashV2: (id) => {
-      return $axios({
-        url: `/blog/article/move_to_trash_v2/${id}`,
-        method: 'post'
-      })
-    },
     recoverFromTrash: (id) => {
       return $axios({
         url: `/blog/article/recover_from_trash/${id}`,
-        method: 'post'
-      })
-    },
-    recoverFromTrashV2: (id) => {
-      return $axios({
-        url: `/blog/article/recover_from_trash_v2/${id}`,
         method: 'post'
       })
     },

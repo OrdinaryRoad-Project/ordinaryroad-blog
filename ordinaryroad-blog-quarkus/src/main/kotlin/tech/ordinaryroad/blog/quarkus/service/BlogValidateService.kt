@@ -107,4 +107,18 @@ class BlogValidateService {
         return blogComment
     }
 
+    /**
+     * 校验评论是否存在
+     */
+    fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
+        if (originalId.isNullOrBlank()) {
+            if (must) {
+                BlogCommentNotValidException().throws()
+            } else {
+                return null
+            }
+        }
+        return commentService.findById(originalId) ?: throw BlogCommentNotFoundException()
+    }
+
 }

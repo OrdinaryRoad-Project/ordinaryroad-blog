@@ -203,6 +203,7 @@
     "allAccounts": "所有账号"
   },
   "comment": {
+    "onlyViewOwn": "只查看自己的",
     "content": "内容",
     "article": "文章",
     "totalRepliesCount": "共{0}条回复",

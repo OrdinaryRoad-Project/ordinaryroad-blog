@@ -78,6 +78,10 @@ public interface BlogCommentMapStruct extends BaseBlogMapStruct {
         BlogCommentService commentService = CDI.current().select(BlogCommentService.class).get();
 
         BlogComment parentComment = commentService.findById(parentId);
+        // 容错
+        if (parentComment == null) {
+            return null;
+        }
         // 防止死循环
         parentComment.setParentId(null);
         return this.transferSub(parentComment);
