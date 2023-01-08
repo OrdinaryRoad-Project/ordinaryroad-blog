@@ -426,7 +426,7 @@ export default {
     initData (data) {
       // 只能编辑草稿或已发布的
       if (data.status !== 'DRAFT' && data.status !== 'PUBLISH') {
-        this.$router.replace('/dashboard/article/writing')
+        this.$router.replace('/dashboard/article/writing/new')
       } else {
         this.article = data
         this.articleContent = data.content
