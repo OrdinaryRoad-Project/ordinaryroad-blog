@@ -570,7 +570,7 @@ export default {
           if (dialog.isConfirm) {
             this.$apis.blog.article.publish(this.article)
               .then((data) => {
-                this.$snackbar.success(this.$t('whatSuccessfully'))
+                this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.publish')]))
                 setTimeout(() => {
                   this.$router.replace('/dashboard/article/status/PENDING')
                   dialog.cancel()
