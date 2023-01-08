@@ -77,6 +77,8 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
 
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
+        val content = request.content
+
         val fromUser = blogService.currentUser()
 
         // 先转换，后面需要填充
@@ -85,7 +87,6 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         // 传入parentId视为回复评论
         val isReply = !request.parentId.isNullOrBlank()
 
-        val content = request.content
         val article: BlogArticle
         var parentComment: BlogComment? = null
         if (isReply) {
