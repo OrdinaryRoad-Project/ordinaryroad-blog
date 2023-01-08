@@ -940,6 +940,9 @@ export default {
               dialog.cancel()
               this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
             })
+            .catch(() => {
+              dialog.cancel()
+            })
         }
       })
     },
