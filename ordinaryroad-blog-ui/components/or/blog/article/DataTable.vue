@@ -690,9 +690,9 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.startAuditing(item.uuid)
             .then(() => {
-              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.startAuditing')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
+              this.$router.push(`/dashboard/article/auditing/${item.uuid}`)
             })
             .catch(() => {
               dialog.cancel()
