@@ -109,6 +109,8 @@
       },
       "systemTitle": "System Management",
       "system": {
+        "user": "Users",
+        "role": "Roles",
         "log": "Operation Log"
       },
       "comment": {

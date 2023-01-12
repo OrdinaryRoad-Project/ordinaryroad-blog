@@ -147,8 +147,29 @@ class BlogUserResource {
     }
 
     /**
+     * 搜索用户
+     */
+    @GET
+    @Path("search/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun search(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserVO> {
+        val wrapper = ChainWrappers.queryChain(userService.dao)
+            .like(!request.username.isNullOrBlank(), "username", "%" + request.username + "%")
+
+        val page = userService.page(request, wrapper)
+
+        val voPage = PageUtils.copyPage<BlogUser, BlogUserVO>(page).apply {
+            records = page.records.stream()
+                .map { userMapStruct.transfer(it) }
+                .collect(Collectors.toList())
+        }
+        return voPage
+    }
+
+    /**
      * 分页查询用户
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -179,7 +200,7 @@ class BlogUserResource {
     ): Long {
         userService.update(BlogUser().apply {
             this.uuid = userId
-            this.enabled = disableTime > 0
+            this.enabled = false
         })
 
         StpUtil.disable(userId, disableTime)

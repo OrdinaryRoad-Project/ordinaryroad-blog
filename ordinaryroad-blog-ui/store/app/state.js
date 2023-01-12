@@ -116,10 +116,32 @@ export default () => ({
       children: []
     },
     {
-      to: '/dashboard/system/log',
+      to: '/dashboard/system/user',
       titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
       icon: 'mdi-cog',
       children: [
+        {
+          to: '/dashboard/system/user',
+          titleKey: 'dashboardMenuTitles.dashboard.system.user',
+          icon: 'mdi-account',
+          children: [],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        },
+        {
+          to: '/dashboard/system/role',
+          titleKey: 'dashboardMenuTitles.dashboard.system.role',
+          icon: 'mdi-account-multiple',
+          children: [],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        },
         {
           to: '/dashboard/system/log',
           titleKey: 'dashboardMenuTitles.dashboard.system.log',

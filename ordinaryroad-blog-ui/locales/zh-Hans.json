@@ -109,6 +109,8 @@
       },
       "systemTitle": "系统管理",
       "system": {
+        "user": "用户",
+        "role": "角色",
         "log": "操作日志"
       },
       "comment": {
