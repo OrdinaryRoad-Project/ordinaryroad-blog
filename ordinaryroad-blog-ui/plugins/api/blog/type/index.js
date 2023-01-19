@@ -52,9 +52,10 @@ export default {
       })
     },
     updateOwn: ({ uuid, name }) => {
-      const data = { uuid, name }
+      const data = new FormData()
+      data.append('name', name)
       return $axios({
-        url: '/blog/type/update/own',
+        url: `/blog/type/update/own/${uuid}`,
         method: 'post',
         data
       })

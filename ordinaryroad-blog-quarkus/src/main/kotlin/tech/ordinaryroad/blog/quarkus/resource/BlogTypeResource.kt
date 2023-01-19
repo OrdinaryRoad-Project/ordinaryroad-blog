@@ -137,7 +137,7 @@ class BlogTypeResource {
      */
     @SaCheckLogin
     @POST
-    @Path("update/own")
+    @Path("update/own/{id}")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     fun updateOwn(@Valid request: BlogTypeUpdateRequest): BlogTypeDTO {
