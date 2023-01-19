@@ -21,34 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.dto
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
-import cn.hutool.core.util.StrUtil
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+let $axios = null
 
-/**
- * 博客角色DTO类
- */
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-data class BlogRoleDTO(
-    var roleName: String = StrUtil.EMPTY,
-    var roleCode: String = StrUtil.EMPTY,
-    var enabled: Boolean = true,
-) : BaseBlogModelDTO<BlogRole>() {
-
-    override fun parse(baseDo: BlogRole) {
-        roleName = baseDo.roleName
-        roleCode = baseDo.roleCode
-        enabled = baseDo.enabled
+export default {
+  initAxios (axios) {
+    $axios = $axios || axios
+  },
+  apis: {
+    create ({ roleName, roleCode }) {
+      const data = { roleName, roleCode }
+      return $axios({
+        url: `/blog/role/create?${urlEncode(data)}`,
+        method: 'post'
+      })
+    },
+    update ({ uuid, roleName, roleCode }) {
+      const data = { roleName, roleCode }
+      return $axios({
+        url: `/blog/role/${uuid}?${urlEncode(data)}`,
+        method: 'post'
+      })
+    },
+    updateEnabled (id, enabled) {
+      return $axios({
+        url: `/blog/role/${id}/enabled?${urlEncode(enabled, 'enabled')}`,
+        method: 'put'
+      })
+    },
+    page: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/role/page/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
     }
-
-    companion object {
-        private const val serialVersionUID: Long = -425690715347674015L
-    }
-
+  }
 }

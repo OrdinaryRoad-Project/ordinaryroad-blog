@@ -59,6 +59,20 @@ class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
 
         return super.dao.selectOne(wrapper)
     }
+
+    /**
+     * 根据名称和code查询是否存在
+     */
+    fun existByRoleNameOrRoleCode(roleName: String? = null, roleCode: String? = null): Boolean {
+        if (roleName.isNullOrBlank() && roleCode.isNullOrBlank()) {
+            return true
+        }
+        val wrapper = Wrappers.query<BlogRole>()
+            .eq(!roleName.isNullOrBlank(), "role_name", roleName)
+            .or()
+            .eq(!roleCode.isNullOrBlank(), "role_code", roleCode)
+        return super.dao.exists(wrapper)
+    }
     //endregion
 
 }

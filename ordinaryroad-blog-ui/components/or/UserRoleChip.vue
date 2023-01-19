@@ -24,58 +24,61 @@
 
 <template>
   <v-menu
-    :min-width="minWidth"
-    :eager="eager&&eagerModel"
-    :offset-y="offsetY"
-    :open-on-hover="openOnHover"
-    :close-on-content-click="closeOnContentClick"
+    open-delay="500"
+    open-on-hover
   >
     <template #activator="{ on, attrs }">
-      <slot name="activator" :on="on" :attrs="attrs" />
+      <v-chip
+        :small="small"
+        :color="roleColor(role.roleCode)"
+        :outlined="roleOutlined(role.roleCode)"
+        label
+        :class="chipClass"
+        v-bind="attrs"
+        v-on="on"
+      >
+        {{ role.roleName }}
+      </v-chip>
     </template>
-    <slot />
+    <v-card>
+      <v-card-title>{{ role.roleName }}</v-card-title>
+    </v-card>
   </v-menu>
 </template>
 
 <script>
-
 export default {
-  name: 'OrBaseMenu',
+  name: 'OrUserRoleChip',
   props: {
-    eager: {
-      type: Boolean,
-      default: false
-    },
-    closeOnContentClick: {
+    small: {
       type: Boolean,
       default: true
     },
-    openOnHover: {
-      type: Boolean,
-      default: false
+    role: {
+      type: Object,
+      required: true
     },
-    minWidth: {
+    chipClass: {
       type: String,
-      default: null
-    },
-    offsetY: {
-      type: Boolean,
-      default: false
+      default: ''
     }
   },
-  data: () => ({
-    eagerModel: false
-  }),
-  created () {
-  },
-  mounted () {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.$nextTick(() => {
-          this.eagerModel = true
-        })
-      }, 500)
-    })
+  computed: {
+    roleColor () {
+      return (roleCode) => {
+        let color = null
+        const primary = ['DEVELOPER', 'ADMIN', 'SSSSSSVIP']
+        if (primary.includes(roleCode)) {
+          color = 'primary'
+        }
+        return color
+      }
+    },
+    roleOutlined () {
+      return (roleCode) => {
+        return !['DEVELOPER'].includes(roleCode)
+      }
+    }
   }
 }
 </script>

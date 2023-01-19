@@ -21,34 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.dto
 
-import cn.hutool.core.util.StrUtil
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+package tech.ordinaryroad.blog.quarkus.exception
 
-/**
- * 博客角色DTO类
- */
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-data class BlogRoleDTO(
-    var roleName: String = StrUtil.EMPTY,
-    var roleCode: String = StrUtil.EMPTY,
-    var enabled: Boolean = true,
-) : BaseBlogModelDTO<BlogRole>() {
-
-    override fun parse(baseDo: BlogRole) {
-        roleName = baseDo.roleName
-        roleCode = baseDo.roleCode
-        enabled = baseDo.enabled
-    }
-
+class BlogRoleNameOrCodeAlreadyExistException : BaseBlogException(StatusCode.BLOG_ROLE_NAME_OR_CODE_ALREADY_EXIST) {
     companion object {
-        private const val serialVersionUID: Long = -425690715347674015L
+        private const val serialVersionUID: Long = -7721268675374842194L
     }
-
 }

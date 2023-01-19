@@ -21,34 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.dto
 
-import cn.hutool.core.util.StrUtil
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+package tech.ordinaryroad.blog.quarkus.enums
+
+import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 
 /**
- * 博客角色DTO类
+ * 内置角色
+ *
+ * @author mjz
+ * @date 2023/1/19
  */
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-data class BlogRoleDTO(
-    var roleName: String = StrUtil.EMPTY,
-    var roleCode: String = StrUtil.EMPTY,
-    var enabled: Boolean = true,
-) : BaseBlogModelDTO<BlogRole>() {
-
-    override fun parse(baseDo: BlogRole) {
-        roleName = baseDo.roleName
-        roleCode = baseDo.roleCode
-        enabled = baseDo.enabled
-    }
+enum class BlogBuiltInRoleEnum(
+    val roleCode: String,
+    val roleName: String,
+) {
+    DEVELOPER(SaTokenConstants.ROLE_DEVELOPER, "站长"),
+    ADMIN(SaTokenConstants.ROLE_ADMIN, "管理员"),
+    AUDITOR(SaTokenConstants.ROLE_AUDITOR, "审核员"),
+    SSSSSSVIP(SaTokenConstants.ROLE_SSSSSSVIP, "SSSSSSVIP"),
+    ;
 
     companion object {
-        private const val serialVersionUID: Long = -425690715347674015L
+        fun getByRoleCode(roleCode: String?): BlogBuiltInRoleEnum? {
+            if (roleCode.isNullOrBlank()) {
+                return null
+            }
+            for (value in values()) {
+                if (value.roleCode == roleCode) {
+                    return value
+                }
+            }
+            return null
+        }
     }
-
 }

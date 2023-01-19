@@ -21,34 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.dto
+package tech.ordinaryroad.blog.quarkus.request
 
-import cn.hutool.core.util.StrUtil
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import io.quarkus.runtime.annotations.RegisterForReflection
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
+import javax.validation.constraints.NotBlank
+import javax.ws.rs.PathParam
 
-/**
- * 博客角色DTO类
- */
-@JsonInclude
-@JsonPropertyOrder
-@RegisterForReflection
-data class BlogRoleDTO(
-    var roleName: String = StrUtil.EMPTY,
-    var roleCode: String = StrUtil.EMPTY,
-    var enabled: Boolean = true,
-) : BaseBlogModelDTO<BlogRole>() {
+class BlogRoleSaveRequest : BaseRequest() {
 
-    override fun parse(baseDo: BlogRole) {
-        roleName = baseDo.roleName
-        roleCode = baseDo.roleCode
-        enabled = baseDo.enabled
-    }
+    @PathParam("id")
+    var uuid: String? = null
+
+    @RestQuery
+    @NotBlank(message = "名称不能为空")
+    var roleName: String = ""
+
+    @RestQuery
+    @NotBlank(message = "code不能为空")
+    var roleCode: String = ""
 
     companion object {
-        private const val serialVersionUID: Long = -425690715347674015L
+        private const val serialVersionUID: Long = 6285311181467403631L
     }
 
 }
