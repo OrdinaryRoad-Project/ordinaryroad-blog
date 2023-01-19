@@ -30,7 +30,7 @@
     content-class="rounded-0"
     :dark="params.dark"
     :light="params.light"
-    :persistent="params.persistent==null?params.loading:params.persistent"
+    :persistent="loading||(params.persistent==null?params.loading:params.persistent)"
     :internal-activator="params.internalActivator"
     :overlay-color="params.overlayColor"
     :overlay-opacity="params.overlayOpacity"
@@ -45,7 +45,7 @@
         </v-icon>
         {{ params.title || i18n.$t('attention') }}
       </v-card-title>
-      <v-card-text class="text-subtitle-1" style="white-space: pre-line">
+      <v-card-text v-if="params.content" class="text-subtitle-1" style="white-space: pre-line">
         {{ params.content }}
       </v-card-text>
       <v-card-actions v-show="!params.hideActions" class="pa-2">
@@ -111,6 +111,9 @@ export default {
         this.isConfirm = false
         this.$destroy()
       }, 300)
+    },
+    cancelLoading () {
+      this.loading = false
     },
     destroyDom (v) {
       if (!v) {
