@@ -25,7 +25,7 @@
 <template>
   <v-dialog
     v-model="value"
-    :persistent="persistent==null?loading:persistent"
+    :persistent="loadingModel||(persistent==null?loading:persistent)"
     width="80%"
     scrollable
     @input="input"
