@@ -86,7 +86,7 @@ export default ({
     return hasRole
   }
   const hasDeveloperOrAdminRole = () => {
-    return hasRolesOr('DEVELOPER', 'ADMIN')
+    return hasRolesOr(['DEVELOPER', 'ADMIN'])
   }
   inject('access', {
     has: (permissionCode) => {
