@@ -35,6 +35,7 @@
         v-model.trim="input"
         :rules="rules"
         :label="label"
+        :hint="hint"
       />
     </v-form>
   </or-base-dialog>
@@ -44,6 +45,10 @@
 export default {
   name: 'OrInputDialog',
   props: {
+    defaultValue: {
+      type: [String, Number],
+      default: ''
+    },
     title: {
       type: String,
       required: true
@@ -55,11 +60,18 @@ export default {
     rules: {
       type: Array,
       default: () => []
+    },
+    hint: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
     input: ''
   }),
+  created () {
+    this.input = this.defaultValue
+  },
   methods: {
     show () {
       this.$refs.dialog.show()
