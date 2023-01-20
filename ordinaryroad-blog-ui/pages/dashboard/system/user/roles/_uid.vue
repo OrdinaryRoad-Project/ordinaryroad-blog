@@ -39,15 +39,13 @@ export default {
     // 必填
     return !!params.uid
   },
-  async asyncData ({ route, $apisServer, store }) {
+  async asyncData ({ route, $apis, store }) {
     let presetModel
     if (route.params.item) {
       presetModel = route.params.item
     } else {
       // 加载用户
-      presetModel = (await $apisServer.blog.user.findByUid(
-        store.getters['user/getTokenInfo'].value, { uid: route.params.uid })
-      )
+      presetModel = (await $apis.blog.user.findByUid(route.params.uid))
     }
     return { presetModel }
   },

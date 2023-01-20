@@ -76,6 +76,19 @@ export default {
         url: `/blog/role/all?${urlEncode(data)}`,
         method: 'get'
       })
+    },
+    findByUniqueColumn: ({ roleCode = null, roleName = null }, token = null) => {
+      const data = { roleCode, roleName }
+      return token
+        ? $axios({
+          url: `/blog/role/unique?${urlEncode(data)}`,
+          method: 'get',
+          headers: { 'or-blog-token': token }
+        })
+        : $axios({
+          url: `/blog/role/unique?${urlEncode(data)}`,
+          method: 'get'
+        })
     }
   }
 }
