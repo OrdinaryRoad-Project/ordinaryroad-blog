@@ -1,168 +1,184 @@
 {
-  "user": {
-    "space": {
-      "of": "User Space Of {0}"
-    },
-    "basicInfo": {
-      "articlesCount": "Articles",
-      "commentsCount": "Comments"
-    }
-  },
-  "closeCatalogue": "Close Catalogue",
-  "catalogue": "Catalogue",
-  "authorizedHint": "Authorization passed, obtaining user information...",
-  "clearAvatar": "Clear Avatar",
-  "loginHint": "Currently, only account unbinding is supported, and canceling is not supported. After successful login, you can bind other accounts by unbinding",
-  "understandAnd": "Understand And {0}",
-  "oauthAccountAlreadyRegisteredHint": "The account has been registered, please cancel the account first (under development...)",
   "all": "All",
   "appName": "OR BLOG",
   "article": {
-    "pinned": "Popular Articles",
-    "cannotCommentHint": "The owner does not want to be commented by others for the time being~",
-    "likedTime": "Like Time: {0}",
-    "browsedTime": "Browse Time: {0}",
-    "firstBrowsedTime": "First Browse Time: {0}",
-    "detail": {
-      "copyrightStatement": {
-        "title": "Copyright Statement: ",
-        "statementPrefix": "This article is an original article by OrdinaryRoad blogger {0}, following the",
-        "statementSuffix": "license agreement, please attach a link to this article and this statement for reprinting.",
-        "link": "Link to this article: ",
-        "author": "Author: "
-      },
-      "readingTimeHint": {
-        "prefix": "Friendly Reminder: ",
-        "hint": "This article needs to be read about "
-      }
+    "actions": {
+      "articleAppeal": "Appeal",
+      "articleViolation": "Violation",
+      "auditApproved": "Approved",
+      "auditFailed": "Hit Back",
+      "edit": "Edit Article",
+      "historicVersion": "Historic Version",
+      "like": "Like Article",
+      "moveToTrash": "Move Article To Trash",
+      "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
+      "publish": "Publish",
+      "recoverFromTrash": "Restore Article To Draft",
+      "saveDraft": "Save As Draft",
+      "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
+      "selectionOfHistoricalVersions": "Selection Of Historical Versions",
+      "startAuditing": "Start Auditing",
+      "unlike": "Unlike Article",
+      "writing": "Start Writing"
     },
-    "title": "Title",
-    "coverImage": "Cover Image",
-    "summary": "Summary",
-    "content": "Content",
-    "status": "Status",
-    "typeName": "Type",
-    "tagNames": "Tags",
+    "browsedTime": "Browse Time: {0}",
     "canComment": "Can Comment",
     "canReward": "Can Reward",
+    "cannotCommentHint": "The owner does not want to be commented by others for the time being~",
+    "content": "Content",
+    "coverImage": "Cover Image",
+    "detail": {
+      "copyrightStatement": {
+        "author": "Author: ",
+        "link": "Link to this article: ",
+        "statementPrefix": "This article is an original article by OrdinaryRoad blogger {0}, following the",
+        "statementSuffix": "license agreement, please attach a link to this article and this statement for reprinting.",
+        "title": "Copyright Statement: "
+      },
+      "readingTimeHint": {
+        "hint": "This article needs to be read about ",
+        "prefix": "Friendly Reminder: "
+      }
+    },
+    "firstBrowsedTime": "First Browse Time: {0}",
+    "likedTime": "Like Time: {0}",
+    "onlyViewOwn": "Only View Own",
     "original": "Original",
     "originalOptions": {
       "original": "Original",
       "reprint": "Reprint"
     },
-    "onlyViewOwn": "Only View Own",
-    "actions": {
-      "onlyEditDraftOrPublishHint": "Only draft or published articles can be edited",
-      "selectHistoricHint": "Make sure to use this historical version, the local editor will lose the content",
-      "selectionOfHistoricalVersions": "Selection Of Historical Versions",
-      "historicVersion": "Historic Version",
-      "writing": "Start Writing",
-      "saveDraft": "Save As Draft",
-      "publish": "Publish",
-      "like": "Like Article",
-      "unlike": "Unlike Article",
-      "edit": "Edit Article",
-      "moveToTrash": "Move Article To Trash",
-      "recoverFromTrash": "Restore Article To Draft",
-      "startAuditing": "Start Auditing",
-      "auditApproved": "Approved",
-      "auditFailed": "Hit Back",
-      "articleViolation": "Violation",
-      "articleAppeal": "Appeal"
-    },
-    "startWritingHint": "Start Writing Now",
+    "pinned": "Popular Articles",
     "restoreReadingStatusHint": "Reading position, day and night mode parameters have been automatically restored",
-    "top": "Top"
+    "startWritingHint": "Start Writing Now",
+    "status": "Status",
+    "summary": "Summary",
+    "tagNames": "Tags",
+    "title": "Title",
+    "top": "Top",
+    "typeName": "Type"
   },
   "articleCount": "Articles {0}",
-  "avatar": "Avatar",
+  "authorizedHint": "Authorization passed, obtaining user information...",
+  "basicUserInfo": {
+    "articlesCount": "Articles",
+    "commentsCount": "Comments"
+  },
+  "catalogue": "Catalogue",
+  "clearAvatar": "Clear Avatar",
+  "closeCatalogue": "Close Catalogue",
+  "comment": {
+    "actions": {
+      "deleteForever": "Delete",
+      "placeholder": "Practice makes perfect.",
+      "reply": "Reply",
+      "send": "Send",
+      "viewOriginal": "Original Comment"
+    },
+    "article": "Article",
+    "content": "Content",
+    "onlyViewOwn": "Only View Own",
+    "totalRepliesCount": "{0} Replies"
+  },
   "commentCount": "Comments {0}",
   "continueReadingOnOtherDevices": "Continue reading on other devices",
   "copied": "Copied",
   "copy": "Copy",
-  "createWhat": "Create {0}",
   "dashboardMenuTitles": {
     "dashboard": {
-      "title": "Dashboard",
-      "userProfileTitle": "User Profile",
-      "userSpaceTitle": "User Space",
       "article": {
-        "title": "Articles",
-        "writing": "Writing",
+        "browsed": "Article Browsing History",
+        "liked": "Liked Article",
         "status": {
           "draft": "Draft",
-          "pending": "Pending",
-          "underReview": "Under Review",
-          "publish": "Publish",
           "offend": "Offend",
           "onAppeal": "On Appeal",
-          "trash": "Trash"
+          "pending": "Pending",
+          "publish": "Publish",
+          "trash": "Trash",
+          "underReview": "Under Review"
         },
-        "liked": "Liked Article",
-        "browsed": "Article Browsing History"
+        "title": "Articles",
+        "writing": "Writing"
       },
-      "type": {
-        "title": "Types"
+      "comment": {
+        "title": "Comments"
+      },
+      "system": {
+        "log": "Operation Log",
+        "role": {
+          "title": "Roles",
+          "users": "Role Users"
+        },
+        "title": "System Management",
+        "user": {
+          "roles": "User Roles",
+          "title": "Users"
+        }
       },
       "tag": {
         "title": "Tags"
       },
-      "systemTitle": "System Management",
-      "system": {
-        "user": "Users",
-        "role": "Roles",
-        "log": "Operation Log"
+      "title": "Dashboard",
+      "type": {
+        "title": "Types"
       },
-      "comment": {
-        "title": "Comments"
-      }
+      "userProfileTitle": "User Profile",
+      "userSpaceTitle": "User Space"
     }
   },
   "feedback": "Feedback",
   "focusSearchInputTip": "Press '/' to start input",
   "focusSearchInputTipWhenFocused": "Enter to search, ESC to cancel",
   "log": {
-    "ip": "Ip",
-    "path": "Path",
-    "method": "Method",
-    "headers": "Headers",
+    "consumedTime": "ConsumedTime",
     "cookies": "Cookies",
+    "headers": "Headers",
+    "ip": "Ip",
+    "method": "Method",
+    "path": "Path",
     "pathParams": "PathParams",
     "queryParams": "QueryParams",
     "request": "Request",
-    "status": "Status",
-    "responseHeaders": "ResponseHeaders",
-    "responseCookies": "ResponseCookies",
     "response": "Response",
-    "consumedTime": "ConsumedTime",
+    "responseCookies": "ResponseCookies",
+    "responseHeaders": "ResponseHeaders",
+    "status": "Status",
     "type": "Type"
   },
   "loginFormTitle": "Login To OR BLOG",
+  "loginHint": "Currently, only account unbinding is supported, and canceling is not supported. After successful login, you can bind other accounts by unbinding",
   "loginToFeedbackTip": " for a better experience~",
   "myStats": {
-    "title": "My Stats",
-    "publishedArticlesCount": "Published Articles Count",
     "browsedArticlesCount": "Browsed Articles Count",
-    "likedArticlesCount": "Liked Articles Count",
-    "typesCount": "Types Count",
-    "postedCommentsCount": "Posted Comments Count",
     "charts": {
       "dailyPosts": "Article Publishing Heatmap",
-      "topNTypesArticle": "Types Top 10 Articles Chart",
+      "topNBrowsedArticle": "Top 10 Browsed Articles Chart",
       "topNCommentsArticle": "Comments Top 10 Articles Chart",
       "topNLikedArticle": "Top 10 Liked Articles Chart",
-      "topNBrowsedArticle": "Top 10 Browsed Articles Chart"
-    }
+      "topNTypesArticle": "Types Top 10 Articles Chart"
+    },
+    "likedArticlesCount": "Liked Articles Count",
+    "postedCommentsCount": "Posted Comments Count",
+    "publishedArticlesCount": "Published Articles Count",
+    "title": "My Stats",
+    "typesCount": "Types Count"
   },
   "oAuthUser": {
     "actions": {
-      "update": "Update",
       "add": "Bind",
-      "remove": "Unbind"
+      "remove": "Unbind",
+      "update": "Update"
     }
   },
+  "oauthAccountAlreadyRegisteredHint": "The account has been registered, please cancel the account first (under development...)",
   "other": "Other",
   "overview": "Overview",
+  "roleDataTable": {
+    "enabled": "Enabled",
+    "roleCode": "Role Code",
+    "roleName": "Role Name"
+  },
   "selectVersion": "Select Version",
   "status": {
     "article": {
@@ -173,15 +189,18 @@
     "name": "Tag Name"
   },
   "themeTitles": {
-    "light": "Light",
     "dark": "Dark",
     "hunk": "Hunk",
+    "light": "Light",
     "system": "Dark Hunk"
   },
   "titles": {
     "form": {
+      "log": "Operation Log",
+      "role": "Role",
+      "tag": "Tag",
       "type": "Type",
-      "tag": "Tag"
+      "userRoles": "User Roles"
     }
   },
   "type": {
@@ -189,31 +208,26 @@
   },
   "typeCount": "Types {0}",
   "typeTitle": "Type",
-  "updateWhat": "Update {0}",
+  "understandAnd": "Understand And {0}",
   "userCount": "Users {0}",
+  "userDataTable": {
+    "enabled": "Enabled",
+    "uid": "UID",
+    "username": "Username"
+  },
   "userMenuTitles": {
-    "space": "User Space",
-    "dashboard": "Dashboard",
-    "profile": "User Profile",
     "article": "Articles",
-    "type": "Types",
+    "dashboard": "Dashboard",
+    "log": "Operation Logs",
+    "profile": "User Profile",
+    "space": "User Space",
     "tag": "Tags",
-    "log": "Operation Logs"
+    "type": "Types"
   },
   "userProfile": {
     "allAccounts": "All Accounts"
   },
-  "comment": {
-    "onlyViewOwn": "Only View Own",
-    "content": "Content",
-    "article": "Article",
-    "totalRepliesCount": "{0} Replies",
-    "actions": {
-      "deleteForever": "Delete",
-      "send": "Send",
-      "reply": "Reply",
-      "viewOriginal": "Original Comment",
-      "placeholder": "Practice makes perfect."
-    }
+  "userSpace": {
+    "of": "User Space Of {0}"
   }
 }

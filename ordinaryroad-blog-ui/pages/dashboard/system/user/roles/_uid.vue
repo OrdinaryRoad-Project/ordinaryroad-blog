@@ -23,14 +23,47 @@
   -->
 
 <template>
-  <v-sheet :height="200" class="d-flex justify-center align-center">
-    <h1>{{ $vuetify.lang.t('$vuetify.noDataText') }}</h1>
-  </v-sheet>
+  <base-material-card
+    icon="mdi-account-multiple"
+    :title="$t('dashboardMenuTitles.dashboard.system.user.roles')"
+  >
+    <or-blog-user-roles-form
+      :preset="presetModel"
+    />
+  </base-material-card>
 </template>
 
 <script>
 export default {
-  name: 'OrEmpty'
+  validate ({ params }) {
+    // 必填
+    return !!params.uid
+  },
+  async asyncData ({ route, $apisServer, store }) {
+    let presetModel
+    if (route.params.item) {
+      presetModel = route.params.item
+    } else {
+      // 加载用户
+      presetModel = (await $apisServer.blog.user.findByUid(
+        store.getters['user/getTokenInfo'].value, { uid: route.params.uid })
+      )
+    }
+    return { presetModel }
+  },
+  data: () => ({
+    presetModel: null
+  }),
+  head () {
+    return {
+      title: this.$t('dashboardMenuTitles.dashboard.system.user.roles')
+    }
+  },
+  created () {
+  },
+  mounted () {
+  },
+  methods: {}
 }
 </script>
 

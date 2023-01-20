@@ -27,8 +27,15 @@ package tech.ordinaryroad.blog.quarkus.service
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogRoleDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserRoles
+import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
+import tech.ordinaryroad.blog.quarkus.exception.BlogUserNotFoundException
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.differ
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 /**
  * Service-Role
@@ -38,6 +45,12 @@ import javax.enterprise.context.ApplicationScoped
  */
 @ApplicationScoped
 class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
+
+    @Inject
+    protected lateinit var userService: BlogUserService
+
+    @Inject
+    protected lateinit var userRolesService: BlogUserRolesService
 
     override fun getEntityClass(): Class<BlogRole> {
         return BlogRole::class.java
@@ -50,12 +63,43 @@ class BlogRoleService : BaseService<BlogRoleDAO, BlogRole>() {
     fun findAllByUserId(userId: String): List<BlogRole> {
         return super.dao.selectAllByUserId(userId)
     }
+
+    fun updateUsers(id: String, userUuids: List<String>) {
+        val oldUserIdList = userService.findAllByRoleUuid(id)
+            .stream()
+            .map(BlogUser::getUuid)
+            .collect(Collectors.toList())
+
+        val lists = oldUserIdList.differ(userUuids)
+
+        val userIdListToDelete = lists[0]
+        val userIdListToAdd = lists[1]
+
+        userRolesService.deleteByUserIdsAndRoleId(userIdListToDelete, id)
+        userIdListToAdd.forEach {
+            val user = userService.findById(it)
+            if (user == null) {
+                BlogUserNotFoundException().throws()
+            }
+            userRolesService.create(BlogUserRoles().apply {
+                this.userId = it
+                this.roleId = id
+            })
+        }
+    }
     //endregion
 
     //region SQL相关
     fun findByRoleCode(roleCode: String): BlogRole? {
         val wrapper = Wrappers.query<BlogRole>()
             .eq("role_code", roleCode)
+
+        return super.dao.selectOne(wrapper)
+    }
+
+    fun findByRoleName(roleName: String): BlogRole? {
+        val wrapper = Wrappers.query<BlogRole>()
+            .eq("role_name", roleName)
 
         return super.dao.selectOne(wrapper)
     }

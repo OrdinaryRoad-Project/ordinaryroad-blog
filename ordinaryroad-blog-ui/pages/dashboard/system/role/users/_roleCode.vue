@@ -23,40 +23,44 @@
   -->
 
 <template>
-  <div class="d-flex flex-column justify-center align-center" style="height: 100vh;text-align: center">
-    <p class="font-weight-bold display-4">
-      404
-    </p><br>
-    <p class="display-2">
-      {{ error.message }}
-    </p><br>
-    <p>{{ $t('error.404') }}</p>
-    <div>
-      <v-btn class="ma-5" large @click="$router.replace({path:'/'})">
-        {{ $t('error.home') }}
-      </v-btn>
-      <v-btn color="primary" large class="ma-5" @click="$router.back()">
-        {{ $t('error.back') }}
-      </v-btn>
-    </div>
-  </div>
+  <base-material-card
+    icon="mdi-account"
+    :title="$t('dashboardMenuTitles.dashboard.system.role.users')"
+  >
+    <or-blog-role-users-form :preset="presetModel" />
+  </base-material-card>
 </template>
-
 <script>
 export default {
-  name: 'OrNotFound',
-  props: {
-    error: {
-      type: Object,
-      required: true
+  validate ({ params }) {
+    // 必填
+    return !!params.roleCode
+  },
+  async asyncData ({ route, $apisServer, store }) {
+    let presetModel
+    if (route.params.item) {
+      presetModel = route.params.item
+    } else {
+      // 加载角色
+      presetModel = (await $apisServer.blog.role.findByUniqueColumn(
+        store.getters['user/getTokenInfo'].value, { roleCode: route.params.roleCode })
+      )
+    }
+    return { presetModel }
+  },
+  data: () => ({
+    presetModel: null
+  }),
+  head () {
+    return {
+      title: this.$t('dashboardMenuTitles.dashboard.system.role.users')
     }
   },
-  data () {
-    return {}
-  },
-  watch: {},
   created () {
-  }
+  },
+  mounted () {
+  },
+  methods: {}
 }
 </script>
 

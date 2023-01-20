@@ -25,13 +25,16 @@ package tech.ordinaryroad.blog.quarkus.request
 
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
+import javax.validation.constraints.Size
 
 class BlogRoleQueryRequest : BaseQueryRequest() {
 
     @RestQuery
+    @Size(max = 100, message = "name长度不能大于32")
     var roleName: String? = null
 
     @RestQuery
+    @Size(max = 100, message = "code长度不能大于32")
     var roleCode: String? = null
 
     companion object {

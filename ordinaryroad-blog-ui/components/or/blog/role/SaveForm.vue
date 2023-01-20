@@ -27,12 +27,12 @@
     <v-text-field
       v-model="model.roleName"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
-      :label="$t('role.roleName')"
+      :label="$t('roleDataTable.roleName')"
     />
     <v-text-field
       v-model="model.roleCode"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
-      :label="$t('role.roleCode')"
+      :label="$t('roleDataTable.roleCode')"
     />
   </v-form>
 </template>

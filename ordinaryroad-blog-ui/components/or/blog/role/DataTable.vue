@@ -96,9 +96,17 @@
           v-if="!isBuiltInRole(item)"
           icon
           color="accent"
+          class="me-2"
           @click="$refs.dataTable.editItem(item)"
         >
           <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          color="accent"
+          @click="$router.push({ name: 'dashboard-system-role-users-roleCode', params: { roleCode: item.roleCode, item } })"
+        >
+          <v-icon>mdi-account</v-icon>
         </v-btn>
       </template>
     </or-base-data-table>

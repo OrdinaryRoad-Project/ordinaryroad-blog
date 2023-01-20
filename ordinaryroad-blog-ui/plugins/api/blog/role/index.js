@@ -41,7 +41,7 @@ export default {
       const data = { roleName, roleCode }
       return $axios({
         url: `/blog/role/${uuid}?${urlEncode(data)}`,
-        method: 'post'
+        method: 'put'
       })
     },
     updateEnabled (id, enabled) {
@@ -50,9 +50,30 @@ export default {
         method: 'put'
       })
     },
+    updateUsers ({ uuid, userUuids }) {
+      const data = { userUuids }
+      return $axios({
+        url: `/blog/role/${uuid}/users`,
+        method: 'put',
+        data
+      })
+    },
     page: (page, size, sortBy, sortDesc, searchParams) => {
       return $axios({
         url: `/blog/role/page/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
+        method: 'get'
+      })
+    },
+    findAllByUserUuid: (id) => {
+      return $axios({
+        url: `/blog/role/user/${id}`,
+        method: 'get'
+      })
+    },
+    findAll ({ roleCode }) {
+      const data = { roleCode }
+      return $axios({
+        url: `/blog/role/all?${urlEncode(data)}`,
         method: 'get'
       })
     }

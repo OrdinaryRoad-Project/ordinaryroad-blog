@@ -37,7 +37,7 @@
  这里我们是采用的ES6 语法 引入 的qs模块
  */
 
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 let $axios = null
 
@@ -94,6 +94,20 @@ export default {
       const data = { userId }
       return $axios({
         url: `/blog/user/disable/untie?${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    updateRoles: ({ uuid, roleUuids }) => {
+      const data = { roleUuids }
+      return $axios({
+        url: `/blog/user/${uuid}/roles`,
+        method: 'put',
+        data
+      })
+    },
+    findAllByRoleUuid (id) {
+      return $axios({
+        url: `/blog/user/all/role/${id}`,
         method: 'get'
       })
     }

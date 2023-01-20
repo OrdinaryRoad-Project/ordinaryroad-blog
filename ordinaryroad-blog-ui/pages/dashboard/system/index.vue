@@ -29,7 +29,7 @@
 <script>
 export default {
   asyncData ({ redirect }) {
-    redirect('/dashboard/system/log')
+    redirect('/dashboard/system/user')
   }
 }
 </script>

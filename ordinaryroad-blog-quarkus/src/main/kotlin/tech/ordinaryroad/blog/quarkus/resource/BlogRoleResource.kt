@@ -28,6 +28,8 @@ import cn.dev33.satoken.annotation.SaCheckRole
 import cn.dev33.satoken.annotation.SaMode
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import io.vertx.core.json.JsonObject
+import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
@@ -41,10 +43,14 @@ import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogValidateService
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
+import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
+import javax.management.relation.RoleNotFoundException
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -159,6 +165,22 @@ class BlogRoleResource {
     }
 
     /**
+     * 更新角色对应的用户
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
+    @PUT
+    @Path("{id}/users")
+    @Transactional
+    fun updateUsers(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        request: JsonObject
+    ) {
+        val userUuids = request.getJsonArray("userUuids").list as List<String>
+        roleService.updateUsers(id, userUuids)
+    }
+
+    /**
      * 分页查询角色
      */
     @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
@@ -178,6 +200,63 @@ class BlogRoleResource {
                 .collect(Collectors.toList())
         }
         return dtoPage
+    }
+
+    /**
+     * 查询所有角色
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findAll(@Valid @BeanParam request: BlogRoleQueryRequest): List<BlogRoleDTO> {
+        val wrapper = ChainWrappers.queryChain(roleService.dao)
+            .eq("enabled", true)
+            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName + "%")
+            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode + "%")
+
+        val all = roleService.findAll(request, wrapper)
+
+        return all.stream().map { dtoService.transfer(it, BlogRoleDTO::class.java) }.collect(Collectors.toList())
+    }
+
+    /**
+     * 根据用户id查询用户的所有角色
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
+    @GET
+    @Path("user/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findAllByUserUuid(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): List<BlogRoleDTO> {
+        val all = roleService.findAllByUserId(id)
+        return all.stream().map { dtoService.transfer(it, BlogRoleDTO::class.java) }.collect(Collectors.toList())
+    }
+
+    /**
+     * 根据唯一键查询角色
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
+    @GET
+    @Path("unique")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findByUniqueColumn(@Valid @BeanParam request: BlogRoleQueryRequest): BlogRoleDTO {
+        var blogRole: BlogRole? = null
+        val roleCode = request.roleCode
+        val roleName = request.roleName
+        if (!roleCode.isNullOrBlank()) {
+            blogRole = roleService.findByRoleCode(roleCode)
+        }
+        if (blogRole == null && !roleName.isNullOrBlank()) {
+            blogRole = roleService.findByRoleName(roleName)
+        }
+        if (blogRole == null) {
+            throw RoleNotFoundException()
+        } else {
+            return dtoService.transfer(blogRole, BlogRoleDTO::class.java)
+        }
     }
 
 }

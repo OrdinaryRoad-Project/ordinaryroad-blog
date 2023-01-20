@@ -1,168 +1,184 @@
 {
-  "user": {
-    "space": {
-      "of": "{0}的个人空间"
-    },
-    "basicInfo": {
-      "articlesCount": "文章",
-      "commentsCount": "评论"
-    }
-  },
-  "closeCatalogue": "开启目录",
-  "catalogue": "目录",
-  "authorizedHint": "授权通过，正在获取用户信息...",
-  "clearAvatar": "清空头像",
-  "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",
-  "understandAnd": "我知道了，继续{0}",
-  "oauthAccountAlreadyRegisteredHint": "该账号已注册，请先注销账号（开发中...）",
   "all": "全部",
   "appName": "OR博客",
   "article": {
-    "pinned": "热门文章",
-    "cannotCommentHint": "楼主暂时不想被别人评论哦～",
-    "likedTime": "点赞时间：{0}",
-    "browsedTime": "浏览时间：{0}",
-    "firstBrowsedTime": "首次浏览时间：{0}",
-    "detail": {
-      "copyrightStatement": {
-        "title": "版权声明：",
-        "statementPrefix": "本文为OrdinaryRoad博客博主 {0} 的原创文章，遵循",
-        "statementSuffix": "许可协议，转载请附上本文链接及本声明。",
-        "link": "本文链接：",
-        "author": "本文作者："
-      },
-      "readingTimeHint": {
-        "prefix": "友情提示：",
-        "hint": "此篇文章大约需要阅读 "
-      }
+    "actions": {
+      "articleAppeal": "申诉",
+      "articleViolation": "违规",
+      "auditApproved": "通过",
+      "auditFailed": "打回",
+      "edit": "编辑",
+      "historicVersion": "历史版本",
+      "like": "点赞",
+      "moveToTrash": "移动该文章到垃圾箱",
+      "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
+      "publish": "发布",
+      "recoverFromTrash": "恢复文章到草稿箱",
+      "saveDraft": "保存草稿",
+      "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",
+      "selectionOfHistoricalVersions": "历史版本选择",
+      "startAuditing": "开始审核",
+      "unlike": "取消点赞",
+      "writing": "开始写作"
     },
-    "title": "标题",
-    "coverImage": "封面",
-    "summary": "摘要",
-    "content": "内容",
-    "status": "状态",
-    "typeName": "分类",
-    "tagNames": "标签",
+    "browsedTime": "浏览时间：{0}",
     "canComment": "允许评论",
     "canReward": "允许打赏",
+    "cannotCommentHint": "楼主暂时不想被别人评论哦～",
+    "content": "内容",
+    "coverImage": "封面",
+    "detail": {
+      "copyrightStatement": {
+        "author": "本文作者：",
+        "link": "本文链接：",
+        "statementPrefix": "本文为OrdinaryRoad博客博主 {0} 的原创文章，遵循",
+        "statementSuffix": "许可协议，转载请附上本文链接及本声明。",
+        "title": "版权声明："
+      },
+      "readingTimeHint": {
+        "hint": "此篇文章大约需要阅读 ",
+        "prefix": "友情提示："
+      }
+    },
+    "firstBrowsedTime": "首次浏览时间：{0}",
+    "likedTime": "点赞时间：{0}",
+    "onlyViewOwn": "只查看自己的",
     "original": "是否原创",
     "originalOptions": {
       "original": "原创",
       "reprint": "转载"
     },
-    "onlyViewOwn": "只查看自己的",
-    "actions": {
-      "onlyEditDraftOrPublishHint": "只能编辑草稿或已发布的文章",
-      "selectHistoricHint": "确定使用该历史版本，本地编辑器将内容将会丢失",
-      "selectionOfHistoricalVersions": "历史版本选择",
-      "historicVersion": "历史版本",
-      "writing": "开始写作",
-      "saveDraft": "保存草稿",
-      "publish": "发布",
-      "like": "点赞",
-      "unlike": "取消点赞",
-      "edit": "编辑",
-      "moveToTrash": "移动该文章到垃圾箱",
-      "recoverFromTrash": "恢复文章到草稿箱",
-      "startAuditing": "开始审核",
-      "auditApproved": "通过",
-      "auditFailed": "打回",
-      "articleViolation": "违规",
-      "articleAppeal": "申诉"
-    },
-    "startWritingHint": "开始写作吧",
+    "pinned": "热门文章",
     "restoreReadingStatusHint": "已自动恢复阅读位置、日/夜间模式参数",
-    "top": "从头开始"
+    "startWritingHint": "开始写作吧",
+    "status": "状态",
+    "summary": "摘要",
+    "tagNames": "标签",
+    "title": "标题",
+    "top": "从头开始",
+    "typeName": "分类"
   },
   "articleCount": "文章{0}",
-  "avatar": "头像",
+  "authorizedHint": "授权通过，正在获取用户信息...",
+  "basicUserInfo": {
+    "articlesCount": "文章",
+    "commentsCount": "评论"
+  },
+  "catalogue": "目录",
+  "clearAvatar": "清空头像",
+  "closeCatalogue": "开启目录",
+  "comment": {
+    "actions": {
+      "deleteForever": "删除",
+      "placeholder": "有志者，事竟成。",
+      "reply": "回复",
+      "send": "发送",
+      "viewOriginal": "查看原评论"
+    },
+    "article": "文章",
+    "content": "内容",
+    "onlyViewOwn": "只查看自己的",
+    "totalRepliesCount": "共{0}条回复"
+  },
   "commentCount": "评论{0}",
   "continueReadingOnOtherDevices": "在其他设备上继续阅读",
   "copied": "已复制",
   "copy": "复制",
-  "createWhat": "创建{0}",
   "dashboardMenuTitles": {
     "dashboard": {
-      "title": "控制台",
-      "userProfileTitle": "个人中心",
-      "userSpaceTitle": "个人空间",
       "article": {
-        "title": "文章",
-        "writing": "写作",
+        "browsed": "文章浏览记录",
+        "liked": "赞过的文章",
         "status": {
           "draft": "草稿箱",
-          "pending": "待审核",
-          "underReview": "审核中",
-          "publish": "已发布",
           "offend": "违规",
           "onAppeal": "申诉中",
-          "trash": "垃圾箱"
+          "pending": "待审核",
+          "publish": "已发布",
+          "trash": "垃圾箱",
+          "underReview": "审核中"
         },
-        "liked": "赞过的文章",
-        "browsed": "文章浏览记录"
+        "title": "文章",
+        "writing": "写作"
       },
-      "type": {
-        "title": "分类"
+      "comment": {
+        "title": "评论"
+      },
+      "system": {
+        "log": "操作日志",
+        "role": {
+          "title": "角色",
+          "users": "角色用户"
+        },
+        "title": "系统管理",
+        "user": {
+          "roles": "用户角色",
+          "title": "用户"
+        }
       },
       "tag": {
         "title": "标签"
       },
-      "systemTitle": "系统管理",
-      "system": {
-        "user": "用户",
-        "role": "角色",
-        "log": "操作日志"
+      "title": "控制台",
+      "type": {
+        "title": "分类"
       },
-      "comment": {
-        "title": "评论"
-      }
+      "userProfileTitle": "个人中心",
+      "userSpaceTitle": "个人空间"
     }
   },
   "feedback": "反馈",
   "focusSearchInputTip": "按 '/' 开始输入",
   "focusSearchInputTipWhenFocused": "回车搜索，ESC取消",
   "log": {
-    "ip": "IP",
-    "path": "请求路径",
-    "method": "请求方法",
-    "headers": "请求头",
+    "consumedTime": "耗时",
     "cookies": "请求Cookie",
+    "headers": "请求头",
+    "ip": "IP",
+    "method": "请求方法",
+    "path": "请求路径",
     "pathParams": "路径参数",
     "queryParams": "查询参数",
     "request": "请求体",
-    "status": "状态",
-    "responseHeaders": "响应头",
-    "responseCookies": "响应Cookie",
     "response": "响应体",
-    "consumedTime": "耗时",
+    "responseCookies": "响应Cookie",
+    "responseHeaders": "响应头",
+    "status": "状态",
     "type": "类型"
   },
   "loginFormTitle": "登录到OR博客",
+  "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",
   "loginToFeedbackTip": "后体验更佳～",
   "myStats": {
-    "title": "我的统计",
-    "publishedArticlesCount": "已发布文章",
     "browsedArticlesCount": "已浏览文章",
-    "likedArticlesCount": "已点赞文章",
-    "typesCount": "分类个数",
-    "postedCommentsCount": "评论发表数",
     "charts": {
       "dailyPosts": "文章发布热力图",
-      "topNTypesArticle": "分类文章数Top10",
+      "topNBrowsedArticle": "文章浏览数Top10",
       "topNCommentsArticle": "文章评论数Top10",
       "topNLikedArticle": "文章点赞数Top10",
-      "topNBrowsedArticle": "文章浏览数Top10"
-    }
+      "topNTypesArticle": "分类文章数Top10"
+    },
+    "likedArticlesCount": "已点赞文章",
+    "postedCommentsCount": "评论发表数",
+    "publishedArticlesCount": "已发布文章",
+    "title": "我的统计",
+    "typesCount": "分类个数"
   },
   "oAuthUser": {
     "actions": {
-      "update": "更新",
       "add": "绑定",
-      "remove": "解绑"
+      "remove": "解绑",
+      "update": "更新"
     }
   },
+  "oauthAccountAlreadyRegisteredHint": "该账号已注册，请先注销账号（开发中...）",
   "other": "其他",
   "overview": "概览",
+  "roleDataTable": {
+    "enabled": "启用",
+    "roleCode": "角色code",
+    "roleName": "角色名"
+  },
   "selectVersion": "选择版本",
   "status": {
     "article": {
@@ -173,16 +189,18 @@
     "name": "标签名称"
   },
   "themeTitles": {
-    "light": "浅色主题",
     "dark": "深色主题",
     "hunk": "猛男配色",
+    "light": "浅色主题",
     "system": "深色猛男"
   },
   "titles": {
     "form": {
-      "type": "分类",
+      "log": "日志",
+      "role": "角色",
       "tag": "标签",
-      "log": "日志"
+      "type": "分类",
+      "userRoles": "用户角色"
     }
   },
   "type": {
@@ -190,31 +208,26 @@
   },
   "typeCount": "分类{0}",
   "typeTitle": "分类",
-  "updateWhat": "更新{0}",
+  "understandAnd": "我知道了，继续{0}",
   "userCount": "用户{0}",
+  "userDataTable": {
+    "enabled": "启用",
+    "uid": "UID",
+    "username": "用户名"
+  },
   "userMenuTitles": {
-    "space": "个人空间",
-    "dashboard": "控制台",
-    "profile": "个人中心",
     "article": "文章",
-    "type": "分类",
+    "dashboard": "控制台",
+    "log": "操作日志",
+    "profile": "个人中心",
+    "space": "个人空间",
     "tag": "标签",
-    "log": "操作日志"
+    "type": "分类"
   },
   "userProfile": {
     "allAccounts": "所有账号"
   },
-  "comment": {
-    "onlyViewOwn": "只查看自己的",
-    "content": "内容",
-    "article": "文章",
-    "totalRepliesCount": "共{0}条回复",
-    "actions": {
-      "deleteForever": "删除",
-      "send": "发送",
-      "reply": "回复",
-      "viewOriginal": "查看原评论",
-      "placeholder": "有志者，事竟成。"
-    }
+  "userSpace": {
+    "of": "{0}的个人空间"
   }
 }

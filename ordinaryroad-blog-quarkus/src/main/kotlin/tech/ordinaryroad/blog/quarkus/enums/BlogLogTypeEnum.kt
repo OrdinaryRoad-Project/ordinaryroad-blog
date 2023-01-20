@@ -56,10 +56,14 @@ enum class BlogLogTypeEnum(
     BLOG_USER_UPDATE_USERNAME("用户更新用户名", 3001, "/user/username", "PUT"),
     BLOG_USER_DISABLE("用户封禁", 3002, "/user/disable", "GET"),
     BLOG_USER_DISABLE_UNTIE("用户解封", 3003, "/user/disable/untie", "GET"),
+    BLOG_USER_UPDATE_ROLES("更新用户拥有的角色", 3004, "/user/*/roles", "PUT"),
     //endregion
 
     //region BlogRoleResource
-    BLOG_ROLE_UPDATE_AVATAR("用户更新头像", 4000, "/user/avatar", "PUT"),
+    BLOG_ROLE_CREATE("创建角色", 4000, "/role/create", "POST"),
+    BLOG_ROLE_UPDATE("更新角色", 4001, "/role/*", "PUT"),
+    BLOG_ROLE_UPDATE_ENABLED("启用/禁用角色", 4002, "/role/*/enabled", "PUT"),
+    BLOG_ROLE_UPDATE_USERS("更新角色对应的用户", 4003, "/role/*/users", "PUT"),
     //endregion
 
     //region BlogOAuthUserResource
@@ -148,6 +152,10 @@ enum class BlogLogTypeEnum(
         fun main(args: Array<String>) {
             val get = get("/oauth2/callback/ordinaryroad", "GET")
             println(get)
+
+            val matcher = AntPathMatcher()
+            println(matcher.match("/user/*/roles*", "/user/123123123/roles?1=1"))
+
         }
     }
 
