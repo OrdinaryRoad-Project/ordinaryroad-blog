@@ -277,7 +277,7 @@
       <!-- 替换默认的操作按钮 -->
       <template #actions="{ item }">
         <v-btn
-          v-if="['DRAFT', 'PUBLISH'].includes(item.status)"
+          v-if="item.creatorId===userInfo.user.uuid&&['DRAFT', 'PUBLISH'].includes(item.status)"
           icon
           color="accent"
           class="mr-2"
