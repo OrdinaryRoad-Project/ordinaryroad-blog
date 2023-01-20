@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.system.role')">
+    <base-material-card
+      icon="mdi-account-multiple"
+      :title="$t('dashboardMenuTitles.dashboard.system.role.title')"
+    >
       <or-blog-role-data-table />
     </base-material-card>
   </div>

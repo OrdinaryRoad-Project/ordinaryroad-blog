@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.system.user')">
+    <base-material-card
+      icon="mdi-account"
+      :title="$t('dashboardMenuTitles.dashboard.system.user.title')"
+    >
       <or-blog-user-data-table />
     </base-material-card>
   </div>

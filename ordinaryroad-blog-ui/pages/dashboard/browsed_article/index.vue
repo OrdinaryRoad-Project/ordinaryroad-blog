@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.article.browsed')">
+    <base-material-card
+      icon="mdi-history"
+      :title="$t('dashboardMenuTitles.dashboard.article.browsed')"
+    >
       <or-blog-article-data-iterator-browsed />
     </base-material-card>
   </div>

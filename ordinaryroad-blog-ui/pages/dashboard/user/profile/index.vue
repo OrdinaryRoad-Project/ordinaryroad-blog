@@ -23,7 +23,10 @@
   -->
 
 <template>
-  <base-material-card :title="$t('userMenuTitles.profile')">
+  <base-material-card
+    icon="mdi-account"
+    :title="$t('userMenuTitles.profile')"
+  >
     <v-card flat outlined>
       <v-card-title>{{ $t('basicInfo') }}</v-card-title>
       <v-form ref="avatarForm" class="mx-4">
