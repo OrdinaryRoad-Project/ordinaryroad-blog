@@ -42,10 +42,7 @@
           :class="hoverAble?(hover?'primary--text':'text--primary'):null"
           style="text-decoration: none;"
         >
-          <slot /><span><v-icon
-            v-if="!hideIcon&&target==='_blank'"
-            x-small
-          >mdi-arrow-top-right-bold-box-outline</v-icon></span>
+          <slot /><v-icon v-if="!hideIcon&&target==='_blank'" x-small>mdi-arrow-top-right-bold-box-outline</v-icon>
         </a>
       </span>
     </template>
