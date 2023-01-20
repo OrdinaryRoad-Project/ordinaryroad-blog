@@ -26,7 +26,7 @@ package tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms
 
 import io.vertx.core.json.JsonObject
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient
-import org.jboss.resteasy.reactive.MultipartForm
+import javax.ws.rs.BeanParam
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -45,6 +45,6 @@ interface OrUpmsApi {
     @POST
     @Path("file/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    fun upload(@MultipartForm request: FileUploadRequest): JsonObject
+    fun upload(@BeanParam request: FileUploadRequest): JsonObject
 
 }

@@ -31,7 +31,6 @@ import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import org.eclipse.microprofile.rest.client.inject.RestClient
-import org.jboss.resteasy.reactive.MultipartForm
 import org.jboss.resteasy.reactive.RestHeader
 import tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.OrUpmsApi
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserInfoDTO
@@ -84,7 +83,7 @@ class BlogResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     fun upload(
-        @MultipartForm request: FileUploadRequest,
+        @BeanParam request: FileUploadRequest,
         @RestHeader("or-blog-token") token: String
     ): Response {
         if (StpUtil.getLoginIdByToken(token) == null) {
