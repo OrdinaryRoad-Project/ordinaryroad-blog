@@ -104,8 +104,8 @@ class BlogResource {
 
         val jsonObject =
             orUpmsApi.upload(tech.ordinaryroad.blog.quarkus.client.ordinaryroad.upms.FileUploadRequest().apply {
-                clientId = ordinaryroadOAuth2Property["client-id"]!! as String
-                clientSecret = ordinaryroadOAuth2Property["client-secret"]!! as String
+                clientId = ordinaryroadOAuth2Property["client-id"]!!
+                clientSecret = ordinaryroadOAuth2Property["client-secret"]!!
                 file = renamedFile
             })
 

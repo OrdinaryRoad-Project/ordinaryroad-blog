@@ -100,7 +100,7 @@ class BlogRoleResource {
      * 更新角色
      */
     @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
-    @POST
+    @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional

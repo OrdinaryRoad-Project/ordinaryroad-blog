@@ -142,7 +142,7 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
         }
         BlogTypeService typeService = CDI.current().select(BlogTypeService.class).get();
         BlogType blogType = typeService.findById(type);
-        if (blogType.getDeleted()) {
+        if (blogType == null || blogType.getDeleted()) {
             return null;
         }
         return BlogTypeMapStruct.INSTANCE.transfer(blogType);
