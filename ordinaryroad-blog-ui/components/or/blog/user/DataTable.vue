@@ -35,7 +35,7 @@
       :show-actions-when-selecting="showActionsWhenSelecting"
       :preset-selected-items="presetSelectedItems"
       :table-headers="headers"
-      access-key="blog:type"
+      access-key="blog:user"
       @getItems="onGetItems"
       @insertItem="onInsertItem"
       @deleteItem="onDeleteItem"
@@ -61,6 +61,10 @@
         </v-col>
       </template>
 
+      <template #actionsTop>
+        <span />
+      </template>
+
       <template #[`item.username`]="{ item }">
         <div class="d-flex align-center">
           <!-- <or-blog-user-avatar :user="item" /> -->
@@ -80,19 +84,36 @@
         <v-switch
           v-model="item.enabled"
           readonly
-          :disabled="!$access.hasDeveloperOrAdminRole()"
+          :disabled="!canUpdateUserEnabled"
           inset
           @click="toggleEnabled(item)"
         />
+      </template>
+
+      <template #actions="{ item }">
+        <v-btn
+          icon
+          color="accent"
+          @click="$router.push({ name: 'dashboard-system-user-roles-uid', params: { uid: item.uid, item } })"
+        >
+          <v-icon>mdi-account-multiple</v-icon>
+        </v-btn>
       </template>
     </or-base-data-table>
 
     <or-input-dialog
       ref="inputDialog"
-      title="请输入封禁时间（秒）"
-      :rules="[$rules.required,$rules.notBlank]"
+      :title="$t('disable')"
+      label="封禁时间"
+      :default-value="-1"
+      hint="-1：永久封禁"
+      :rules="[$or.rules.required,$or.rules.notBlank]"
       @onConfirm="disable"
-    />
+    >
+      <template #append-outer>
+        <span>{{ $t('time.seconds') }}</span>
+      </template>
+    </or-input-dialog>
   </v-container>
 </template>
 
@@ -176,6 +197,9 @@ export default {
     },
     action () {
       return this.selectedIndex === -1 ? 'create' : 'update'
+    },
+    canUpdateUserEnabled () {
+      return !(!this.$access.hasDeveloperOrAdminRole || (this.showSelect && !this.showActionsWhenSelecting))
     }
   },
   watch: {},
@@ -203,14 +227,15 @@ export default {
     },
     untieDisable (item) {
       this.$dialog({
-        content: '确定解封该用户？',
-        loading: true
+        title: this.$t('areYouSureToDoWhat', [this.$t('enable')]),
+        loading: true,
+        persistent: false
       })
         .then((dialog) => {
           if (dialog.isConfirm) {
             this.$apis.blog.user.untieDisable(item.uuid)
               .then((data) => {
-                this.$snackbar.success(this.$t('whatSuccessfully', ['解封']))
+                this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('enable')]))
                 dialog.cancel()
                 this.$refs.dataTable.getItems()
               })
@@ -221,6 +246,9 @@ export default {
         })
     },
     toggleEnabled (item) {
+      if (!this.canUpdateUserEnabled) {
+        return
+      }
       this.selectedItem = Object.assign({}, item)
       item.enabled ? this.$refs.inputDialog.show() : this.untieDisable(item)
     },
