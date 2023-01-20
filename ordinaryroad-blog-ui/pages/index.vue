@@ -85,22 +85,6 @@ export default {
     }
   },
   mounted () {
-    const key = 'notification_0'
-    const hideNotification0 = localStorage.getItem(key) === 'true'
-    if (!hideNotification0) {
-      this.$dialog({
-        persistent: true,
-        title: '欢迎体验OR博客',
-        content: '项目原型为我的个人博客，目前为删档内测，仅保留OR账号，💪仍在继续开发中，注册登录就送SSSSSSVIP！！！🙏感谢您的参与！\n😊也欢迎光临我的个人博客：https://ordinaryroad.top',
-        confirmText: '让我康康！',
-        cancelText: '下次一定～'
-      }).then(({ isConfirm }) => {
-        if (isConfirm) {
-          window.open('https://ordinaryroad.top', '_blank')
-        }
-        localStorage.setItem(key, 'true')
-      })
-    }
   },
   created () {
   },
