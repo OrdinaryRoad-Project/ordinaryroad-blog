@@ -28,6 +28,7 @@
       ref="dataTable"
       :sort-by="[]"
       :sort-desc="[]"
+      hide-update-headers
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -174,7 +175,7 @@ export default {
       this.editedItem = item
     },
     create () {
-      if (this.$util.objectEquals(this.editedItem, this.selectedItem)) {
+      if (this.$or.util.objectEquals(this.editedItem, this.selectedItem)) {
         this.$refs.tagDialog.close()
         // 有变动才进行创建或更新
       } else if (this.$refs.tagForm.validate()) {

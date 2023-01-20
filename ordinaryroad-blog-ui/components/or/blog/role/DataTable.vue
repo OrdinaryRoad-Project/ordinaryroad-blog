@@ -56,7 +56,7 @@
             clearable
             hide-details="auto"
             maxlength="100"
-            :label="$t('role.roleName')"
+            :label="$t('roleDataTable.roleName')"
           />
         </v-col>
         <v-col
@@ -71,7 +71,7 @@
             clearable
             hide-details="auto"
             maxlength="100"
-            :label="$t('role.roleCode')"
+            :label="$t('roleDataTable.roleCode')"
           />
         </v-col>
       </template>
@@ -91,7 +91,6 @@
       </template>
 
       <template #actions="{ item }">
-        <span v-if="item" />
         <v-btn
           v-if="!isBuiltInRole(item)"
           icon
@@ -184,17 +183,17 @@ export default {
     headers () {
       const headers = [
         {
-          text: this.$t('role.roleName'),
+          text: this.$t('roleDataTable.roleName'),
           value: 'roleName',
           width: 150
         },
         {
-          text: this.$t('role.roleCode'),
+          text: this.$t('roleDataTable.roleCode'),
           value: 'roleCode',
           width: 300
         },
         {
-          text: this.$t('role.enabled'),
+          text: this.$t('roleDataTable.enabled'),
           value: 'enabled',
           width: 100
         }
@@ -224,7 +223,7 @@ export default {
       this.selectedItem = Object.assign({}, item)
       const action = this.selectedIndex === -1 ? 'disable' : 'enable'
       this.$dialog({
-        title: this.$t(action) + '角色',
+        title: this.$t('areYouSureToDoWhat', [this.$t(action)]),
         loading: true,
         persistent: false
       })

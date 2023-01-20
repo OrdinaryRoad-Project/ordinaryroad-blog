@@ -27,6 +27,7 @@
     <or-base-data-table
       ref="dataTable"
       :sort-by="[]"
+      hide-update-headers
       :sort-desc="[]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"

@@ -714,7 +714,7 @@ export default {
     watchTimeString () {
       // 估算阅读时长
       const totalSeconds = this.article.content.length / 8
-      return this.$util.formatSeconds(totalSeconds, {
+      return this.$or.util.formatSeconds(totalSeconds, {
         aMoment: this.$t('time.aMoment'),
         second: this.$t('time.seconds'),
         minute: this.$t('time.minutes'),

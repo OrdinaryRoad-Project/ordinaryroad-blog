@@ -56,7 +56,7 @@
             clearable
             hide-details="auto"
             maxlength="100"
-            :label="$t('user.username')"
+            :label="$t('userDataTable.username')"
           />
         </v-col>
       </template>
@@ -157,17 +157,17 @@ export default {
     headers () {
       const headers = [
         {
-          text: this.$t('user.uid'),
+          text: this.$t('userDataTable.uid'),
           value: 'uid',
           width: 100
         },
         {
-          text: this.$t('user.username'),
+          text: this.$t('userDataTable.username'),
           value: 'username',
           width: 300
         },
         {
-          text: this.$t('user.enabled'),
+          text: this.$t('userDataTable.enabled'),
           value: 'enabled',
           width: 100
         }

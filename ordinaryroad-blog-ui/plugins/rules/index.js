@@ -22,32 +22,15 @@
  * SOFTWARE.
  */
 
-import Vue from 'vue'
-/* 表单校验规则 */
-import rules from 'ordinaryroad-vuetify/src/rules'
-/* 自定义工具类 */
-import util from 'ordinaryroad-vuetify/src/utils'
-/* 自定义常量 */
-import constants from './constants/index'
-import echarts from './echarts/index'
-
-Vue.prototype.$echarts = echarts
-
 export default function (context, inject) {
   const { app } = context
   const i18n = app.i18n
+  const $t = i18n.$t
 
-  rules.init(i18n.$t)
-
-  Vue.prototype.$or = {
-    constants,
-    util,
-    rules,
-    locales: {
-      en: require('ordinaryroad-vuetify/src/locales/en.json'),
-      zhHans: require('ordinaryroad-vuetify/src/locales/zh-Hans.json')
-    }
+  const rules = {
+    testRule: value => (value !== undefined) || $t('required')
   }
 
-  inject('or', Vue.prototype.$or)
+  // 将自定义form rules注入nuxt上下文 $rules
+  inject('rules', rules)
 }

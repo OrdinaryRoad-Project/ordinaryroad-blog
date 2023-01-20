@@ -26,7 +26,7 @@
   <v-form ref="form">
     <v-text-field
       v-model="model.name"
-      :rules="[$rules.notBlank,$rules.max100Chars]"
+      :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('tag.name')"
     />
   </v-form>

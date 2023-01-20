@@ -115,7 +115,7 @@
                 truncate-length="100"
                 accept="image/*"
                 prepend-icon=""
-                :rules="[$rules.maxFileSize10MB]"
+                :rules="[$or.rules.maxFileSize10MB]"
                 outlined
                 show-size
                 append-outer-icon="mdi-eye"
@@ -127,7 +127,7 @@
             <v-row no-gutters>
               <v-select
                 v-model="article.original"
-                :rules="[$rules.required]"
+                :rules="[$or.rules.required]"
                 class="flex-grow-0"
                 style="width: 100px;"
                 outlined
@@ -137,7 +137,7 @@
               <v-text-field
                 v-model="article.title"
                 :counter="article.title.length>=60"
-                :rules="[$rules.notBlank,$rules.max100Chars]"
+                :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
                 outlined
                 :label="$t('article.title')"
                 @focusin="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
@@ -149,7 +149,7 @@
                 v-model="article.summary"
                 rows="1"
                 :counter="article.summary.length>=400"
-                :rules="[$rules.max500Chars]"
+                :rules="[$or.rules.max500Chars]"
                 auto-grow
                 outlined
                 :label="$t('article.summary')"
@@ -228,7 +228,7 @@
                     chips
                     v-bind="attrs"
                     return-object
-                    :rules="[$rules.max10Size]"
+                    :rules="[$or.rules.max10Size]"
                     clearable
                     :items="tagOptions.items"
                     :label="$t('titles.form.tag')"

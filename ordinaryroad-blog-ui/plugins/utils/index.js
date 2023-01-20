@@ -22,32 +22,6 @@
  * SOFTWARE.
  */
 
-import Vue from 'vue'
-/* 表单校验规则 */
-import rules from 'ordinaryroad-vuetify/src/rules'
-/* 自定义工具类 */
-import util from 'ordinaryroad-vuetify/src/utils'
-/* 自定义常量 */
-import constants from './constants/index'
-import echarts from './echarts/index'
-
-Vue.prototype.$echarts = echarts
-
 export default function (context, inject) {
-  const { app } = context
-  const i18n = app.i18n
 
-  rules.init(i18n.$t)
-
-  Vue.prototype.$or = {
-    constants,
-    util,
-    rules,
-    locales: {
-      en: require('ordinaryroad-vuetify/src/locales/en.json'),
-      zhHans: require('ordinaryroad-vuetify/src/locales/zh-Hans.json')
-    }
-  }
-
-  inject('or', Vue.prototype.$or)
 }

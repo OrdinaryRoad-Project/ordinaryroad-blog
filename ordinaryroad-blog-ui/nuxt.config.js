@@ -62,6 +62,10 @@ export default {
     '~/plugins/ordinaryroad/index.js',
     // 路由插件
     '~/plugins/router/statistics/index.js',
+    // rule插件
+    '~/plugins/rules/index.js',
+    // util插件
+    '~/plugins/utils/index.js',
     { src: '~/plugins/router/access.js', mode: 'client' },
     // vuetify client mode
     {

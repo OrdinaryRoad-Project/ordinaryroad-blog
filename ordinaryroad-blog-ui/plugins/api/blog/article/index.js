@@ -36,7 +36,7 @@
  默认情况下，axios将JavaScript对象序列化为JSON。 要以application / x-www-form-urlencoded格式发送数据，您可以使用以下选项之一。
  这里我们是采用的ES6 语法 引入 的qs模块
  */
-import { urlEncode } from '~/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 let $axios = null
 

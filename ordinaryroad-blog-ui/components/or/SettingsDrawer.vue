@@ -148,7 +148,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 export default {
   name: 'OrSettingsDrawer',
@@ -203,7 +203,7 @@ export default {
         return ''
       }
       const customParams = {
-        clientInfo: this.$util.getBrowserInfo(),
+        clientInfo: this.$or.util.getBrowserInfo(),
         clientVersion: this.$config.APP_VERSION
       }
       if (this.$access.isLogged()) {
