@@ -126,21 +126,19 @@
         {{ $t('other') }}
       </div>
       <v-list>
-        <client-only>
-          <v-list-item
-            :href="feedbackUrl"
-            target="_blank"
-          >
-            <v-list-item-content>
-              <v-list-item-title>{{ $t('feedback') }}</v-list-item-title>
-              <v-list-item-subtitle v-if="!$access.isLogged()">
-                <span>
-                  <or-link href="/user/login" target="_self">{{ $t('login') }}</or-link>{{ $t('loginToFeedbackTip') }}
-                </span>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </client-only>
+        <v-list-item
+          :href="feedbackUrl"
+          target="_blank"
+        >
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('feedback') }}</v-list-item-title>
+            <v-list-item-subtitle v-if="!$access.isLogged()">
+              <span>
+                <or-link href="/user/login" target="_self">{{ $t('login') }}</or-link>{{ $t('loginToFeedbackTip') }}
+              </span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-container>
   </v-navigation-drawer>
