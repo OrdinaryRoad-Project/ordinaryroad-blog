@@ -49,7 +49,7 @@
           clearable
           flat
           maxlength="10"
-          :rules="[$rules.max100Chars]"
+          :rules="[$or.rules.max100Chars]"
           append-icon="mdi-magnify"
           @click:append="onClickSearchInputAppend"
           @focusin="searchInputFocused=true"

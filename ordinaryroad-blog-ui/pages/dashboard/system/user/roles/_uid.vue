@@ -23,52 +23,45 @@
   -->
 
 <template>
-  <div style="width: 100%;">
-    <or-no-more-data v-if="noMoreData" />
-    <v-btn
-      v-else
-      text
-      :loading="loading"
-      block
-      depressed
-      @click="startLoading(false)"
-    >
-      <v-icon v-if="showDownIcon" left>
-        mdi-chevron-down
-      </v-icon>
-      加载更多
-    </v-btn>
-  </div>
+  <base-material-card
+    icon="mdi-account-multiple"
+    :title="$t('dashboardMenuTitles.dashboard.system.user.roles')"
+  >
+    <or-blog-user-roles-form
+      :preset="presetModel"
+    />
+  </base-material-card>
 </template>
 
 <script>
 export default {
-  name: 'OrLoadMoreFooter',
-  props: {
-    /**
-     * 是否显示向下的图标
-     */
-    showDownIcon: {
-      type: Boolean,
-      default: true
-    },
-    noMoreData: {
-      type: Boolean,
-      required: true
+  validate ({ params }) {
+    // 必填
+    return !!params.uid
+  },
+  async asyncData ({ route, $apis, store }) {
+    let presetModel
+    if (route.params.item) {
+      presetModel = route.params.item
+    } else {
+      // 加载用户
+      presetModel = (await $apis.blog.user.findByUid(route.params.uid))
     }
+    return { presetModel }
   },
   data: () => ({
-    loading: false
+    presetModel: null
   }),
-  methods: {
-    startLoading (onlyAnimation = false) {
-      this.loading = true
-      !onlyAnimation && this.$emit('loadMore')
-    },
-    finishLoad () {
-      this.loading = false
+  head () {
+    return {
+      title: this.$t('dashboardMenuTitles.dashboard.system.user.roles')
     }
-  }
+  },
+  created () {
+  },
+  mounted () {
+  },
+  methods: {}
 }
 </script>
 

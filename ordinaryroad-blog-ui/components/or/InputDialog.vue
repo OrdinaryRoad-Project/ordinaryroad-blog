@@ -35,7 +35,21 @@
         v-model.trim="input"
         :rules="rules"
         :label="label"
-      />
+        :hint="hint"
+      >
+        <template #prepend>
+          <slot name="prepend" />
+        </template>
+        <template #prepend-inner>
+          <slot name="prepend-inner" />
+        </template>
+        <template #append>
+          <slot name="append" />
+        </template>
+        <template #append-outer>
+          <slot name="append-outer" />
+        </template>
+      </v-text-field>
     </v-form>
   </or-base-dialog>
 </template>
@@ -44,6 +58,10 @@
 export default {
   name: 'OrInputDialog',
   props: {
+    defaultValue: {
+      type: [String, Number],
+      default: ''
+    },
     title: {
       type: String,
       required: true
@@ -55,11 +73,18 @@ export default {
     rules: {
       type: Array,
       default: () => []
+    },
+    hint: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
     input: ''
   }),
+  created () {
+    this.input = this.defaultValue
+  },
   methods: {
     show () {
       this.$refs.dialog.show()

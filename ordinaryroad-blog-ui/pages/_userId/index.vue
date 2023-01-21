@@ -119,7 +119,7 @@ export default {
   },
   head () {
     return {
-      title: this.$t('user.space.of', [this.user.username]),
+      title: this.$t('userSpace.of', [this.user.username]),
       titleTemplate: `%s - ${this.$t('appName')}`
     }
   },

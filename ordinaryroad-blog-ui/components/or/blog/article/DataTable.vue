@@ -277,7 +277,7 @@
       <!-- 替换默认的操作按钮 -->
       <template #actions="{ item }">
         <v-btn
-          v-if="['DRAFT', 'PUBLISH'].includes(item.status)"
+          v-if="item.creatorId===userInfo.user.uuid&&['DRAFT', 'PUBLISH'].includes(item.status)"
           icon
           color="accent"
           class="mr-2"
@@ -690,9 +690,9 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.startAuditing(item.uuid)
             .then(() => {
-              this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.startAuditing')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
+              this.$router.push(`/dashboard/article/auditing/${item.uuid}`)
             })
             .catch(() => {
               dialog.cancel()

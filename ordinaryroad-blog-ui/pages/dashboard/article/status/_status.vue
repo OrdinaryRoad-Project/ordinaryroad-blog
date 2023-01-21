@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.article.title')">
+    <base-material-card
+      icon="mdi-file-document-multiple"
+      :title="$t('dashboardMenuTitles.dashboard.article.title')"
+    >
       <or-blog-article-data-table :param-status="$route.params.status" />
     </base-material-card>
   </div>

@@ -189,7 +189,7 @@ export default {
       this.editedItem = item
     },
     createOrUpdate () {
-      if (this.$util.objectEquals(this.editedItem, this.selectedItem)) {
+      if (this.$or.util.objectEquals(this.editedItem, this.selectedItem)) {
         this.$refs.typeDialog.close()
         // 有变动才进行创建或更新
       } else if (this.$refs.typeForm.validate()) {

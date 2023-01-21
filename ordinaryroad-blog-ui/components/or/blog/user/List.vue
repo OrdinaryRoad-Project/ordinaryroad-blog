@@ -47,7 +47,12 @@
           />
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{ item.username }}</v-list-item-title>
+          <v-list-item-title class="d-flex align-center flex-wrap">
+            {{ item.username }}
+            <span v-if="item.roles.length>0" class="ms-2">
+              <or-user-roles :roles="item.roles" />
+            </span>
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -104,7 +109,7 @@ export default {
       }
       this.$emit('update:loading', true)
       const page = loadMore ? this.userPageItems.current + 1 : 1
-      this.$apis.blog.user.page(page, 20, { username: this.username })
+      this.$apis.blog.user.search(page, 20, { username: this.username })
         .then((data) => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()

@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.article.liked')">
+    <base-material-card
+      icon="mdi-thumb-up"
+      :title="$t('dashboardMenuTitles.dashboard.article.liked')"
+    >
       <or-blog-article-data-iterator-liked />
     </base-material-card>
   </div>

@@ -32,16 +32,25 @@ export default ({
 }) => {
   // Set i18n instance on app
   // This way we can use it in middleware and pages asyncData/fetch
-  const enOr = require('~/plugins/ordinaryroad/i18n/en.json')
-  const zhHansOr = require('~/plugins/ordinaryroad/i18n/zh-Hans.json')
+  const enOr = require('ordinaryroad-vuetify/src/locales/en.json')
+  const zhHansOr = require('ordinaryroad-vuetify/src/locales/zh-Hans.json')
+
+  const enApp = require('~/locales/en.json')
+  const zhHansApp = require('~/locales/zh-Hans.json')
 
   const en = {
-    ...require('~/locales/en.json'),
-    ...enOr
+    ...enOr,
+    ...enApp
   }
   const zhHans = {
-    ...require('~/locales/zh-Hans.json'),
-    ...zhHansOr
+    ...zhHansOr,
+    ...zhHansApp
+  }
+  const keysApp = Object.keys(zhHansApp)
+  for (const key in enOr) {
+    if (keysApp.includes(key)) {
+      console.warn('locales key有冲突', key)
+    }
   }
 
   app.i18n = new VueI18n({

@@ -37,16 +37,18 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
 @RegisterForReflection
 data class BlogRoleDTO(
     var roleName: String = StrUtil.EMPTY,
-    var roleCode: String = StrUtil.EMPTY
+    var roleCode: String = StrUtil.EMPTY,
+    var enabled: Boolean = true,
 ) : BaseBlogModelDTO<BlogRole>() {
 
     override fun parse(baseDo: BlogRole) {
         roleName = baseDo.roleName
         roleCode = baseDo.roleCode
+        enabled = baseDo.enabled
     }
 
     companion object {
-        private const val serialVersionUID: Long = 8986328668809035932L
+        private const val serialVersionUID: Long = -425690715347674015L
     }
 
 }

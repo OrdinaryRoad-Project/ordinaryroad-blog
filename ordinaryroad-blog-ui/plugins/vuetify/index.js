@@ -25,8 +25,20 @@
 // plugins/vuetify.js client mode
 import Vue from 'vue'
 import 'vuetify/dist/vuetify.min.css'
+import 'ordinaryroad-vuetify/src/styles/ordinaryroad.css'
 import { VDateTimePicker } from 'vuetify2-expand'
 import Snackbar from 'vuetify2-expand/components/Snackbar'
+import {
+  BaseMaterialCard,
+  OrBaseDataIterator,
+  OrBaseDataTable,
+  OrBaseMenu,
+  OrBaseTreeList,
+  OrEmpty,
+  OrLoadMoreFooter,
+  OrNoMoreData,
+  OrNotFound
+} from 'ordinaryroad-vuetify/src/components'
 import Dialog from '~/components/expand/Dialog'
 
 export default ({
@@ -180,6 +192,17 @@ export default ({
   })
   // 全局引入 VDateTimePicker 组件
   Vue.use(VDateTimePicker)
+
+  // 按需引入
+  Vue.component('BaseMaterialCard', BaseMaterialCard)
+  Vue.component('OrBaseDataIterator', OrBaseDataIterator)
+  Vue.component('OrBaseDataTable', OrBaseDataTable)
+  Vue.component('OrBaseMenu', OrBaseMenu)
+  Vue.component('OrBaseTreeList', OrBaseTreeList)
+  Vue.component('OrEmpty', OrEmpty)
+  Vue.component('OrLoadMoreFooter', OrLoadMoreFooter)
+  Vue.component('OrNoMoreData', OrNoMoreData)
+  Vue.component('OrNotFound', OrNotFound)
 
   inject('dialog', Vue.prototype.$dialog)
   inject('snackbar', Vue.prototype.$snackbar)

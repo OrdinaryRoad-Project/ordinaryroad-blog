@@ -23,39 +23,57 @@
   -->
 
 <template>
-  <div class="d-flex flex-column justify-center align-center" style="height: 100vh;text-align: center">
-    <p class="font-weight-bold display-4">
-      404
-    </p><br>
-    <p class="display-2">
-      {{ error.message }}
-    </p><br>
-    <p>{{ $t('error.404') }}</p>
-    <div>
-      <v-btn class="ma-5" large @click="$router.replace({path:'/'})">
-        {{ $t('error.home') }}
-      </v-btn>
-      <v-btn color="primary" large class="ma-5" @click="$router.back()">
-        {{ $t('error.back') }}
-      </v-btn>
-    </div>
-  </div>
+  <v-form ref="form">
+    <v-text-field
+      v-model="model.roleName"
+      :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
+      :label="$t('roleDataTable.roleName')"
+    />
+    <v-text-field
+      v-model="model.roleCode"
+      :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
+      :label="$t('roleDataTable.roleCode')"
+    />
+  </v-form>
 </template>
 
 <script>
 export default {
-  name: 'OrNotFound',
+  name: 'OrBlogRoleSaveForm',
   props: {
-    error: {
+    preset: {
       type: Object,
-      required: true
+      default: () => ({
+        roleName: null,
+        roleCode: null
+      })
     }
   },
-  data () {
-    return {}
+  data: () => ({
+    model: {}
+  }),
+  watch: {
+    preset: {
+      handler (val) {
+        this.model = Object.assign({}, val)
+      },
+      deep: true,
+      immediate: true
+    },
+    model: {
+      handler (val) {
+        this.$emit('update', val)
+      },
+      deep: true,
+      immediate: true
+    }
   },
-  watch: {},
-  created () {
+  mounted () {
+  },
+  methods: {
+    validate () {
+      return this.$refs.form.validate()
+    }
   }
 }
 </script>

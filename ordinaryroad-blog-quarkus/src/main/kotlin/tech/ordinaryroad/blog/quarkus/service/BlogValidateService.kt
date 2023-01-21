@@ -26,12 +26,11 @@ package tech.ordinaryroad.blog.quarkus.service
 import cn.dev33.satoken.stp.StpUtil
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
+import tech.ordinaryroad.blog.quarkus.enums.BlogBuiltInRoleEnum
+import tech.ordinaryroad.blog.quarkus.exception.*
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
-import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
-import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotValidException
-import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotFoundException
-import tech.ordinaryroad.blog.quarkus.exception.BlogCommentNotValidException
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -45,10 +44,13 @@ import javax.inject.Inject
 class BlogValidateService {
 
     @Inject
-    lateinit var articleService: BlogArticleService
+    protected lateinit var articleService: BlogArticleService
 
     @Inject
-    lateinit var commentService: BlogCommentService
+    protected lateinit var roleService: BlogRoleService
+
+    @Inject
+    protected lateinit var commentService: BlogCommentService
 
     /**
      * 根据文章的firstId校验文章是否存在已发布的
@@ -110,15 +112,33 @@ class BlogValidateService {
     /**
      * 校验评论是否存在
      */
-    fun validateComment(originalId: String?, must: Boolean = false): BlogComment? {
-        if (originalId.isNullOrBlank()) {
+    fun validateComment(id: String?, must: Boolean = false): BlogComment? {
+        if (id.isNullOrBlank()) {
             if (must) {
                 BlogCommentNotValidException().throws()
             } else {
                 return null
             }
         }
-        return commentService.findById(originalId) ?: throw BlogCommentNotFoundException()
+        return commentService.findById(id) ?: throw BlogCommentNotFoundException()
+    }
+
+    /**
+     * 校验角色是否存在
+     */
+    fun validateRole(id: String?, must: Boolean = false): BlogRole? {
+        if (id.isNullOrBlank()) {
+            if (must) {
+                BlogRoleNotValidException().throws()
+            } else {
+                return null
+            }
+        }
+        return roleService.findById(id) ?: throw BlogRoleNotFoundException()
+    }
+
+    fun isBuiltInRole(role: BlogRole): Boolean {
+        return BlogBuiltInRoleEnum.getByRoleCode(role.roleCode) != null
     }
 
 }

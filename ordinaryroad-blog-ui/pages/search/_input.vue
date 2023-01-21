@@ -38,7 +38,7 @@
         clearable
         :placeholder="searchInputPlaceholder"
         outlined
-        :rules="[$rules.max100Chars]"
+        :rules="[$or.rules.max100Chars]"
         @focusin="searchInputFocused=true"
         @focusout="searchInputFocused=false"
         @click:append-outer="onInputSubmit(input)"

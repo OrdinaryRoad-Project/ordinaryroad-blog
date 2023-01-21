@@ -23,7 +23,10 @@
   -->
 
 <template>
-  <base-material-card :title="$t('userMenuTitles.profile')">
+  <base-material-card
+    icon="mdi-account"
+    :title="$t('userMenuTitles.profile')"
+  >
     <v-card flat outlined>
       <v-card-title>{{ $t('basicInfo') }}</v-card-title>
       <v-form ref="avatarForm" class="mx-4">
@@ -33,7 +36,7 @@
             truncate-length="100"
             accept="image/*"
             prepend-icon=""
-            :rules="[$rules.maxFileSize10MB]"
+            :rules="[$or.rules.maxFileSize10MB]"
             show-size
             :label="$t('avatar')"
             :clearable="false"
@@ -59,7 +62,7 @@
         <div class="d-flex align-center">
           <v-text-field
             v-model="usernameTextField.input"
-            :rules="[$rules.notBlank,$rules.max20Chars]"
+            :rules="[$or.rules.notBlank,$or.rules.max20Chars]"
             :loading="usernameTextField.loading"
             :disabled="usernameTextField.disabled"
             type="text"
@@ -147,7 +150,7 @@ export default {
   computed: {
     oAuthUser () {
       return (provider) => {
-        const query = this.$util.query(this.oAuthUsers, 'provider', provider)
+        const query = this.$or.util.query(this.oAuthUsers, 'provider', provider)
         return query[0]
       }
     },

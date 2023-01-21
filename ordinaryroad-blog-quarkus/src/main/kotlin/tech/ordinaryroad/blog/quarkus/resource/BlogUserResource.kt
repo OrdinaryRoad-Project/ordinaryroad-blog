@@ -30,6 +30,7 @@ import cn.dev33.satoken.stp.StpUtil
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
+import io.vertx.core.json.JsonObject
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
@@ -69,19 +70,20 @@ class BlogUserResource {
     /**
      * 查询用户
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     fun findById(
         @Valid @NotBlank(message = "Id不能为空")
         @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
-    ): BlogUserVO {
+    ): BlogUserDTO {
         val blogUser = userService.findById(id)
 
         if (blogUser == null) {
             throw BlogUserNotFoundException()
         } else {
-            return userMapStruct.transfer(blogUser)
+            return dtoService.transfer(blogUser, BlogUserDTO::class.java)
         }
     }
 
@@ -147,8 +149,29 @@ class BlogUserResource {
     }
 
     /**
+     * 搜索用户
+     */
+    @GET
+    @Path("search/{page}/{size}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun search(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserVO> {
+        val wrapper = ChainWrappers.queryChain(userService.dao)
+            .like(!request.username.isNullOrBlank(), "username", "%" + request.username + "%")
+
+        val page = userService.page(request, wrapper)
+
+        val voPage = PageUtils.copyPage<BlogUser, BlogUserVO>(page).apply {
+            records = page.records.stream()
+                .map { userMapStruct.transfer(it) }
+                .collect(Collectors.toList())
+        }
+        return voPage
+    }
+
+    /**
      * 分页查询用户
      */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @GET
     @Path("page/{page}/{size}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -179,7 +202,7 @@ class BlogUserResource {
     ): Long {
         userService.update(BlogUser().apply {
             this.uuid = userId
-            this.enabled = disableTime > 0
+            this.enabled = false
         })
 
         StpUtil.disable(userId, disableTime)
@@ -209,16 +232,35 @@ class BlogUserResource {
         return StpUtil.getDisableTime(userId)
     }
 
+    /**
+     * 更新用户拥有的角色
+     */
     @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
     @PUT
-    @Path("roles/{id}")
+    @Path("{id}/roles")
     @Transactional
     fun updateRoles(
         @Valid @NotBlank(message = "Id不能为空")
-        @RestPath id: String,
-        @RestQuery roleIds: List<String> = emptyList()
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        request: JsonObject
     ) {
-        userService.updateRoles(id, roleIds)
+        val roleUuids = request.getJsonArray("roleUuids").list as List<String>
+        userService.updateRoles(id, roleUuids)
+    }
+
+    /**
+     * 查询所有拥有某个角色的用户
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER, SaTokenConstants.ROLE_ADMIN, mode = SaMode.OR)
+    @GET
+    @Path("all/role/{id}")
+    fun findAllByRoleUuid(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): List<BlogUserDTO> {
+        val all = userService.findAllByRoleUuid(id)
+
+        return all.stream().map { dtoService.transfer(it, BlogUserDTO::class.java) }.collect(Collectors.toList())
     }
 
     //region 开发中（管理员）

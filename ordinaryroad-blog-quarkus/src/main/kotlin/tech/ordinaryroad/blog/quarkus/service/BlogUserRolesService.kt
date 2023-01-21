@@ -68,4 +68,17 @@ class BlogUserRolesService : BaseService<BlogUserRolesDAO, BlogUserRoles>() {
         wrapper.eq("user_id", userId)
         return super.dao.delete(wrapper)
     }
+
+    /**
+     * 根据用户Id和角色Id删除关联关系
+     */
+    fun deleteByUserIdsAndRoleId(userIds: List<String>, roleId: String): Int {
+        if (userIds.isEmpty()) {
+            return 0
+        }
+        val wrapper = Wrappers.query<BlogUserRoles>()
+        wrapper.`in`("user_id", userIds)
+        wrapper.eq("role_id", roleId)
+        return super.dao.delete(wrapper)
+    }
 }

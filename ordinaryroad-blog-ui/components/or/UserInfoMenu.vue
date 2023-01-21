@@ -112,7 +112,7 @@ export default {
         if (this.$vuetify.breakpoint.smAndDown) {
           items.unshift({
             titleKey: 'article.actions.writing',
-            to: '/dashboard/article/writing',
+            to: '/dashboard/article/writing/new',
             icon: 'mdi-pencil'
           })
         }

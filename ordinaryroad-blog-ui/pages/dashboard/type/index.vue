@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.type.title')">
+    <base-material-card
+      icon="mdi-view-list"
+      :title="$t('dashboardMenuTitles.dashboard.type.title')"
+    >
       <or-blog-type-data-table />
     </base-material-card>
   </div>

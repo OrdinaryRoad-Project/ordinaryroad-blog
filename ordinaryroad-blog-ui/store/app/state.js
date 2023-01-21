@@ -116,10 +116,58 @@ export default () => ({
       children: []
     },
     {
-      to: '/dashboard/system/log',
-      titleKey: 'dashboardMenuTitles.dashboard.systemTitle',
+      to: '/dashboard/system',
+      titleKey: 'dashboardMenuTitles.dashboard.system.title',
       icon: 'mdi-cog',
       children: [
+        {
+          to: '/dashboard/system/user',
+          titleKey: 'dashboardMenuTitles.dashboard.system.user.title',
+          icon: 'mdi-account',
+          children: [
+            {
+              ignore: true,
+              name: 'dashboard-system-user-roles-uid',
+              to: '/dashboard/system/user/roles',
+              titleKey: 'dashboardMenuTitles.dashboard.system.user.roles',
+              children: [],
+              meta: {
+                roles: {
+                  or: ['ADMIN', 'DEVELOPER']
+                }
+              }
+            }
+          ],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        },
+        {
+          to: '/dashboard/system/role',
+          titleKey: 'dashboardMenuTitles.dashboard.system.role.title',
+          icon: 'mdi-account-multiple',
+          children: [
+            {
+              ignore: true,
+              name: 'dashboard-system-role-users-roleCode',
+              to: '/dashboard/system/role/users',
+              titleKey: 'dashboardMenuTitles.dashboard.system.role.users',
+              children: [],
+              meta: {
+                roles: {
+                  or: ['ADMIN', 'DEVELOPER']
+                }
+              }
+            }
+          ],
+          meta: {
+            roles: {
+              or: ['ADMIN', 'DEVELOPER']
+            }
+          }
+        },
         {
           to: '/dashboard/system/log',
           titleKey: 'dashboardMenuTitles.dashboard.system.log',

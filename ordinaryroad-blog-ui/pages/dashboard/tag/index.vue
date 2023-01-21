@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.tag.title')">
+    <base-material-card
+      icon="mdi-tag-multiple"
+      :title="$t('dashboardMenuTitles.dashboard.tag.title')"
+    >
       <or-blog-tag-data-table />
     </base-material-card>
   </div>

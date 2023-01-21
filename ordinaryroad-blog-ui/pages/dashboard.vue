@@ -84,12 +84,22 @@ export default {
           })
           for (let j = 0; j < menuItem.children.length; j++) {
             const menuItem2 = menuItem.children[j]
-            if (menuItem2.to === path) {
+            if (menuItem2.to === path || path.startsWith(menuItem2.to)) {
               items.push({
                 text: menuItem2.titleKey,
                 disable: false,
                 href: menuItem2.to
               })
+              for (let k = 0; k < menuItem2.children.length; k++) {
+                const menuItem3 = menuItem2.children[k]
+                if (menuItem3.to === path || path.startsWith(menuItem3.to)) {
+                  items.push({
+                    text: menuItem3.titleKey,
+                    disable: false,
+                    href: menuItem3.to
+                  })
+                }
+              }
             }
           }
         }

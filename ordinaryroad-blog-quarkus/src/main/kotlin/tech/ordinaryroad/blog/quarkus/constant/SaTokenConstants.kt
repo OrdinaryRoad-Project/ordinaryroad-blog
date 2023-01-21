@@ -35,5 +35,6 @@ interface SaTokenConstants {
         const val ROLE_DEVELOPER = "DEVELOPER"
         const val ROLE_ADMIN = "ADMIN"
         const val ROLE_AUDITOR = "AUDITOR"
+        const val ROLE_SSSSSSVIP = "SSSSSSVIP"
     }
 }

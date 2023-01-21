@@ -45,6 +45,8 @@ enum class StatusCode(
     BLOG_TAG_NAME_ALREADY_EXIST(400, "标签名已存在"),
     BLOG_ROLE_NOT_FOUND(404, "角色不存在"),
     BLOG_ROLE_NOT_VALID(400, "角色无效"),
+    BLOG_ROLE_NAME_OR_CODE_ALREADY_EXIST(400, "角色名或code已存在"),
+    BLOG_ROLE_CANNOT_MODIFY_BUILT_IN(400, "内置角色不支持修改"),
     ;
 
     override fun getCode(): Int {
