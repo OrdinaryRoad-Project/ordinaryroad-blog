@@ -116,6 +116,13 @@ class BlogUserService : BaseService<BlogUserDAO, BlogUser>() {
         wrapper.eq("uid", uid)
         return super.dao.selectOne(wrapper)
     }
+
+    /**
+     * 查询所有拥有某个角色的用户
+     */
+    fun findAllByRoleUuid(id: String): List<BlogUser> {
+        return super.dao.selectAllByRoleUuid(id)
+    }
     //endregion
 
 }

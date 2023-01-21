@@ -23,14 +23,45 @@
   -->
 
 <template>
-  <div class="text-center">
-    <span>{{ $t('noMoreData') }}</span>
-  </div>
+  <base-material-card
+    icon="mdi-account"
+    :title="$t('dashboardMenuTitles.dashboard.system.role.users')"
+  >
+    <or-blog-role-users-form :preset="presetModel" />
+  </base-material-card>
 </template>
-
 <script>
 export default {
-  name: 'OrNoMoreData'
+  validate ({ params }) {
+    // 必填
+    return !!params.roleCode
+  },
+  async asyncData ({ route, $apis, store }) {
+    let presetModel
+    if (route.params.item) {
+      presetModel = route.params.item
+    } else {
+      // 加载角色
+      presetModel = (await $apis.blog.role.findByUniqueColumn(
+        { roleCode: route.params.roleCode },
+        store.getters['user/getTokenValue']
+      ))
+    }
+    return { presetModel }
+  },
+  data: () => ({
+    presetModel: null
+  }),
+  head () {
+    return {
+      title: this.$t('dashboardMenuTitles.dashboard.system.role.users')
+    }
+  },
+  created () {
+  },
+  mounted () {
+  },
+  methods: {}
 }
 </script>
 

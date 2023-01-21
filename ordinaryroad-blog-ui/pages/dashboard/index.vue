@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('userMenuTitles.dashboard')">
+    <base-material-card
+      icon="mdi-view-dashboard"
+      :title="$t('userMenuTitles.dashboard')"
+    >
       <v-row>
         <v-col>
           <v-card outlined>

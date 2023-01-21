@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { urlEncode } from '~/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 let $axios = null
 
@@ -52,11 +52,10 @@ export default {
       })
     },
     updateOwn: ({ uuid, name }) => {
-      const data = { uuid, name }
+      const data = { name }
       return $axios({
-        url: '/blog/type/update/own',
-        method: 'post',
-        data
+        url: `/blog/type/update/own/${uuid}?${urlEncode(data)}`,
+        method: 'post'
       })
     },
     findAllOwn () {

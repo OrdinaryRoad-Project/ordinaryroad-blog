@@ -24,7 +24,10 @@
 
 <template>
   <div>
-    <base-material-card :title="$t('dashboardMenuTitles.dashboard.comment.title')">
+    <base-material-card
+      icon="mdi-comment-multiple"
+      :title="$t('dashboardMenuTitles.dashboard.comment.title')"
+    >
       <or-blog-comment-data-table />
     </base-material-card>
   </div>

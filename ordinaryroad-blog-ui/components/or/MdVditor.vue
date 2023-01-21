@@ -244,7 +244,7 @@ export default {
         },
         upload: {
           max: 30 * 1024 * 1024,
-          url: '/blog/common/upload',
+          url: '/api/blog/common/upload',
           // 跨站点访问控制。默认值: false
           withCredentials: true,
           headers: {},

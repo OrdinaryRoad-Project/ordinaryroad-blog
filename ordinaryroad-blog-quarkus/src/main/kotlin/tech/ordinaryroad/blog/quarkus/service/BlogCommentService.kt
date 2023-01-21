@@ -24,6 +24,8 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
+import cn.hutool.dfa.StopChar
+import cn.hutool.dfa.WordTree
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor
 import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler
@@ -75,8 +77,23 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         return BlogComment::class.java
     }
 
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+
+            val wordTree = WordTree()
+            wordTree.addWord("土豆")
+            val charFilter = StopChar::isNotStopChar
+            wordTree.setCharFilter(charFilter)
+
+            println(wordTree.matchAll("我有一颗大土 豆，刚出锅的彩.票发票"))
+        }
+    }
+
     //region 业务相关
     fun post(request: BlogCommentPostRequest): Response {
+        val content = request.content
+
         val fromUser = blogService.currentUser()
 
         // 先转换，后面需要填充
@@ -85,7 +102,6 @@ class BlogCommentService : BaseService<BlogCommentDAO, BlogComment>() {
         // 传入parentId视为回复评论
         val isReply = !request.parentId.isNullOrBlank()
 
-        val content = request.content
         val article: BlogArticle
         var parentComment: BlogComment? = null
         if (isReply) {

@@ -94,7 +94,7 @@ export default {
     addComment (comment) {
       if (comment.originalId && comment.originalId !== '') {
         // 子评论
-        const query = this.$util.query(this.blogArticleComments.records, 'uuid', comment.originalId)[0]
+        const query = this.$or.util.query(this.blogArticleComments.records, 'uuid', comment.originalId)[0]
         query.replies.records.unshift(comment)
         query.replies.total = query.replies.records.length
       } else {

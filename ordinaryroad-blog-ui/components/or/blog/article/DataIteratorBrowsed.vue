@@ -138,7 +138,7 @@ export default {
 
               const items = this.$refs.articleIterator.$refs.dataIterator.dataIteratorParams.items
               this.$refs.articleIterator.$refs.dataIterator.loadSuccessfully(
-                this.$util.remove(items, 'uuid', item.uuid),
+                this.$or.util.remove(items, 'uuid', item.uuid),
                 this.$refs.articleIterator.$refs.dataIterator.dataIteratorParams.totalItems - 1
               )
 

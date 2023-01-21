@@ -37,7 +37,7 @@
  这里我们是采用的ES6 语法 引入 的qs模块
  */
 
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 let $axios = null
 
@@ -58,10 +58,16 @@ export default {
         method: 'put'
       })
     },
-    page: (page, size, { username }) => {
+    search: (page, size, { username }) => {
       const data = { username }
       return $axios({
-        url: `/blog/user/page/${page}/${size}?${urlEncode(data)}`,
+        url: `/blog/user/search/${page}/${size}?${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    page: (page, size, sortBy, sortDesc, searchParams) => {
+      return $axios({
+        url: `/blog/user/page/${page}/${size}?${urlEncode(searchParams)}${urlEncode(sortBy, 'sortBy')}${urlEncode(sortDesc, 'sortDesc')}`,
         method: 'get'
       })
     },
@@ -74,6 +80,34 @@ export default {
     findByUid: (uid) => {
       return $axios({
         url: `/blog/user/uid/${uid}`,
+        method: 'get'
+      })
+    },
+    disable: (userId, disableTime = -1) => {
+      const data = { userId, disableTime }
+      return $axios({
+        url: `/blog/user/disable?${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    untieDisable: (userId) => {
+      const data = { userId }
+      return $axios({
+        url: `/blog/user/disable/untie?${urlEncode(data)}`,
+        method: 'get'
+      })
+    },
+    updateRoles: ({ uuid, roleUuids }) => {
+      const data = { roleUuids }
+      return $axios({
+        url: `/blog/user/${uuid}/roles`,
+        method: 'put',
+        data
+      })
+    },
+    findAllByRoleUuid (id) {
+      return $axios({
+        url: `/blog/user/all/role/${id}`,
         method: 'get'
       })
     }

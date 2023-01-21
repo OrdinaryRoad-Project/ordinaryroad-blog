@@ -23,7 +23,7 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
-import org.jboss.resteasy.reactive.RestForm
+import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
 import javax.ws.rs.PathParam
@@ -34,7 +34,7 @@ class BlogTypeUpdateRequest : BaseRequest() {
     @NotBlank(message = "ID不能为空")
     var uuid: String = ""
 
-    @RestForm
+    @RestQuery
     @NotBlank(message = "名称不能为空")
     var name: String = ""
 

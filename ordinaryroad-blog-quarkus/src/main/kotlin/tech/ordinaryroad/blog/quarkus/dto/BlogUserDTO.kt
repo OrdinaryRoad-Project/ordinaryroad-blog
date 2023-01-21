@@ -23,6 +23,7 @@
  */
 package tech.ordinaryroad.blog.quarkus.dto
 
+import cn.hutool.core.util.BooleanUtil
 import cn.hutool.core.util.StrUtil
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
@@ -38,13 +39,15 @@ import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 data class BlogUserDTO(
     var uid: String = StrUtil.EMPTY,
     var username: String = StrUtil.EMPTY,
-    var avatar: String = StrUtil.EMPTY
+    var avatar: String = StrUtil.EMPTY,
+    var enabled: Boolean = true,
 ) : BaseBlogModelDTO<BlogUser>() {
 
     override fun parse(baseDo: BlogUser) {
         uid = baseDo.uid
         username = StrUtil.nullToEmpty(baseDo.username)
         avatar = StrUtil.nullToEmpty(baseDo.avatar)
+        enabled = BooleanUtil.isTrue(baseDo.enabled)
     }
 
     companion object {

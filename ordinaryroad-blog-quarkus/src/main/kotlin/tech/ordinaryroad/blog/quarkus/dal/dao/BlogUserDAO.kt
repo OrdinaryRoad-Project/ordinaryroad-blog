@@ -25,10 +25,21 @@
 package tech.ordinaryroad.blog.quarkus.dal.dao
 
 import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Select
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
 
 @Mapper
 interface BlogUserDAO : IBaseMapper<BlogUser> {
+
+    /**
+     * 根据角色Id查询所有用户
+     */
+    @Select(
+        "SELECT BU.* FROM blog_user_roles AS BUR " +
+                "LEFT JOIN (SELECT * FROM blog_user WHERE `deleted` = 0) AS BU ON BU.uuid = BUR.user_id " +
+                "WHERE (BUR.role_id = #{roleUuid} AND BUR.`deleted` = 0)"
+    )
+    fun selectAllByRoleUuid(roleUuid: String): List<BlogUser>
 
 }

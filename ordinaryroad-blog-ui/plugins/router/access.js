@@ -28,31 +28,7 @@ export default ({ app, store }) => {
   router.beforeEach((to, from, next) => {
     const dashboardMenuItems = store.getters['app/getDashboardMenuItems']
     const userMenuItems = store.getters['app/getUserMenuItems']
-    // 不在侧边栏展示的menuItems
-    const itemsNotInDrawer = [
-      // {
-      //   to: '/upms/user/roles',
-      //   name: 'upms-user-roles-orNumber',
-      //   meta: {
-      //     permission: 'upms:user:update:user_roles'
-      //   }
-      // },
-      // {
-      //   to: '/upms/role/users',
-      //   name: 'upms-role-users-roleCode',
-      //   meta: {
-      //     permission: 'upms:role:update:role_users'
-      //   }
-      // },
-      // {
-      //   to: '/upms/role/permissions',
-      //   name: 'upms-role-permissions-roleCode',
-      //   meta: {
-      //     permission: 'upms:role:update:role_permissions'
-      //   }
-      // }
-    ]
-    const items = dashboardMenuItems.concat(userMenuItems).concat(itemsNotInDrawer)
+    const items = dashboardMenuItems.concat(userMenuItems)
 
     let found = false
     let item = items.shift()

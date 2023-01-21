@@ -23,14 +23,19 @@
   -->
 
 <template>
-  <v-sheet :height="200" class="d-flex justify-center align-center">
-    <h1>{{ $vuetify.lang.t('$vuetify.noDataText') }}</h1>
-  </v-sheet>
+  <div>
+    <base-material-card
+      icon="mdi-account-multiple"
+      :title="$t('dashboardMenuTitles.dashboard.system.role.title')"
+    >
+      <or-blog-role-data-table />
+    </base-material-card>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'OrEmpty'
+  middleware: ['userInfo']
 }
 </script>
 

@@ -74,7 +74,7 @@
                 :href="`/${user.uid}?tab=article`"
               >
                 <v-row justify="center" class="text-h6">
-                  {{ $t('user.basicInfo.articlesCount') }}
+                  {{ $t('basicUserInfo.articlesCount') }}
                 </v-row>
                 <v-row justify="center" class="text-subtitle-1">
                   {{ articlesCountOptions.loading ? '-' : articlesCountOptions.data }}
@@ -83,7 +83,7 @@
             </v-col>
             <v-col>
               <v-row justify="center" class="text-h6">
-                {{ $t('user.basicInfo.commentsCount') }}
+                {{ $t('basicUserInfo.commentsCount') }}
               </v-row>
               <v-row justify="center" class="text-subtitle-1">
                 {{ commentsCountOptions.loading ? '-' : commentsCountOptions.data }}

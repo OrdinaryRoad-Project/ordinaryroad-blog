@@ -30,6 +30,7 @@ import userApis from './user'
 import typeApis from './type'
 import tagApis from './tag'
 import logApis from './log'
+import roleApis from './role'
 
 let $axios = null
 let $config = null
@@ -46,6 +47,7 @@ export default {
     typeApis.initAxios(axios)
     tagApis.initAxios(axios)
     logApis.initAxios(axios)
+    roleApis.initAxios(axios)
   },
   apis: {
     oauth2: oauth2Apis.apis,
@@ -56,6 +58,7 @@ export default {
     type: typeApis.apis,
     tag: tagApis.apis,
     log: logApis.apis,
+    role: roleApis.apis,
     /**
      * 获取文件全路径
      * @param url

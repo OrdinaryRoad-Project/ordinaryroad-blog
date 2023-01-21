@@ -26,7 +26,7 @@
   <or-input-dialog
     ref="dialog"
     :title="title"
-    :rules="[$rules.notBlank,$rules.max500Chars]"
+    :rules="[$or.rules.notBlank,$or.rules.max500Chars]"
     label="请输入原因或理由"
     @onConfirm="onConfirm"
   />

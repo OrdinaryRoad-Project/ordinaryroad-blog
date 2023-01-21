@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { urlEncode } from '@/plugins/ordinaryroad/utils'
+import { urlEncode } from 'ordinaryroad-vuetify/src/utils'
 
 let $axios = null
 

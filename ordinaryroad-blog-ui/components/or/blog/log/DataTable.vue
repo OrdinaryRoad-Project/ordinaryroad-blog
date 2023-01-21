@@ -33,8 +33,8 @@
       :show-select="showSelect"
       :show-base-headers-when-selecting="showBaseHeadersWhenSelecting"
       :show-actions-when-selecting="showActionsWhenSelecting"
-      :show-update-headers="false"
       :preset-selected-items="presetSelectedItems"
+      hide-update-headers
       :table-headers="headers"
       access-key="blog:log"
       @getItems="onGetItems"
