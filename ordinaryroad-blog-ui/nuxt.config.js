@@ -150,7 +150,12 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    // https://nuxtjs.org/docs/configuration-glossary/configuration-build/#transpile
+    transpile: [
+      'ordinaryroad-vuetify/src/components'
+    ]
+  },
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {

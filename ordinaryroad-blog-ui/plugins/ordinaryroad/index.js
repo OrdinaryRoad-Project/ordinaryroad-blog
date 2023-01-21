@@ -28,6 +28,17 @@ import rules from 'ordinaryroad-vuetify/src/rules'
 /* 自定义工具类 */
 import util from 'ordinaryroad-vuetify/src/utils'
 /* 自定义常量 */
+import {
+  BaseMaterialCard,
+  OrBaseDataIterator,
+  OrBaseDataTable,
+  OrBaseMenu,
+  OrBaseTreeList,
+  OrEmpty,
+  OrLoadMoreFooter,
+  OrNoMoreData,
+  OrNotFound
+} from 'ordinaryroad-vuetify/src/components'
 import constants from './constants/index'
 import echarts from './echarts/index'
 
@@ -50,4 +61,15 @@ export default function (context, inject) {
   }
 
   inject('or', Vue.prototype.$or)
+
+  // 按需引入
+  Vue.component('BaseMaterialCard', BaseMaterialCard)
+  Vue.component('OrBaseDataIterator', OrBaseDataIterator)
+  Vue.component('OrBaseDataTable', OrBaseDataTable)
+  Vue.component('OrBaseMenu', OrBaseMenu)
+  Vue.component('OrBaseTreeList', OrBaseTreeList)
+  Vue.component('OrEmpty', OrEmpty)
+  Vue.component('OrLoadMoreFooter', OrLoadMoreFooter)
+  Vue.component('OrNoMoreData', OrNoMoreData)
+  Vue.component('OrNotFound', OrNotFound)
 }
