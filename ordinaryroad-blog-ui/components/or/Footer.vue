@@ -27,7 +27,6 @@
     :app="app"
     padless
     inset
-    :height="$vuetify.breakpoint.smAndDown?150:100"
   >
     <v-container>
       <div
@@ -76,6 +75,30 @@
             src="https://ordinaryroad.coding.net/badges/ordinaryroad/job/1483779/build.svg"
           ></a>
         </div>
+      </div>
+      <div
+        class="d-flex justify-center align-center font-weight-light"
+        :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
+      >
+        <or-link
+          hover-able
+          :class="$vuetify.breakpoint.smAndDown?null:'me-2'"
+          :href="$config.BEIAN.GONG_AN_HREF"
+          hide-icon
+        >
+          <span class="d-flex justify-center align-center"><img
+            alt="备案图标"
+            class="me-1"
+            :src="require('~/assets/img/gongan.png')"
+          >{{ $config.BEIAN.GONG_AN_NUMBER }}</span>
+        </or-link>
+        <or-link
+          hover-able
+          href="https://beian.miit.gov.cn"
+          hide-icon
+        >
+          {{ $config.BEIAN.ICP_NUMBER }}
+        </or-link>
       </div>
     </v-container>
   </v-footer>
