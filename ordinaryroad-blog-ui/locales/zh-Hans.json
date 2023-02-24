@@ -147,7 +147,7 @@
     "type": "类型"
   },
   "loginFormTitle": "登录到OR博客",
-  "loginHint": "目前仅支持账号解绑，不支持注销，登录成功后可以通过解绑来绑定其他账号",
+  "loginHint": "登录成功会自动创建账号，导致无法与其他账号绑定，如果需要绑定请务必使用主账号登录",
   "loginToFeedbackTip": "后体验更佳～",
   "myStats": {
     "browsedArticlesCount": "已浏览文章",

@@ -165,6 +165,12 @@ export default {
       }
     },
 
+    BEIAN: {
+      ICP_NUMBER: '苏ICP备2020055920号-1',
+      GONG_AN_NUMBER: '苏公网安备 32021102001093号',
+      GONG_AN_HREF: 'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32021102001093'
+    },
+
     BASE_URL: process.env.BASE_URL,
     // 文件下载地址
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
