@@ -19,8 +19,10 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 - 第三方账号
 - 账号临时封禁、永久封禁、解封
-- 角色控制
 - 个人空间
+- 用户角色分配
+- 角色用户管理
+- 角色启用禁用
 
 ### 文章模块
 
