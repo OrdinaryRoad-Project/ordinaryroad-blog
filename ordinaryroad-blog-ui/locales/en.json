@@ -147,8 +147,8 @@
     "type": "Type"
   },
   "loginFormTitle": "Login To OR BLOG",
-  "loginHint": "Currently, only account unbinding is supported, and canceling is not supported. After successful login, you can bind other accounts by unbinding",
-  "loginToFeedbackTip": " for a better experience~",
+  "loginHint": "If you log in successfully, an account will be automatically created, resulting in the inability to bind to other accounts, if you need to bind the binding, you must log in with the primary account",
+  "loginToFeedbackTip": " for a better experixence~",
   "myStats": {
     "browsedArticlesCount": "Browsed Articles Count",
     "charts": {
