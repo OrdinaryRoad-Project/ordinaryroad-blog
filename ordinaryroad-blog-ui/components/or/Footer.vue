@@ -77,6 +77,7 @@
         </div>
       </div>
       <div
+        v-if="$config.BEIAN.ENABLED"
         class="d-flex justify-center align-center font-weight-light"
         :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
