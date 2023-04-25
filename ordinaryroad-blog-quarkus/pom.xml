@@ -109,6 +109,11 @@
             <version>${ip2region.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-reactive-qute</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>io.quarkus</groupId>

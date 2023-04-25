@@ -24,12 +24,13 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import io.quarkus.mailer.Mail
-import io.quarkus.mailer.Mailer
+import io.quarkus.mailer.MailTemplate.MailTemplateInstance
+import io.quarkus.qute.CheckedTemplate
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserLikedArticle
+import java.time.Duration
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -43,8 +44,45 @@ import javax.inject.Inject
 @ApplicationScoped
 class BlogPushService {
 
-    @Inject
-    protected lateinit var mailer: Mailer
+    /**
+     * https://www.likecs.com/ask-195922.html
+     *  @JvmStatic
+     */
+    @CheckedTemplate
+    internal object Templates {
+
+        @JvmStatic
+        external fun articleStatusChanged(
+            title: String?,
+            articleHref: String?,
+            articleTitle: String?,
+            actionString: String?
+        ): MailTemplateInstance
+
+        @JvmStatic
+        external fun newComment(
+            title: String?,
+            fromUserId: String?,
+            fromUsername: String?,
+            actionString: String?,
+            content: String?,
+            toUserId: String?,
+            articleId: String?,
+            articleTitle: String?
+        ): MailTemplateInstance
+
+        @JvmStatic
+        external fun userLikesArticle(
+            title: String?,
+            fromUserId: String?,
+            fromUsername: String?,
+            actionString: String?,
+            content: String?,
+            toUserId: String?,
+            articleId: String?,
+            articleTitle: String?
+        ): MailTemplateInstance
+    }
 
     @Inject
     protected lateinit var userService: BlogUserService
@@ -79,25 +117,22 @@ class BlogPushService {
         if (toUser.email.isNullOrBlank()) {
             return
         }
-        val emailSet = setOf(toUser.email)
 
-        var contentTemplate = NEW_COMMENT_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
-        contentTemplate = contentTemplate.replace("{actionString}", actionString)
-        contentTemplate = contentTemplate.replace("{content}", content)
-        contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
-
-        mailer.send(
-            Mail().apply {
-                to = emailSet.toList()
-                subject = title
-                html = contentTemplate
-            }
+        Templates.newComment(
+            title,
+            fromUser.username,
+            fromUser.uid,
+            actionString,
+            content,
+            article.firstId,
+            article.title,
+            toUser.uid
         )
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
 
     /**
@@ -114,16 +149,6 @@ class BlogPushService {
         val actionString = "点赞了我的文章"
         val content = article.title
 
-        var contentTemplate = USER_LIKES_ARTICLE_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace("{fromUsername}", fromUser.username)
-        contentTemplate = contentTemplate.replace("{fromUserId}", fromUser.uid)
-        contentTemplate = contentTemplate.replace("{actionString}", actionString)
-        contentTemplate = contentTemplate.replace("{content}", content)
-        contentTemplate = contentTemplate.replace("{articleId}", article.firstId)
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{toUserId}", toUser.uid)
-
         if (fromUser.uuid == toUser.uuid) {
             // 跳过本人操作
             return
@@ -132,15 +157,22 @@ class BlogPushService {
         if (toUser.email.isNullOrBlank()) {
             return
         }
-        val emailSet = setOf(toUser.email)
 
-        mailer.send(
-            Mail().apply {
-                to = emailSet.toList()
-                subject = title
-                html = contentTemplate
-            }
+        Templates.userLikesArticle(
+            title,
+            fromUser.username,
+            fromUser.uid,
+            actionString,
+            content,
+            article.firstId,
+            article.title,
+            toUser.uid
         )
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
 
     /**
@@ -153,20 +185,17 @@ class BlogPushService {
 
         val title = "文章开始审核通知"
 
-        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace(
-            "{articleHref}",
-            "https://blog.ordinaryroad.tech/dashboard/article/auditing/${article.uuid}"
+        Templates.articleStatusChanged(
+            title,
+            "https://blog.ordinaryroad.tech/dashboard/article/auditing/${article.uuid}",
+            article.title,
+            "已经开始审核"
         )
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{actionString}", "已经开始审核")
-
-        mailer.send(Mail().apply {
-            to = listOf(toUser.email)
-            subject = title
-            html = contentTemplate
-        })
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
 
     /**
@@ -179,20 +208,17 @@ class BlogPushService {
 
         val title = "文章审核通过通知"
 
-        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace(
-            "{articleHref}",
-            "https://blog.ordinaryroad.tech/${toUser.uid}/article/${article.uuid}"
+        Templates.articleStatusChanged(
+            title,
+            "https://blog.ordinaryroad.tech/${toUser.uid}/article/${article.uuid}",
+            article.title,
+            "审核通过 已经开放浏览"
         )
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{actionString}", "审核通过 已经开放浏览")
-
-        mailer.send(Mail().apply {
-            to = listOf(toUser.email)
-            subject = title
-            html = contentTemplate
-        })
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
 
     /**
@@ -205,20 +231,17 @@ class BlogPushService {
 
         val title = "文章审核失败通知"
 
-        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace(
-            "{articleHref}",
-            "https://blog.ordinaryroad.tech/dashboard/article/writing/${article.uuid}"
+        Templates.articleStatusChanged(
+            title,
+            "https://blog.ordinaryroad.tech/dashboard/article/writing/${article.uuid}",
+            article.title,
+            "审核失败 原因：$reason"
         )
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{actionString}", "审核失败 原因：$reason")
-
-        mailer.send(Mail().apply {
-            to = listOf(toUser.email)
-            subject = title
-            html = contentTemplate
-        })
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
 
     /**
@@ -231,80 +254,16 @@ class BlogPushService {
 
         val title = "文章违规通知"
 
-        var contentTemplate = ARTICLE_STATUS_CHANGED_TEMPLATE
-        contentTemplate = contentTemplate.replace("{title}", title)
-        contentTemplate = contentTemplate.replace(
-            "{articleHref}",
-            "https://blog.ordinaryroad.tech/dashboard/article/status/OFFEND"
+        Templates.articleStatusChanged(
+            title,
+            "https://blog.ordinaryroad.tech/dashboard/article/status/OFFEND",
+            article.title,
+            "违规 原因：$reason"
         )
-        contentTemplate = contentTemplate.replace("{articleTitle}", article.title)
-        contentTemplate = contentTemplate.replace("{actionString}", "违规 原因：$reason")
-
-        mailer.send(Mail().apply {
-            to = listOf(toUser.email)
-            subject = title
-            html = contentTemplate
-        })
+            .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
     }
-
-    /**
-     * src/main/resources/templates/new-comment.html
-     */
-    private final val NEW_COMMENT_TEMPLATE = "<!DOCTYPE html>\n" +
-            "<html lang=\"zh\">\n" +
-            "<head>\n" +
-            "    <meta charset=\"UTF-8\">\n" +
-            "    <title>{title}</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "\n" +
-            "<a href=\"https://blog.ordinaryroad.tech/{fromUserId}\">{fromUsername}</a>{actionString}\n" +
-            "<div>\n" +
-            "    {content}\n" +
-            "</div>\n" +
-            "<div>\n" +
-            "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/{articleId}#comments\">{articleTitle}</a>\n" +
-            "</div>\n" +
-            "\n" +
-            "</body>\n" +
-            "</html>"
-
-
-    /**
-     * src/main/resources/templates/user-likes-article.html
-     */
-    private final val USER_LIKES_ARTICLE_TEMPLATE = "<!DOCTYPE html>\n" +
-            "<html lang=\"zh\">\n" +
-            "<head>\n" +
-            "    <meta charset=\"UTF-8\">\n" +
-            "    <title>{title}</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "\n" +
-            "<a href=\"https://blog.ordinaryroad.tech/{fromUserId}\">{fromUsername}</a>{actionString}\n" +
-            "<div>\n" +
-            "    {content}\n" +
-            "</div>\n" +
-            "<div>\n" +
-            "    <a href=\"https://blog.ordinaryroad.tech/{toUserId}/article/{articleId}\">{articleTitle}</a>\n" +
-            "</div>\n" +
-            "\n" +
-            "</body>\n" +
-            "</html>"
-
-    /**
-     * src/main/resources/templates/article-status-changed.html
-     */
-    private final val ARTICLE_STATUS_CHANGED_TEMPLATE = "<!DOCTYPE html>\n" +
-            "<html lang=\"zh\">\n" +
-            "<head>\n" +
-            "    <meta charset=\"UTF-8\">\n" +
-            "    <title>{title}</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "\n" +
-            "您的文章 <a href=\"{articleHref}\">{articleTitle}</a> {actionString}\n" +
-            "\n" +
-            "</body>\n" +
-            "</html>"
 }
