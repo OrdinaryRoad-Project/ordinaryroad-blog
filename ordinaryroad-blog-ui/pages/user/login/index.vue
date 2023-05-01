@@ -119,7 +119,7 @@ export default {
         this.$snackbar.info(this.$t('term.agreeHint'))
         return
       }
-      const state = `${this.$dayjs().valueOf()}_${this.redirect}_${provider}_login`
+      const state = `${this.$dayjs().valueOf()}$${this.redirect}$${provider}$login`
       this.$dialog({
         content: this.$t('loginHint'),
         confirmText: this.$t('understandAnd', [this.$t('login')])
