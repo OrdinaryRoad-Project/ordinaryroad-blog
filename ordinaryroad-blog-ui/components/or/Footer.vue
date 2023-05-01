@@ -30,6 +30,14 @@
   >
     <v-container>
       <div
+        class="d-flex justify-center align-center font-weight-light"
+        :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
+      >
+        <or-link href="/friend_link" hover-able hide-icon>
+          {{ $t('friendLink.title') }}
+        </or-link>
+      </div>
+      <div
         class="d-flex justify-center align-center"
         :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
