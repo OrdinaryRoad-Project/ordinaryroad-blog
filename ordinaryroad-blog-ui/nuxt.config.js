@@ -159,6 +159,14 @@ export default {
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {
+    FRIEND_LINK_INFO: [
+      { key: 'friendLink.name', value: 'OR博客' },
+      { key: 'friendLink.description', value: '世间种种平凡，都不平凡。' },
+      { key: 'friendLink.url', value: 'https://blog.ordinaryroad.tech' },
+      { key: 'friendLink.logo', value: 'https://blog.ordinaryroad.tech' },
+      { key: 'friendLink.email', value: 'or-mjz@qq.com' }
+    ],
+
     STATISTICS: {
       BAIDU: {
         CODE: process.env.STATISTICS_BAIDU_CODE

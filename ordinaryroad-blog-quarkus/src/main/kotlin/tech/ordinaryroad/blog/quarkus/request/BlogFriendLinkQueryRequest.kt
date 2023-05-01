@@ -21,33 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-import blogApis from './blog/index'
+import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.enums.BlogFriendLinkStatusEnum
+import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  blogApis.initAxios($axios, $config)
-  const $apis = {
-    blog: blogApis.apis,
-    statusColor (item) {
-      if (['OK', 'NO_CONTENT'].includes(item.status) ||
-        ['APPROVED'].includes(item.status)) {
-        return 'success'
-      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status) ||
-        ['DISAPPROVED'].includes(item.status)) {
-        return 'error'
-      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
-        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
-        return 'warning'
-      } else {
-        return null
-      }
+class BlogFriendLinkQueryRequest : BaseQueryRequest() {
+
+    @RestQuery
+    var name: String? = null
+
+    @RestQuery
+    var description: String? = null
+
+    @RestQuery
+    var url: String? = null
+
+    @RestQuery
+    var email: String? = null
+
+    @RestQuery
+    var status: BlogFriendLinkStatusEnum? = null
+
+    companion object {
+        private const val serialVersionUID: Long = 6578261924878008670L
     }
-  }
-  // $apis
-  inject('apis', $apis)
+
 }

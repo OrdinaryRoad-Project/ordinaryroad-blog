@@ -22,32 +22,17 @@
  * SOFTWARE.
  */
 
-import blogApis from './blog/index'
+package tech.ordinaryroad.blog.quarkus.dal.dao
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  blogApis.initAxios($axios, $config)
-  const $apis = {
-    blog: blogApis.apis,
-    statusColor (item) {
-      if (['OK', 'NO_CONTENT'].includes(item.status) ||
-        ['APPROVED'].includes(item.status)) {
-        return 'success'
-      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status) ||
-        ['DISAPPROVED'].includes(item.status)) {
-        return 'error'
-      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
-        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
-        return 'warning'
-      } else {
-        return null
-      }
-    }
-  }
-  // $apis
-  inject('apis', $apis)
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Update
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogFriendLink
+import tech.ordinaryroad.commons.mybatis.quarkus.mapper.IBaseMapper
+
+@Mapper
+interface BlogFriendLinkDAO : IBaseMapper<BlogFriendLink> {
+
+    @Update("UPDATE blog_friend_link SET `deleted` = 0 WHERE `uuid` = #{uuid}")
+    fun restore(uuid: String): Int
+
 }

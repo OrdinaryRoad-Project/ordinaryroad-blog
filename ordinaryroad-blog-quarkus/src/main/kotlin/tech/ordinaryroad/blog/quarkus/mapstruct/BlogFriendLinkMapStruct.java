@@ -22,32 +22,18 @@
  * SOFTWARE.
  */
 
-import blogApis from './blog/index'
+package tech.ordinaryroad.blog.quarkus.mapstruct;
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  blogApis.initAxios($axios, $config)
-  const $apis = {
-    blog: blogApis.apis,
-    statusColor (item) {
-      if (['OK', 'NO_CONTENT'].includes(item.status) ||
-        ['APPROVED'].includes(item.status)) {
-        return 'success'
-      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status) ||
-        ['DISAPPROVED'].includes(item.status)) {
-        return 'error'
-      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
-        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
-        return 'warning'
-      } else {
-        return null
-      }
-    }
-  }
-  // $apis
-  inject('apis', $apis)
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogFriendLink;
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogFriendLinkVO;
+
+@Mapper
+public interface BlogFriendLinkMapStruct extends BaseBlogMapStruct {
+
+    BlogFriendLinkMapStruct INSTANCE = Mappers.getMapper(BlogFriendLinkMapStruct.class);
+
+    BlogFriendLinkVO transfer(BlogFriendLink friendLink);
+
 }

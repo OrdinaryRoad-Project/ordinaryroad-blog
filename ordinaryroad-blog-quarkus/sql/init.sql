@@ -463,3 +463,33 @@ CREATE TABLE `blog_user_liked_article`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_as_ci COMMENT = '博客用户点赞的文章表'
   ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for blog_friend_link
+-- ----------------------------
+# DROP TABLE if exists `blog_friend_link`;
+CREATE TABLE `blog_friend_link`
+(
+    `id`           bigint                                                         NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `uuid`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NOT NULL COMMENT '主键UUID',
+    `created_time` datetime                                                       NULL     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '创建者ID',
+    `update_time`  datetime                                                       NULL     DEFAULT NULL COMMENT '更新时间',
+    `update_by`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '更新者ID',
+
+    `ip`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci NULL COMMENT 'IP',
+
+    `name`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL COMMENT '网站名称',
+    `description`  varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站描述',
+    `url`          varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站地址',
+    `logo`         varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站logo地址',
+    `email`        varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '站长email',
+    `status`       varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '状态',
+    `deleted`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `blog_friend_link_uuid_uindex` (`uuid`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_as_ci COMMENT = '博客友情链接'
+  ROW_FORMAT = Dynamic;

@@ -26,10 +26,8 @@ package tech.ordinaryroad.blog.quarkus.service
 
 import io.quarkus.mailer.MailTemplate.MailTemplateInstance
 import io.quarkus.qute.CheckedTemplate
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
-import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserLikedArticle
+import org.eclipse.microprofile.config.ConfigProvider
+import tech.ordinaryroad.blog.quarkus.dal.entity.*
 import java.time.Duration
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -81,6 +79,19 @@ class BlogPushService {
             toUserId: String?,
             articleId: String?,
             articleTitle: String?
+        ): MailTemplateInstance
+
+        @JvmStatic
+        external fun applyForFriendLink(title: String?, friendLink: BlogFriendLink?): MailTemplateInstance
+
+        @JvmStatic
+        external fun applyForFriendLinkApproved(title: String?, friendLink: BlogFriendLink?): MailTemplateInstance
+
+        @JvmStatic
+        external fun applyForFriendLinkDisapproved(
+            title: String?,
+            reason: String?,
+            friendLink: BlogFriendLink?
         ): MailTemplateInstance
     }
 
@@ -261,6 +272,47 @@ class BlogPushService {
             "违规 原因：$reason"
         )
             .to(toUser.email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
+    }
+
+    /**
+     * 通知开发者有新的友链申请
+     */
+    fun applyForFriendLink(friendLink: BlogFriendLink) {
+        val title = "友链申请通知"
+        Templates.applyForFriendLink(title, friendLink)
+            .to(ConfigProvider.getConfig().getValue("quarkus.mailer.from", String::class.java))
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
+    }
+
+    fun friendLinkApproved(friendLink: BlogFriendLink) {
+        val email = friendLink.email
+        if (email.isNullOrBlank()) {
+            return
+        }
+        val title = "友链申请结果通知"
+        Templates.applyForFriendLinkApproved(title, friendLink)
+            .to(email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
+    }
+
+    fun friendLinkDisapproved(reason: String, friendLink: BlogFriendLink) {
+        val email = friendLink.email
+        if (email.isNullOrBlank()) {
+            return
+        }
+        val title = "友链申请结果通知"
+        Templates.applyForFriendLinkDisapproved(title, reason, friendLink)
+            .to(email)
             .subject(title)
             .send()
             .await()

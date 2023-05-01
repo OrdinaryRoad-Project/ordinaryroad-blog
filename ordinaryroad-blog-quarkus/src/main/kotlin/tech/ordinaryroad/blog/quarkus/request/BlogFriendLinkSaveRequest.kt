@@ -21,33 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package tech.ordinaryroad.blog.quarkus.request
 
-import blogApis from './blog/index'
+import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  blogApis.initAxios($axios, $config)
-  const $apis = {
-    blog: blogApis.apis,
-    statusColor (item) {
-      if (['OK', 'NO_CONTENT'].includes(item.status) ||
-        ['APPROVED'].includes(item.status)) {
-        return 'success'
-      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status) ||
-        ['DISAPPROVED'].includes(item.status)) {
-        return 'error'
-      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
-        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
-        return 'warning'
-      } else {
-        return null
-      }
+class BlogFriendLinkSaveRequest : BaseRequest() {
+
+    @NotBlank(message = "网站名称不能为空")
+    @Size(max = 50, message = "网站名称长度不能超过50")
+    var name: String = ""
+
+    @Size(max = 100, message = "网站描述长度不能超过100")
+    var description: String? = null
+
+    @NotBlank(message = "网站地址不能为空")
+    @Size(max = 500, message = "网站地址长度不能超过500")
+    var url: String = ""
+
+    @NotBlank(message = "网站logo地址不能为空")
+    @Size(max = 500, message = "网站logo地址长度不能超过500")
+    var logo: String = ""
+
+    @Size(max = 500, message = "站长email长度不能超过500")
+    var email: String? = null
+
+    companion object {
+        private const val serialVersionUID: Long = 4154999132288945052L
     }
-  }
-  // $apis
-  inject('apis', $apis)
+
 }

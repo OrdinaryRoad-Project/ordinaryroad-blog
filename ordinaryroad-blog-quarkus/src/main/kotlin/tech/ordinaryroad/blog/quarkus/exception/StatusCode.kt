@@ -47,6 +47,9 @@ enum class StatusCode(
     BLOG_ROLE_NOT_VALID(400, "角色无效"),
     BLOG_ROLE_NAME_OR_CODE_ALREADY_EXIST(400, "角色名或code已存在"),
     BLOG_ROLE_CANNOT_MODIFY_BUILT_IN(400, "内置角色不支持修改"),
+    BLOG_FRIEND_LINK_NOT_VALID(400, "友链无效"),
+    BLOG_FRIEND_LINK_NOT_FOUND(404, "友链不存在"),
+    BLOG_FRIEND_LINK_URL_ALREADY_EXIST(400, "友链已存在"),
     ;
 
     override fun getCode(): Int {

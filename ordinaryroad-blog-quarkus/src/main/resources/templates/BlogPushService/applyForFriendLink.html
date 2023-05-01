@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>{title}</title>
+</head>
+<body>
+
+<div style="background-color: #f2f5f8; display: flex; justify-content: center; align-items: center;">
+    <div
+            style="background-color: #fff;border-radius: 4px;box-sizing: border-box;box-shadow: 0 0 5px rgba(0, 0, 0, .2); padding: 30px; margin: 30px;">
+        <div
+                style="display: flex;height: 40px; line-height: 40px; justify-content: space-between; border-bottom: 2px dashed #86bef9;">
+            <div style="margin: 5px 15px; font-weight: bold; color: #2d8cf0;">
+                <img alt="logo" src="TODO"
+                     style="width: 25px; height: 25px; border: 1px solid #ececec;border-radius: 100%;vertical-align: text-bottom;">
+                OR博客
+            </div>
+            <a href="https://blog.ordinaryroad.tech"
+               style="color: #2d8cf0; display: inline; margin: 5px 15px; text-decoration: none;" target="_blank"
+               rel="noopener noreferrer">首页</a>
+        </div>
+        <div style="text-align: center;">
+            <h2 style="font-size: 30px; font-weight: 400; margin: 10px auto;"><span
+                        style="color: #2d8cf0; font-size: 30px; font-weight: 400;">OR博客</span> -- 友链申请通知
+            </h2>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站名称：<span
+                        style="color: #2d8cf0; font-size: 17px; margin: 20px auto;">{friendLink.name}</span></p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站链接：
+                <a href="{friendLink.url}"
+                   style="color: #2d8cf0; font-size: 17px; text-decoration: underline;"
+                   target="_blank" rel="noopener noreferrer">{friendLink.url}</a>
+            </p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站Logo：<span
+                        style="color: #2d8cf0; font-size: 17px; margin: 20px auto;"><img
+                            style="width: 25px; height: 25px;" src="{friendLink.logo}"></span></p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站Logo地址：
+                <a href="{friendLink.logo}"
+                   style="color: #2d8cf0; font-size: 17px; text-decoration: underline;"
+                   target="_blank" rel="noopener noreferrer">{friendLink.logo}</a>
+            </p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站描述：<span
+                        style="color: #2d8cf0; font-size: 17px; margin: 20px auto;">{friendLink.description}</span></p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">站长邮箱：<span
+                        style="color: #2d8cf0; font-size: 17px; margin: 20px auto;">{friendLink.email}</span></p>
+            <a href="https://blog.ordinaryroad.tech/dashboard/system/friend_link"
+               style="color: #2d8cf0; font-size: 17px; text-decoration: underline;"
+               target="_blank" rel="noopener noreferrer">去处理</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

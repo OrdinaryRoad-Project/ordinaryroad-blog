@@ -22,32 +22,42 @@
  * SOFTWARE.
  */
 
-import blogApis from './blog/index'
+package tech.ordinaryroad.blog.quarkus.enums
 
-export default function ({
-  $axios,
-  $config,
-  app
-}, inject) {
-  // 初始化axios
-  blogApis.initAxios($axios, $config)
-  const $apis = {
-    blog: blogApis.apis,
-    statusColor (item) {
-      if (['OK', 'NO_CONTENT'].includes(item.status) ||
-        ['APPROVED'].includes(item.status)) {
-        return 'success'
-      } else if (['BAD_REQUEST', 'INTERNAL_SERVER_ERROR', 'REQUEST_TIMEOUT'].includes(item.status) ||
-        ['DISAPPROVED'].includes(item.status)) {
-        return 'error'
-      } else if (['UNAUTHORIZED', 'FORBIDDEN', 'METHOD_NOT_ALLOWED', 'NOT_FOUND',
-        'REQUEST_ENTITY_TOO_LARGE', 'REQUEST_URI_TOO_LONG', 'UNSUPPORTED_MEDIA_TYPE'].includes(item.status)) {
-        return 'warning'
-      } else {
-        return null
-      }
+import cn.hutool.core.util.EnumUtil
+import com.baomidou.mybatisplus.annotation.IEnum
+
+/**
+ * 友链状态
+ *
+ * @author mjz
+ * @date 2023/2/25
+ */
+enum class BlogFriendLinkStatusEnum : IEnum<String> {
+
+    /**
+     * 待审核
+     */
+    PENDING,
+
+    /**
+     * 审核通过
+     */
+    APPROVED,
+
+    /**
+     * 审核失败
+     */
+    DISAPPROVED,
+    ;
+
+
+    override fun getValue(): String {
+        return EnumUtil.toString(this)
     }
-  }
-  // $apis
-  inject('apis', $apis)
+
+    override fun toString(): String {
+        return EnumUtil.toString(this)
+    }
+
 }
