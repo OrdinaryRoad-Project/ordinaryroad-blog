@@ -44,7 +44,10 @@
     <or-header />
 
     <v-main>
-      <v-container :fluid="['index','userId'].includes($route.name)" :class="$route.name==='index'?'pa-0':null">
+      <v-container
+        fluid
+        :class="$route.name==='index'?'pa-0':null"
+      >
         <nuxt />
       </v-container>
     </v-main>
