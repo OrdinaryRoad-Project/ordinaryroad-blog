@@ -6,7 +6,7 @@ quarkus:
   datasource:
     jdbc:
       driver: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/or_blog_pro_temp?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/or_blog_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     password: Root123.
     username: root
   http:
