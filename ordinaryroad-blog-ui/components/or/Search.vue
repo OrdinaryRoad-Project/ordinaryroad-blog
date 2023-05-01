@@ -36,6 +36,7 @@
         @submit.n.native.prevent
       >
         <v-text-field
+          id="orSearchInput"
           ref="input"
           v-model.trim="searchInput"
           dense
@@ -111,6 +112,23 @@ export default {
     }
   },
   mounted () {
+    // 兼容其他输入框正常输入'/'
+    const inputs = [...window.document.getElementsByTagName('input')].filter((input) => {
+      return input.id !== 'orSearchInput' && input.type === 'text'
+    })
+    const textareas = window.document.getElementsByTagName('textarea')
+    const editableElements = [...inputs, ...textareas]
+    if (editableElements && editableElements.length) {
+      for (const element of editableElements) {
+        element.addEventListener('focus', (ev) => {
+          this.$store.dispatch('app/setSearchInputHotKeyEnabled', false)
+        })
+        element.addEventListener('blur', (ev) => {
+          this.$store.dispatch('app/setSearchInputHotKeyEnabled', true)
+        })
+      }
+    }
+
     window.addEventListener('keydown', (e) => {
       if (this.$vuetify.breakpoint.smAndDown || this.disableHotKey) {
         return
@@ -146,7 +164,7 @@ export default {
       if (!this.searchInput || this.searchInput.trim() === '') {
         return
       }
-      window.open(`/search/${this.searchInput}`, '_blank')
+      this.$emit('onSubmit', this.searchInput)
     }
   }
 }
