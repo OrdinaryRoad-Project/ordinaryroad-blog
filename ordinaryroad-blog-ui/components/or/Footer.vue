@@ -33,12 +33,20 @@
         class="d-flex justify-center align-center"
         :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
+        <div class="d-flex text--grey">
+          ©2019 - {{ new Date().getFullYear() }} 苗锦洲 {{ $t('allRightsReserved') }}
+        </div>
         <div
-          class="d-flex"
-          :class="$vuetify.breakpoint.smAndDown?null:'me-2'"
+          class="d-flex align-center"
+          :class="$vuetify.breakpoint.smAndDown?null:'ms-2'"
         >
+          <or-link href="https://ordinaryroad.tech" hover-able hide-icon>
+            OrdinaryRoad
+          </or-link>
+
           <v-btn
             icon
+            class="ms-2"
             target="_blank"
             href="https://github.com/1962247851"
           >
@@ -46,9 +54,6 @@
               mdi-github
             </v-icon>
           </v-btn>
-        </div>
-        <div class="d-flex text--grey">
-          ©2019 - {{ new Date().getFullYear() }} 苗锦洲 {{ $t('allRightsReserved') }}
         </div>
       </div>
       <div
@@ -77,23 +82,25 @@
         </div>
       </div>
       <div
-        v-if="$config.BEIAN.ENABLED"
+        v-if="$config.BEIAN.ENABLED || $config.BEIAN_GONGAN.ENABLED"
         class="d-flex justify-center align-center font-weight-light"
         :class="$vuetify.breakpoint.smAndDown?'flex-column':null"
       >
         <or-link
+          v-if="$config.BEIAN_GONGAN.ENABLED"
           hover-able
           :class="$vuetify.breakpoint.smAndDown?null:'me-2'"
-          :href="$config.BEIAN.GONG_AN_HREF"
+          :href="$config.BEIAN_GONGAN.HREF"
           hide-icon
         >
           <span class="d-flex justify-center align-center"><img
             alt="备案图标"
             class="me-1"
             :src="require('~/assets/img/gongan.png')"
-          >{{ $config.BEIAN.GONG_AN_NUMBER }}</span>
+          >{{ $config.BEIAN_GONGAN.NUMBER }}</span>
         </or-link>
         <or-link
+          v-if="$config.BEIAN.ENABLED"
           hover-able
           href="https://beian.miit.gov.cn"
           hide-icon
