@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: 'OR博客，一个Markdown多人博客'
+        content: '世间种种平凡，都不平凡。'
       },
       {
         name: 'format-detection',
@@ -163,7 +163,7 @@ export default {
       { key: 'friendLink.name', value: 'OR博客' },
       { key: 'friendLink.description', value: '世间种种平凡，都不平凡。' },
       { key: 'friendLink.url', value: 'https://blog.ordinaryroad.tech' },
-      { key: 'friendLink.logo', value: 'https://blog.ordinaryroad.tech' },
+      { key: 'friendLink.logo', value: 'https://blog.ordinaryroad.tech/favicon.ico' },
       { key: 'friendLink.email', value: 'or-mjz@qq.com' }
     ],
 
