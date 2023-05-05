@@ -25,6 +25,7 @@
 <template>
   <v-footer
     :app="app"
+    :absolute="absolute"
     padless
     inset
   >
@@ -125,6 +126,10 @@ export default {
   name: 'OrFooter',
   props: {
     app: {
+      type: Boolean,
+      default: false
+    },
+    absolute: {
       type: Boolean,
       default: false
     }
