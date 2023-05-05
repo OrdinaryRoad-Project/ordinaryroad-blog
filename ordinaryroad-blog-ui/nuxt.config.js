@@ -175,12 +175,12 @@ export default {
 
     BEIAN: {
       ENABLED: process.env.BEIAN_ENABLED || false,
-      ICP_NUMBER: '苏ICP备2020055920号-1'
+      ICP_NUMBER: process.env.BEIAN_ICP_NUMBER
     },
     BEIAN_GONGAN: {
       ENABLED: process.env.BEIAN_GONGAN_ENABLED || false,
-      NUMBER: '苏公网安备 32021102001093号',
-      HREF: 'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32021102001093'
+      NUMBER: process.env.BEIAN_GONGAN_NUMBER,
+      HREF: process.env.BEIAN_GONGAN_HREF
     },
 
     BASE_URL: process.env.BASE_URL,
