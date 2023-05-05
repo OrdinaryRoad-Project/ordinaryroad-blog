@@ -26,6 +26,7 @@ package tech.ordinaryroad.blog.quarkus.service
 import cn.dev33.satoken.stp.StpUtil
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogComment
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogFriendLink
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogRole
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.enums.BlogBuiltInRoleEnum
@@ -51,6 +52,9 @@ class BlogValidateService {
 
     @Inject
     protected lateinit var commentService: BlogCommentService
+
+    @Inject
+    protected lateinit var friendLinkService: BlogFriendLinkService
 
     /**
      * 根据文章的firstId校验文章是否存在已发布的
@@ -139,6 +143,20 @@ class BlogValidateService {
 
     fun isBuiltInRole(role: BlogRole): Boolean {
         return BlogBuiltInRoleEnum.getByRoleCode(role.roleCode) != null
+    }
+
+    /**
+     * 校验友链是否存在
+     */
+    fun validateFriendLink(id: String?, must: Boolean): BlogFriendLink? {
+        if (id.isNullOrBlank()) {
+            if (must) {
+                BlogFriendLinkNotValidException().throws()
+            } else {
+                return null
+            }
+        }
+        return friendLinkService.findById(id) ?: throw BlogFriendLinkNotFoundException()
     }
 
 }

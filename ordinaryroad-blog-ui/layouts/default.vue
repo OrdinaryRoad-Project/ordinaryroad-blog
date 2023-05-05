@@ -44,13 +44,16 @@
     <or-header />
 
     <v-main>
-      <v-container :fluid="['index','userId'].includes($route.name)" :class="$route.name==='index'?'pa-0':null">
+      <v-container
+        fluid
+        :class="$route.name==='index'?'pa-0':null"
+      >
         <nuxt />
       </v-container>
     </v-main>
 
     <!-- Footer -->
-    <or-footer />
+    <or-footer app absolute />
 
     <!-- 回到顶部按钮 -->
     <v-fab-transition>

@@ -83,6 +83,7 @@
         :focused.sync="searchInputFocused"
         :auto-expand="false"
         solo-inverted
+        @onSubmit="onSearchSubmit"
       />
 
       <!-- 用户信息 -->
@@ -912,6 +913,9 @@ export default {
     window.removeEventListener('scroll', this.handleScroll, false)
   },
   methods: {
+    onSearchSubmit (searchInput) {
+      window.open(`/search/${searchInput}`, '_blank')
+    },
     onClickArticleAppeal (reason) {
       if (this.$refs.articleAppealDialog.validate()) {
         this.$apis.blog.article.articleAppeal(this.blogArticle.uuid, reason)

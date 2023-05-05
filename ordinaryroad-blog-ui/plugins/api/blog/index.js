@@ -31,6 +31,7 @@ import typeApis from './type'
 import tagApis from './tag'
 import logApis from './log'
 import roleApis from './role'
+import friendLinkApis from './friend_link'
 
 let $axios = null
 let $config = null
@@ -48,6 +49,7 @@ export default {
     tagApis.initAxios(axios)
     logApis.initAxios(axios)
     roleApis.initAxios(axios)
+    friendLinkApis.initAxios(axios)
   },
   apis: {
     oauth2: oauth2Apis.apis,
@@ -59,6 +61,7 @@ export default {
     tag: tagApis.apis,
     log: logApis.apis,
     role: roleApis.apis,
+    friend_link: friendLinkApis.apis,
     /**
      * 获取文件全路径
      * @param url

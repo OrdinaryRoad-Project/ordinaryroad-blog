@@ -25,7 +25,6 @@
 <template>
   <or-blog-user-list
     ref="userList"
-    :auto-load-more="false"
     :total.sync="totalUsers"
     :loading.sync="loading"
   />

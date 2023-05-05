@@ -47,8 +47,8 @@ export default {
     redirect
   }) {
     const stateFromServer = route.query.state
-    const redirectFromLogin = decodeURIComponent(stateFromServer).split('_')[1]
-    const provider = decodeURIComponent(stateFromServer).split('_')[2]
+    const redirectFromLogin = decodeURIComponent(stateFromServer).split('$')[1]
+    const provider = decodeURIComponent(stateFromServer).split('$')[2]
 
     try {
       const code = route.query.code
@@ -94,6 +94,9 @@ export default {
       this.$store.commit('app/UPDATE_ACCESSIBLE_USER_MENU_ITEMS', this.$access)
       this.$store.commit('app/UPDATE_ACCESSIBLE_DASHBOARD_MENU_ITEMS', this.$access)
       this.$router.replace(this.redirect)
+        .catch(() => {
+          this.$router.replace('/')
+        })
     } else {
       this.$dialog({
         persistent: true,

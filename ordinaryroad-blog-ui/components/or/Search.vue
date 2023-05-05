@@ -36,6 +36,7 @@
         @submit.n.native.prevent
       >
         <v-text-field
+          id="orSearchInput"
           ref="input"
           v-model.trim="searchInput"
           dense
@@ -87,6 +88,12 @@ export default {
     }
   },
   data: () => ({
+    observer: null,
+    /**
+     * 观察器的配置（需要观察什么变动）
+     */
+    observerConfig: { attributes: false, childList: true, subtree: true },
+
     searchInput: '',
     searchInputFocused: false
   }),
@@ -110,7 +117,19 @@ export default {
       this.$emit('update:focused', val)
     }
   },
+  created () {
+  },
   mounted () {
+    // 创建一个观察器实例并传入回调函数
+    this.observer = new MutationObserver(this.mutationObserverCallback)
+    // 以上述配置开始观察目标节点
+    this.observer.observe(document, this.observerConfig)
+
+    // 之后，可停止观察
+    // observer.disconnect()
+
+    this.initFocusEvents()
+
     window.addEventListener('keydown', (e) => {
       if (this.$vuetify.breakpoint.smAndDown || this.disableHotKey) {
         return
@@ -134,6 +153,70 @@ export default {
     })
   },
   methods: {
+    /**
+     * 当观察到变动时执行的回调函数
+     */
+    mutationObserverCallback (mutationsList, observer) {
+      // Use traditional 'for loops' for IE 11
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          // A child node has been added or removed.
+          // console.log(mutation)
+          // console.log(mutation.addedNodes)
+          mutation.addedNodes.forEach((value, key, parent) => {
+            // console.log(value)
+            const editableElements = this.getEditableElements(value)
+            if (editableElements && editableElements.length) {
+              // console.log(value)
+              // console.log('editableElements', editableElements)
+              for (const element of editableElements) {
+                element.addEventListener('focus', this.onFocusOtherEditableElements)
+                element.addEventListener('blur', this.onBlurOtherEditableElements)
+              }
+            }
+          })
+        }
+      }
+    },
+    /**
+     * 兼容其他输入框正常输入'/'
+     */
+    initFocusEvents () {
+      const editableElements = this.getEditableElements(document)
+      // console.log(editableElements)
+      if (editableElements && editableElements.length) {
+        for (const element of editableElements) {
+          element.addEventListener('focus', this.onFocusOtherEditableElements)
+          element.addEventListener('blur', this.onBlurOtherEditableElements)
+          // console.log('element', element)
+        }
+      }
+    },
+    /**
+     * 获取可编辑的元素
+     * @param element
+     */
+    getEditableElements (element) {
+      if (!element) {
+        return []
+      }
+      const inputs = [...element.getElementsByTagName('input')].filter((input) => {
+        return input.id !== 'orSearchInput' && input.type === 'text' && input.getAttribute('readonly') !== 'readonly'
+      })
+      const textareas = element.getElementsByTagName('textarea')
+      return [...inputs, ...textareas]
+    },
+
+    onFocusOtherEditableElements (ev) {
+      // console.log('onFocus', ev)
+      this.$store.dispatch('app/setSearchInputHotKeyEnabled', false)
+    },
+
+    onBlurOtherEditableElements (ev) {
+      // console.log('onBlur', ev)
+      this.$store.dispatch('app/setSearchInputHotKeyEnabled', true)
+    },
+
     onClickSearchInputAppend () {
       if (this.searchInputFocused) {
         this.onSearchFormSubmit()
@@ -146,7 +229,7 @@ export default {
       if (!this.searchInput || this.searchInput.trim() === '') {
         return
       }
-      window.open(`/search/${this.searchInput}`, '_blank')
+      this.$emit('onSubmit', this.searchInput)
     }
   }
 }

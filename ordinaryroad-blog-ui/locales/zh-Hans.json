@@ -1,4 +1,26 @@
 {
+  "friendLink": {
+    "apply": "申请友链",
+    "applyFormTitle": "友链申请表",
+    "thisSiteInfo": "本站友链添加格式",
+    "thisSiteInfoCanCopyHint": "内容可点击复制",
+    "applySending": "申请发送中，请耐心等待...",
+    "applySuccessHint": "已收到您的申请，我将尽快处理！",
+    "applyFailedHintPrefix": "申请发送失败，请",
+    "applyFailedHintSuffix": "修改并重试",
+    "applyNow": "立即申请",
+    "title": "友链",
+    "name": "网站名称",
+    "description": "网站描述",
+    "url": "网站地址",
+    "logo": "网站logo地址",
+    "email": "站长email",
+    "status": "状态",
+    "actions": {
+      "approved": "通过",
+      "disapproved": "拒绝"
+    }
+  },
   "all": "全部",
   "appName": "OR博客",
   "article": {
@@ -86,6 +108,9 @@
   "copy": "复制",
   "dashboardMenuTitles": {
     "dashboard": {
+      "friendLink": {
+        "title": "友链"
+      },
       "article": {
         "browsed": "文章浏览记录",
         "liked": "赞过的文章",
@@ -114,7 +139,8 @@
         "user": {
           "roles": "用户角色",
           "title": "用户"
-        }
+        },
+        "friendLink": "友链"
       },
       "tag": {
         "title": "标签"
@@ -200,7 +226,8 @@
       "role": "角色",
       "tag": "标签",
       "type": "分类",
-      "userRoles": "用户角色"
+      "userRoles": "用户角色",
+      "friendLink": "友链"
     }
   },
   "type": {
@@ -222,7 +249,8 @@
     "profile": "个人中心",
     "space": "个人空间",
     "tag": "标签",
-    "type": "分类"
+    "type": "分类",
+    "friendLink": "友链"
   },
   "userProfile": {
     "allAccounts": "所有账号"

@@ -102,6 +102,15 @@ enum class BlogLogTypeEnum(
     BLOG_COMMENT_POST("用户发布评论", 40000, "/comment/post"),
     BLOG_COMMENT_DELETE("用户删除自己数据权限内的评论", 40001, "/comment/delete/*", "DELETE"),
     //endregion
+
+    //region BlogFriendLinkResource
+    BLOG_FRIEND_LINK_CREATE("创建友链", 50000, "/friend_link/create", "POST"),
+    BLOG_FRIEND_LINK_DELETE("删除友链", 50001, "/friend_link/delete/*", "DELETE"),
+    BLOG_FRIEND_LINK_UPDATE("更新友链", 50002, "/friend_link/update/*", "POST"),
+    BLOG_FRIEND_LINK_APPLY("申请友链", 50003, "/friend_link/apply", "POST"),
+    BLOG_FRIEND_LINK_APPROVED("通过友链申请", 50004, "/friend_link/approved/*", "PUT"),
+    BLOG_FRIEND_LINK_DISAPPROVED("拒绝友链申请", 50005, "/friend_link/disapproved/*", "PUT"),
+    //endregion
     ;
 
     override fun getValue(): Int {

@@ -74,6 +74,12 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - 文章点赞数Top10
 - 文章浏览数Top10
 
+### 友链模块
+
+- 手动添加
+- 主动申请
+- 申请结果通知
+
 ### 其他
 
 - 国际化

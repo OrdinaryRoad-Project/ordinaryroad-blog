@@ -140,8 +140,6 @@
                 :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
                 outlined
                 :label="$t('article.title')"
-                @focusin="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
-                @focusout="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
               />
             </v-row>
             <v-col cols="12">
@@ -153,8 +151,6 @@
                 auto-grow
                 outlined
                 :label="$t('article.summary')"
-                @focusin="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
-                @focusout="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
               />
             </v-col>
             <v-col
@@ -193,8 +189,6 @@
                 prepend-inner-icon="mdi-view-list"
                 solo
                 hide-details
-                @focusin="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
-                @focusout="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
               >
                 <template #selection="{ attrs, item, select, selected }">
                   <v-chip
@@ -236,8 +230,6 @@
                     solo
                     multiple
                     hide-details="auto"
-                    @focusin="$store.dispatch('app/setSearchInputHotKeyEnabled', false)"
-                    @focusout="$store.dispatch('app/setSearchInputHotKeyEnabled', true)"
                     @input="onSelectedItemsInput"
                     v-on="on"
                   >
