@@ -36,7 +36,10 @@
       <v-col
         v-for="item in friendLinkPageItems.records"
         :key="item.uuid"
-        :cols="$vuetify.breakpoint.smAndDown?6:3"
+        cols="6"
+        sm="4"
+        md="3"
+        lg="2"
         class="pa-0 child-flex"
       >
         <or-blog-friend-link-item :item="item" />
