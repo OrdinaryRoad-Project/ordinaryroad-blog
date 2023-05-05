@@ -35,6 +35,7 @@
       v-if="$route.name!=='search-input'"
       :disable-hot-key="!$store.getters['app/getSearchInputHotKeyEnabled']"
       :focused.sync="searchInputFocused"
+      @onSubmit="onSearchSubmit"
     />
 
     <!-- 用户信息 -->
@@ -86,6 +87,9 @@ export default {
       setSelectedThemeOption: 'setSelectedThemeOption'
     }),
 
+    onSearchSubmit (searchInput) {
+      window.open(`/search/${searchInput}`, '_blank')
+    },
     click (index) {
       this.setSelectedThemeOption({
         value: index,

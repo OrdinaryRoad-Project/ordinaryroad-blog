@@ -24,6 +24,7 @@
 
 <template>
   <v-menu
+    disabled
     open-delay="500"
     open-on-hover
   >

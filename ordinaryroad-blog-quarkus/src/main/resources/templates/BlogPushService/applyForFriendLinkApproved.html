@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>{title}</title>
+</head>
+<body>
+
+<div style="background-color: #f2f5f8; display: flex; justify-content: center; align-items: center;">
+    <div
+            style="background-color: #fff;border-radius: 4px;box-sizing: border-box;box-shadow: 0 0 5px rgba(0, 0, 0, .2); padding: 30px; margin: 30px;">
+        <div
+                style="display: flex;height: 40px; line-height: 40px; justify-content: space-between; border-bottom: 2px dashed #86bef9;">
+            <div style="margin: 5px 15px; font-weight: bold; color: #2d8cf0;">
+                <img alt="logo" src="TODO"
+                     style="width: 25px; height: 25px; border: 1px solid #ececec;border-radius: 100%;vertical-align: text-bottom;">
+                OR博客
+            </div>
+            <a href="https://blog.ordinaryroad.tech"
+               style="color: #2d8cf0; display: inline; margin: 5px 15px; text-decoration: none;" target="_blank"
+               rel="noopener noreferrer">首页</a>
+        </div>
+        <div style="text-align: center;">
+            <h2 style="font-size: 30px; font-weight: 400; margin: 10px auto;"><span
+                        style="color: #2d8cf0; font-size: 30px; font-weight: 400;">OR博客</span> -- 友链申请结果通知
+            </h2>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">您在<a
+                        style="text-decoration: none; color: #2d8cf0"
+                        href="https://blog.ordinaryroad.tech">OR博客</a>提交的友链申请已处理完毕，具体结果如下
+            </p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站名称：<span
+                        style="color: #2d8cf0; font-size: 17px; margin: 20px auto;">{friendLink.name}</span></p>
+            <p style="color: #444; font-size: 17px; margin: 20px auto;">网站链接：
+                <a href="{friendLink.url}"
+                   style="color: #2d8cf0; font-size: 17px; text-decoration: underline;"
+                   target="_blank" rel="noopener noreferrer">{friendLink.url}</a>
+            </p>
+            <p style="color: #444; font-size: 17px; font-weight: bold; margin: 20px auto;">申请状态：<span
+                        style="color: #19be6b; font-size: 20px;">已通过</span></p>
+            <p><span style="color: #2d8cf0; font-weight: bold;">望两站友情长存，共创美好未来～</span></p>
+        </div>
+        <div style="text-align: center; border-top: 1px dashed #eee;">
+            <p style="margin: 20px auto 15px; font-size: 10px; color: #999;">此为系统自动发送邮件，请勿直接回复。 版权所有
+                @OR博客
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -94,7 +94,7 @@ class BlogOAuth2Resource {
     @Transactional
     fun callback(@RestPath provider: String, @RestQuery code: String, @RestQuery state: String): JsonObject {
         // 回掉方式 login|add|update
-        val type = state.split("_")[3]
+        val type = state.split("$")[3]
         when (type) {
             "login" -> {
                 // 已经登录则需要退出登录

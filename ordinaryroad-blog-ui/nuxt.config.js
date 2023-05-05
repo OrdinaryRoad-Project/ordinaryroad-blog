@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: 'OR博客，一个Markdown多人博客'
+        content: '世间种种平凡，都不平凡。'
       },
       {
         name: 'format-detection',
@@ -159,6 +159,14 @@ export default {
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {
+    FRIEND_LINK_INFO: [
+      { key: 'friendLink.name', value: 'OR博客' },
+      { key: 'friendLink.description', value: '世间种种平凡，都不平凡。' },
+      { key: 'friendLink.url', value: 'https://blog.ordinaryroad.tech' },
+      { key: 'friendLink.logo', value: 'https://blog.ordinaryroad.tech/favicon.ico' },
+      { key: 'friendLink.email', value: 'or-mjz@qq.com' }
+    ],
+
     STATISTICS: {
       BAIDU: {
         CODE: process.env.STATISTICS_BAIDU_CODE
@@ -166,9 +174,13 @@ export default {
     },
 
     BEIAN: {
-      ICP_NUMBER: '苏ICP备2020055920号-1',
-      GONG_AN_NUMBER: '苏公网安备 32021102001093号',
-      GONG_AN_HREF: 'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32021102001093'
+      ENABLED: process.env.BEIAN_ENABLED || false,
+      ICP_NUMBER: process.env.BEIAN_ICP_NUMBER
+    },
+    BEIAN_GONGAN: {
+      ENABLED: process.env.BEIAN_GONGAN_ENABLED || false,
+      NUMBER: process.env.BEIAN_GONGAN_NUMBER,
+      HREF: process.env.BEIAN_GONGAN_HREF
     },
 
     BASE_URL: process.env.BASE_URL,

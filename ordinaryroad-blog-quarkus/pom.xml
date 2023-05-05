@@ -29,7 +29,7 @@
     <parent>
         <groupId>tech.ordinaryroad.quarkus</groupId>
         <artifactId>ordinaryroad-blog</artifactId>
-        <version>0.0.6</version>
+        <version>0.0.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -107,6 +107,11 @@
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
             <version>${ip2region.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-reactive-qute</artifactId>
         </dependency>
 
 

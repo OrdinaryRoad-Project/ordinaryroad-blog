@@ -28,6 +28,7 @@
     persistent
     loading
     :title="title"
+    @onClose="onClose"
     @onConfirm="$emit('onConfirm',input)"
   >
     <v-form ref="form">
@@ -56,8 +57,16 @@
 
 <script>
 export default {
+  // TODO 确认时进行validate校验
   name: 'OrInputDialog',
   props: {
+    /**
+     * 关闭时是否保留输入
+     */
+    keepInputOnClose: {
+      type: Boolean,
+      default: false
+    },
     defaultValue: {
       type: [String, Number],
       default: ''
@@ -97,6 +106,12 @@ export default {
     },
     validate () {
       return this.$refs.form.validate()
+    },
+    onClose () {
+      if (!this.keepInputOnClose) {
+        this.input = ''
+      }
+      this.$emit('onClose')
     }
   }
 }

@@ -169,6 +169,17 @@ export default () => ({
           }
         },
         {
+          to: '/dashboard/system/friend_link',
+          titleKey: 'dashboardMenuTitles.dashboard.system.friendLink',
+          icon: 'mdi-link',
+          children: [],
+          meta: {
+            roles: {
+              or: ['DEVELOPER']
+            }
+          }
+        },
+        {
           to: '/dashboard/system/log',
           titleKey: 'dashboardMenuTitles.dashboard.system.log',
           icon: 'mdi-text-box-multiple',
@@ -216,6 +227,16 @@ export default () => ({
       titleKey: 'userMenuTitles.tag',
       to: '/dashboard/tag',
       icon: 'mdi-tag-multiple'
+    },
+    {
+      titleKey: 'userMenuTitles.friendLink',
+      to: '/dashboard/system/friend_link',
+      icon: 'mdi-link',
+      meta: {
+        roles: {
+          or: ['DEVELOPER']
+        }
+      }
     },
     {
       titleKey: 'userMenuTitles.log',

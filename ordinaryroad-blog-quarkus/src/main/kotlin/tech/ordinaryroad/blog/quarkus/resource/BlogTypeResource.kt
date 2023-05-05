@@ -153,9 +153,9 @@ class BlogTypeResource {
             name = request.name
         }
 
-        val create = typeService.updateOwn(blogType)
+        val update = typeService.updateOwn(blogType)
 
-        return dtoService.transfer(create, BlogTypeDTO::class.java)
+        return dtoService.transfer(update, BlogTypeDTO::class.java)
     }
 
     /**

@@ -107,6 +107,7 @@
       label="封禁时间"
       :default-value="-1"
       hint="-1：永久封禁"
+      keep-input-on-close
       :rules="[$or.rules.required,$or.rules.notBlank]"
       @onConfirm="disable"
     >

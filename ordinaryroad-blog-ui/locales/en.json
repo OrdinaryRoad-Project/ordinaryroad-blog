@@ -1,4 +1,26 @@
 {
+  "friendLink": {
+    "apply": "Apply For Friend Link",
+    "applyFormTitle": "Friend Link Application Form",
+    "thisSiteInfo": "Add Formatting To This Site's Friend Link",
+    "thisSiteInfoCanCopyHint": "Content Can Be Clicked To Copy",
+    "applySending": "Application is being sent, please be patient...",
+    "applySuccessHint": "Your application has been received and I will process it as soon as possible!",
+    "applyFailedHintPrefix": "Application sent failed, please ",
+    "applyFailedHintSuffix": "modify and try again.",
+    "applyNow": "Apply Now",
+    "title": "Friend Link",
+    "name": "Site Name",
+    "description": "Site Description",
+    "url": "Site Url",
+    "logo": "Site Logo",
+    "email": "Webmaster Email",
+    "status": "Status",
+    "actions": {
+      "approved": "Approved",
+      "disapproved": "Disapproved"
+    }
+  },
   "all": "All",
   "appName": "OR BLOG",
   "article": {
@@ -86,6 +108,9 @@
   "copy": "Copy",
   "dashboardMenuTitles": {
     "dashboard": {
+      "friendLink": {
+        "title": "Friend Link"
+      },
       "article": {
         "browsed": "Article Browsing History",
         "liked": "Liked Article",
@@ -114,7 +139,8 @@
         "user": {
           "roles": "User Roles",
           "title": "Users"
-        }
+        },
+        "friendLink": "Friend Link"
       },
       "tag": {
         "title": "Tags"
@@ -200,7 +226,8 @@
       "role": "Role",
       "tag": "Tag",
       "type": "Type",
-      "userRoles": "User Roles"
+      "userRoles": "User Roles",
+      "friendLink": "Friend Link"
     }
   },
   "type": {
@@ -222,7 +249,8 @@
     "profile": "User Profile",
     "space": "User Space",
     "tag": "Tags",
-    "type": "Types"
+    "type": "Types",
+    "friendLink": "Friend Link"
   },
   "userProfile": {
     "allAccounts": "All Accounts"
