@@ -30,12 +30,13 @@
           <v-btn
             color="transparent"
             large
+            class="pa-2"
             depressed
             v-bind="attrs"
             v-on="on"
           >
             <or-avatar
-              size="38"
+              :size="$vuetify.breakpoint.smAndDown?32:38"
               avatar-class="v-list-item__avatar"
               :username="username"
               :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
@@ -43,7 +44,10 @@
             <v-list-item-title v-if="!$vuetify.breakpoint.smAndDown">
               {{ username }}
             </v-list-item-title>
-            <v-icon>mdi-chevron-down</v-icon>
+            <v-spacer />
+            <v-icon right>
+              mdi-chevron-down
+            </v-icon>
           </v-btn>
         </template>
         <or-base-tree-list
@@ -79,7 +83,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'OrUserInfoMenu',
