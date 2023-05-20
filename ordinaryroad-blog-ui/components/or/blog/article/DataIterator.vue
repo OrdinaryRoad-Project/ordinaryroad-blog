@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-iterator
       ref="dataIterator"
       :sort-by="sortBy"

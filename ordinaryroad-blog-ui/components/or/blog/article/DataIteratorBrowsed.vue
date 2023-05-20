@@ -23,14 +23,14 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-blog-article-data-iterator
       ref="articleIterator"
       hide-default-footer
       @getItems="onGetItems"
     >
       <template #default="{ props }">
-        <v-container class="ma-0 pa-0">
+        <v-container fluid class="ma-0 pa-0">
           <v-timeline
             align-top
             :dense="$vuetify.breakpoint.mdAndDown"

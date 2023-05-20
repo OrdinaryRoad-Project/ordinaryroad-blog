@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-blog-article-data-iterator
       ref="articleIterator"
       @getItems="onGetItems"
