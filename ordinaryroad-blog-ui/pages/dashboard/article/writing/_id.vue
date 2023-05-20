@@ -107,7 +107,7 @@
         ref="form"
         v-model="formValid"
       >
-        <v-container>
+        <v-container fluid>
           <v-row no-gutters>
             <v-col cols="12">
               <v-file-input
