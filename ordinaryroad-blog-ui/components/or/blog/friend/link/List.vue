@@ -30,7 +30,18 @@
       加载失败
     </v-row>
 
-    <or-empty v-else-if="friendLinkPageItems&&friendLinkPageItems.total===0" />
+    <div v-else-if="friendLinkPageItems&&friendLinkPageItems.total===0">
+      <or-empty>
+        <template #append>
+          <v-btn text to="/friend_link/apply" class="ms-2">
+            {{ $t('friendLink.applyNow') }}
+            <v-icon>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+        </template>
+      </or-empty>
+    </div>
 
     <v-row v-else-if="friendLinkPageItems&&friendLinkPageItems.records.length">
       <v-col
