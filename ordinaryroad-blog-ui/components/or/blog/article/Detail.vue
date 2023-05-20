@@ -69,13 +69,20 @@
       <v-spacer />
 
       <!-- 编辑 -->
-      <v-btn
-        v-if="!readOnly&&userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
-        icon
-        :to="`/dashboard/article/writing/${blogArticle.uuid}`"
-      >
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{on,attrs}">
+          <v-btn
+            v-if="!readOnly&&userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
+            v-bind="attrs"
+            icon
+            :to="`/dashboard/article/writing/${blogArticle.uuid}`"
+            v-on="on"
+          >
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </template>
+        {{ $t('article.actions.edit') }}
+      </v-tooltip>
 
       <!-- 搜索 -->
       <or-search
@@ -96,14 +103,19 @@
 
       <!-- 在其他设备上阅读 -->
       <v-menu
-        v-if="$vuetify.breakpoint.smAndDown"
+        v-if="!$vuetify.breakpoint.smAndDown"
         origin="top center"
         offset-overflow
         absolute
         transition="scale-transition"
       >
-        <template #activator="{ on }">
-          <v-btn icon dark v-on="on">
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
             <v-icon>mdi-cellphone-link</v-icon>
           </v-btn>
         </template>
@@ -115,31 +127,6 @@
           />
         </div>
       </v-menu>
-      <v-tooltip v-else bottom>
-        <template #activator="{ on }">
-          <v-menu
-            origin="top center"
-            offset-overflow
-            absolute
-            transition="scale-transition"
-            v-on="on"
-          >
-            <template #activator="{ on }">
-              <v-btn icon dark v-on="on">
-                <v-icon>mdi-cellphone-link</v-icon>
-              </v-btn>
-            </template>
-            <div style="width: 150px;height: 150px">
-              <vue-qr
-                :margin="10"
-                :text="vueQrUrl"
-                style="width: 100%;height: 100%"
-              />
-            </div>
-          </v-menu>
-        </template>
-        <span>{{ $t('continueReadingOnOtherDevices') }}</span>
-      </v-tooltip>
 
       <v-btn icon @click.stop="$store.dispatch('app/toggleRightDrawerModel')">
         <v-icon>mdi-dots-horizontal</v-icon>
@@ -150,6 +137,7 @@
     <v-navigation-drawer
       v-if="catalogue.length>0"
       v-model="drawer"
+      width="280"
       clipped
       app
     >
