@@ -34,6 +34,7 @@
       >
         <or-avatar
           v-bind="$attrs"
+          :size="$vuetify.breakpoint.smAndDown?42:48"
           :avatar="$apis.blog.getFileUrl(user.avatar)"
           :username="user.username"
         />

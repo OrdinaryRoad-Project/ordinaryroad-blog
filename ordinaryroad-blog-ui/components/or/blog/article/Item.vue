@@ -133,20 +133,14 @@
               </v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-action>
+            <v-list-item-action class="ms-1 my-1">
               <v-row
                 no-gutters
                 align="center"
                 justify="end"
               >
-                <v-col class="d-inline-flex align-center me-3">
-                  <v-icon left small>
-                    mdi-thumb-up
-                  </v-icon>
-                  <span>{{ item.likesCount }}</span>
-                </v-col>
                 <!-- 浏览量uv -->
-                <div class="d-inline-flex align-center me-3">
+                <div v-if="false" class="d-inline-flex align-center">
                   <v-icon left small>
                     mdi-account-eye
                   </v-icon>
@@ -159,7 +153,12 @@
                   </v-icon>
                   <span>{{ item.pv }}</span>
                 </v-col>
-
+                <v-col class="d-inline-flex align-center me-3">
+                  <v-icon left small>
+                    mdi-thumb-up
+                  </v-icon>
+                  <span>{{ item.likesCount }}</span>
+                </v-col>
                 <v-hover v-model="commentButtonFocused">
                   <v-col class="d-inline-flex align-center" @click.stop="onClickArticleComments">
                     <v-icon left small :color="commentButtonFocused?'primary':null">
