@@ -34,7 +34,7 @@
       @click="onClickArticle"
     >
       <!-- 图片上层的信息 -->
-      <div style="position: relative; overflow: hidden">
+      <div style="position: relative; overflow: hidden; max-height: 33vh">
         <!-- 封面 -->
         <img
           style="background-color: darkgrey"
