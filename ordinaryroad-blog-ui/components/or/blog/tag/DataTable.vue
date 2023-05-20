@@ -26,8 +26,8 @@
   <v-container>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       hide-update-headers
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
