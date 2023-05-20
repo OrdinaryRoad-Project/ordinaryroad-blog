@@ -33,9 +33,13 @@
     <div v-else-if="friendLinkPageItems&&friendLinkPageItems.total===0">
       <or-empty>
         <template #append>
-          <v-btn text to="/friend_link/apply" class="ms-2">
+          <v-btn
+            depressed
+            color="primary"
+            to="/friend_link/apply"
+          >
             {{ $t('friendLink.applyNow') }}
-            <v-icon>
+            <v-icon right>
               mdi-chevron-right
             </v-icon>
           </v-btn>
