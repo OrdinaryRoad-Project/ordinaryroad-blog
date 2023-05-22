@@ -16,6 +16,10 @@ export default {
         content: 'width=device-width, initial-scale=1'
       },
       {
+        name: 'keywords',
+        content: 'JAVA, Kotlin, Spring, Quarkus, Android, AI, IoT, CI/CD, 云原生, 安卓, 安卓原生, 小程序, 人工智能, 物联网, 持续集成, 持续交付, 对象存储'
+      },
+      {
         hid: 'description',
         name: 'description',
         content: '世间种种平凡，都不平凡。'
