@@ -37,7 +37,8 @@ import {
   OrEmpty,
   OrLoadMoreFooter,
   OrNoMoreData,
-  OrNotFound
+  OrNotFound,
+  OrSearch
 } from 'ordinaryroad-vuetify/src/components'
 import constants from './constants/index'
 import echarts from './echarts/index'
@@ -72,4 +73,5 @@ export default function (context, inject) {
   Vue.component('OrLoadMoreFooter', OrLoadMoreFooter)
   Vue.component('OrNoMoreData', OrNoMoreData)
   Vue.component('OrNotFound', OrNotFound)
+  Vue.component('OrSearch', OrSearch)
 }

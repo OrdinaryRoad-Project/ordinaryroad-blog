@@ -154,8 +154,6 @@
     }
   },
   "feedback": "Feedback",
-  "focusSearchInputTip": "Press '/' to start input",
-  "focusSearchInputTipWhenFocused": "Enter to search, ESC to cancel",
   "log": {
     "consumedTime": "ConsumedTime",
     "cookies": "Cookies",
