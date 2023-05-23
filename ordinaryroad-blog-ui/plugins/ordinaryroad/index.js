@@ -32,9 +32,11 @@ import {
   BaseMaterialCard,
   OrBaseDataIterator,
   OrBaseDataTable,
+  OrBaseDialog,
   OrBaseMenu,
   OrBaseTreeList,
   OrEmpty,
+  OrInputDialog,
   OrLoadMoreFooter,
   OrNoMoreData,
   OrNotFound,
@@ -74,4 +76,6 @@ export default function (context, inject) {
   Vue.component('OrNoMoreData', OrNoMoreData)
   Vue.component('OrNotFound', OrNotFound)
   Vue.component('OrSearch', OrSearch)
+  Vue.component('OrBaseDialog', OrBaseDialog)
+  Vue.component('OrInputDialog', OrInputDialog)
 }
