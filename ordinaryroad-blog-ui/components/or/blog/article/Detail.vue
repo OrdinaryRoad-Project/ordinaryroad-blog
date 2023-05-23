@@ -37,7 +37,8 @@
       <!-- 开关目录按钮 TODO目录可以调节宽度-->
       <v-tooltip
         v-if="catalogue.length>0"
-        right
+        :disabled="$vuetify.breakpoint.smAndDown&&drawer"
+        bottom
       >
         <template #activator="{ on }">
           <v-btn
@@ -134,9 +135,20 @@
         </div>
       </v-menu>
 
-      <v-btn icon @click.stop="$store.dispatch('app/toggleRightDrawerModel')">
-        <v-icon>mdi-dots-horizontal</v-icon>
-      </v-btn>
+      <!-- 设置 -->
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+            @click.stop="$store.dispatch('app/toggleRightDrawerModel')"
+          >
+            <v-icon>mdi-dots-horizontal</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ $t('more') }}</span>
+      </v-tooltip>
     </v-app-bar>
 
     <!--目录-->
