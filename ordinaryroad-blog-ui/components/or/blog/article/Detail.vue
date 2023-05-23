@@ -724,7 +724,7 @@ export default {
     }),
     skeletonLoaderCount () {
       const totalSeconds = this.article.content.length / 8
-      return Math.round(Math.random() * (totalSeconds / 15) + totalSeconds / 30) * (this.$vuetify.breakpoint.smAndDown ? 2 : 1)
+      return Math.max(Math.round(Math.random() * (totalSeconds / 15) + totalSeconds / 30) * (this.$vuetify.breakpoint.smAndDown ? 2 : 1), 1)
     },
     auditMode () {
       return this.article.status === 'UNDER_REVIEW'
