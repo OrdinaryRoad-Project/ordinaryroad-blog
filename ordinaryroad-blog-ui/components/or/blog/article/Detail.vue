@@ -232,10 +232,9 @@
         <!-- 作者信息 -->
         <div class="d-flex align-center mx-4">
           <!-- 头像 -->
-          <or-avatar
-            :username="blogArticle.user.username"
+          <or-blog-user-avatar
+            :user="blogArticle.user"
             avatar-class="v-list-item__avatar"
-            :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
           />
 
           <v-list-item-content>
@@ -516,10 +515,10 @@
                 v-if="$access.isLogged()"
                 no-gutters
               >
-                <or-avatar
-                  class="mb-auto"
-                  :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
-                  :username="userInfo.user.username"
+                <or-blog-user-avatar
+                  avatar-class="mb-auto"
+                  disable-menu
+                  :user="userInfo.user"
                 />
                 <div class="flex-grow-1">
                   <or-md-vditor

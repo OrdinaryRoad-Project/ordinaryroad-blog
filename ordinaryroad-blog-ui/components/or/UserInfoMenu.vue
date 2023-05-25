@@ -35,11 +35,11 @@
             v-bind="attrs"
             v-on="on"
           >
-            <or-avatar
+            <or-blog-user-avatar
+              disable-menu
               :size="$vuetify.breakpoint.smAndDown?32:38"
               avatar-class="v-list-item__avatar"
-              :username="username"
-              :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
+              :user="userInfo.user"
             />
             <v-list-item-title v-if="!$vuetify.breakpoint.smAndDown">
               {{ username }}
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrUserInfoMenu',

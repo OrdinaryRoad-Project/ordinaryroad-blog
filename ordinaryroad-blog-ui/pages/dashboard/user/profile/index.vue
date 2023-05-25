@@ -42,11 +42,11 @@
             :clearable="false"
             @change="onPictureSelected"
           />
-          <or-avatar
+          <or-blog-user-avatar
+            avatar-class="ms-2"
+            disable-menu
             :size="40"
-            class="ms-2"
-            :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
-            :username="userInfo.user.username"
+            :user="userInfo.user"
           />
           <v-btn
             v-if="userInfo.user.avatar"

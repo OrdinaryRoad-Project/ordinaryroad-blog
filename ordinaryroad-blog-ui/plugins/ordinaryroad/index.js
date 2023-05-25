@@ -30,6 +30,7 @@ import util from 'ordinaryroad-vuetify/src/utils'
 /* 自定义常量 */
 import {
   BaseMaterialCard,
+  OrAvatar,
   OrBaseDataIterator,
   OrBaseDataTable,
   OrBaseDialog,
@@ -78,4 +79,5 @@ export default function (context, inject) {
   Vue.component('OrSearch', OrSearch)
   Vue.component('OrBaseDialog', OrBaseDialog)
   Vue.component('OrInputDialog', OrInputDialog)
+  Vue.component('OrAvatar', OrAvatar)
 }

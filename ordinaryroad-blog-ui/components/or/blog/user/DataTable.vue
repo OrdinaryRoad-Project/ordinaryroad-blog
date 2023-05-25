@@ -67,12 +67,10 @@
 
       <template #[`item.username`]="{ item }">
         <div class="d-flex align-center">
-          <!-- <or-blog-user-avatar :user="item" /> -->
-          <or-avatar
+          <or-blog-user-avatar
             size="38"
+            :user="item"
             avatar-class="v-list-item__avatar"
-            :username="item.username"
-            :avatar="$apis.blog.getFileUrl(item.avatar)"
           />
           <or-link :href="`/${item.uid}`" hover-able>
             <span>{{ item.username }}</span>
