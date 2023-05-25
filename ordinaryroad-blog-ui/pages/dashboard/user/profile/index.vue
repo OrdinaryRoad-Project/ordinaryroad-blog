@@ -244,7 +244,7 @@ export default {
           }
         })
       } else {
-        const state = `${this.$dayjs().valueOf()}_${this.$route.path}_${provider}_${action}`
+        const state = `${this.$dayjs().valueOf()}$${this.$route.path}$${provider}$${action}`
         if (action === 'add') {
           this.$dialog({
             content: this.$t('loginHint'),
