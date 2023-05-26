@@ -191,6 +191,7 @@
         ref="friendLinkForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.friendLinkDialog.confirm()"
       />
     </or-base-dialog>
     <or-input-dialog

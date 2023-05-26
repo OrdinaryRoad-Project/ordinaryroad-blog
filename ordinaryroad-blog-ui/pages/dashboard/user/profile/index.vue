@@ -29,7 +29,7 @@
   >
     <v-card flat outlined>
       <v-card-title>{{ $t('basicInfo') }}</v-card-title>
-      <v-form ref="avatarForm" class="mx-4">
+      <v-form ref="avatarForm" class="mx-4" @submit.native.prevent>
         <div class="d-flex align-center">
           <v-file-input
             :loading="avatarForm.loading"
@@ -58,7 +58,7 @@
           </v-btn>
         </div>
       </v-form>
-      <v-form ref="usernameForm" class="mx-4">
+      <v-form ref="usernameForm" class="mx-4" @submit.native.prevent>
         <div class="d-flex align-center">
           <v-text-field
             v-model="usernameTextField.input"
@@ -67,12 +67,13 @@
             :disabled="usernameTextField.disabled"
             type="text"
             :label="$t('username')"
+            @keydown.enter="usernameClick"
           />
           <v-btn class="ms-3" icon @click="usernameClick">
             <v-icon>
               mdi-{{
                 usernameTextField.disabled ? 'pencil'
-                : usernameTextField.input === usernameTextField.value ? 'close'
+                : (usernameTextField.input === '' || usernameTextField.input === usernameTextField.value) ? 'close'
                   : 'check'
               }}
             </v-icon>
@@ -266,11 +267,13 @@ export default {
         }
       }
     },
+    exitUpdateUsername () {
+      this.usernameTextField.input = this.usernameTextField.value
+      this.usernameTextField.disabled = true
+    },
     usernameClick () {
       if (this.usernameTextField.disabled) {
         this.usernameTextField.disabled = false
-      } else if (this.usernameTextField.input === this.usernameTextField.value) {
-        this.usernameTextField.disabled = true
       } else if (this.$refs.usernameForm.validate()) {
         this.usernameTextField.loading = true
         this.updateUsername({

@@ -105,6 +105,7 @@
         ref="typeForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.typeDialog.confirm()"
       />
     </or-base-dialog>
   </v-container>

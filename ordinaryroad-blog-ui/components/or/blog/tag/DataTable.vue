@@ -91,6 +91,7 @@
       <or-blog-tag-save-form
         ref="tagForm"
         :preset="selectedItem"
+        @submit="$refs.tagDialog.confirm()"
         @update="onItemUpdate"
       />
     </or-base-dialog>

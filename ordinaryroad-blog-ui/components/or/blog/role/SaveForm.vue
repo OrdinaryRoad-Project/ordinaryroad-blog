@@ -28,11 +28,13 @@
       v-model="model.roleName"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('roleDataTable.roleName')"
+      @keydown.enter="$emit('submit')"
     />
     <v-text-field
       v-model="model.roleCode"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('roleDataTable.roleCode')"
+      @keydown.enter="$emit('submit')"
     />
   </v-form>
 </template>

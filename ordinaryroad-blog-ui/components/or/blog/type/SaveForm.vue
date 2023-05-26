@@ -23,11 +23,12 @@
   -->
 
 <template>
-  <v-form ref="form">
+  <v-form ref="form" @submit.native.prevent>
     <v-text-field
       v-model="model.name"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('type.name')"
+      @keydown.enter="$emit('submit')"
     />
   </v-form>
 </template>

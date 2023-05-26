@@ -121,6 +121,7 @@
         ref="roleForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.roleDialog.confirm()"
       />
     </or-base-dialog>
   </v-container>
