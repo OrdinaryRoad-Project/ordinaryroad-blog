@@ -30,7 +30,7 @@
           <v-btn
             color="transparent"
             large
-            class="pa-2"
+            class="pa-2 text-none"
             depressed
             v-bind="attrs"
             v-on="on"
