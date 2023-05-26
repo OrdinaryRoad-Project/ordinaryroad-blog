@@ -129,7 +129,7 @@
                 v-model="article.original"
                 :rules="[$or.rules.required]"
                 class="flex-grow-0"
-                style="width: 100px;"
+                style="width: 120px;"
                 outlined
                 hide-details
                 :items="[{text: $t('article.originalOptions.original'),value:true},{text:$t('article.originalOptions.reprint'),value:false}]"
