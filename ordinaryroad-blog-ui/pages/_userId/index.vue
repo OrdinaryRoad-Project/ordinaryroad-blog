@@ -72,7 +72,7 @@
           class="sticky-top"
         >
           <!-- 用户基本资料 -->
-          <or-blog-user-basic-info :user="user" username-link-disabled />
+          <or-blog-user-basic-info :user="user" username-link-disabled disable-menu />
 
           <div class="mt-14" />
           <!-- 用户创建的分类 -->
