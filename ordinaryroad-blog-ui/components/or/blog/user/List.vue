@@ -40,10 +40,9 @@
         :to="`/${item.uid}`"
       >
         <v-list-item-avatar>
-          <or-avatar
+          <or-blog-user-avatar
             :size="40"
-            :username="item.username"
-            :avatar="$apis.blog.getFileUrl(item.avatar)"
+            :user="item"
           />
         </v-list-item-avatar>
         <v-list-item-content>

@@ -24,22 +24,27 @@
 
 <template>
   <v-menu
+    :disabled="disableMenu"
     open-on-hover
     content-class="elevation-0 pa-2"
   >
     <template #activator="{ attrs, on }">
-      <div
+      <span
         v-bind="attrs"
         v-on="on"
       >
         <or-avatar
-          v-bind="$attrs"
+          :avatar-class="avatarClass"
+          :size="size??($vuetify.breakpoint.smAndDown?42:48)"
           :avatar="$apis.blog.getFileUrl(user.avatar)"
           :username="user.username"
         />
-      </div>
+      </span>
     </template>
-    <or-blog-user-basic-info :user="user" />
+    <or-blog-user-basic-info
+      disable-menu
+      :user="user"
+    />
   </v-menu>
 </template>
 
@@ -50,6 +55,21 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    avatarClass: {
+      type: String,
+      default: ''
+    },
+    size: {
+      type: [Number, String],
+      default: undefined
+    },
+    /**
+     * 防止递归生效
+     */
+    disableMenu: {
+      type: Boolean,
+      default: false
     }
   }
 }

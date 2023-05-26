@@ -34,10 +34,11 @@
       :elevation="showScrollToTopFab?4:0"
       :color="showScrollToTopFab?'primary':'transparent'"
     >
-      <!-- 开关目录按钮 -->
+      <!-- 开关目录按钮 TODO目录可以调节宽度-->
       <v-tooltip
         v-if="catalogue.length>0"
-        right
+        :disabled="$vuetify.breakpoint.smAndDown&&drawer"
+        bottom
       >
         <template #activator="{ on }">
           <v-btn
@@ -69,13 +70,20 @@
       <v-spacer />
 
       <!-- 编辑 -->
-      <v-btn
-        v-if="!readOnly&&userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
-        icon
-        :to="`/dashboard/article/writing/${blogArticle.uuid}`"
-      >
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{on,attrs}">
+          <v-btn
+            v-if="!readOnly&&userInfo&&blogArticle.user.uuid===userInfo.user.uuid"
+            v-bind="attrs"
+            icon
+            :to="`/dashboard/article/writing/${blogArticle.uuid}`"
+            v-on="on"
+          >
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </template>
+        {{ $t('article.actions.edit') }}
+      </v-tooltip>
 
       <!-- 搜索 -->
       <or-search
@@ -96,16 +104,27 @@
 
       <!-- 在其他设备上阅读 -->
       <v-menu
-        v-if="$vuetify.breakpoint.smAndDown"
+        v-if="!$vuetify.breakpoint.smAndDown"
         origin="top center"
-        offset-overflow
-        absolute
         transition="scale-transition"
       >
-        <template #activator="{ on }">
-          <v-btn icon dark v-on="on">
-            <v-icon>mdi-cellphone-link</v-icon>
-          </v-btn>
+        <template #activator="{ on: menu, attrs }">
+          <v-tooltip bottom>
+            <template #activator="{ on: tooltip }">
+              <v-btn
+                id="readOnOtherDeviceMenuBtn"
+                icon
+                dark
+                v-bind="attrs"
+                v-on="{ ...tooltip, ...menu }"
+              >
+                <v-icon>
+                  mdi-cellphone-link
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>{{ $t('continueReadingOnOtherDevices') }}</span>
+          </v-tooltip>
         </template>
         <div style="width: 150px;height: 150px">
           <vue-qr
@@ -115,41 +134,28 @@
           />
         </div>
       </v-menu>
-      <v-tooltip v-else bottom>
-        <template #activator="{ on }">
-          <v-menu
-            origin="top center"
-            offset-overflow
-            absolute
-            transition="scale-transition"
-            v-on="on"
-          >
-            <template #activator="{ on }">
-              <v-btn icon dark v-on="on">
-                <v-icon>mdi-cellphone-link</v-icon>
-              </v-btn>
-            </template>
-            <div style="width: 150px;height: 150px">
-              <vue-qr
-                :margin="10"
-                :text="vueQrUrl"
-                style="width: 100%;height: 100%"
-              />
-            </div>
-          </v-menu>
-        </template>
-        <span>{{ $t('continueReadingOnOtherDevices') }}</span>
-      </v-tooltip>
 
-      <v-btn icon @click.stop="$store.dispatch('app/toggleRightDrawerModel')">
-        <v-icon>mdi-dots-horizontal</v-icon>
-      </v-btn>
+      <!-- 设置 -->
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+            @click.stop="$store.dispatch('app/toggleRightDrawerModel')"
+          >
+            <v-icon>mdi-dots-horizontal</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ $t('more') }}</span>
+      </v-tooltip>
     </v-app-bar>
 
     <!--目录-->
     <v-navigation-drawer
       v-if="catalogue.length>0"
       v-model="drawer"
+      width="280"
       clipped
       app
     >
@@ -174,7 +180,29 @@
     </v-navigation-drawer>
 
     <!-- 设置 -->
-    <or-settings-drawer show-i18n-setting />
+    <or-settings-drawer show-i18n-setting>
+      <template #other-list-item>
+        <v-list-item v-if="$vuetify.breakpoint.smAndDown" @click="$refs.qrDialog.show()">
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('continueReadingOnOtherDevices') }}</v-list-item-title>
+          </v-list-item-content>
+          <or-base-dialog
+            ref="qrDialog"
+            :title="$t('continueReadingOnOtherDevices')"
+          >
+            <div
+              class="d-flex justify-center align-center"
+            >
+              <vue-qr
+                :margin="10"
+                :text="vueQrUrl"
+                :size="150"
+              />
+            </div>
+          </or-base-dialog>
+        </v-list-item>
+      </template>
+    </or-settings-drawer>
 
     <!-- 封面 -->
     <v-img
@@ -204,10 +232,9 @@
         <!-- 作者信息 -->
         <div class="d-flex align-center mx-4">
           <!-- 头像 -->
-          <or-avatar
-            :username="blogArticle.user.username"
+          <or-blog-user-avatar
+            :user="blogArticle.user"
             avatar-class="v-list-item__avatar"
-            :avatar="$apis.blog.getFileUrl(blogArticle.user.avatar)"
           />
 
           <v-list-item-content>
@@ -381,14 +408,25 @@
         </div>
 
         <!-- 内容 -->
-        <or-md-vditor
-          id="content"
-          :preview-toc.sync="toc"
-          :current-toc-index.sync="currentTocIndex"
-          :dark="$vuetify.theme.dark"
-          :pre-set-content="blogArticle.content"
-          @after="onVditorAfter"
-        />
+        <div v-if="!articleVditorFinished" class="ma-5">
+          <v-skeleton-loader
+            v-for="i in skeletonLoaderCount"
+            :key="i"
+            :type="i%3===1?'heading':'paragraph'"
+            :class="i%3===1?'my-3':null"
+          />
+        </div>
+        <v-fade-transition class="transition-fast-in-fast-out">
+          <or-md-vditor
+            v-show="articleVditorFinished"
+            id="content"
+            :preview-toc.sync="toc"
+            :current-toc-index.sync="currentTocIndex"
+            :dark="$vuetify.theme.dark"
+            :pre-set-content="blogArticle.content"
+            @after="onVditorAfter"
+          />
+        </v-fade-transition>
 
         <div id="likeFab" />
 
@@ -477,10 +515,10 @@
                 v-if="$access.isLogged()"
                 no-gutters
               >
-                <or-avatar
-                  class="mb-auto"
-                  :avatar="$apis.blog.getFileUrl(userInfo.user.avatar)"
-                  :username="userInfo.user.username"
+                <or-blog-user-avatar
+                  avatar-class="mb-auto"
+                  disable-menu
+                  :user="userInfo.user"
                 />
                 <div class="flex-grow-1">
                   <or-md-vditor
@@ -661,6 +699,7 @@ export default {
     }
   },
   data: () => ({
+    articleVditorFinished: false,
     hoverLikeButton: false,
     drawer: false,
     showScrollToTopFab: false,
@@ -694,6 +733,10 @@ export default {
     ...mapGetters('user', {
       userInfo: 'getUserInfo'
     }),
+    skeletonLoaderCount () {
+      const totalSeconds = this.article.content.length / 8
+      return Math.max(Math.round(Math.random() * (totalSeconds / 15) + totalSeconds / 30) * (this.$vuetify.breakpoint.smAndDown ? 2 : 1), 1)
+    },
     auditMode () {
       return this.article.status === 'UNDER_REVIEW'
     },
@@ -1059,6 +1102,7 @@ export default {
       }
     },
     onVditorAfter () {
+      this.articleVditorFinished = true
       // 恢复主题和阅读位置
       this.restoreLastReadProfile()
     },

@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       hide-update-headers
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
@@ -59,6 +59,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('tag.name')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -90,6 +91,7 @@
       <or-blog-tag-save-form
         ref="tagForm"
         :preset="selectedItem"
+        @submit="$refs.tagDialog.confirm()"
         @update="onItemUpdate"
       />
     </or-base-dialog>

@@ -1,6 +1,6 @@
 {
   "name": "ordinaryroad-blog-ui",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": true,
   "config": {
     "nuxt": {
@@ -26,7 +26,7 @@
     "echarts": "^5.3.3",
     "js-cookie": "^3.0.1",
     "nuxt": "^2.12.2",
-    "ordinaryroad-vuetify": "^1.5.6",
+    "ordinaryroad-vuetify": "^1.5.7",
     "vditor": "^3.8.18",
     "vue": "^2.7.10",
     "vue-i18n": "^8.27.2",

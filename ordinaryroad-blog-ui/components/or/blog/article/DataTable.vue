@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -88,6 +88,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('article.title')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -103,6 +104,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('article.summary')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -118,6 +120,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('article.content')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -135,6 +138,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.canComment')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -152,6 +156,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.canReward')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -169,6 +174,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.original')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -187,6 +193,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.onlyViewOwn')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>

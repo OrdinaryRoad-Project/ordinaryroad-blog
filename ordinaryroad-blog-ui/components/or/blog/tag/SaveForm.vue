@@ -28,6 +28,7 @@
       v-model="model.name"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('tag.name')"
+      @keydown.enter="$emit('submit')"
     />
   </v-form>
 </template>

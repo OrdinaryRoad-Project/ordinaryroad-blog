@@ -30,14 +30,18 @@ import util from 'ordinaryroad-vuetify/src/utils'
 /* 自定义常量 */
 import {
   BaseMaterialCard,
+  OrAvatar,
   OrBaseDataIterator,
   OrBaseDataTable,
+  OrBaseDialog,
   OrBaseMenu,
   OrBaseTreeList,
   OrEmpty,
+  OrInputDialog,
   OrLoadMoreFooter,
   OrNoMoreData,
-  OrNotFound
+  OrNotFound,
+  OrSearch
 } from 'ordinaryroad-vuetify/src/components'
 import constants from './constants/index'
 import echarts from './echarts/index'
@@ -72,4 +76,8 @@ export default function (context, inject) {
   Vue.component('OrLoadMoreFooter', OrLoadMoreFooter)
   Vue.component('OrNoMoreData', OrNoMoreData)
   Vue.component('OrNotFound', OrNotFound)
+  Vue.component('OrSearch', OrSearch)
+  Vue.component('OrBaseDialog', OrBaseDialog)
+  Vue.component('OrInputDialog', OrInputDialog)
+  Vue.component('OrAvatar', OrAvatar)
 }

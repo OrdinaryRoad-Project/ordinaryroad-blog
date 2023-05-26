@@ -25,11 +25,11 @@
 <template>
   <base-material-card avatar="_required">
     <template #avatar>
-      <or-avatar
-        :username="user.username"
+      <or-blog-user-avatar
+        :disable-menu="disableMenu"
+        :user="user"
         avatar-class="v-card--material__avatar elevation-6"
         size="128"
-        :avatar="$apis.blog.getFileUrl(user.avatar)"
       />
     </template>
     <v-list class="pa-0">
@@ -105,6 +105,13 @@ export default {
       required: true
     },
     usernameLinkDisabled: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 防止递归生效
+     */
+    disableMenu: {
       type: Boolean,
       default: false
     }
