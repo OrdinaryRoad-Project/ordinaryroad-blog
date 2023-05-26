@@ -57,6 +57,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('type.name')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>

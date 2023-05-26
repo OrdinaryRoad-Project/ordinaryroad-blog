@@ -58,6 +58,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.name')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -74,6 +75,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.description')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -90,6 +92,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.url')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -106,6 +109,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.email')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -123,6 +127,7 @@
             outlined
             :loading="statusOptions.loading"
             :label="$t('log.status')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>

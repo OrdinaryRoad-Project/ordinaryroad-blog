@@ -48,6 +48,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('article.title')"
+            @keydown.enter="$refs.dataIterator.searchItems()"
           />
         </v-col>
         <v-col
@@ -63,6 +64,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('article.summary')"
+            @keydown.enter="$refs.dataIterator.searchItems()"
           />
         </v-col>
         <v-col
@@ -78,6 +80,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('article.content')"
+            @keydown.enter="$refs.dataIterator.searchItems()"
           />
         </v-col>
         <v-col
@@ -95,6 +98,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.canReward')"
+            @change="$refs.dataIterator.searchItems()"
           />
         </v-col>
         <v-col
@@ -112,6 +116,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('article.original')"
+            @change="$refs.dataIterator.searchItems()"
           />
         </v-col>
       </template>

@@ -56,6 +56,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('comment.content')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -74,6 +75,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('comment.onlyViewOwn')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>

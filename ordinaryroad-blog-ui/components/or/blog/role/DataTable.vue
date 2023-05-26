@@ -57,6 +57,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('roleDataTable.roleName')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -72,6 +73,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('roleDataTable.roleCode')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>

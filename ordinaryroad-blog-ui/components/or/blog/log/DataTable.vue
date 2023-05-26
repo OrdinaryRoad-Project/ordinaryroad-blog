@@ -59,6 +59,7 @@
             :label="$t('log.type')"
             item-text="description"
             return-object
+            @change="$refs.dataTable.searchItems()"
             @input="onTypeSelect"
           />
         </v-col>
@@ -69,6 +70,7 @@
         >
           <v-select
             v-model="searchParams.method"
+            :disabled="searchParams.type"
             clearable
             dense
             hide-details
@@ -93,6 +95,7 @@
             outlined
             :loading="statusOptions.loading"
             :label="$t('log.status')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -107,6 +110,7 @@
             hide-details
             clearable
             :label="$t('createBy')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -215,7 +219,7 @@ export default {
     },
     searchParams: {
       createBy: '',
-      type: {},
+      type: null,
       method: '',
       status: ''
     },
@@ -277,6 +281,7 @@ export default {
       if (method) {
         this.searchParams.type = null
       }
+      this.$refs.dataTable.searchItems()
     },
     onTypeSelect (type) {
       if (type) {
