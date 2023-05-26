@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -57,6 +57,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('type.name')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -104,6 +105,7 @@
         ref="typeForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.typeDialog.confirm()"
       />
     </or-base-dialog>
   </v-container>

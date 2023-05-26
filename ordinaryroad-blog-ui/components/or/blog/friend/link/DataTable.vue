@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -58,6 +58,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.name')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -74,6 +75,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.description')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -90,6 +92,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.url')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -106,6 +109,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('friendLink.email')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
 
@@ -123,6 +127,7 @@
             outlined
             :loading="statusOptions.loading"
             :label="$t('log.status')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -186,6 +191,7 @@
         ref="friendLinkForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.friendLinkDialog.confirm()"
       />
     </or-base-dialog>
     <or-input-dialog

@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -57,6 +57,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('userDataTable.username')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -67,12 +68,10 @@
 
       <template #[`item.username`]="{ item }">
         <div class="d-flex align-center">
-          <!-- <or-blog-user-avatar :user="item" /> -->
-          <or-avatar
+          <or-blog-user-avatar
             size="38"
+            :user="item"
             avatar-class="v-list-item__avatar"
-            :username="item.username"
-            :avatar="$apis.blog.getFileUrl(item.avatar)"
           />
           <or-link :href="`/${item.uid}`" hover-able>
             <span>{{ item.username }}</span>

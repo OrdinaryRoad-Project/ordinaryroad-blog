@@ -23,11 +23,11 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -57,6 +57,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('roleDataTable.roleName')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -72,6 +73,7 @@
             hide-details="auto"
             maxlength="100"
             :label="$t('roleDataTable.roleCode')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
@@ -119,6 +121,7 @@
         ref="roleForm"
         :preset="selectedItem"
         @update="onItemUpdate"
+        @submit="$refs.roleDialog.confirm()"
       />
     </or-base-dialog>
   </v-container>

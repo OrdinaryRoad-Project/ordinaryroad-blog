@@ -28,26 +28,31 @@
       v-model="model.name"
       :rules="[$or.rules.notBlank,$or.rules.max50Chars]"
       :label="$t('friendLink.name')"
+      @keydown.enter="$emit('submit')"
     />
     <v-text-field
       v-model="model.description"
       :rules="[$or.rules.notBlank,$or.rules.max100Chars]"
       :label="$t('friendLink.description')"
+      @keydown.enter="$emit('submit')"
     />
     <v-text-field
       v-model="model.url"
       :rules="[$or.rules.notBlank,$or.rules.max500Chars]"
       :label="$t('friendLink.url')"
+      @keydown.enter="$emit('submit')"
     />
     <v-text-field
       v-model="model.logo"
       :rules="[$or.rules.notBlank,$or.rules.max500Chars]"
       :label="$t('friendLink.logo')"
+      @keydown.enter="$emit('submit')"
     />
     <v-text-field
       v-model="model.email"
       :rules="[$or.rules.max500Chars]"
       :label="$t('friendLink.email')"
+      @keydown.enter="$emit('submit')"
     />
   </v-form>
 </template>

@@ -43,10 +43,21 @@
 
     <!-- 国际化 -->
     <or-i18n-menu v-if="!$vuetify.breakpoint.smAndDown" />
+
     <!-- 设置 -->
-    <v-btn icon @click="$store.dispatch('app/toggleRightDrawerModel')">
-      <v-icon>mdi-dots-horizontal</v-icon>
-    </v-btn>
+    <v-tooltip bottom>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-bind="attrs"
+          v-on="on"
+          @click.stop="$store.dispatch('app/toggleRightDrawerModel')"
+        >
+          <v-icon>mdi-dots-horizontal</v-icon>
+        </v-btn>
+      </template>
+      <span>{{ $t('more') }}</span>
+    </v-tooltip>
   </v-app-bar>
 </template>
 

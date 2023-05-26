@@ -139,6 +139,7 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <slot name="other-list-item" />
       </v-list>
     </v-container>
   </v-navigation-drawer>

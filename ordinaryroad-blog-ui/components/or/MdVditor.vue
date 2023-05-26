@@ -406,9 +406,9 @@ export default {
                 let headString
                 let headHtml = element.innerHTML
                 const vditorAnchor = element.getElementsByTagName('a')
-                if (vditorAnchor && vditorAnchor[0]) {
-                  headString = vditorAnchor[0].getAttribute('id').slice(13)
-                  headHtml = headHtml.replace(vditorAnchor[0].outerHTML, '')
+                if (vditorAnchor && vditorAnchor[vditorAnchor.length - 1]) {
+                  headString = vditorAnchor[vditorAnchor.length - 1].getAttribute('id').slice(13)
+                  headHtml = headHtml.replace(vditorAnchor[vditorAnchor.length - 1].outerHTML, '')
                 } else {
                   headString = element.textContent
                 }

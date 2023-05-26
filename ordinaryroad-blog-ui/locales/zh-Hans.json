@@ -88,7 +88,7 @@
   },
   "catalogue": "目录",
   "clearAvatar": "清空头像",
-  "closeCatalogue": "开启目录",
+  "closeCatalogue": "关闭目录",
   "comment": {
     "actions": {
       "deleteForever": "删除",
@@ -154,8 +154,6 @@
     }
   },
   "feedback": "反馈",
-  "focusSearchInputTip": "按 '/' 开始输入",
-  "focusSearchInputTipWhenFocused": "回车搜索，ESC取消",
   "log": {
     "consumedTime": "耗时",
     "cookies": "请求Cookie",

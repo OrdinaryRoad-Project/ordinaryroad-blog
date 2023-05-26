@@ -23,12 +23,12 @@
   -->
 
 <template>
-  <v-container>
+  <v-container fluid>
     <or-base-data-table
       ref="dataTable"
-      :sort-by="[]"
       hide-update-headers
-      :sort-desc="[]"
+      :sort-by="['createdTime']"
+      :sort-desc="[true]"
       :single-select="singleSelect"
       :select-return-object="selectReturnObject"
       :show-select="showSelect"
@@ -56,6 +56,7 @@
             hide-details="auto"
             maxlength="200"
             :label="$t('comment.content')"
+            @keydown.enter="$refs.dataTable.searchItems()"
           />
         </v-col>
         <v-col
@@ -74,6 +75,7 @@
             item-value="value"
             hide-details="auto"
             :label="$t('comment.onlyViewOwn')"
+            @change="$refs.dataTable.searchItems()"
           />
         </v-col>
       </template>
