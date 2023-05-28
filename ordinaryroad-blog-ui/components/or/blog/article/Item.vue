@@ -37,8 +37,8 @@
       <div style="position: relative; overflow: hidden;">
         <!-- 封面 -->
         <img
-          style="background-color: darkgrey"
           alt=""
+          :style="{aspectRatio: (-1.2/1000*Math.min(item.uv,1000)+1.6)}"
           class="or-cover-image"
           :src="articleCoverImageUrl(item)"
         >
@@ -230,6 +230,7 @@ export default {
     articleCoverImageUrl () {
       return (item) => {
         // return this.$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')
+        // return 'https://tuapi.eees.cc/fengjing/m/1661427654614.jpg'
         return this.$apis.blog.getFileUrl(item.coverImage, 'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')
       }
     }
@@ -269,11 +270,11 @@ export default {
 }
 
 .or-cover-image {
+  background-color: darkgrey;
   object-fit: cover;
   height: 100%;
   width: 100%;
-  max-height: 350px;
-  min-height: 150px;
+  max-height: 400px;
   display: block;
   margin: 0 auto;
 }
