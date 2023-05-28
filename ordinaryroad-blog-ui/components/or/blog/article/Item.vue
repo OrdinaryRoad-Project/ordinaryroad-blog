@@ -34,7 +34,7 @@
       @click="onClickArticle"
     >
       <!-- 图片上层的信息 -->
-      <div style="position: relative; overflow: hidden; max-height: 33vh">
+      <div style="position: relative; overflow: hidden;">
         <!-- 封面 -->
         <img
           style="background-color: darkgrey"
@@ -272,9 +272,10 @@ export default {
   object-fit: cover;
   height: 100%;
   width: 100%;
-  max-height: 500px;
+  max-height: 350px;
   min-height: 150px;
   display: block;
+  margin: 0 auto;
 }
 
 .or-title {
