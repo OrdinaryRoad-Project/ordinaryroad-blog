@@ -45,7 +45,6 @@ import javax.enterprise.inject.spi.CDI;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -119,10 +118,8 @@ public interface BlogArticleMapStruct extends BaseBlogMapStruct {
         BlogArticleService articleService = CDI.current().select(BlogArticleService.class).get();
         JsonObject times = articleService.getPublishCreatedTimeAndUpdateTimeById(articleUuid);
         vo.setCreatedTime((LocalDateTime) times.getValue("createdTime"));
-        Object updateTime = times.getValue("updateTime");
-        if (Objects.nonNull(updateTime)) {
-            vo.setUpdateTime((LocalDateTime) updateTime);
-        }
+        // 设置文章的实际更新时间，即使为null也要set，覆盖掉更新状态时的更新时间
+        vo.setUpdateTime((LocalDateTime) times.getValue("updateTime"));
 
         BlogUserBrowsedArticleService userBrowsedArticleService = CDI.current().select(BlogUserBrowsedArticleService.class).get();
         Pair<Long, BigDecimal> articleUvAndPv = userBrowsedArticleService.getArticleUvAndPv(articleUuid);
