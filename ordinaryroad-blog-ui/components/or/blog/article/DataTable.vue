@@ -640,6 +640,7 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.moveToTrash(item.uuid)
             .then(() => {
+              this.$indexnow.updateArticle(item)
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.moveToTrash')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
@@ -716,6 +717,7 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.auditApproved(item.uuid)
             .then(() => {
+              this.$indexnow.updateArticle(item)
               this.$snackbar.success(this.$t('whatSuccessfully', [this.$t('article.actions.auditApproved')]))
               this.$refs.dataTable.getItems()
               dialog.cancel()
@@ -753,6 +755,7 @@ export default {
       if (this.$refs.articleViolationDialog.validate()) {
         this.$apis.blog.article.articleViolation(this.selectedItem.uuid, reason)
           .then((data) => {
+            this.$indexnow.updateArticle(this.selectedItem)
             this.$snackbar.success(this.$t('operationSucceeded'))
             this.$refs.dataTable.getItems()
             this.$refs.articleViolationDialog.close()

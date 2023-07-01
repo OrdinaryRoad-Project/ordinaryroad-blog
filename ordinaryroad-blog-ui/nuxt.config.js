@@ -62,6 +62,8 @@ export default {
     '~/plugins/dayjs/index.js',
     // 国际化插件
     '~/plugins/i18n/index.js',
+    // indexnow插件
+    '~/plugins/indexnow/index.js',
     // 自定义常量 工具类等
     '~/plugins/ordinaryroad/index.js',
     // 路由插件
@@ -163,6 +165,18 @@ export default {
 
   // https://www.nuxtjs.cn/guide/runtime-config#runtime-config-213
   publicRuntimeConfig: {
+    DOMAIN: process.env.DOMAIN,
+    INDEX_NOW: {
+      SEARCH_ENGINES: [
+        {
+          enabled: true,
+          name: 'Bing',
+          url: 'https://www.bing.com'
+        }
+      ],
+      KEY: '2b7cc4e2b1f34d53887e6d35ac9e144f'
+    },
+
     FRIEND_LINK_INFO: [
       { key: 'friendLink.name', value: 'OR博客' },
       { key: 'friendLink.description', value: '世间种种平凡，都不平凡。' },
