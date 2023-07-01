@@ -34,7 +34,7 @@ import tech.ordinaryroad.blog.quarkus.enums.BlogFriendLinkStatusEnum;
 @RegisterForReflection
 public class BlogFriendLink extends BaseBlogDO {
 
-    private static final long serialVersionUID = -3945325420469172147L;
+    private static final long serialVersionUID = -5889222597070818404L;
 
     /**
      * 网站名称
@@ -62,9 +62,19 @@ public class BlogFriendLink extends BaseBlogDO {
     private String email;
 
     /**
+     * 网站快照地址
+     */
+    private String snapshotUrl;
+
+    /**
      * 友链状态
      */
     private BlogFriendLinkStatusEnum status;
+
+    /**
+     * 是否启用
+     */
+    private Boolean enabled;
 
     /**
      * 是否删除
@@ -75,13 +85,15 @@ public class BlogFriendLink extends BaseBlogDO {
     public BlogFriendLink() {
     }
 
-    public BlogFriendLink(String name, String description, String url, String logo, String email, BlogFriendLinkStatusEnum status, Boolean deleted) {
+    public BlogFriendLink(String name, String description, String url, String logo, String email, String snapshotUrl, BlogFriendLinkStatusEnum status, Boolean enabled, Boolean deleted) {
         this.name = name;
         this.description = description;
         this.url = url;
         this.logo = logo;
         this.email = email;
+        this.snapshotUrl = snapshotUrl;
         this.status = status;
+        this.enabled = enabled;
         this.deleted = deleted;
     }
 
@@ -125,12 +137,28 @@ public class BlogFriendLink extends BaseBlogDO {
         this.email = email;
     }
 
+    public String getSnapshotUrl() {
+        return snapshotUrl;
+    }
+
+    public void setSnapshotUrl(String snapshotUrl) {
+        this.snapshotUrl = snapshotUrl;
+    }
+
     public BlogFriendLinkStatusEnum getStatus() {
         return status;
     }
 
     public void setStatus(BlogFriendLinkStatusEnum status) {
         this.status = status;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Boolean getDeleted() {

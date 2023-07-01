@@ -42,7 +42,9 @@ data class BlogFriendLinkDTO(
     var url: String = StrUtil.EMPTY,
     var logo: String = StrUtil.EMPTY,
     var email: String = StrUtil.EMPTY,
+    var snapshotUrl: String = StrUtil.EMPTY,
     var status: BlogFriendLinkStatusEnum? = null,
+    var enabled: Boolean = false,
 ) : BaseBlogModelDTO<BlogFriendLink>() {
 
     override fun parse(baseDo: BlogFriendLink) {
@@ -51,11 +53,13 @@ data class BlogFriendLinkDTO(
         url = baseDo.url
         logo = baseDo.logo
         email = StrUtil.nullToEmpty(baseDo.email)
+        snapshotUrl = StrUtil.nullToEmpty(baseDo.snapshotUrl)
         status = baseDo.status
+        enabled = baseDo.enabled
     }
 
     companion object {
-        private const val serialVersionUID: Long = -8686880722990553297L
+        private const val serialVersionUID: Long = -850926173850572186L
     }
 
 }

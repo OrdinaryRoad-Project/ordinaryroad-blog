@@ -47,8 +47,11 @@ class BlogFriendLinkSaveRequest : BaseRequest() {
     @Size(max = 500, message = "站长email长度不能超过500")
     var email: String? = null
 
+    @Size(max = 500, message = "网站快照地址长度不能超过500")
+    var snapshotUrl: String = ""
+
     companion object {
-        private const val serialVersionUID: Long = 4154999132288945052L
+        private const val serialVersionUID: Long = 4789157779083113050L
     }
 
 }

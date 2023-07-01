@@ -85,6 +85,9 @@ export default ({
     }
     return hasRole
   }
+  const hasDeveloperRole = () => {
+    return hasRolesOr(['DEVELOPER'])
+  }
   const hasDeveloperOrAdminRole = () => {
     return hasRolesOr(['DEVELOPER', 'ADMIN'])
   }
@@ -114,6 +117,7 @@ export default ({
      * 判断是否拥有审核权限
      */
     hasAuditorRole,
+    hasDeveloperRole,
     hasDeveloperOrAdminRole
   })
 }

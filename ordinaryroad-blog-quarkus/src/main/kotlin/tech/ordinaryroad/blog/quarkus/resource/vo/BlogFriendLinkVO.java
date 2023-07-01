@@ -47,14 +47,17 @@ public class BlogFriendLinkVO {
 
     private String logo;
 
+    private String snapshotUrl;
+
     public BlogFriendLinkVO() {
     }
 
-    public BlogFriendLinkVO(String name, String description, String url, String logo) {
+    public BlogFriendLinkVO(String name, String description, String url, String logo, String snapshotUrl) {
         this.name = name;
         this.description = description;
         this.url = url;
         this.logo = logo;
+        this.snapshotUrl = snapshotUrl;
     }
 
     public String getName() {
@@ -87,5 +90,13 @@ public class BlogFriendLinkVO {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getSnapshotUrl() {
+        return snapshotUrl;
+    }
+
+    public void setSnapshotUrl(String snapshotUrl) {
+        this.snapshotUrl = snapshotUrl;
     }
 }

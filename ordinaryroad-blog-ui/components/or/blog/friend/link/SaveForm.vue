@@ -54,6 +54,29 @@
       :label="$t('friendLink.email')"
       @keydown.enter="$emit('submit')"
     />
+    <v-text-field
+      v-model="model.snapshotUrl"
+      :loading="snapshotParams.loading"
+      :disabled="snapshotParams.loading"
+      clearable
+      :rules="[$or.rules.max500Chars]"
+      :error-messages="snapshotParams.error"
+      :label="$t('friendLink.snapshotUrl')"
+      @keydown.enter="$emit('submit')"
+    >
+      <template #append-outer>
+        <v-form ref="snapshotFileForm">
+          <v-file-input
+            hide-input
+            hide-details
+            :rules="[maxFileSize10MB]"
+            accept="image/*"
+            class="pt-0 mt-0 or-friend-link-file-input"
+            @change="onPictureSelected"
+          />
+        </v-form>
+      </template>
+    </v-text-field>
   </v-form>
 </template>
 
@@ -69,6 +92,11 @@ export default {
     }
   },
   data: () => ({
+    maxFileSize10MB: value => (!value || value.size <= 100) || 'File size should be less than or equal to  MB.',
+    snapshotParams: {
+      error: null,
+      loading: false
+    },
     model: {}
   }),
   watch: {
@@ -90,6 +118,28 @@ export default {
   mounted () {
   },
   methods: {
+    onPictureSelected (file) {
+      if (file == null) {
+        return
+      }
+      if (!this.$refs.snapshotFileForm.validate()) {
+        this.snapshotParams.error = '文件过大，请重新选择'
+        setTimeout(() => {
+          this.snapshotParams.error = null
+          this.$refs.snapshotFileForm.resetValidation()
+        }, 2000)
+      } else {
+        this.snapshotParams.loading = true
+        this.$apis.blog.upload(file)
+          .then((data) => {
+            this.model.snapshotUrl = data
+            this.snapshotParams.loading = false
+          })
+          .catch(() => {
+            this.snapshotParams.loading = false
+          })
+      }
+    },
     validate () {
       return this.$refs.form.validate()
     }
@@ -97,6 +147,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.or-friend-link-file-input .v-input__prepend-outer{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
 </style>

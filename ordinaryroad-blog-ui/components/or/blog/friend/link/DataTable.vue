@@ -175,12 +175,64 @@
         </or-link>
       </template>
 
+      <template #[`item.snapshotUrl`]="{ item }">
+        <or-link
+          v-if="item.snapshotUrl"
+          :href="item.snapshotUrl"
+        >
+          <v-menu open-on-hover>
+            <template #activator="{ attrs ,on }">
+              <span
+                v-bind="attrs"
+                v-on="on"
+              >{{ item.snapshotUrl }}</span>
+            </template>
+            <v-card
+              :href="$apis.blog.getFileUrl(item.snapshotUrl)"
+              target="_blank"
+            >
+              <v-img
+                min-width="100%"
+                :width="$vuetify.breakpoint.width/4"
+                :src="$apis.blog.getFileUrl(item.snapshotUrl)"
+                aspect-ratio="1"
+              />
+            </v-card>
+          </v-menu>
+        </or-link>
+        <span v-else>
+          无
+        </span>
+      </template>
+
+      <template #[`item.enabled`]="{ item }">
+        <v-switch
+          v-model="item.enabled"
+          readonly
+          :disabled="item.status!=='APPROVED'||!$access.hasDeveloperRole()"
+          inset
+          @click="onToggleEnabled(item)"
+        />
+      </template>
+
       <template #[`item.status`]="{ item }">
         <v-chip label :color="$apis.statusColor(item)">
           {{ item.status }}
         </v-chip>
       </template>
     </or-base-data-table>
+    <or-base-dialog
+      ref="friendLinkEnabledDialog"
+      loading
+      :title="$t('areYouSureToDoWhat', [$t(friendLinkEnabledDialog.action)])"
+      @onConfirm="toggleEnabled"
+    >
+      <v-checkbox
+        v-model="friendLinkEnabledDialog.notice"
+        :disabled="!selectedItem.email"
+        label="通知站长"
+      />
+    </or-base-dialog>
     <or-base-dialog
       ref="friendLinkDialog"
       loading
@@ -238,6 +290,10 @@ export default {
     }
   },
   data: () => ({
+    friendLinkEnabledDialog: {
+      action: String,
+      notice: false
+    },
     statusOptions: {
       loading: true,
       items: []
@@ -267,6 +323,11 @@ export default {
     headers () {
       const headers = [
         {
+          text: this.$t('friendLink.enabled'),
+          value: 'enabled',
+          width: 100
+        },
+        {
           text: this.$t('friendLink.status'),
           value: 'status',
           width: 100
@@ -285,6 +346,11 @@ export default {
           text: this.$t('friendLink.description'),
           value: 'description',
           width: 200
+        },
+        {
+          text: this.$t('friendLink.snapshotUrl'),
+          value: 'snapshotUrl',
+          width: 100
         },
         {
           text: this.$t('friendLink.url'),
@@ -310,6 +376,25 @@ export default {
   mounted () {
   },
   methods: {
+    onToggleEnabled (item) {
+      if (item.status !== 'APPROVED' || !this.$access.hasDeveloperRole()) {
+        return
+      }
+      this.selectedItem = Object.assign({}, item)
+      this.friendLinkEnabledDialog.action = item.enabled ? 'disable' : 'enable'
+      this.$refs.friendLinkEnabledDialog.show()
+    },
+    toggleEnabled () {
+      this.$apis.blog.friend_link.enabled(this.selectedItem.uuid, !this.selectedItem.enabled, this.friendLinkEnabledDialog.notice)
+        .then(() => {
+          this.friendLinkEnabledDialog.notice = false
+          this.$refs.dataTable.getItems()
+          this.$refs.friendLinkEnabledDialog.close()
+        })
+        .catch(() => {
+          this.$refs.friendLinkEnabledDialog.close()
+        })
+    },
     disapproved (input) {
       if (!this.$refs.inputDialog.validate()) {
         this.$snackbar.info('请检查输入')

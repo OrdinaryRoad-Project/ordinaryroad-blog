@@ -110,6 +110,7 @@ enum class BlogLogTypeEnum(
     BLOG_FRIEND_LINK_APPLY("申请友链", 50003, "/friend_link/apply", "POST"),
     BLOG_FRIEND_LINK_APPROVED("通过友链申请", 50004, "/friend_link/approved/*", "PUT"),
     BLOG_FRIEND_LINK_DISAPPROVED("拒绝友链申请", 50005, "/friend_link/disapproved/*", "PUT"),
+    BLOG_FRIEND_LINK_ENABLED("更新友链是否启用", 50006, "/friend_link/enabled/*", "PUT"),
     //endregion
     ;
 
