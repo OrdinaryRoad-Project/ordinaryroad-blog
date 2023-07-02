@@ -396,19 +396,14 @@ export default {
         })
     },
     disapproved (input) {
-      if (!this.$refs.inputDialog.validate()) {
-        this.$snackbar.info('请检查输入')
-        this.$refs.inputDialog.cancelLoading()
-      } else {
-        this.$apis.blog.friend_link.disapproved(this.editedItem.uuid, input)
-          .then(() => {
-            this.$refs.inputDialog.close()
-            this.$refs.dataTable.getItems()
-          })
-          .catch(() => {
-            this.$refs.inputDialog.close()
-          })
-      }
+      this.$apis.blog.friend_link.disapproved(this.editedItem.uuid, input)
+        .then(() => {
+          this.$refs.inputDialog.close()
+          this.$refs.dataTable.getItems()
+        })
+        .catch(() => {
+          this.$refs.inputDialog.close()
+        })
     },
     onClickDisapproved (item) {
       this.editedItem = item
