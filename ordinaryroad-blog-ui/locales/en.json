@@ -16,6 +16,8 @@
     "logo": "Site Logo",
     "email": "Webmaster Email",
     "status": "Status",
+    "snapshotUrl": "Snapshot Url",
+    "enabled": "Enabled",
     "actions": {
       "approved": "Approved",
       "disapproved": "Disapproved"

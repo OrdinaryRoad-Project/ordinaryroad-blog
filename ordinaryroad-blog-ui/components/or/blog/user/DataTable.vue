@@ -107,7 +107,7 @@
       :default-value="-1"
       hint="-1：永久封禁"
       keep-input-on-close
-      :rules="[$or.rules.required,$or.rules.notBlank]"
+      :rules="[$or.rules.required,$or.rules.notBlank,$or.rules.integer]"
       @onConfirm="disable"
     >
       <template #append-outer>
@@ -210,20 +210,15 @@ export default {
   methods: {
     disable (input) {
       const disableTime = Number(input)
-      if (!this.$refs.inputDialog.validate() || !Number.isInteger(disableTime)) {
-        this.$snackbar.info('请检查输入')
-        this.$refs.inputDialog.cancelLoading()
-      } else {
-        this.$apis.blog.user.disable(this.selectedItem.uuid, disableTime)
-          .then((data) => {
-            this.$snackbar.success(`操作成功，剩余时间：${data}s`)
-            this.$refs.inputDialog.close()
-            this.$refs.dataTable.getItems()
-          })
-          .catch(() => {
-            this.$refs.inputDialog.cancelLoading()
-          })
-      }
+      this.$apis.blog.user.disable(this.selectedItem.uuid, disableTime)
+        .then((data) => {
+          this.$snackbar.success(`操作成功，剩余时间：${data}s`)
+          this.$refs.inputDialog.close()
+          this.$refs.dataTable.getItems()
+        })
+        .catch(() => {
+          this.$refs.inputDialog.cancelLoading()
+        })
     },
     untieDisable (item) {
       this.$dialog({

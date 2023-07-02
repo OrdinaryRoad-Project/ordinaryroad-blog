@@ -79,6 +79,8 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - 手动添加
 - 主动申请
 - 申请结果通知
+- 友链状态变更通知
+- 悬浮预览友链快照
 
 ### 其他
 

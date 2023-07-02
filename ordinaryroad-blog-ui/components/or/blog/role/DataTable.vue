@@ -224,7 +224,7 @@ export default {
         return
       }
       this.selectedItem = Object.assign({}, item)
-      const action = this.selectedIndex === -1 ? 'disable' : 'enable'
+      const action = item.enabled ? 'disable' : 'enable'
       this.$dialog({
         title: this.$t('areYouSureToDoWhat', [this.$t(action)]),
         loading: true,

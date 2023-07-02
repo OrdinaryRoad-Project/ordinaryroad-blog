@@ -484,7 +484,9 @@ CREATE TABLE `blog_friend_link`
     `url`          varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站地址',
     `logo`         varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站logo地址',
     `email`        varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '站长email',
+    `snapshotUrl`  varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci  NULL COMMENT '网站快照地址',
     `status`       varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_ci   NULL     DEFAULT NULL COMMENT '状态',
+    `enabled`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否启用',
     `deleted`      bit(1)                                                         NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `blog_friend_link_uuid_uindex` (`uuid`) USING BTREE

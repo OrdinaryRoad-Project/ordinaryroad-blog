@@ -54,6 +54,18 @@
       :label="$t('friendLink.email')"
       @keydown.enter="$emit('submit')"
     />
+    <or-file-field
+      ref="snapshotFileField"
+      v-model="model.snapshotUrl"
+      :loading="snapshotParams.uploading"
+      :rules="[$or.rules.maxFileSize10MB]"
+      :text-rules="[$or.rules.max500Chars]"
+      :label="$t('friendLink.snapshotUrl')"
+      accept="image/*"
+      error-when-file-not-valid="文件过大，请重新选择"
+      @keydown-enter="$emit('submit')"
+      @change="onPictureSelected"
+    />
   </v-form>
 </template>
 
@@ -69,6 +81,9 @@ export default {
     }
   },
   data: () => ({
+    snapshotParams: {
+      uploading: false
+    },
     model: {}
   }),
   watch: {
@@ -90,13 +105,23 @@ export default {
   mounted () {
   },
   methods: {
+    onPictureSelected (file) {
+      this.snapshotParams.uploading = true
+      this.$apis.blog.upload(file)
+        .then((data) => {
+          this.model.snapshotUrl = data
+          this.snapshotParams.uploading = false
+        })
+        .catch(() => {
+          this.snapshotParams.uploading = false
+        })
+    },
     validate () {
-      return this.$refs.form.validate()
+      return this.$refs.form.validate() && this.$refs.snapshotFileField.validate()
     }
   }
 }
 </script>
 
 <style scoped>
-
 </style>

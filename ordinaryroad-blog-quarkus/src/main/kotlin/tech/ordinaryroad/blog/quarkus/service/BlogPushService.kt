@@ -93,6 +93,20 @@ class BlogPushService {
             reason: String?,
             friendLink: BlogFriendLink?
         ): MailTemplateInstance
+
+        @JvmStatic
+        external fun friendLinkInvalid(
+            title: String?,
+            reason: String?,
+            friendLink: BlogFriendLink?
+        ): MailTemplateInstance
+
+        @JvmStatic
+        external fun friendLinkValid(
+            title: String?,
+            reason: String?,
+            friendLink: BlogFriendLink?
+        ): MailTemplateInstance
     }
 
     @Inject
@@ -312,6 +326,36 @@ class BlogPushService {
         }
         val title = "友链申请结果通知"
         Templates.applyForFriendLinkDisapproved(title, reason, friendLink)
+            .to(email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
+    }
+
+    fun friendLinkInvalid(friendLink: BlogFriendLink) {
+        val email = friendLink.email
+        if (email.isNullOrBlank()) {
+            return
+        }
+
+        val title = "友链状态变化通知"
+        Templates.friendLinkInvalid(title, "由于贵站无法访问，已暂时取消展示", friendLink)
+            .to(email)
+            .subject(title)
+            .send()
+            .await()
+            .atMost(Duration.ofMinutes(1))
+    }
+
+    fun friendLinkValid(friendLink: BlogFriendLink) {
+        val email = friendLink.email
+        if (email.isNullOrBlank()) {
+            return
+        }
+
+        val title = "友链恢复展示通知"
+        Templates.friendLinkValid(title, "贵站访问正常，已恢复展示", friendLink)
             .to(email)
             .subject(title)
             .send()

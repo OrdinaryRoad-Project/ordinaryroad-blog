@@ -16,6 +16,8 @@
     "logo": "网站logo地址",
     "email": "站长email",
     "status": "状态",
+    "snapshotUrl": "快照地址",
+    "enabled": "启用",
     "actions": {
       "approved": "通过",
       "disapproved": "拒绝"

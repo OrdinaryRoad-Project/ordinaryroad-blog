@@ -983,6 +983,7 @@ export default {
         if (dialog.isConfirm) {
           this.$apis.blog.article.auditApproved(this.blogArticle.uuid)
             .then((data) => {
+              this.$indexnow.updateArticle(this.blogArticle)
               this.$snackbar.success(this.$t('operationSucceeded'))
               dialog.cancel()
               this.$router.replace('/dashboard/article/status/UNDER_REVIEW')

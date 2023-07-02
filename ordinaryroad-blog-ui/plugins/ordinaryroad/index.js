@@ -37,6 +37,7 @@ import {
   OrBaseMenu,
   OrBaseTreeList,
   OrEmpty,
+  OrFileField,
   OrInputDialog,
   OrLoadMoreFooter,
   OrNoMoreData,
@@ -80,4 +81,5 @@ export default function (context, inject) {
   Vue.component('OrBaseDialog', OrBaseDialog)
   Vue.component('OrInputDialog', OrInputDialog)
   Vue.component('OrAvatar', OrAvatar)
+  Vue.component('OrFileField', OrFileField)
 }

@@ -30,8 +30,8 @@ export default {
     $axios = $axios || axios
   },
   apis: {
-    create ({ name, description, url, logo, email }) {
-      const data = { name, description, url, logo, email }
+    create ({ name, description, url, logo, email, snapshotUrl }) {
+      const data = { name, description, url, logo, email, snapshotUrl }
       return $axios({
         url: '/blog/friend_link/create',
         method: 'post',
@@ -44,8 +44,8 @@ export default {
         method: 'delete'
       })
     },
-    update ({ uuid, name, description, url, logo, email }) {
-      const data = { uuid, name, description, url, logo, email }
+    update ({ uuid, name, description, url, logo, email, snapshotUrl }) {
+      const data = { uuid, name, description, url, logo, email, snapshotUrl }
       return $axios({
         url: `/blog/friend_link/update/${uuid}`,
         method: 'post',
@@ -82,6 +82,13 @@ export default {
       const data = { reason }
       return $axios({
         url: `/blog/friend_link/disapproved/${id}?${urlEncode(data)}`,
+        method: 'put'
+      })
+    },
+    enabled (id, enabled, notice) {
+      const data = { enabled, notice }
+      return $axios({
+        url: `/blog/friend_link/enabled/${id}?${urlEncode(data)}`,
         method: 'put'
       })
     },
