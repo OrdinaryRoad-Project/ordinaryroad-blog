@@ -48,6 +48,7 @@ import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -159,6 +160,7 @@ class BlogFriendLinkResource {
     fun pageInfo(@Valid @BeanParam request: BaseQueryRequest): Page<BlogFriendLinkVO> {
         val wrapper = ChainWrappers.queryChain(friendLinkService.dao)
             .eq("status", BlogFriendLinkStatusEnum.APPROVED)
+            .eq("enabled", true)
 
         val page = friendLinkService.page(request, wrapper)
 
@@ -272,6 +274,44 @@ class BlogFriendLinkResource {
 
         update.email?.let {
             pushService.friendLinkDisapproved(reason, update)
+        }
+    }
+
+    /**
+     * 开发者设置友链是否禁用
+     */
+    @SaCheckRole(SaTokenConstants.ROLE_DEVELOPER)
+    @PUT
+    @Path("enabled/{id}")
+    @Transactional
+    fun enabled(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String,
+        @Valid @NotNull(message = "是否启用不能为空") @RestQuery enabled: Boolean,
+        @RestQuery @DefaultValue("false") notice: Boolean
+    ) {
+        // 状态判断
+        val friendLink = validateService.validateFriendLink(id, true)!!
+        // 只允许APPROVED
+        if (BlogFriendLinkStatusEnum.APPROVED != friendLink.status) {
+            BlogFriendLinkNotValidException().throws()
+        }
+
+        if (enabled == friendLink.enabled) {
+            return
+        }
+
+        val update = friendLinkService.update(BlogFriendLink().apply {
+            uuid = id
+            this.enabled = enabled
+        })
+
+        if (notice) {
+            if (enabled) {
+                pushService.friendLinkValid(update)
+            } else {
+                pushService.friendLinkInvalid(update)
+            }
         }
     }
 

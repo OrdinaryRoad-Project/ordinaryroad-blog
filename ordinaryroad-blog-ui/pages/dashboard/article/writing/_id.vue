@@ -110,18 +110,16 @@
         <v-container fluid>
           <v-row no-gutters>
             <v-col cols="12">
-              <v-file-input
-                :loading="fileUploading"
-                truncate-length="100"
-                accept="image/*"
-                prepend-icon=""
-                :rules="[$or.rules.maxFileSize10MB]"
+              <or-file-field
+                ref="fileField"
+                v-model="article.coverImage"
                 outlined
-                show-size
-                append-outer-icon="mdi-eye"
+                :loading="fileUploading"
+                accept="image/*"
+                :rules="[$or.rules.maxFileSize10MB]"
+                :text-rules="[$or.rules.max1000Chars]"
                 :label="$t('article.coverImage')"
                 @change="onPictureSelected"
-                @click:append-outer="onPictureClicked"
               />
             </v-col>
             <v-row no-gutters>
@@ -321,7 +319,7 @@ export default {
   }),
   computed: {
     fileFormValid () {
-      return true
+      return this.$refs.fileField.validate()
     },
     articleValid () {
       const selectedItems = this.tagOptions.selectedItems
@@ -523,19 +521,15 @@ export default {
      * @param file File
      */
     onPictureSelected (file) {
-      if (file == null) {
-        this.article.coverImage = ''
-      } else if (this.fileFormValid) {
-        this.fileUploading = true
-        this.$apis.blog.upload(file)
-          .then((data) => {
-            this.article.coverImage = data
-            this.fileUploading = false
-          })
-          .catch(() => {
-            this.fileUploading = false
-          })
-      }
+      this.fileUploading = true
+      this.$apis.blog.upload(file)
+        .then((data) => {
+          this.article.coverImage = data
+          this.fileUploading = false
+        })
+        .catch(() => {
+          this.fileUploading = false
+        })
     },
     updateArticleTagNames () {
       this.article.tagNames = []
@@ -592,11 +586,6 @@ export default {
           })
       } else {
         this.$snackbar.error('请检查输入')
-      }
-    },
-    onPictureClicked () {
-      if (this.article.coverImage && this.article.coverImage !== '') {
-        window.open(this.$apis.blog.getFileUrl(this.article.coverImage), '_blank')
       }
     }
   }

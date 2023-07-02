@@ -23,50 +23,72 @@
   -->
 
 <template>
-  <v-card
-    hover
-    class="d-flex ma-1"
-    :href="item.TYPE==='APPLY'?'/friend_link/apply':item.url"
-    :target="item.TYPE==='APPLY'?'_self':'_blank'"
+  <!-- 悬浮预览网站 -->
+  <v-menu
+    open-delay="500"
+    open-on-hover
+    :disabled="!item.snapshotUrl||item.TYPE==='APPLY'"
   >
-    <v-img
-      v-if="item.TYPE==='APPLY'"
-      :gradient="$vuetify.theme.dark?'rgba(0,0,0,0.2),rgba(0,0,0,0.2)':''"
-      class="align-center"
-      aspect-ratio="1"
-    >
-      <div class="d-flex align-center justify-center text--primary">
-        <v-card-title class="pa-0 font-weight-bold">
-          {{ $t('friendLink.applyNow') }}
-        </v-card-title>
-        <v-icon large>
-          mdi-chevron-right
-        </v-icon>
-      </div>
-    </v-img>
-    <v-img
-      v-else
-      :gradient="$vuetify.theme.dark?'rgba(0,0,0,0.2),rgba(0,0,0,0.2)':''"
-      :src="item.logo"
-      class="align-end"
-      aspect-ratio="1"
-    >
-      <div style="background-color: rgba(0,0,0,0.25); ">
-        <v-card-text
-          class="ma-0 white--text pt-0 pb-0 ps-2 pe-2 title"
-          style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap"
+    <template #activator="{ attrs, on }">
+      <v-card
+        v-bind="attrs"
+        hover
+        class="d-flex ma-1"
+        :href="item.TYPE==='APPLY'?'/friend_link/apply':item.url"
+        :target="item.TYPE==='APPLY'?'_self':'_blank'"
+        v-on="on"
+      >
+        <v-img
+          v-if="item.TYPE==='APPLY'"
+          :gradient="$vuetify.theme.dark?'rgba(0,0,0,0.2),rgba(0,0,0,0.2)':''"
+          class="align-center"
+          aspect-ratio="1"
         >
-          {{ item.name }}
-        </v-card-text>
-        <v-card-text
-          class="ma-0 white--text pt-0 pb-1 ps-2 pe-2"
-          style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap"
+          <div class="d-flex align-center justify-center text--primary">
+            <v-card-title class="pa-0 font-weight-bold">
+              {{ $t('friendLink.applyNow') }}
+            </v-card-title>
+            <v-icon large>
+              mdi-chevron-right
+            </v-icon>
+          </div>
+        </v-img>
+        <v-img
+          v-else
+          :gradient="$vuetify.theme.dark?'rgba(0,0,0,0.2),rgba(0,0,0,0.2)':''"
+          :src="item.logo"
+          class="align-end"
+          aspect-ratio="1"
         >
-          {{ item.description }}
-        </v-card-text>
-      </div>
-    </v-img>
-  </v-card>
+          <div style="background-color: rgba(0,0,0,0.25); ">
+            <v-card-text
+              class="ma-0 white--text pt-0 pb-0 ps-2 pe-2 title"
+              style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap"
+            >
+              {{ item.name }}
+            </v-card-text>
+            <v-card-text
+              class="ma-0 white--text pt-0 pb-1 ps-2 pe-2"
+              style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap"
+            >
+              {{ item.description }}
+            </v-card-text>
+          </div>
+        </v-img>
+      </v-card>
+    </template>
+    <v-card
+      :href="item.url"
+      target="_blank"
+    >
+      <v-img
+        min-width="100%"
+        :width="$vuetify.breakpoint.width/4"
+        :src="$apis.blog.getFileUrl(item.snapshotUrl)"
+        aspect-ratio="1"
+      />
+    </v-card>
+  </v-menu>
 </template>
 
 <script>

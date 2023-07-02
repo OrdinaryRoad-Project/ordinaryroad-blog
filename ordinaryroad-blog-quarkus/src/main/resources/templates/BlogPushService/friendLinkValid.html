@@ -5,7 +5,7 @@
     <title>{title}</title>
 </head>
 <body>
-
+{!TODO!}
 <div style="background-color: #f2f5f8; display: flex; justify-content: center; align-items: center;">
     <div
             style="background-color: #fff;border-radius: 4px;box-sizing: border-box;box-shadow: 0 0 5px rgba(0, 0, 0, .2); padding: 30px; margin: 30px;">
@@ -22,11 +22,11 @@
         </div>
         <div style="text-align: center;">
             <h2 style="font-size: 30px; font-weight: 400; margin: 10px auto;"><span
-                        style="color: #2d8cf0; font-size: 30px; font-weight: 400;">OR博客</span> -- 友链申请结果通知
+                        style="color: #2d8cf0; font-size: 30px; font-weight: 400;">OR博客</span> -- 友链状态变化通知
             </h2>
             <p style="color: #444; font-size: 17px; margin: 20px auto;">您在<a
                         style="text-decoration: none; color: #2d8cf0"
-                        href="https://blog.ordinaryroad.tech">OR博客</a>提交的友链申请已处理完毕，具体结果如下
+                        href="https://blog.ordinaryroad.tech">OR博客</a>提交的友链
             </p>
             <p style="color: #444; font-size: 17px; margin: 20px auto;">网站名称：<span
                         style="color: #2d8cf0; font-size: 17px; margin: 20px auto;">{friendLink.name}</span></p>
@@ -35,8 +35,8 @@
                    style="color: #2d8cf0; font-size: 17px; text-decoration: underline;"
                    target="_blank" rel="noopener noreferrer">{friendLink.url}</a>
             </p>
-            <p style="color: #444; font-size: 17px; font-weight: bold; margin: 20px auto;">申请状态：<span
-                        style="color: #be1919; font-size: 20px;">未通过</span>
+            <p style="color: #444; font-size: 17px; font-weight: bold; margin: 20px auto;">状态：<span
+                        style="color: #19c319; font-size: 20px;">已启用</span>
             </p>
             <p style="color: #444; font-size: 17px; font-weight: bold; margin: 20px auto;">原因：<span
                         style="font-size: 17px;">{reason}</span>

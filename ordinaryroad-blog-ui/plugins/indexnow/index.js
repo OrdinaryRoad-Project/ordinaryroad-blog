@@ -21,37 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.request
 
-import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
+import Vue from 'vue'
 
-class BlogFriendLinkSaveRequest : BaseRequest() {
+export default function ({
+  $axios,
+  $config,
+  app
+}, inject) {
+  const host = $config.DOMAIN.replace('https://', '')
 
-    @NotBlank(message = "网站名称不能为空")
-    @Size(max = 50, message = "网站名称长度不能超过50")
-    var name: String = ""
+  // 初始化时过滤掉未启用的
+  const searchEnginesEnabled = $config.INDEX_NOW.SEARCH_ENGINES.filter((value) => {
+    return value.enabled
+  })
 
-    @Size(max = 100, message = "网站描述长度不能超过100")
-    var description: String? = null
-
-    @NotBlank(message = "网站地址不能为空")
-    @Size(max = 500, message = "网站地址长度不能超过500")
-    var url: String = ""
-
-    @NotBlank(message = "网站logo地址不能为空")
-    @Size(max = 500, message = "网站logo地址长度不能超过500")
-    var logo: String = ""
-
-    @Size(max = 500, message = "站长email长度不能超过500")
-    var email: String? = null
-
-    @Size(max = 500, message = "网站快照地址长度不能超过500")
-    var snapshotUrl: String = ""
-
-    companion object {
-        private const val serialVersionUID: Long = 4789157779083113050L
+  Vue.prototype.$indexnow = {
+    updateUrls: (urlList) => {
+      searchEnginesEnabled.forEach((searchEngine) => {
+        $axios({
+          method: 'post',
+          url: `${searchEngine.url}/indexnow`,
+          data: {
+            host,
+            key: $config.INDEX_NOW.KEY,
+            // 支持相对路径，自动添加网站DOMAIN
+            urlList: urlList.map((url) => {
+              if (url.startsWith('/')) {
+                return $config.DOMAIN + url
+              } else {
+                return url
+              }
+            })
+          }
+        })
+      })
+    },
+    updateArticle (article) {
+      this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
     }
-
+  }
+  inject('indexnow', Vue.prototype.$indexnow)
 }
