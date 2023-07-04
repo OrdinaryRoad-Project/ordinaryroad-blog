@@ -86,7 +86,13 @@
         :width="$vuetify.breakpoint.width/4"
         :src="$apis.blog.getFileUrl(item.snapshotUrl)"
         aspect-ratio="1"
-      />
+      >
+        <template #placeholder>
+          <div class="d-flex or-friend-link-snapshot-img">
+            <v-skeleton-loader type="image" class="flex-grow-1" />
+          </div>
+        </template>
+      </v-img>
     </v-card>
   </v-menu>
 </template>
@@ -103,6 +109,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.or-friend-link-snapshot-img{
+  height: 100%;
+}
 
+.or-friend-link-snapshot-img .v-skeleton-loader__image{
+  height: 100% !important;
+}
 </style>

@@ -212,8 +212,9 @@
     >
       <!-- 封面占位符 -->
       <template #placeholder>
-        <v-skeleton-loader type="image" tile />
-        <v-skeleton-loader type="image" tile />
+        <div class="d-flex or-article-cover-img">
+          <v-skeleton-loader type="image" class="flex-grow-1" tile />
+        </div>
       </template>
 
       <!-- 文章标题 -->
@@ -1201,5 +1202,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.or-article-cover-img{
+  height: 100%;
+}
+
+.or-article-cover-img .v-skeleton-loader__image{
+  height: 100% !important;
+}
 </style>
