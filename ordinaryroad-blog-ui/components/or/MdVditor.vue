@@ -204,8 +204,8 @@ export default {
             '-1': '👎',
             heart: '❤',
             cold_sweat: '😰',
-            sad: '💔',
-            'or-logo': 'https://cdn.jsdelivr.net/npm/vditor@1.3.1/dist/images/emoji/j.png'
+            sad: '💔'
+            // 'or-logo': 'https://cdn.jsdelivr.net/npm/vditor@1.3.1/dist/images/emoji/j.png'
           },
           extend: [
             {
