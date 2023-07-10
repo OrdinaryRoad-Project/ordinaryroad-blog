@@ -184,7 +184,8 @@ export default {
         codeTheme = 'dracula'
       }
       Vditor.setCodeTheme(codeTheme)
-      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.17/dist/css/content-theme')
+      const vditorVersion = require('@/package.json').dependencies.vditor.replace('^', '@')
+      Vditor.setContentTheme(theme, `https://unpkg.com/vditor${vditorVersion}/dist/css/content-theme`)
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
