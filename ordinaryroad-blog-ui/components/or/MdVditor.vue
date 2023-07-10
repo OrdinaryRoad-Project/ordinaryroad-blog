@@ -197,7 +197,7 @@ export default {
         },
         // https://b3log.org/vditor/demo/advanced-hint.html
         hint: {
-          emojiTail: '输入英文冒号 <code>:</code> 使用<a href="https://github.com/88250/lute/blob/master/parse/emoji_map.go?utm_source=ld246.com" target="_blank">更多表情</a>',
+          emojiTail: '输入英文冒号 <code>:</code> 使用<a href="https://github.com/88250/lute/blob/master/parse/emoji_map.go" target="_blank">更多表情</a>（<a href="https://www.emojiall.com/zh-cn" target="_blank">emojiall</a>）',
           // https://github.com/88250/lute/blob/master/parse/emoji_map.go?utm_source=ld246.com
           emoji: {
             '+1': '👍',
