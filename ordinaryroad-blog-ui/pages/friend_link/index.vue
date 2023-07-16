@@ -27,23 +27,40 @@
     icon="mdi-web"
     :title="$t('friendLink.title')"
   >
-    <or-blog-friend-link-list ref="friendLinkList" />
+    <or-blog-friend-link-list
+      ref="friendLinkList"
+      :preset-items="friendLinkPageItems"
+    />
   </base-material-card>
 </template>
 
 <script>
 
 export default {
-  data () {
-    return {}
+  asyncData ({
+    route,
+    $apis,
+    store,
+    error,
+    redirect
+  }) {
+    // 先获取前50个友链
+    return $apis.blog.friend_link.pageInfo(1, 50)
+      .then((data) => {
+        return {
+          friendLinkPageItems: data
+        }
+      })
   },
+  data: () => ({
+    friendLinkPageItems: {}
+  }),
   head () {
     return {
       title: this.$t('friendLink.title')
     }
   },
   mounted () {
-    this.$refs.friendLinkList.getFriendLinks(false)
   },
   created () {
   },
