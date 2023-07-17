@@ -208,7 +208,7 @@
     <v-img
       :src="$apis.blog.getFileUrl(blogArticle.coverImage,'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')"
       style="height: 400px; margin-top: -70px"
-      gradient="rgba(0,0,0,.15),rgba(0,0,0,.15)"
+      gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
     >
       <!-- 封面占位符 -->
       <template #placeholder>

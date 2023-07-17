@@ -49,15 +49,44 @@
         </div>
 
         <!-- 封面上层 -->
-        <div class="or-title px-4 pb-1">
-          <v-card-subtitle class="d-flex flex-wrap pt-0 pb-1 align-center">
-            <!-- 创建时间 -->
-            <span class="d-inline-flex me-2">
-              <v-icon dark small class="me-1">
-                mdi-calendar
-              </v-icon>
-              {{ item.createdTime }}
-            </span>
+        <div
+          class="or-title"
+          :class="{
+            'pb-1':!$vuetify.breakpoint.smAndDown
+          }"
+        >
+          <v-card-subtitle
+            class="d-flex flex-wrap pt-0 align-center"
+            :class="{
+              'pb-1':!$vuetify.breakpoint.smAndDown,
+              'px-2':$vuetify.breakpoint.smAndDown,
+              'pb-0':$vuetify.breakpoint.smAndDown,
+              'text-caption':$vuetify.breakpoint.smAndDown,
+            }"
+          >
+            <div class="d-inline-flex">
+              <!-- 创建时间 -->
+              <span class="d-inline-flex align-center me-3">
+                <v-icon dark small left>
+                  mdi-history
+                </v-icon>
+                {{ $dayjs(item.createdTime).fromNow() }}
+              </span>
+              <!-- 浏览量uv -->
+              <span v-if="false" class="d-inline-flex align-center">
+                <v-icon left small>
+                  mdi-account-eye
+                </v-icon>
+                <span>{{ item.uv }}</span>
+              </span>
+              <!-- 浏览量pv -->
+              <span class="d-inline-flex align-center">
+                <v-icon left small>
+                  mdi-eye
+                </v-icon>
+                <span>{{ item.pv }}</span>
+              </span>
+            </div>
 
             <!-- 分类 -->
             <span v-if="item.type" class="d-inline-flex me-2">
@@ -87,7 +116,13 @@
           </v-card-subtitle>
 
           <!-- 标题 -->
-          <v-card-title class="py-0 text-justify tow-lines-text font-weight-bold">
+          <v-card-title
+            class="py-0 text-justify tow-lines-text font-weight-bold"
+            :class="{
+              'text-subtitle-1':$vuetify.breakpoint.smAndDown,
+              'px-2':$vuetify.breakpoint.smAndDown
+            }"
+          >
             {{ item.title }}
           </v-card-title>
 
@@ -107,15 +142,31 @@
             </div>
           </v-expand-transition>
 
-          <v-divider class="mt-2" />
+          <v-divider
+            :class="`mt-${$vuetify.breakpoint.smAndDown?0:2}`"
+          />
 
           <!-- 作者信息和操作按钮栏 -->
-          <v-list-item>
-            <!-- 头像 -->
-            <or-blog-user-avatar
-              avatar-class="v-list-item__avatar"
-              :user="item.user"
-            />
+          <v-list-item
+            :dense="$vuetify.breakpoint.smAndDown"
+            :class="{
+              'px-2':$vuetify.breakpoint.smAndDown
+            }"
+          >
+            <v-list-item-avatar
+              :size="$vuetify.breakpoint.smAndDown?34:48"
+              :class="{
+                'my-1':$vuetify.breakpoint.smAndDown,
+                'me-2':$vuetify.breakpoint.smAndDown
+              }"
+            >
+              <!-- 头像 -->
+              <or-blog-user-avatar
+                :user="item.user"
+                :size="$vuetify.breakpoint.smAndDown?34:48"
+              />
+            </v-list-item-avatar>
+
             <!-- 用户名 -->
             <v-list-item-content>
               <v-list-item-title>
@@ -139,20 +190,6 @@
                 align="center"
                 justify="end"
               >
-                <!-- 浏览量uv -->
-                <div v-if="false" class="d-inline-flex align-center">
-                  <v-icon left small>
-                    mdi-account-eye
-                  </v-icon>
-                  <span>{{ item.uv }}</span>
-                </div>
-                <!-- 浏览量pv -->
-                <v-col class="d-inline-flex align-center me-3">
-                  <v-icon left small>
-                    mdi-eye
-                  </v-icon>
-                  <span>{{ item.pv }}</span>
-                </v-col>
                 <v-col class="d-inline-flex align-center me-3">
                   <v-icon left small>
                     mdi-thumb-up
@@ -286,6 +323,6 @@ export default {
   right: 0;
   color: white;
   padding-top: 40px;
-  background: linear-gradient(to top, rgba(0, 0, 0, .4), rgba(0, 0, 0, 0));
+  background: linear-gradient(to top, rgba(0, 0, 0, .4), rgba(0, 0, 0, .35), rgba(0, 0, 0, .25), rgba(0, 0, 0, 0.0));
 }
 </style>
