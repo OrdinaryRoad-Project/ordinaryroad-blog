@@ -70,7 +70,7 @@ export default {
   data: () => ({
     mediumZoomOptions: {
       options: {
-        background: '#fff'
+        background: 'rgba(255,255,255,0.65)'
       },
       previewerZoom: null,
       editorZoom: null
@@ -94,7 +94,7 @@ export default {
       }
     },
     dark (val) {
-      this.mediumZoomOptions.options.background = val ? '#000' : '#fff'
+      this.mediumZoomOptions.options.background = val ? 'rgba(0,0,0,0.65)' : 'rgba(255,255,255,0.65)'
       try {
         if (this.readOnly) {
           this.updatePreviewerTheme(val)
