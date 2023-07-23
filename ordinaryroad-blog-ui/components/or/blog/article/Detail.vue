@@ -421,6 +421,7 @@
           <or-md-vditor
             v-show="articleVditorFinished"
             id="content"
+            :headings-offset-top="appBarHeight"
             :preview-toc.sync="toc"
             :current-toc-index.sync="currentTocIndex"
             :dark="$vuetify.theme.dark"
@@ -706,6 +707,7 @@ export default {
     }
   },
   data: () => ({
+    appBarHidden: false,
     articleVditorFinished: false,
     hoverLikeButton: false,
     drawer: false,
@@ -772,14 +774,6 @@ export default {
         hour: this.$t('time.hours'),
         day: this.$t('time.days')
       })
-    },
-    /**
-     * AppBar是否已隐藏
-     *
-     * @returns {Boolean}
-     */
-    appBarHidden () {
-      return this.$refs.appBar.$el.style.transform.includes('-')
     },
     appBarHeight () {
       return this.appBarHidden ? 0 : (this.$vuetify.breakpoint.smAndDown ? 56 : 64)
@@ -1141,6 +1135,9 @@ export default {
       }
       // 计算网页百分比
       this.realPercentOfRead = (scrollTop) / (totalHeight - window.innerHeight - (this.appBarHeight))
+
+      // App Bar是否隐藏
+      this.appBarHidden = this.$refs.appBar?.$el.style.transform.includes('-') ?? false
 
       // console.log("this.percentOfRead", this.percentOfRead, "this.realPercentOfRead", this.realPercentOfRead)
     },
