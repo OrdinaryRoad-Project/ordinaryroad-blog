@@ -35,6 +35,7 @@ import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException.Companion.throws
 import tech.ordinaryroad.blog.quarkus.exception.BlogArticleNotFoundException
+import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.state.article.base.ArticleState
 import tech.ordinaryroad.commons.mybatis.quarkus.service.BaseService
 import java.time.LocalDateTime
@@ -143,11 +144,20 @@ class BlogArticleService : BaseService<BlogArticleDAO, BlogArticle>() {
     }
 
     /**
-     *
+     * 根据文章ID获取上一篇 下一篇文章
      */
-    fun getPreAndNextArticle(id: String): JsonObject {
-        // TODO("Not yet implemented")
-        return JsonObject()
+    fun getPreAndNextArticle(id: String, transfer: (BlogArticle) -> (BlogArticlePreviewVO)): JsonObject {
+        val preAndNextArticle = super.dao.getPreAndNextArticle(id).map(transfer)
+        val result = JsonObject()
+        if (preAndNextArticle.size == 1) {
+            val blogArticle = preAndNextArticle[0]
+            result.put(if (blogArticle.uuid > id) "next" else "pre", blogArticle)
+        }
+        if (preAndNextArticle.size == 2) {
+            result.put("pre", preAndNextArticle[0])
+            result.put("next", preAndNextArticle[1])
+        }
+        return result
     }
 
     /**

@@ -62,6 +62,10 @@
       "readingTimeHint": {
         "hint": "此篇文章大约需要阅读 ",
         "prefix": "友情提示："
+      },
+      "preAndNextArticleBar": {
+        "pre": "上一篇",
+        "next": "下一篇"
       }
     },
     "firstBrowsedTime": "首次浏览时间：{0}",

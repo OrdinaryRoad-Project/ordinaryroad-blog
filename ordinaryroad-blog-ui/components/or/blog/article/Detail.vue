@@ -499,6 +499,10 @@
           </div>
         </div>
 
+        <!-- 文章切换，上/下一篇 -->
+        <v-divider />
+        <or-blog-article-pre-and-next-bar :pre-and-next-article="preAndNextArticle" />
+
         <!-- 评论 -->
         <v-divider />
         <v-card id="comments">
@@ -624,8 +628,6 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-
-        <!-- TODO 上/下一篇 -->
       </v-card>
     </v-card>
 
@@ -691,6 +693,10 @@ export default {
     article: {
       type: Object,
       required: true
+    },
+    preAndNextArticle: {
+      type: Object,
+      default: null
     },
     presetArticleComments: {
       type: Object,

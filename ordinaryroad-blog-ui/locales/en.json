@@ -62,6 +62,10 @@
       "readingTimeHint": {
         "hint": "This article needs to be read about ",
         "prefix": "Friendly Reminder: "
+      },
+      "preAndNextArticleBar": {
+        "pre": "Pre",
+        "next": "Next"
       }
     },
     "firstBrowsedTime": "First Browse Time: {0}",
