@@ -696,7 +696,7 @@ export default {
     },
     preAndNextArticle: {
       type: Object,
-      default: null
+      default: () => ({})
     },
     presetArticleComments: {
       type: Object,
