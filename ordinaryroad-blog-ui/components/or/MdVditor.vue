@@ -29,6 +29,7 @@
 <script>
 import Vditor from 'vditor'
 import 'vditor/src/assets/less/index.less'
+import mediumZoom from 'medium-zoom'
 
 export default {
   name: 'OrMdVditor',
@@ -67,6 +68,13 @@ export default {
     }
   },
   data: () => ({
+    mediumZoomOptions: {
+      options: {
+        background: '#fff'
+      },
+      previewerZoom: null,
+      editorZoom: null
+    },
     scrollingOptions: {
       scrollEndTimer: null,
       currentScrollTop: 0
@@ -86,6 +94,7 @@ export default {
       }
     },
     dark (val) {
+      this.mediumZoomOptions.options.background = val ? '#000' : '#fff'
       try {
         if (this.readOnly) {
           this.updatePreviewerTheme(val)
@@ -99,6 +108,12 @@ export default {
       try {
         this.setPlaceholder(val)
       } catch (e) {
+      }
+    },
+    'mediumZoomOptions.options.background': {
+      handler (newValue, oldValue) {
+        this.mediumZoomOptions.previewerZoom?.update({ background: newValue })
+        this.mediumZoomOptions.editorZoom?.update({ background: newValue })
       }
     }
   },
@@ -375,11 +390,7 @@ export default {
           },
           after: () => {
             this.updatePreviewerTheme(this.dark)
-            previewElement.addEventListener('click', (event) => {
-              if (event.target.tagName === 'IMG') {
-                Vditor.previewImage(event.target, this.$i18n.locale === 'en' ? 'en_US' : 'zh_CN', this.$vuetify.theme.dark ? 'dark' : 'light')
-              }
-            })
+            this.attachImgs(previewElement, 'previewer')
 
             if (this.commentMode) {
               // 评论不需要目录
@@ -484,6 +495,14 @@ export default {
           this.$emit('update:currentTocIndex', currentTocIndex)
         }
       }, 100)
+    },
+    attachImgs (document, type) {
+      const imgElements = []
+      const elementsByTagName = document.getElementsByTagName('img')
+      for (let i = 0; i < elementsByTagName.length; i++) {
+        imgElements.push(elementsByTagName[i])
+      }
+      this.mediumZoomOptions[`${type}Zoom`] = mediumZoom(imgElements, this.mediumZoomOptions.options)
     }
   }
 }
@@ -497,5 +516,10 @@ export default {
 
 .vditor-toolbar--hide {
   display: none;
+}
+
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+  z-index: 999;
 }
 </style>
