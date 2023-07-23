@@ -422,7 +422,7 @@ export default {
                 })
               }
               this.$emit('update:previewToc', toc)
-              console.log('toc', toc)
+              // console.log('toc', toc)
 
               this.$emit('update:currentTocIndex', 0)
               // console.log('MdVditor 需要激活的目录', 0)
@@ -453,8 +453,9 @@ export default {
             const offset = this.headingsOffsetTop
             const element = headingElements[i]
             const currentTop = element.getBoundingClientRect().top
+            // console.log(offset, currentTop)
             if (currentTop >= offset) {
-              if (currentTop === offset) {
+              if (currentTop - offset <= 1) {
                 currentTocIndex = i
                 // console.log('MdVditor 滑动后需要激活的目录', i)
               } else if (i > 1) {
