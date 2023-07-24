@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { setSelectedThemeOption } from 'static/js/utils/cookie/vuex/app'
+import { setSelectedThemeOption, setSystemPrefersColorScheme } from 'static/js/utils/cookie/vuex/app'
 import colors from 'vuetify/es5/util/colors'
 
 export default {
@@ -175,10 +175,8 @@ export default {
     })
     state.accessibleDashboardMenuItems = accessibleDashboardMenuItems
   },
-  SET_SYSTEM_PREFERS_COLOR_SCHEMES: (state, value) => {
-    state.systemPrefersColorSchemes = value
-  },
   UPDATE_SYSTEM_PREFERS_COLOR_SCHEME: (state, value) => {
     state.systemPrefersColorScheme = value
+    setSystemPrefersColorScheme(value)
   }
 }

@@ -25,7 +25,11 @@
 import Cookies from 'js-cookie'
 
 export const SELECTED_THEME_OPTION_KEY = 'selectedThemeOption'
+export const SYSTEM_PREFERS_COLOR_SCHEME_KEY = 'systemPrefersColorScheme'
 
 export function setSelectedThemeOption (value) {
   Cookies.set(SELECTED_THEME_OPTION_KEY, value, { expires: 365 })
+}
+export function setSystemPrefersColorScheme (value) {
+  Cookies.set(SYSTEM_PREFERS_COLOR_SCHEME_KEY, value, { expires: 365 })
 }
