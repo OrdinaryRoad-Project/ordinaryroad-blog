@@ -249,6 +249,11 @@ export default {
         cache: {
           enable: false
         },
+        link: {
+          click: (bom) => {
+            window.open(bom.href, '_blank')
+          }
+        },
         preview: {
           hljs: {
             style: this.dark ? 'dracula' : 'github',
