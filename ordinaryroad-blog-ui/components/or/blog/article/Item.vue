@@ -43,11 +43,6 @@
           :src="articleCoverImageUrl(item)"
         >
 
-        <!-- 是否原创 -->
-        <div v-if="item.original" class="primary or-original-label">
-          <span>{{ $t('article.originalOptions.original') }}</span>
-        </div>
-
         <!-- 封面上层 -->
         <div
           class="or-title"
@@ -214,6 +209,11 @@
               </v-row>
             </v-list-item-action>
           </v-list-item>
+        </div>
+
+        <!-- 是否原创 -->
+        <div v-if="item.original" class="primary or-original-label">
+          <span>{{ $t('article.originalOptions.original') }}</span>
         </div>
       </div>
     </v-card>
