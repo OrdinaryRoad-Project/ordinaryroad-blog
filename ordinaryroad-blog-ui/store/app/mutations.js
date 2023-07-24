@@ -36,9 +36,41 @@ export default {
     state.selectedThemeOption = value
     setSelectedThemeOption(value)
   },
-  UPDATE_THEME (state, { value, $vuetify }) {
+  UPDATE_THEME: (state, { value, $vuetify }) => {
     switch (value) {
       case 0:
+        switch (state.systemPrefersColorScheme) {
+          case 'dark':
+            $vuetify.theme.themes.dark = {
+              primary: colors.blue.darken2,
+              accent: colors.grey.darken3,
+              secondary: colors.amber.darken3,
+              info: colors.teal.lighten1,
+              warning: colors.amber.base,
+              error: colors.deepOrange.accent4,
+              success: colors.green.accent3
+            }
+            $vuetify.theme.dark = true
+            break
+          case 'light':
+          case 'no-preference':
+            $vuetify.theme.themes.light = {
+              primary: '#1976D2',
+              secondary: '#424242',
+              accent: '#82B1FF',
+              error: '#FF5252',
+              info: '#2196F3',
+              success: '#4CAF50',
+              warning: '#FFC107'
+            }
+            $vuetify.theme.dark = false
+            break
+          case 'no-support':
+            // ignore
+            break
+        }
+        break
+      case 1:
         $vuetify.theme.themes.light = {
           primary: '#1976D2',
           secondary: '#424242',
@@ -50,7 +82,7 @@ export default {
         }
         $vuetify.theme.dark = false
         break
-      case 1:
+      case 2:
         $vuetify.theme.themes.dark = {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
@@ -62,7 +94,7 @@ export default {
         }
         $vuetify.theme.dark = true
         break
-      case 2:
+      case 3:
         $vuetify.theme.themes.light = {
           primary: colors.pink.base,
           secondary: colors.lime.base,
@@ -74,7 +106,7 @@ export default {
         }
         $vuetify.theme.dark = false
         break
-      case 3:
+      case 4:
         $vuetify.theme.themes.dark = {
           primary: colors.pink.base,
           secondary: colors.lime.base,
@@ -142,5 +174,11 @@ export default {
       }
     })
     state.accessibleDashboardMenuItems = accessibleDashboardMenuItems
+  },
+  SET_SYSTEM_PREFERS_COLOR_SCHEMES: (state, value) => {
+    state.systemPrefersColorSchemes = value
+  },
+  UPDATE_SYSTEM_PREFERS_COLOR_SCHEME: (state, value) => {
+    state.systemPrefersColorScheme = value
   }
 }

@@ -1,28 +1,4 @@
 {
-  "friendLink": {
-    "apply": "Apply For Friend Link",
-    "applyFormTitle": "Friend Link Application Form",
-    "thisSiteInfo": "Add Formatting To This Site's Friend Link",
-    "thisSiteInfoCanCopyHint": "Content Can Be Clicked To Copy",
-    "applySending": "Application is being sent, please be patient...",
-    "applySuccessHint": "Your application has been received and I will process it as soon as possible!",
-    "applyFailedHintPrefix": "Application sent failed, please ",
-    "applyFailedHintSuffix": "modify and try again.",
-    "applyNow": "Apply Now",
-    "title": "Friend Link",
-    "name": "Site Name",
-    "description": "Site Description",
-    "url": "Site Url",
-    "logo": "Site Logo",
-    "email": "Webmaster Email",
-    "status": "Status",
-    "snapshotUrl": "Snapshot Url",
-    "enabled": "Enabled",
-    "actions": {
-      "approved": "Approved",
-      "disapproved": "Disapproved"
-    }
-  },
   "all": "All",
   "appName": "OR BLOG",
   "article": {
@@ -59,13 +35,13 @@
         "statementSuffix": "license agreement, please attach a link to this article and this statement for reprinting.",
         "title": "Copyright Statement: "
       },
+      "preAndNextArticleBar": {
+        "next": "Next",
+        "pre": "Pre"
+      },
       "readingTimeHint": {
         "hint": "This article needs to be read about ",
         "prefix": "Friendly Reminder: "
-      },
-      "preAndNextArticleBar": {
-        "pre": "Pre",
-        "next": "Next"
       }
     },
     "firstBrowsedTime": "First Browse Time: {0}",
@@ -114,9 +90,6 @@
   "copy": "Copy",
   "dashboardMenuTitles": {
     "dashboard": {
-      "friendLink": {
-        "title": "Friend Link"
-      },
       "article": {
         "browsed": "Article Browsing History",
         "liked": "Liked Article",
@@ -135,7 +108,11 @@
       "comment": {
         "title": "Comments"
       },
+      "friendLink": {
+        "title": "Friend Link"
+      },
       "system": {
+        "friendLink": "Friend Link",
         "log": "Operation Log",
         "role": {
           "title": "Roles",
@@ -145,8 +122,7 @@
         "user": {
           "roles": "User Roles",
           "title": "Users"
-        },
-        "friendLink": "Friend Link"
+        }
       },
       "tag": {
         "title": "Tags"
@@ -160,6 +136,30 @@
     }
   },
   "feedback": "Feedback",
+  "friendLink": {
+    "actions": {
+      "approved": "Approved",
+      "disapproved": "Disapproved"
+    },
+    "apply": "Apply For Friend Link",
+    "applyFailedHintPrefix": "Application sent failed, please ",
+    "applyFailedHintSuffix": "modify and try again.",
+    "applyFormTitle": "Friend Link Application Form",
+    "applyNow": "Apply Now",
+    "applySending": "Application is being sent, please be patient...",
+    "applySuccessHint": "Your application has been received and I will process it as soon as possible!",
+    "description": "Site Description",
+    "email": "Webmaster Email",
+    "enabled": "Enabled",
+    "logo": "Site Logo",
+    "name": "Site Name",
+    "snapshotUrl": "Snapshot Url",
+    "status": "Status",
+    "thisSiteInfo": "Add Formatting To This Site's Friend Link",
+    "thisSiteInfoCanCopyHint": "Content Can Be Clicked To Copy",
+    "title": "Friend Link",
+    "url": "Site Url"
+  },
   "log": {
     "consumedTime": "ConsumedTime",
     "cookies": "Cookies",
@@ -221,17 +221,18 @@
   "themeTitles": {
     "dark": "Dark",
     "hunk": "Hunk",
+    "hunkDark": "Dark Hunk",
     "light": "Light",
-    "system": "Dark Hunk"
+    "system": "System"
   },
   "titles": {
     "form": {
+      "friendLink": "Friend Link",
       "log": "Operation Log",
       "role": "Role",
       "tag": "Tag",
       "type": "Type",
-      "userRoles": "User Roles",
-      "friendLink": "Friend Link"
+      "userRoles": "User Roles"
     }
   },
   "type": {
@@ -249,12 +250,12 @@
   "userMenuTitles": {
     "article": "Articles",
     "dashboard": "Dashboard",
+    "friendLink": "Friend Link",
     "log": "Operation Logs",
     "profile": "User Profile",
     "space": "User Space",
     "tag": "Tags",
-    "type": "Types",
-    "friendLink": "Friend Link"
+    "type": "Types"
   },
   "userProfile": {
     "allAccounts": "All Accounts"

@@ -1150,7 +1150,7 @@ export default {
         const selectedThemeOption = this.$route.query.t
         if (selectedThemeOption !== undefined) {
           const tN = parseInt(selectedThemeOption)
-          if (tN >= 0 && tN < 4) {
+          if (tN >= 0 && tN < 5) {
             this.$store.dispatch('app/setSelectedThemeOption', {
               value: tN,
               $vuetify: this.$vuetify

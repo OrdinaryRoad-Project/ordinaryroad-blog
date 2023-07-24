@@ -1,28 +1,4 @@
 {
-  "friendLink": {
-    "apply": "申请友链",
-    "applyFormTitle": "友链申请表",
-    "thisSiteInfo": "本站友链添加格式",
-    "thisSiteInfoCanCopyHint": "内容可点击复制",
-    "applySending": "申请发送中，请耐心等待...",
-    "applySuccessHint": "已收到您的申请，我将尽快处理！",
-    "applyFailedHintPrefix": "申请发送失败，请",
-    "applyFailedHintSuffix": "修改并重试",
-    "applyNow": "立即申请",
-    "title": "友链",
-    "name": "网站名称",
-    "description": "网站描述",
-    "url": "网站地址",
-    "logo": "网站logo地址",
-    "email": "站长email",
-    "status": "状态",
-    "snapshotUrl": "快照地址",
-    "enabled": "启用",
-    "actions": {
-      "approved": "通过",
-      "disapproved": "拒绝"
-    }
-  },
   "all": "全部",
   "appName": "OR博客",
   "article": {
@@ -59,13 +35,13 @@
         "statementSuffix": "许可协议，转载请附上本文链接及本声明。",
         "title": "版权声明："
       },
+      "preAndNextArticleBar": {
+        "next": "下一篇",
+        "pre": "上一篇"
+      },
       "readingTimeHint": {
         "hint": "此篇文章大约需要阅读 ",
         "prefix": "友情提示："
-      },
-      "preAndNextArticleBar": {
-        "pre": "上一篇",
-        "next": "下一篇"
       }
     },
     "firstBrowsedTime": "首次浏览时间：{0}",
@@ -114,9 +90,6 @@
   "copy": "复制",
   "dashboardMenuTitles": {
     "dashboard": {
-      "friendLink": {
-        "title": "友链"
-      },
       "article": {
         "browsed": "文章浏览记录",
         "liked": "赞过的文章",
@@ -135,7 +108,11 @@
       "comment": {
         "title": "评论"
       },
+      "friendLink": {
+        "title": "友链"
+      },
       "system": {
+        "friendLink": "友链",
         "log": "操作日志",
         "role": {
           "title": "角色",
@@ -145,8 +122,7 @@
         "user": {
           "roles": "用户角色",
           "title": "用户"
-        },
-        "friendLink": "友链"
+        }
       },
       "tag": {
         "title": "标签"
@@ -160,6 +136,30 @@
     }
   },
   "feedback": "反馈",
+  "friendLink": {
+    "actions": {
+      "approved": "通过",
+      "disapproved": "拒绝"
+    },
+    "apply": "申请友链",
+    "applyFailedHintPrefix": "申请发送失败，请",
+    "applyFailedHintSuffix": "修改并重试",
+    "applyFormTitle": "友链申请表",
+    "applyNow": "立即申请",
+    "applySending": "申请发送中，请耐心等待...",
+    "applySuccessHint": "已收到您的申请，我将尽快处理！",
+    "description": "网站描述",
+    "email": "站长email",
+    "enabled": "启用",
+    "logo": "网站logo地址",
+    "name": "网站名称",
+    "snapshotUrl": "快照地址",
+    "status": "状态",
+    "thisSiteInfo": "本站友链添加格式",
+    "thisSiteInfoCanCopyHint": "内容可点击复制",
+    "title": "友链",
+    "url": "网站地址"
+  },
   "log": {
     "consumedTime": "耗时",
     "cookies": "请求Cookie",
@@ -221,17 +221,18 @@
   "themeTitles": {
     "dark": "深色主题",
     "hunk": "猛男配色",
+    "hunkDark": "深色猛男",
     "light": "浅色主题",
-    "system": "深色猛男"
+    "system": "跟随系统"
   },
   "titles": {
     "form": {
+      "friendLink": "友链",
       "log": "日志",
       "role": "角色",
       "tag": "标签",
       "type": "分类",
-      "userRoles": "用户角色",
-      "friendLink": "友链"
+      "userRoles": "用户角色"
     }
   },
   "type": {
@@ -249,12 +250,12 @@
   "userMenuTitles": {
     "article": "文章",
     "dashboard": "控制台",
+    "friendLink": "友链",
     "log": "操作日志",
     "profile": "个人中心",
     "space": "个人空间",
     "tag": "标签",
-    "type": "分类",
-    "friendLink": "友链"
+    "type": "分类"
   },
   "userProfile": {
     "allAccounts": "所有账号"

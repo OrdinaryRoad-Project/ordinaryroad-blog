@@ -17,6 +17,7 @@
     "lintfix": "npm run lint:js -- --fix"
   },
   "dependencies": {
+    "@assortment/darkmodejs": "^1.2.1",
     "@mdi/font": "^7.2.96",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dayjs": "^1.4.1",

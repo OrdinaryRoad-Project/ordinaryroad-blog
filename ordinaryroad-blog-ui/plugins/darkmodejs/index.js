@@ -21,40 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import darkmodejs from '@assortment/darkmodejs'
 
-export default {
-  setSearchInputHotKeyEnabled ({ commit }, image) {
-    commit('SET_SEARCH_INPUT_HOT_KEY_ENABLED', image)
-  },
-  setImage ({ commit }, image) {
-    commit('SET_IMAGE', image)
-  },
-  setTitleKey ({ commit }, value) {
-    commit('SET_TITLE_KEY', value)
-  },
-  setSelectedThemeOption ({ commit }, { value, $vuetify }) {
-    commit('SET_SELECTED_THEME_OPTION', { value, $vuetify })
-    commit('UPDATE_THEME', { value, $vuetify })
-  },
-  updateTheme ({ commit }, { value, $vuetify }) {
-    commit('UPDATE_THEME', { value, $vuetify })
-  },
-  setMenuItems ({ commit }, menuItems) {
-    commit('SET_MENU_ITEMS', menuItems)
-  },
-  setDashboardDrawerModel ({ commit }, value) {
-    commit('SET_DASHBOARD_DRAWER_MODEL', value)
-  },
-  toggleDashboardDrawerModel ({ commit }) {
-    commit('TOGGLE_DASHBOARD_DRAWER_MODEL')
-  },
-  setRightDrawerModel ({ commit }, value) {
-    commit('SET_RIGHT_DRAWER_MODEL', value)
-  },
-  toggleRightDrawerModel ({ commit }) {
-    commit('TOGGLE_RIGHT_DRAWER_MODEL')
-  },
-  updateSystemPrefersColorScheme ({ commit }, value) {
-    commit('UPDATE_SYSTEM_PREFERS_COLOR_SCHEME', value)
-  }
+export default ({
+  app,
+  store,
+  $vuetify
+}, inject) => {
+  darkmodejs({
+    onChange: (activeTheme, themes) => {
+      store.dispatch('app/updateSystemPrefersColorScheme', activeTheme)
+      if (store.getters['app/getSelectedThemeOption'] !== 0) {
+        return
+      }
+
+      switch (activeTheme) {
+        case themes.DARK:
+          store.dispatch('app/updateTheme', {
+            value: 2,
+            $vuetify
+          })
+          break
+        case themes.LIGHT:
+          store.dispatch('app/updateTheme', {
+            value: 1,
+            $vuetify
+          })
+          break
+        case themes.NO_PREF:
+          break
+        case themes.NO_SUPP:
+          break
+      }
+    }
+  })
 }

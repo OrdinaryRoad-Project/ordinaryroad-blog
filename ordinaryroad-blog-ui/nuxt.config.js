@@ -58,6 +58,11 @@ export default {
     },
     // axios拦截器等
     '~/plugins/axios/index.js',
+    // darkmodejs识别系统主题 Client Mode
+    {
+      src: '~/plugins/darkmodejs/index.js',
+      mode: 'client'
+    },
     // dayjs
     '~/plugins/dayjs/index.js',
     // 国际化插件
