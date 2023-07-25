@@ -211,6 +211,12 @@ export default {
         method: 'get'
       })
     },
+    getPreAndNextArticle (id) {
+      return $axios({
+        url: `/blog/article/pre_and_next/${id}`,
+        method: 'get'
+      })
+    },
     getTopNComments ({ n = 10, userId }) {
       const params = { n, userId }
       return $axios({

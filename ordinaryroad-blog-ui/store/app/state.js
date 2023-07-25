@@ -259,6 +259,10 @@ export default () => ({
   image: 'http://rekryt.ru/files/sidebar-2.32103624.jpg',
   themeOptions: [
     {
+      titleKey: 'themeTitles.system',
+      icon: 'mdi-desktop-tower-monitor'
+    },
+    {
       titleKey: 'themeTitles.light',
       icon: 'mdi-white-balance-sunny'
     },
@@ -271,9 +275,9 @@ export default () => ({
       icon: 'mdi-arm-flex'
     },
     {
-      titleKey: 'themeTitles.system',
-      // icon: 'mdi-desktop-tower-monitor'
+      titleKey: 'themeTitles.hunkDark',
       icon: 'mdi-arm-flex-outline'
     }
-  ]
+  ],
+  systemPrefersColorScheme: 'light'
 })

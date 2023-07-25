@@ -74,7 +74,15 @@
 <script>
 export default {
   name: 'OrBlogFriendLinkList',
-  props: {},
+  props: {
+    /**
+     * SEO友好，必填
+     */
+    presetItems: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
     loadMoreOptions: {
       loading: false,
@@ -83,9 +91,7 @@ export default {
     friendLinkPageItems: {
       records: [],
       current: 1
-    },
-
-    username: null
+    }
   }),
   computed: {},
   watch: {
@@ -94,10 +100,18 @@ export default {
     }
   },
   mounted () {
+    this.friendLinkPageItems = this.presetItems
+    this.loadMoreOptions.noMoreData = this.presetItems.current === this.presetItems.pages
+    this.unshiftApplyItem()
   },
   created () {
   },
   methods: {
+    unshiftApplyItem () {
+      if (!this.friendLinkPageItems.records.length || this.friendLinkPageItems.records[0].TYPE !== 'APPLY') {
+        this.friendLinkPageItems.records.unshift({ uuid: 'APPLY', TYPE: 'APPLY' })
+      }
+    },
     getFriendLinks (loadMore = true) {
       if (loadMore) {
         if (this.loadMoreOptions.noMoreData) {
@@ -112,7 +126,7 @@ export default {
       }
       this.$emit('update:loading', true)
       const page = loadMore ? this.friendLinkPageItems.current + 1 : 1
-      this.$apis.blog.friend_link.pageInfo(page, 20)
+      this.$apis.blog.friend_link.pageInfo(page, 50)
         .then((data) => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
@@ -135,9 +149,7 @@ export default {
             }
             this.$emit('loadFinish')
           }
-          if (!this.friendLinkPageItems.records.length || this.friendLinkPageItems.records[0].TYPE !== 'APPLY') {
-            this.friendLinkPageItems.records.unshift({ uuid: 'APPLY', TYPE: 'APPLY' })
-          }
+          this.unshiftApplyItem()
           this.$emit('update:loading', false)
         })
         .catch(() => {

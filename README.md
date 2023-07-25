@@ -9,6 +9,7 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 ## 界面
 
+- 支持跟随系统日夜间模式
 - Material Design
 - Markdown
 - 瀑布流

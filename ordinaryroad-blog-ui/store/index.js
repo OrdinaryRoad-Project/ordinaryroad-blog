@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { SELECTED_THEME_OPTION_KEY } from 'static/js/utils/cookie/vuex/app'
+import { SELECTED_THEME_OPTION_KEY, SYSTEM_PREFERS_COLOR_SCHEME_KEY } from 'static/js/utils/cookie/vuex/app'
 import { TOKEN_INFO_KEY } from 'static/js/utils/cookie/vuex/user'
 import { SELECTED_LANG_OPTION_KEY } from 'static/js/utils/cookie/vuex/i18n'
 
@@ -78,6 +78,7 @@ export const actions = {
     if (typeof req !== 'undefined' && req.headers && req.headers.cookie) {
       const cookieString = req.headers.cookie
 
+      commit('app/UPDATE_SYSTEM_PREFERS_COLOR_SCHEME', getStringFromCookie(cookieString, SYSTEM_PREFERS_COLOR_SCHEME_KEY, store.getters['app/getSystemPrefersColorScheme']))
       commit('app/SET_SELECTED_THEME_OPTION', {
         value: getNumberFromCookie(cookieString, SELECTED_THEME_OPTION_KEY, store.getters['app/getSelectedThemeOption']),
         $vuetify

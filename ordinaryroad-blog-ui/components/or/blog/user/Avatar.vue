@@ -26,6 +26,7 @@
   <v-menu
     :disabled="disableMenu"
     open-on-hover
+    open-delay="500"
     content-class="elevation-0 pa-2"
   >
     <template #activator="{ attrs, on }">

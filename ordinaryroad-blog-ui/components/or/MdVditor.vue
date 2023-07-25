@@ -29,6 +29,7 @@
 <script>
 import Vditor from 'vditor'
 import 'vditor/src/assets/less/index.less'
+import mediumZoom from 'medium-zoom'
 
 export default {
   name: 'OrMdVditor',
@@ -67,6 +68,13 @@ export default {
     }
   },
   data: () => ({
+    mediumZoomOptions: {
+      options: {
+        background: 'rgba(255,255,255,0.65)'
+      },
+      previewerZoom: null,
+      editorZoom: null
+    },
     scrollingOptions: {
       scrollEndTimer: null,
       currentScrollTop: 0
@@ -86,6 +94,7 @@ export default {
       }
     },
     dark (val) {
+      this.mediumZoomOptions.options.background = val ? 'rgba(0,0,0,0.65)' : 'rgba(255,255,255,0.65)'
       try {
         if (this.readOnly) {
           this.updatePreviewerTheme(val)
@@ -99,6 +108,12 @@ export default {
       try {
         this.setPlaceholder(val)
       } catch (e) {
+      }
+    },
+    'mediumZoomOptions.options.background': {
+      handler (newValue, oldValue) {
+        this.mediumZoomOptions.previewerZoom?.update({ background: newValue })
+        this.mediumZoomOptions.editorZoom?.update({ background: newValue })
       }
     }
   },
@@ -184,7 +199,8 @@ export default {
         codeTheme = 'dracula'
       }
       Vditor.setCodeTheme(codeTheme)
-      Vditor.setContentTheme(theme, 'https://unpkg.com/vditor@3.8.17/dist/css/content-theme')
+      const vditorVersion = require('@/package.json').dependencies.vditor.replace('^', '@')
+      Vditor.setContentTheme(theme, `https://unpkg.com/vditor${vditorVersion}/dist/css/content-theme`)
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
@@ -196,29 +212,43 @@ export default {
         },
         // https://b3log.org/vditor/demo/advanced-hint.html
         hint: {
-          emojiTail: '输入英文冒号 <code>:</code> 使用<a href="https://github.com/88250/lute/blob/master/parse/emoji_map.go?utm_source=ld246.com" target="_blank">更多表情</a>',
+          emojiTail: '输入英文冒号 <code>:</code> 使用<a href="https://github.com/88250/lute/blob/master/parse/emoji_map.go" target="_blank">更多表情</a>（<a href="https://www.emojiall.com/zh-cn" target="_blank">emojiall</a>）',
           // https://github.com/88250/lute/blob/master/parse/emoji_map.go?utm_source=ld246.com
           emoji: {
             '+1': '👍',
             '-1': '👎',
             heart: '❤',
             cold_sweat: '😰',
-            sad: '💔',
-            'or-logo': 'https://cdn.jsdelivr.net/npm/vditor@1.3.1/dist/images/emoji/j.png'
+            sad: '💔'
+            // 'or-logo': 'https://cdn.jsdelivr.net/npm/vditor@1.3.1/dist/images/emoji/j.png'
           },
           extend: [
-            {
-              key: '@',
-              hint (value) {
-                console.log(value)
-                return [
-                  {
-                    html: '<a> 1 </a>',
-                    value: '@1'
-                  }
-                ]
-              }
-            }
+            // {
+            //   // TODO @功能
+            //   key: '@',
+            //   hint (value) {
+            //     console.log(value)
+            //     return [
+            //       {
+            //         html: '<a> 1 </a>',
+            //         value: '@1'
+            //       }
+            //     ]
+            //   }
+            // },
+            // {
+            //   // TODO #功能
+            //   key: '#',
+            //   hint (value) {
+            //     console.log(value)
+            //     return [
+            //       {
+            //         html: '<a> 1 </a>',
+            //         value: '#1'
+            //       }
+            //     ]
+            //   }
+            // }
           ]
         },
         minHeight: this.commentMode ? 50 : 600,
@@ -232,6 +262,11 @@ export default {
         },
         cache: {
           enable: false
+        },
+        link: {
+          click: (bom) => {
+            window.open(bom.href, '_blank')
+          }
         },
         preview: {
           hljs: {
@@ -374,11 +409,7 @@ export default {
           },
           after: () => {
             this.updatePreviewerTheme(this.dark)
-            previewElement.addEventListener('click', (event) => {
-              if (event.target.tagName === 'IMG') {
-                Vditor.previewImage(event.target, this.$i18n.locale === 'en' ? 'en_US' : 'zh_CN', this.$vuetify.theme.dark ? 'dark' : 'light')
-              }
-            })
+            this.attachImgs(previewElement, 'previewer')
 
             if (this.commentMode) {
               // 评论不需要目录
@@ -421,7 +452,7 @@ export default {
                 })
               }
               this.$emit('update:previewToc', toc)
-              console.log('toc', toc)
+              // console.log('toc', toc)
 
               this.$emit('update:currentTocIndex', 0)
               // console.log('MdVditor 需要激活的目录', 0)
@@ -452,8 +483,9 @@ export default {
             const offset = this.headingsOffsetTop
             const element = headingElements[i]
             const currentTop = element.getBoundingClientRect().top
+            // console.log(offset, currentTop)
             if (currentTop >= offset) {
-              if (currentTop === offset) {
+              if (currentTop - offset <= 1) {
                 currentTocIndex = i
                 // console.log('MdVditor 滑动后需要激活的目录', i)
               } else if (i > 1) {
@@ -482,6 +514,14 @@ export default {
           this.$emit('update:currentTocIndex', currentTocIndex)
         }
       }, 100)
+    },
+    attachImgs (document, type) {
+      const imgElements = []
+      const elementsByTagName = document.getElementsByTagName('img')
+      for (let i = 0; i < elementsByTagName.length; i++) {
+        imgElements.push(elementsByTagName[i])
+      }
+      this.mediumZoomOptions[`${type}Zoom`] = mediumZoom(imgElements, this.mediumZoomOptions.options)
     }
   }
 }
@@ -495,5 +535,10 @@ export default {
 
 .vditor-toolbar--hide {
   display: none;
+}
+
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+  z-index: 999;
 }
 </style>

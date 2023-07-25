@@ -795,6 +795,18 @@ class BlogArticleResource {
     }
 
     /**
+     * 查询上一篇/下一篇文章
+     */
+    @GET
+    @Path("pre_and_next/{id}")
+    fun getPreAndNextArticle(
+        @Valid @NotBlank(message = "Id不能为空")
+        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
+    ): JsonObject {
+        return articleService.getPreAndNextArticle(id, articleMapStruct::transferPreview)
+    }
+
+    /**
      * 获取评论数前N的文章
      */
     @GET
@@ -1029,18 +1041,6 @@ class BlogArticleResource {
             }
         }
         return list
-    }
-
-    /**
-     * 查询上一篇/下一篇文章
-     */
-    @GET
-    @Path("pre_and_next/{id}")
-    fun getPreAndNextArticle(
-        @Valid @NotBlank(message = "Id不能为空")
-        @Size(max = 32, message = "id长度不能大于32") @RestPath id: String
-    ): JsonObject {
-        return articleService.getPreAndNextArticle(id)
     }
     //endregion
 
