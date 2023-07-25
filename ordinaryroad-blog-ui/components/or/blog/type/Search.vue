@@ -94,7 +94,7 @@ export default {
       }
       this.$emit('update:loading', true)
       const page = loadMore ? this.typeInfoPageItems.current + 1 : 1
-      this.$apis.blog.type.pageInfo(page, 20, { name: this.name, createBy: this.createBy })
+      this.$apis.blog.type.pageInfo(page, 20, { name: this.name })
         .then((data) => {
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
