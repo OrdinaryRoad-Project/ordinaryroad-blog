@@ -356,4 +356,13 @@
             </otherwise>
         </choose>
     </select>
+
+    <select id="getPreAndNextArticle" resultMap="BaseResultMap">
+        SELECT *
+        FROM blog_article
+        WHERE `uuid` IN (
+                         (SELECT MAX(`uuid`) FROM blog_article WHERE `uuid` &lt; #{uuid} AND `status` = 'PUBLISH'),
+                         (SELECT MIN(`uuid`) FROM blog_article WHERE `uuid` &gt; #{uuid} AND `status` = 'PUBLISH')
+            )
+    </select>
 </mapper>

@@ -53,5 +53,8 @@ export default {
   },
   toggleRightDrawerModel ({ commit }) {
     commit('TOGGLE_RIGHT_DRAWER_MODEL')
+  },
+  updateSystemPrefersColorScheme ({ commit }, value) {
+    commit('UPDATE_SYSTEM_PREFERS_COLOR_SCHEME', value)
   }
 }

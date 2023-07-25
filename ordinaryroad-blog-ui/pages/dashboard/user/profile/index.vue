@@ -71,11 +71,7 @@
           />
           <v-btn class="ms-3" icon @click="usernameClick">
             <v-icon>
-              mdi-{{
-                usernameTextField.disabled ? 'pencil'
-                : (usernameTextField.input === '' || usernameTextField.input === usernameTextField.value) ? 'close'
-                  : 'check'
-              }}
+              mdi-{{ usernameBtnIcon }}
             </v-icon>
           </v-btn>
         </div>
@@ -149,6 +145,15 @@ export default {
     oAuthUsers: []
   }),
   computed: {
+    usernameBtnIcon () {
+      if (this.usernameTextField.disabled) {
+        return 'pencil'
+      } else if (this.usernameTextField.input === '' || this.usernameTextField.input === this.usernameTextField.value) {
+        return 'close'
+      } else {
+        return 'check'
+      }
+    },
     oAuthUser () {
       return (provider) => {
         const query = this.$or.util.query(this.oAuthUsers, 'provider', provider)
@@ -274,6 +279,8 @@ export default {
     usernameClick () {
       if (this.usernameTextField.disabled) {
         this.usernameTextField.disabled = false
+      } else if (this.usernameBtnIcon === 'close') {
+        this.usernameTextField.disabled = true
       } else if (this.$refs.usernameForm.validate()) {
         this.usernameTextField.loading = true
         this.updateUsername({

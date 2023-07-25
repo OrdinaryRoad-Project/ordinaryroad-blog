@@ -21,15 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import darkmodejs from '@assortment/darkmodejs'
 
-import Cookies from 'js-cookie'
+export default ({
+  app,
+  store,
+  $vuetify
+}, inject) => {
+  darkmodejs({
+    onChange: (activeTheme, themes) => {
+      store.dispatch('app/updateSystemPrefersColorScheme', activeTheme)
+      if (store.getters['app/getSelectedThemeOption'] !== 0) {
+        return
+      }
 
-export const SELECTED_THEME_OPTION_KEY = 'selectedThemeOption'
-export const SYSTEM_PREFERS_COLOR_SCHEME_KEY = 'systemPrefersColorScheme'
-
-export function setSelectedThemeOption (value) {
-  Cookies.set(SELECTED_THEME_OPTION_KEY, value, { expires: 365 })
-}
-export function setSystemPrefersColorScheme (value) {
-  Cookies.set(SYSTEM_PREFERS_COLOR_SCHEME_KEY, value, { expires: 365 })
+      switch (activeTheme) {
+        case themes.DARK:
+          store.dispatch('app/updateTheme', {
+            value: 2,
+            $vuetify
+          })
+          break
+        case themes.LIGHT:
+          store.dispatch('app/updateTheme', {
+            value: 1,
+            $vuetify
+          })
+          break
+        case themes.NO_PREF:
+          break
+        case themes.NO_SUPP:
+          break
+      }
+    }
+  })
 }

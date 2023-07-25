@@ -24,7 +24,11 @@
 
 <template>
   <v-container fluid class="pa-0">
-    <or-blog-article-detail :article="article" :preset-article-comments="articleComments" />
+    <or-blog-article-detail
+      :article="article"
+      :pre-and-next-article="preAndNextArticle"
+      :preset-article-comments="articleComments"
+    />
   </v-container>
 </template>
 
@@ -62,8 +66,10 @@ export default {
         }
 
         const articleComments = await $apis.blog.comment.pageArticle(id, 1)
+        const preAndNextArticle = await $apis.blog.article.getPreAndNextArticle(article.uuid)
         return {
           article,
+          preAndNextArticle,
           articleComments
         }
       } catch {
@@ -76,6 +82,7 @@ export default {
   data () {
     return {
       article: null,
+      preAndNextArticle: null,
       articleComments: {}
     }
   },

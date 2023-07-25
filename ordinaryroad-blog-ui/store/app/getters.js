@@ -44,7 +44,7 @@ export default {
   },
 
   getSelectedThemeOption: (state) => {
-    return state.selectedThemeOption
+    return state.selectedThemeOption || 0
   },
 
   getThemeOptions (state) {
@@ -65,5 +65,9 @@ export default {
 
   getRightDrawerModel (state) {
     return state.rightDrawerModel
+  },
+
+  getSystemPrefersColorScheme (state) {
+    return state.systemPrefersColorScheme
   }
 }

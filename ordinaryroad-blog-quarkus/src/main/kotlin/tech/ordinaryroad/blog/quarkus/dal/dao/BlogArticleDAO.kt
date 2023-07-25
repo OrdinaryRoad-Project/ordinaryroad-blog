@@ -141,4 +141,9 @@ interface BlogArticleDAO : IBaseMapper<BlogArticle> {
         orderBySql: String
     ): IPage<BlogArticle>
 
+    /**
+     * 获取上一篇、下一篇文章
+     */
+    fun getPreAndNextArticle(uuid: String): List<BlogArticle>
+
 }

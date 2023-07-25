@@ -208,12 +208,13 @@
     <v-img
       :src="$apis.blog.getFileUrl(blogArticle.coverImage,'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')"
       style="height: 400px; margin-top: -70px"
-      gradient="rgba(0,0,0,.15),rgba(0,0,0,.15)"
+      gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
     >
       <!-- 封面占位符 -->
       <template #placeholder>
-        <v-skeleton-loader type="image" tile />
-        <v-skeleton-loader type="image" tile />
+        <div class="d-flex or-article-cover-img">
+          <v-skeleton-loader type="image" class="flex-grow-1" tile />
+        </div>
       </template>
 
       <!-- 文章标题 -->
@@ -420,6 +421,7 @@
           <or-md-vditor
             v-show="articleVditorFinished"
             id="content"
+            :headings-offset-top="appBarHeight"
             :preview-toc.sync="toc"
             :current-toc-index.sync="currentTocIndex"
             :dark="$vuetify.theme.dark"
@@ -497,6 +499,10 @@
             </v-tooltip>
           </div>
         </div>
+
+        <!-- 文章切换，上/下一篇 -->
+        <v-divider />
+        <or-blog-article-pre-and-next-bar :pre-and-next-article="preAndNextArticle" />
 
         <!-- 评论 -->
         <v-divider />
@@ -623,8 +629,6 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-
-        <!-- TODO 上/下一篇 -->
       </v-card>
     </v-card>
 
@@ -691,6 +695,10 @@ export default {
       type: Object,
       required: true
     },
+    preAndNextArticle: {
+      type: Object,
+      default: () => ({})
+    },
     presetArticleComments: {
       type: Object,
       default: () => ({
@@ -699,6 +707,7 @@ export default {
     }
   },
   data: () => ({
+    appBarHidden: false,
     articleVditorFinished: false,
     hoverLikeButton: false,
     drawer: false,
@@ -765,14 +774,6 @@ export default {
         hour: this.$t('time.hours'),
         day: this.$t('time.days')
       })
-    },
-    /**
-     * AppBar是否已隐藏
-     *
-     * @returns {Boolean}
-     */
-    appBarHidden () {
-      return this.$refs.appBar.$el.style.transform.includes('-')
     },
     appBarHeight () {
       return this.appBarHidden ? 0 : (this.$vuetify.breakpoint.smAndDown ? 56 : 64)
@@ -1072,7 +1073,7 @@ export default {
       this.commentOptions.parentId = parentComment.uuid
       this.commentOptions.showAlert = true
       this.$vuetify.goTo(this.$refs.commentsContainer)
-      this.$refs.commentVditor.focus()
+      this.$refs.commentVditor?.focus()
     },
     postComment () {
       if (!this.$access.checkLogin()) {
@@ -1135,6 +1136,9 @@ export default {
       // 计算网页百分比
       this.realPercentOfRead = (scrollTop) / (totalHeight - window.innerHeight - (this.appBarHeight))
 
+      // App Bar是否隐藏
+      this.appBarHidden = this.$refs.appBar?.$el.style.transform.includes('-') ?? false
+
       // console.log("this.percentOfRead", this.percentOfRead, "this.realPercentOfRead", this.realPercentOfRead)
     },
     /**
@@ -1146,7 +1150,7 @@ export default {
         const selectedThemeOption = this.$route.query.t
         if (selectedThemeOption !== undefined) {
           const tN = parseInt(selectedThemeOption)
-          if (tN >= 0 && tN < 4) {
+          if (tN >= 0 && tN < 5) {
             this.$store.dispatch('app/setSelectedThemeOption', {
               value: tN,
               $vuetify: this.$vuetify
@@ -1201,5 +1205,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.or-article-cover-img{
+  height: 100%;
+}
+
+.or-article-cover-img .v-skeleton-loader__image{
+  height: 100% !important;
+}
 </style>
