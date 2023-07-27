@@ -365,7 +365,8 @@
             <v-chip
               small
               label
-              @click="onClickType(blogArticle.type)"
+              target="_blank"
+              :href="`/${blogArticle.user.uid}/type/${blogArticle.type.uuid}`"
             >
               {{ blogArticle.type.name }}
             </v-chip>
@@ -385,8 +386,8 @@
                 :key="tag.uuid"
                 small
                 :class="index!==blogArticle.tags.length-1?'me-2':null"
-                @click="onClickTag(tag)"
-                @keypress.enter="onClickTag(tag)"
+                target="_blank"
+                :href="`/search/${tag.name}`"
               >
                 {{ tag.name }}
               </v-chip>
@@ -1060,12 +1061,6 @@ export default {
       } else {
         this.$router.push('/')
       }
-    },
-    onClickType (type) {
-      window.open(`/${this.blogArticle.user.uid}/type/${type.uuid}`, '_blank')
-    },
-    onClickTag (tag) {
-      window.open(`/search/${tag.name}`, '_blank')
     },
     onClickReply ({
       originalComment,
