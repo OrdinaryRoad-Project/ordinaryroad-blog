@@ -342,6 +342,9 @@
     >
       <v-card flat class="pt-1">
         <!-- 摘要 -->
+        <div v-if="blogArticle.summary" v-show="false">
+          {{ blogArticle.summary }}
+        </div>
         <div v-if="blogArticle.summary && blogArticle.summary !== ''">
           <or-md-vditor
             class="my-2"
