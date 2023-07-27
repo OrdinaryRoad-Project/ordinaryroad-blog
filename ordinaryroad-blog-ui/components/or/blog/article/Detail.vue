@@ -410,6 +410,9 @@
 
         <!-- 内容 -->
         <div v-if="!articleVditorFinished" class="ma-5">
+          <div v-show="false">
+            {{ blogArticle.content }}
+          </div>
           <v-skeleton-loader
             v-for="i in skeletonLoaderCount"
             :key="i"
