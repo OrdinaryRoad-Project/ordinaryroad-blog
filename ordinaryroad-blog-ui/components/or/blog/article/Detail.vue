@@ -342,6 +342,9 @@
     >
       <v-card flat class="pt-1">
         <!-- 摘要 -->
+        <div v-if="blogArticle.summary" v-show="false">
+          {{ blogArticle.summary }}
+        </div>
         <div v-if="blogArticle.summary && blogArticle.summary !== ''">
           <or-md-vditor
             class="my-2"
@@ -362,7 +365,8 @@
             <v-chip
               small
               label
-              @click="onClickType(blogArticle.type)"
+              target="_blank"
+              :href="`/${blogArticle.user.uid}/type/${blogArticle.type.uuid}`"
             >
               {{ blogArticle.type.name }}
             </v-chip>
@@ -382,8 +386,8 @@
                 :key="tag.uuid"
                 small
                 :class="index!==blogArticle.tags.length-1?'me-2':null"
-                @click="onClickTag(tag)"
-                @keypress.enter="onClickTag(tag)"
+                target="_blank"
+                :href="`/search/${tag.name}`"
               >
                 {{ tag.name }}
               </v-chip>
@@ -410,6 +414,9 @@
 
         <!-- 内容 -->
         <div v-if="!articleVditorFinished" class="ma-5">
+          <div v-show="false">
+            {{ blogArticle.content }}
+          </div>
           <v-skeleton-loader
             v-for="i in skeletonLoaderCount"
             :key="i"
@@ -1054,12 +1061,6 @@ export default {
       } else {
         this.$router.push('/')
       }
-    },
-    onClickType (type) {
-      window.open(`/${this.blogArticle.user.uid}/type/${type.uuid}`, '_blank')
-    },
-    onClickTag (tag) {
-      window.open(`/search/${tag.name}`, '_blank')
     },
     onClickReply ({
       originalComment,
