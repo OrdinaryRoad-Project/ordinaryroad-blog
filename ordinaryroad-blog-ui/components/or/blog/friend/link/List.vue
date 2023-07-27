@@ -100,11 +100,11 @@ export default {
     }
   },
   mounted () {
+  },
+  created () {
     this.friendLinkPageItems = this.presetItems
     this.loadMoreOptions.noMoreData = this.presetItems.current === this.presetItems.pages
     this.unshiftApplyItem()
-  },
-  created () {
   },
   methods: {
     unshiftApplyItem () {
