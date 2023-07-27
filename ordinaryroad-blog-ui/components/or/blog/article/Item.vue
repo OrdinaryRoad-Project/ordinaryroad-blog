@@ -68,14 +68,14 @@
                 {{ $dayjs(item.createdTime).fromNow() }}
               </span>
               <!-- 浏览量uv -->
-              <span v-if="false" class="d-inline-flex align-center">
+              <span v-if="false" class="d-inline-flex align-center me-3">
                 <v-icon left small>
                   mdi-account-eye
                 </v-icon>
                 <span>{{ item.uv }}</span>
               </span>
               <!-- 浏览量pv -->
-              <span class="d-inline-flex align-center">
+              <span class="d-inline-flex align-center me-3">
                 <v-icon left small>
                   mdi-eye
                 </v-icon>
