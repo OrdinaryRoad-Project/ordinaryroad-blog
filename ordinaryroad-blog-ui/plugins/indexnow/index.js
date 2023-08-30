@@ -41,7 +41,7 @@ export default function ({
       for (const searchEngine of searchEnginesEnabled) {
         await $axios({
           method: 'post',
-          url: `${searchEngine.url}/indexnow`,
+          url: `/indexnow/${searchEngine.name}`,
           data: {
             host,
             key: $config.INDEX_NOW.KEY,

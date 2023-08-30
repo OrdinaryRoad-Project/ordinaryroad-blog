@@ -116,6 +116,12 @@ export default {
   },
 
   proxy: {
+    '/api/indexnow/Bing': {
+      target: 'https://www.bing.com',
+      pathRewrite: {
+        '^/api/indexnow/Bing': '/indexnow'
+      }
+    },
     '/api/blog': {
       target: process.env.BLOG_BASE_URL,
       pathRewrite: {
