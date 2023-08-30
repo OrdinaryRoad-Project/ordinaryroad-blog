@@ -37,11 +37,11 @@ export default function ({
   })
 
   Vue.prototype.$indexnow = {
-    updateUrls: (urlList) => {
-      searchEnginesEnabled.forEach((searchEngine) => {
-        $axios({
+    updateUrls: async (urlList) => {
+      for (const searchEngine of searchEnginesEnabled) {
+        await $axios({
           method: 'post',
-          url: `${searchEngine.url}/indexnow`,
+          url: `/indexnow/${searchEngine.name}`,
           data: {
             host,
             key: $config.INDEX_NOW.KEY,
@@ -55,10 +55,10 @@ export default function ({
             })
           }
         })
-      })
+      }
     },
     updateArticle (article) {
-      this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
+      return this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
     }
   }
   inject('indexnow', Vue.prototype.$indexnow)

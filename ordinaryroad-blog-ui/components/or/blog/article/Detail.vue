@@ -1207,11 +1207,11 @@ export default {
 </script>
 
 <style>
-.or-article-cover-img{
+.or-article-cover-img {
   height: 100%;
 }
 
-.or-article-cover-img .v-skeleton-loader__image{
+.or-article-cover-img .v-skeleton-loader__image {
   height: 100% !important;
 }
 </style>
