@@ -37,9 +37,9 @@ export default function ({
   })
 
   Vue.prototype.$indexnow = {
-    updateUrls: (urlList) => {
-      searchEnginesEnabled.forEach((searchEngine) => {
-        $axios({
+    updateUrls: async (urlList) => {
+      for (const searchEngine of searchEnginesEnabled) {
+        await $axios({
           method: 'post',
           url: `${searchEngine.url}/indexnow`,
           data: {
@@ -55,7 +55,7 @@ export default function ({
             })
           }
         })
-      })
+      }
     },
     updateArticle (article) {
       this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
