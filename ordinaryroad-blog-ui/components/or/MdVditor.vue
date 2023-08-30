@@ -118,6 +118,7 @@ export default {
     }
   },
   created () {
+    this.mediumZoomOptions.options.background = this.dark ? 'rgba(0,0,0,0.65)' : 'rgba(255,255,255,0.65)'
   },
   // 相当于created中的nextTick，此时dom元素已经渲染完成
   mounted () {
