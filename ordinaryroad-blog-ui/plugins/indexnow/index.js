@@ -58,7 +58,7 @@ export default function ({
       }
     },
     updateArticle (article) {
-      this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
+      return this.updateUrls([`/${article.creatorUid || article.user.uid}/article/${article.firstId}`])
     }
   }
   inject('indexnow', Vue.prototype.$indexnow)

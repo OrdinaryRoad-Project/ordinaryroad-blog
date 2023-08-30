@@ -989,12 +989,17 @@ export default {
         loading: true
       }).then((dialog) => {
         if (dialog.isConfirm) {
-          this.$apis.blog.article.auditApproved(this.blogArticle.uuid)
-            .then((data) => {
-              this.$indexnow.updateArticle(this.blogArticle)
-              this.$snackbar.success(this.$t('operationSucceeded'))
-              dialog.cancel()
-              this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
+          this.$indexnow.updateArticle(this.blogArticle)
+            .then(() => {
+              this.$apis.blog.article.auditApproved(this.blogArticle.uuid)
+                .then((data) => {
+                  this.$snackbar.success(this.$t('operationSucceeded'))
+                  dialog.cancel()
+                  this.$router.replace('/dashboard/article/status/UNDER_REVIEW')
+                })
+                .catch(() => {
+                  dialog.cancel()
+                })
             })
             .catch(() => {
               dialog.cancel()
@@ -1207,11 +1212,11 @@ export default {
 </script>
 
 <style>
-.or-article-cover-img{
+.or-article-cover-img {
   height: 100%;
 }
 
-.or-article-cover-img .v-skeleton-loader__image{
+.or-article-cover-img .v-skeleton-loader__image {
   height: 100% !important;
 }
 </style>
