@@ -47,6 +47,7 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - 评论文章
 - 回复评论
 - 评论删除
+- [ ] 评论敏感词校验
 
 ### 日志模块
 
