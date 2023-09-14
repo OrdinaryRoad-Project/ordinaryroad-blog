@@ -31,7 +31,7 @@ export default ({
     const userInfo = store.getters['user/getUserInfo']
     return userInfo != null
   }
-  const checkLogin = () => {
+  const checkLogin = (redirect = route.fullPath) => {
     const logged = isLogged()
     if (!logged) {
       app.$dialog({
@@ -42,7 +42,7 @@ export default ({
         if (isConfirm) {
           app.router.push({
             path: '/user/login',
-            query: { redirect: route.fullPath }
+            query: { redirect }
           })
         }
       })

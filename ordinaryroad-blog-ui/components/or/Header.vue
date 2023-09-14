@@ -100,12 +100,6 @@ export default {
 
     onSearchSubmit (searchInput) {
       window.open(`/search/${searchInput}`, '_blank')
-    },
-    click (index) {
-      this.setSelectedThemeOption({
-        value: index,
-        $vuetify: this.$vuetify
-      })
     }
   }
 }
