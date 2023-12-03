@@ -150,7 +150,9 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    defaultAssets: false,
+    defaultAssets: {
+      icons: false
+    },
     icons: {
       iconfont: 'mdi'
     },
