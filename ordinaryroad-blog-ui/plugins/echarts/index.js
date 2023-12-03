@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import Vue from 'vue'
 import * as echarts from 'echarts'
 
-export default echarts
+Vue.prototype.$echarts = echarts
