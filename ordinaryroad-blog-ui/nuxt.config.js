@@ -42,7 +42,8 @@ export default {
   css: [
     '@/assets/css/ordinaryroad.css',
     '@/assets/jv-viewer.scss',
-    '@/assets/vditor-custom.less'
+    '@/assets/vditor-custom.less',
+    '@mdi/font/css/materialdesignicons.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -65,6 +66,11 @@ export default {
     },
     // dayjs
     '~/plugins/dayjs/index.js',
+    // echarts Client Mode
+    {
+      src: '~/plugins/echarts/index.js',
+      mode: 'client'
+    },
     // 国际化插件
     '~/plugins/i18n/index.js',
     // indexnow插件
@@ -144,6 +150,10 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    defaultAssets: false,
+    icons: {
+      iconfont: 'mdi'
+    },
     theme: {
       options: {
         // https://vuetifyjs.com/zh-Hans/features/theme/#section-81ea5b9a4e495c5e6027

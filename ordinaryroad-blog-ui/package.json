@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@assortment/darkmodejs": "^1.2.1",
-    "@mdi/font": "^7.2.96",
+    "@mdi/font": "^7.3.67",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dayjs": "^1.4.1",
     "@nuxtjs/proxy": "^2.1.0",
