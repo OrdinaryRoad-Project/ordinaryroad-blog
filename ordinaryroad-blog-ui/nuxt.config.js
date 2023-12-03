@@ -65,6 +65,11 @@ export default {
     },
     // dayjs
     '~/plugins/dayjs/index.js',
+    // echarts Client Mode
+    {
+      src: '~/plugins/echarts/index.js',
+      mode: 'client'
+    },
     // 国际化插件
     '~/plugins/i18n/index.js',
     // indexnow插件
