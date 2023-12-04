@@ -43,6 +43,7 @@ export default {
     '@/assets/css/ordinaryroad.css',
     '@/assets/jv-viewer.scss',
     '@/assets/vditor-custom.less',
+    '@fontsource/roboto',
     '@mdi/font/css/materialdesignicons.css'
   ],
 
@@ -151,7 +152,11 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     defaultAssets: {
+      font: false,
       icons: false
+    },
+    font: {
+      family: 'Roboto'
     },
     icons: {
       iconfont: 'mdi'
