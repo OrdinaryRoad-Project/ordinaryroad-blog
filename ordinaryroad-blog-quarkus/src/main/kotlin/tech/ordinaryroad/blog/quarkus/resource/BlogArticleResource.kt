@@ -348,9 +348,9 @@ class BlogArticleResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
         val wrapper = ChainWrappers.queryChain(articleService.dao)
-            .like(!request.title.isNullOrBlank(), "title", request.title.escapeSqlLike().escapeSqlLike())
-            .like(!request.summary.isNullOrBlank(), "summary", request.summary.escapeSqlLike().escapeSqlLike())
-            .like(!request.content.isNullOrBlank(), "content", request.content.escapeSqlLike().escapeSqlLike())
+            .like(!request.title.isNullOrBlank(), "title", request.title.escapeSqlLike())
+            .like(!request.summary.isNullOrBlank(), "summary", request.summary.escapeSqlLike())
+            .like(!request.content.isNullOrBlank(), "content", request.content.escapeSqlLike())
             .eq(request.canComment != null, "can_comment", request.canComment)
             .eq(request.canReward != null, "can_reward", request.canReward)
             .eq(request.original != null, "original", request.original)
