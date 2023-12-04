@@ -38,12 +38,12 @@ export default {
       {
         rel: 'stylesheet',
         type: 'text/css',
-        href: 'https://fastly.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css'
+        href: 'https://npm.elemecdn.com/@mdi/font@latest/css/materialdesignicons.min.css'
       },
       {
         rel: 'stylesheet',
         type: 'text/css',
-        href: 'https://fastly.jsdelivr.net/npm/@fontsource/roboto@latest'
+        href: 'https://unpkg.com/@fontsource/roboto@latest/400.css'
       }
     ]
   },
