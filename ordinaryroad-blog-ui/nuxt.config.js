@@ -34,6 +34,16 @@ export default {
         rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: 'https://npm.elemecdn.com/@mdi/font@latest/css/materialdesignicons.min.css'
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: 'https://unpkg.com/@fontsource/roboto@latest/400.css'
       }
     ]
   },
@@ -42,9 +52,7 @@ export default {
   css: [
     '@/assets/css/ordinaryroad.css',
     '@/assets/jv-viewer.scss',
-    '@/assets/vditor-custom.less',
-    '@fontsource/roboto',
-    '@mdi/font/css/materialdesignicons.css'
+    '@/assets/vditor-custom.less'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
