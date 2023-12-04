@@ -40,19 +40,16 @@
       @append="append"
     >
       <template #default="{item}">
-        <template v-if="item">
-          <or-blog-article-item :item="item" />
-        </template>
+        <or-blog-article-item v-if="item" :item="item" />
       </template>
     </vue-masonry-wall>
 
     <or-load-more-footer
       v-if="articlePageItems.total!==0"
       ref="loadMoreFooter"
-      :show-down-icon="!autoLoadMore"
       class="mt-4"
       :no-more-data="loadMoreOptions.noMoreData"
-      @loadMore="!autoLoadMore&&getArticles()"
+      @loadMore="getArticles()"
     />
   </v-container>
 </template>
