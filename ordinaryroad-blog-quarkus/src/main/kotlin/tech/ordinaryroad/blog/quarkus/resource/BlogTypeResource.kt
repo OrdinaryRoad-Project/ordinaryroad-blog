@@ -44,6 +44,7 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogTypeInfoVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogTypeService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -188,7 +189,7 @@ class BlogTypeResource {
         val userId = StpUtil.getLoginIdAsString()
 
         val wrapper = ChainWrappers.queryChain(typeService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
+            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
             .eq("create_by", userId)
 
         val page = typeService.page(request, wrapper)
@@ -208,7 +209,7 @@ class BlogTypeResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun pageInfo(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
         val wrapper = ChainWrappers.queryChain(typeService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
+            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
             .eq(!request.createBy.isNullOrBlank(), "create_by", request.createBy)
 
         val page = typeService.page(request, wrapper)

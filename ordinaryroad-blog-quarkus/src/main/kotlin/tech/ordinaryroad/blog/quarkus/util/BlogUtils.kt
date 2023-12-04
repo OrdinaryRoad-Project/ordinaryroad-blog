@@ -161,6 +161,20 @@ object BlogUtils {
         return Pair(startDateTimeString, endDateTimeString)
     }
 
+    /**
+     * 转义SQL模糊查询特殊字符
+     */
+    fun String?.escapeSqlLike(): String {
+        if (this.isNullOrBlank()) {
+            return ""
+        }
+
+        return this
+            .replace("\\", "\\\\")
+            .replace("_", "\\_")
+            .replace("%", "\\%")
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         println(Json.encode(getIpRegion("127.0.0.1")))

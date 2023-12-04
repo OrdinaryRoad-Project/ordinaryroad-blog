@@ -41,7 +41,9 @@ import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserBrowsed
 import tech.ordinaryroad.blog.quarkus.dal.dao.result.BlogArticleUserLiked
-import tech.ordinaryroad.blog.quarkus.dal.entity.*
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserBrowsedArticle
+import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUserLikedArticle
 import tech.ordinaryroad.blog.quarkus.dto.BlogArticleDTO
 import tech.ordinaryroad.blog.quarkus.enums.BlogArticleStatus
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
@@ -58,10 +60,10 @@ import tech.ordinaryroad.blog.quarkus.resource.vo.BlogArticlePreviewVO
 import tech.ordinaryroad.blog.quarkus.service.*
 import tech.ordinaryroad.blog.quarkus.state.article.context.BlogArticleContext
 import tech.ordinaryroad.blog.quarkus.util.BlogUtils
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.TableInfoUtils
 import java.time.LocalDateTime
-import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -346,9 +348,9 @@ class BlogArticleResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogArticleQueryRequest): Page<BlogArticleDTO> {
         val wrapper = ChainWrappers.queryChain(articleService.dao)
-            .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
-            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
-            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
+            .like(!request.title.isNullOrBlank(), "title", "%" + request.title.escapeSqlLike().escapeSqlLike() + "%")
+            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary.escapeSqlLike().escapeSqlLike() + "%")
+            .like(!request.content.isNullOrBlank(), "content", "%" + request.content.escapeSqlLike().escapeSqlLike() + "%")
             .eq(request.canComment != null, "can_comment", request.canComment)
             .eq(request.canReward != null, "can_reward", request.canReward)
             .eq(request.original != null, "original", request.original)
@@ -518,9 +520,9 @@ class BlogArticleResource {
         }
 
         val wrapper = ChainWrappers.queryChain(articleService.dao)
-            .like(!request.title.isNullOrBlank(), "title", "%" + request.title + "%")
-            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary + "%")
-            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
+            .like(!request.title.isNullOrBlank(), "title", "%" + request.title.escapeSqlLike() + "%")
+            .like(!request.summary.isNullOrBlank(), "summary", "%" + request.summary.escapeSqlLike() + "%")
+            .like(!request.content.isNullOrBlank(), "content", "%" + request.content.escapeSqlLike() + "%")
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
             .like(tagIds.isNotEmpty(), "tag_ids", "%\"${tagId}\"%")
@@ -546,7 +548,7 @@ class BlogArticleResource {
         var tagId: String? = null
         var tagIds = emptyList<String>()
         if (!tagName.isNullOrEmpty()) {
-            tagIds = tagService.dao.selectIdByNameIn(listOf(tagName))
+            tagIds = tagService.dao.selectIdByNameIn(listOf(tagName.escapeSqlLike()))
             tagId = tagIds.firstOrNull()
         }
 
@@ -567,7 +569,7 @@ class BlogArticleResource {
 
         val page = articleService.dao.searchPublish(
             PageDTO.of(request.page, request.size),
-            if (request.title.isNullOrBlank()) null else "%${request.title}%",
+            if (request.title.isNullOrBlank()) null else "%${request.title.escapeSqlLike()}%",
             if (tagIds.isEmpty()) null else "%\"${tagId}\"%",
             orderBySql
         ) as PageDTO<BlogArticle>
