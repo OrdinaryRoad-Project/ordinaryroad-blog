@@ -79,7 +79,7 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM ordinaryroad-docker.pkg.coding.net/ordinaryroad/docker-public/openjdk-11:1.11
+FROM laptevss/openjdk-11
 
 #ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 ENV LANG='C.UTF-8' LANGUAGE='C.UTF-8'
