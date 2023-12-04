@@ -252,7 +252,10 @@ export default {
         FRONTEND: process.env.CI_VERSION_FTONTEND,
         BACKEND: process.env.CI_VERSION_BACKEND
       }
-    }
+    },
+
+    // 适配旧版个人博客的文章链接
+    USER_ID_OLD: process.env.USER_ID_OLD || 1
   },
   privateRuntimeConfig: {},
 
