@@ -157,7 +157,7 @@ class BlogUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun search(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserVO> {
         val wrapper = ChainWrappers.queryChain(userService.dao)
-            .like(!request.username.isNullOrBlank(), "username", "%" + request.username.escapeSqlLike() + "%")
+            .like(!request.username.isNullOrBlank(), "username", request.username.escapeSqlLike())
 
         val page = userService.page(request, wrapper)
 
@@ -178,7 +178,7 @@ class BlogUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserDTO> {
         val wrapper = ChainWrappers.queryChain(userService.dao)
-            .like(!request.username.isNullOrBlank(), "username", "%" + request.username.escapeSqlLike() + "%")
+            .like(!request.username.isNullOrBlank(), "username", request.username.escapeSqlLike())
 
         val page = userService.page(request, wrapper)
 

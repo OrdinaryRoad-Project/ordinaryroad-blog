@@ -117,7 +117,7 @@ class BlogTagResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogTagQueryRequest): Page<BlogTagDTO> {
         val wrapper = ChainWrappers.queryChain(tagService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
+            .like(!request.name.isNullOrBlank(), "name", request.name.escapeSqlLike())
 
         val page = tagService.page(request, wrapper)
 

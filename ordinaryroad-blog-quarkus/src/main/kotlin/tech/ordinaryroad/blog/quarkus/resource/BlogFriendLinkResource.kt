@@ -181,10 +181,10 @@ class BlogFriendLinkResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogFriendLinkQueryRequest): Page<BlogFriendLinkDTO> {
         val wrapper = ChainWrappers.queryChain(friendLinkService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
-            .like(!request.description.isNullOrBlank(), "description", "%" + request.description.escapeSqlLike() + "%")
-            .like(!request.url.isNullOrBlank(), "url", "%" + request.url.escapeSqlLike() + "%")
-            .like(!request.email.isNullOrBlank(), "email", "%" + request.email.escapeSqlLike() + "%")
+            .like(!request.name.isNullOrBlank(), "name", request.name.escapeSqlLike())
+            .like(!request.description.isNullOrBlank(), "description", request.description.escapeSqlLike())
+            .like(!request.url.isNullOrBlank(), "url", request.url.escapeSqlLike())
+            .like(!request.email.isNullOrBlank(), "email", request.email.escapeSqlLike())
             .eq(request.status != null, "status", request.status)
 
         val page = friendLinkService.page(request, wrapper)

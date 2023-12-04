@@ -189,7 +189,7 @@ class BlogTypeResource {
         val userId = StpUtil.getLoginIdAsString()
 
         val wrapper = ChainWrappers.queryChain(typeService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
+            .like(!request.name.isNullOrBlank(), "name", request.name.escapeSqlLike())
             .eq("create_by", userId)
 
         val page = typeService.page(request, wrapper)
@@ -209,7 +209,7 @@ class BlogTypeResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun pageInfo(@Valid @BeanParam request: BlogTypeQueryRequest): Page<BlogTypeInfoVO> {
         val wrapper = ChainWrappers.queryChain(typeService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
+            .like(!request.name.isNullOrBlank(), "name", request.name.escapeSqlLike())
             .eq(!request.createBy.isNullOrBlank(), "create_by", request.createBy)
 
         val page = typeService.page(request, wrapper)

@@ -126,7 +126,7 @@ class BlogCommentResource {
     @Path("page/{page}/{size}")
     fun page(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
         val wrapper = ChainWrappers.queryChain(commentService.dao)
-            .like(!request.content.isNullOrBlank(), "content", "%" + request.content.escapeSqlLike() + "%")
+            .like(!request.content.isNullOrBlank(), "content", request.content.escapeSqlLike())
 
         // 数据权限处理
         if (request.own == true

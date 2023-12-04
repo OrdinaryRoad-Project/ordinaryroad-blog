@@ -189,8 +189,8 @@ class BlogRoleResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogRoleQueryRequest): IPage<BlogRoleDTO> {
         val wrapper = ChainWrappers.queryChain(roleService.dao)
-            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName.escapeSqlLike() + "%")
-            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode.escapeSqlLike() + "%")
+            .like(!request.roleName.isNullOrBlank(), "role_name", request.roleName.escapeSqlLike())
+            .like(!request.roleCode.isNullOrBlank(), "role_code", request.roleCode.escapeSqlLike())
 
         val page = roleService.page(request, wrapper)
 
@@ -212,8 +212,8 @@ class BlogRoleResource {
     fun findAll(@Valid @BeanParam request: BlogRoleQueryRequest): List<BlogRoleDTO> {
         val wrapper = ChainWrappers.queryChain(roleService.dao)
             .eq("enabled", true)
-            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName.escapeSqlLike() + "%")
-            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode.escapeSqlLike() + "%")
+            .like(!request.roleName.isNullOrBlank(), "role_name", request.roleName.escapeSqlLike())
+            .like(!request.roleCode.isNullOrBlank(), "role_code", request.roleCode.escapeSqlLike())
 
         val all = roleService.findAll(request, wrapper)
 
