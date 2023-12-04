@@ -44,6 +44,7 @@ import tech.ordinaryroad.blog.quarkus.request.BlogUserQueryRequest
 import tech.ordinaryroad.blog.quarkus.resource.vo.BlogUserVO
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -156,7 +157,7 @@ class BlogUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun search(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserVO> {
         val wrapper = ChainWrappers.queryChain(userService.dao)
-            .like(!request.username.isNullOrBlank(), "username", "%" + request.username + "%")
+            .like(!request.username.isNullOrBlank(), "username", "%" + request.username.escapeSqlLike() + "%")
 
         val page = userService.page(request, wrapper)
 
@@ -177,7 +178,7 @@ class BlogUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogUserQueryRequest): IPage<BlogUserDTO> {
         val wrapper = ChainWrappers.queryChain(userService.dao)
-            .like(!request.username.isNullOrBlank(), "username", "%" + request.username + "%")
+            .like(!request.username.isNullOrBlank(), "username", "%" + request.username.escapeSqlLike() + "%")
 
         val page = userService.page(request, wrapper)
 

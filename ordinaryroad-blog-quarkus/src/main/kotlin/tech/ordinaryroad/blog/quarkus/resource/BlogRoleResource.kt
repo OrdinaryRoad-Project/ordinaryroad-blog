@@ -42,8 +42,8 @@ import tech.ordinaryroad.blog.quarkus.request.BlogRoleSaveRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogRoleService
 import tech.ordinaryroad.blog.quarkus.service.BlogValidateService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
-import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.management.relation.RoleNotFoundException
@@ -189,8 +189,8 @@ class BlogRoleResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogRoleQueryRequest): IPage<BlogRoleDTO> {
         val wrapper = ChainWrappers.queryChain(roleService.dao)
-            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName + "%")
-            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode + "%")
+            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName.escapeSqlLike() + "%")
+            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode.escapeSqlLike() + "%")
 
         val page = roleService.page(request, wrapper)
 
@@ -212,8 +212,8 @@ class BlogRoleResource {
     fun findAll(@Valid @BeanParam request: BlogRoleQueryRequest): List<BlogRoleDTO> {
         val wrapper = ChainWrappers.queryChain(roleService.dao)
             .eq("enabled", true)
-            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName + "%")
-            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode + "%")
+            .like(!request.roleName.isNullOrBlank(), "role_name", "%" + request.roleName.escapeSqlLike() + "%")
+            .like(!request.roleCode.isNullOrBlank(), "role_code", "%" + request.roleCode.escapeSqlLike() + "%")
 
         val all = roleService.findAll(request, wrapper)
 

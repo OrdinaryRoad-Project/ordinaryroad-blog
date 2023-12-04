@@ -38,6 +38,7 @@ import tech.ordinaryroad.blog.quarkus.request.BlogTagSaveRequest
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogTagService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -116,7 +117,7 @@ class BlogTagResource {
     @Produces(MediaType.APPLICATION_JSON)
     fun page(@Valid @BeanParam request: BlogTagQueryRequest): Page<BlogTagDTO> {
         val wrapper = ChainWrappers.queryChain(tagService.dao)
-            .like(!request.name.isNullOrBlank(), "name", "%" + request.name + "%")
+            .like(!request.name.isNullOrBlank(), "name", "%" + request.name.escapeSqlLike() + "%")
 
         val page = tagService.page(request, wrapper)
 

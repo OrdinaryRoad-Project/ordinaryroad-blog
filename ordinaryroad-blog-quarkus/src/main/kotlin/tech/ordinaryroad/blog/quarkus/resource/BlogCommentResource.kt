@@ -43,6 +43,7 @@ import tech.ordinaryroad.blog.quarkus.service.BlogCommentService
 import tech.ordinaryroad.blog.quarkus.service.BlogDtoService
 import tech.ordinaryroad.blog.quarkus.service.BlogUserService
 import tech.ordinaryroad.blog.quarkus.service.BlogValidateService
+import tech.ordinaryroad.blog.quarkus.util.BlogUtils.escapeSqlLike
 import tech.ordinaryroad.commons.mybatis.quarkus.utils.PageUtils
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -125,7 +126,7 @@ class BlogCommentResource {
     @Path("page/{page}/{size}")
     fun page(@Valid @BeanParam request: BlogCommentQueryRequest): Page<BlogCommentDTO> {
         val wrapper = ChainWrappers.queryChain(commentService.dao)
-            .like(!request.content.isNullOrBlank(), "content", "%" + request.content + "%")
+            .like(!request.content.isNullOrBlank(), "content", "%" + request.content.escapeSqlLike() + "%")
 
         // 数据权限处理
         if (request.own == true
