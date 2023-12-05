@@ -525,7 +525,7 @@ class BlogArticleResource {
             .like(!request.content.isNullOrBlank(), "content", request.content.escapeSqlLike())
             .eq("status", status)
             .eq(request.createBy != null, "create_by", request.createBy)
-            .like(tagIds.isNotEmpty(), "tag_ids", tagId)
+            .like(tagIds.isNotEmpty(), "tag_ids", "\"${tagId}\"")
             .eq(!request.typeId.isNullOrBlank(), "type_id", request.typeId)
 
         val page = articleService.page(request, wrapper)
