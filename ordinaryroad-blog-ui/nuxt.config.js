@@ -43,7 +43,7 @@ export default {
       {
         rel: 'stylesheet',
         type: 'text/css',
-        href: 'https://unpkg.com/@fontsource/roboto@latest/400.css'
+        href: 'https://fastly.jsdelivr.net/npm/@fontsource/roboto@latest/400.css'
       }
     ]
   },

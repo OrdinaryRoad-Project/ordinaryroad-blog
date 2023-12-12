@@ -201,7 +201,7 @@ export default {
       }
       Vditor.setCodeTheme(codeTheme)
       const vditorVersion = require('@/package.json').dependencies.vditor.replace('^', '@')
-      Vditor.setContentTheme(theme, `https://unpkg.com/vditor${vditorVersion}/dist/css/content-theme`)
+      Vditor.setContentTheme(theme, `https://fastly.jsdelivr.net/npm/vditor${vditorVersion}/dist/css/content-theme`)
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
