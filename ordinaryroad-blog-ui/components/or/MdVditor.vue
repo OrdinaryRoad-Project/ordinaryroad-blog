@@ -35,6 +35,10 @@ export default {
   name: 'OrMdVditor',
   components: {},
   props: {
+    cdn: {
+      type: String,
+      default: `https://fastly.jsdelivr.net/npm/vditor@${require('@/package.json').dependencies.vditor.replace('^', '')}`
+    },
     placeholder: {
       type: String,
       default: ''
@@ -199,12 +203,12 @@ export default {
         theme = 'dark'
         codeTheme = 'dracula'
       }
-      Vditor.setCodeTheme(codeTheme)
-      const vditorVersion = require('@/package.json').dependencies.vditor.replace('^', '@')
-      Vditor.setContentTheme(theme, `https://fastly.jsdelivr.net/npm/vditor${vditorVersion}/dist/css/content-theme`)
+      Vditor.setCodeTheme(codeTheme, this.cdn)
+      Vditor.setContentTheme(theme, `${this.cdn}/dist/css/content-theme`)
     },
     initEditor () {
       this.instance = new Vditor(this.$refs.vditor, {
+        cdn: this.cdn,
         lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
         placeholder: this.placeholder,
         toolbarConfig: {
@@ -275,7 +279,8 @@ export default {
             lineNumber: true
           },
           theme: {
-            current: this.dark ? 'dark' : 'light'
+            current: this.dark ? 'dark' : 'light',
+            path: `${this.cdn}/dist/css/content-theme`
           }
         },
         upload: {
@@ -365,6 +370,7 @@ export default {
       }
       Vditor.preview(previewElement, content,
         {
+          cdn: this.cdn,
           lang: this.lang === 'en' ? 'en_US' : 'zh_CN',
           markdown: {
             autoSpace: true,
@@ -379,7 +385,8 @@ export default {
           },
           anchor: 1,
           theme: {
-            current: theme
+            current: theme,
+            path: `${this.cdn}/dist/css/content-theme`
           },
           icon: 'material',
           speech: {
