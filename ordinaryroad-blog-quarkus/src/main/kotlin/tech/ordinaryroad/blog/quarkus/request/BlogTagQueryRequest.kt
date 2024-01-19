@@ -26,14 +26,12 @@ package tech.ordinaryroad.blog.quarkus.request
 import org.jboss.resteasy.reactive.RestQuery
 import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 class BlogTagQueryRequest : BaseQueryRequest() {
 
     @Pattern(regexp = ReConstants.PATTERN_TAG_NAME, message = ReConstants.PATTERN_TAG_NAME_DESCRIPTION)
-    @NotBlank(message = "名称不能为空")
     @Size(max = 100, message = "名称长度不能超过100")
     @RestQuery
     var name: String? = null
