@@ -24,9 +24,9 @@
 
 package tech.ordinaryroad.blog.quarkus.service
 
-import cn.hutool.core.lang.PatternPool
 import cn.hutool.core.util.ReUtil
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.blog.quarkus.dal.dao.BlogTagDAO
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogTag
 import tech.ordinaryroad.blog.quarkus.exception.BaseBlogException
@@ -57,8 +57,8 @@ class BlogTagService : BaseService<BlogTagDAO, BlogTag>() {
         val blogTags = ArrayList<BlogTag>()
         if (!tagNames.isNullOrEmpty()) {
             tagNames.forEach {
-                if (!ReUtil.isMatch(PatternPool.GENERAL_WITH_CHINESE, it)) {
-                    BaseBlogException("标签名称只能包含中文字、英文字母、数字和下划线").throws()
+                if (!ReUtil.isMatch(ReConstants.PATTERN_TAG_NAME, it)) {
+                    BaseBlogException(ReConstants.PATTERN_TAG_NAME_DESCRIPTION).throws()
                 }
                 val wrapper = Wrappers.query<BlogTag>()
                     .eq("name", it)
