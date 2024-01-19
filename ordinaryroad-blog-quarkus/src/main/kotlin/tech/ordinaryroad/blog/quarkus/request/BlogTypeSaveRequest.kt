@@ -23,12 +23,15 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 class BlogTypeSaveRequest : BaseRequest() {
 
+    @Pattern(regexp = ReConstants.PATTERN_TYPE_NAME, message = ReConstants.PATTERN_TYPE_NAME_DESCRIPTION)
     @NotBlank(message = "名称不能为空")
     @Size(max = 100, message = "名称长度不能超过100")
     var name: String = ""

@@ -24,10 +24,15 @@
 package tech.ordinaryroad.blog.quarkus.request
 
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest
+import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
 class BlogTypeQueryRequest : BaseQueryRequest() {
 
+    @Pattern(regexp = ReConstants.PATTERN_TYPE_NAME, message = ReConstants.PATTERN_TYPE_NAME_DESCRIPTION)
+    @Size(max = 100, message = "名称长度不能超过100")
     @RestQuery
     var name: String? = null
 

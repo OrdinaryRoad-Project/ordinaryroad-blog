@@ -25,8 +25,10 @@
 package tech.ordinaryroad.blog.quarkus.request;
 
 import org.jboss.resteasy.reactive.RestQuery;
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants;
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class BlogArticleQueryRequest extends BaseQueryRequest {
@@ -57,6 +59,7 @@ public class BlogArticleQueryRequest extends BaseQueryRequest {
     @RestQuery
     public List<String> status;
 
+    @Pattern(regexp = ReConstants.PATTERN_TAG_NAME, message = ReConstants.PATTERN_TAG_NAME_DESCRIPTION)
     @RestQuery
     public String tagName;
 
