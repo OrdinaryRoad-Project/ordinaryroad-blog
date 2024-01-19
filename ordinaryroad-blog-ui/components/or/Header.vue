@@ -24,8 +24,9 @@
 
 <template>
   <v-app-bar app fixed clipped-left elevate-on-scroll>
-    <v-toolbar-title style="cursor: pointer;" @click="$router.push('/')">
-      {{ $t('appName') }}
+    <v-toolbar-title>
+      <span style="cursor: pointer;" @click="$router.push('/')">{{ $t('appName') }}</span>
+      <or-jinrishici-subtitle />
     </v-toolbar-title>
 
     <v-spacer />
