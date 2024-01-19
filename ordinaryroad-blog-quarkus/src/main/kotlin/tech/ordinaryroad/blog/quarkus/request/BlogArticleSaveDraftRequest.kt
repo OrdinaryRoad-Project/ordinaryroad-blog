@@ -23,8 +23,10 @@
  */
 package tech.ordinaryroad.blog.quarkus.request
 
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 class BlogArticleSaveDraftRequest : BaseRequest() {
@@ -51,6 +53,7 @@ class BlogArticleSaveDraftRequest : BaseRequest() {
     @Size(max = 32, message = "First Id长度不能超过32")
     var firstId: String? = null
 
+    @Pattern(regexp = ReConstants.PATTERN_TYPE_NAME, message = ReConstants.PATTERN_TYPE_NAME_DESCRIPTION)
     @Size(max = 100, message = "分类名称长度不能超过100")
     var typeName: String? = null
 

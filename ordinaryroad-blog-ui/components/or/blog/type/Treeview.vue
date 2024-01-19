@@ -123,7 +123,7 @@ export default {
           }
         })
         .catch(() => {
-          this.typeInfoPageItems = null
+          // this.typeInfoPageItems = null
           if (loadMore) {
             this.$refs.loadMoreFooter.finishLoad()
             setTimeout(() => {

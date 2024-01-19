@@ -34,7 +34,7 @@
       :elevation="showScrollToTopFab?4:0"
       :color="showScrollToTopFab?'primary':'transparent'"
     >
-      <!-- 开关目录按钮 TODO目录可以调节宽度-->
+      <!-- 开关目录按钮 TODO 目录可以调节宽度-->
       <v-tooltip
         v-if="catalogue.length>0"
         :disabled="$vuetify.breakpoint.smAndDown&&drawer"
@@ -59,12 +59,9 @@
       </v-tooltip>
 
       <!-- 标题 -->
-      <v-toolbar-title
-        style="cursor: pointer;"
-        :style="{color:showScrollToTopFab||!drawer||$vuetify.theme.dark?'white':'black'}"
-        @click="onClickToolbarTitle"
-      >
-        {{ showScrollToTopFab ? blogArticle.title : $t('appName') }}
+      <v-toolbar-title :style="{color:showScrollToTopFab||!drawer||$vuetify.theme.dark?'white':'black'}">
+        <span style="cursor: pointer;" @click="onClickToolbarTitle">{{ showScrollToTopFab ? blogArticle.title : $t('appName') }}</span>
+        <or-jinrishici-subtitle />
       </v-toolbar-title>
 
       <v-spacer />

@@ -21,23 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package tech.ordinaryroad.blog.quarkus.request
+package tech.ordinaryroad.blog.quarkus.constant
 
-import tech.ordinaryroad.blog.quarkus.constant.ReConstants
-import tech.ordinaryroad.commons.core.quarkus.base.request.BaseRequest
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Size
+/**
+ * @author mjz
+ * @date 2024/1/19
+ */
+object ReConstants {
+    /**
+     * 中文字、英文字母、数字、空格、下划线和减号
+     */
+    const val PATTERN_TYPE_NAME = "^\$|^[\\u4E00-\\u9FFF\\w\\s-]+\$"
+    const val PATTERN_TYPE_NAME_DESCRIPTION = "分类名称只能包含中文字、英文字母、数字、空格、下划线和减号"
 
-class BlogTypeSaveRequest : BaseRequest() {
+    /**
+     * 中文字、英文字母、数字、空格、下划线和减号
+     */
+    const val PATTERN_TAG_NAME = "^\$|^[\\u4E00-\\u9FFF\\w\\s-]+\$"
+    const val PATTERN_TAG_NAME_DESCRIPTION = "标签名称只能包含中文字、英文字母、数字、空格、下划线和减号"
 
-    @Pattern(regexp = ReConstants.PATTERN_TYPE_NAME, message = ReConstants.PATTERN_TYPE_NAME_DESCRIPTION)
-    @NotBlank(message = "名称不能为空")
-    @Size(max = 100, message = "名称长度不能超过100")
-    var name: String = ""
-
-    companion object {
-        private const val serialVersionUID: Long = -8778210869146236624L
-    }
-
+    /**
+     * 中文字、英文字母、数字、下划线和减号
+     */
+    const val PATTERN_USERNAME = "^\$|^[\\u4E00-\\u9FFF\\w-]+\$"
+    const val PATTERN_USERNAME_DESCRIPTION = "用户名只能包含中文字、英文字母、数字、下划线和减号"
 }
