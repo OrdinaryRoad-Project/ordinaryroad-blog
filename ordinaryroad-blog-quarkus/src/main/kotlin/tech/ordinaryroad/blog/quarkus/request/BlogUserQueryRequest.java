@@ -25,12 +25,18 @@
 package tech.ordinaryroad.blog.quarkus.request;
 
 import org.jboss.resteasy.reactive.RestQuery;
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants;
 import tech.ordinaryroad.commons.core.quarkus.base.request.query.BaseQueryRequest;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class BlogUserQueryRequest extends BaseQueryRequest {
 
     private static final long serialVersionUID = -4005654259557529003L;
 
+    @Pattern(regexp = ReConstants.PATTERN_USERNAME, message = ReConstants.PATTERN_USERNAME_DESCRIPTION)
+    @Size(max = 50, message = "用户名长度不能大于50")
     @RestQuery
     public String username;
 

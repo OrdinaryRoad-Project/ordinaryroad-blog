@@ -39,4 +39,10 @@ object ReConstants {
      */
     const val PATTERN_TAG_NAME = "^[\\u4E00-\\u9FFF\\w\\s-]+\$"
     const val PATTERN_TAG_NAME_DESCRIPTION = "标签名称只能包含中文字、英文字母、数字、空格、下划线和减号"
+
+    /**
+     * 中文字、英文字母、数字、下划线和减号
+     */
+    const val PATTERN_USERNAME = "^\$|^[\\u4E00-\\u9FFF\\w-]+\$"
+    const val PATTERN_USERNAME_DESCRIPTION = "用户名只能包含中文字、英文字母、数字、下划线和减号"
 }

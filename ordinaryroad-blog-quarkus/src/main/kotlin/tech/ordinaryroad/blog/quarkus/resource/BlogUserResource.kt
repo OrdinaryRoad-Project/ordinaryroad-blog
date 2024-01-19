@@ -33,6 +33,7 @@ import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers
 import io.vertx.core.json.JsonObject
 import org.jboss.resteasy.reactive.RestPath
 import org.jboss.resteasy.reactive.RestQuery
+import tech.ordinaryroad.blog.quarkus.constant.ReConstants
 import tech.ordinaryroad.blog.quarkus.constant.SaTokenConstants
 import tech.ordinaryroad.blog.quarkus.dal.entity.BlogUser
 import tech.ordinaryroad.blog.quarkus.dto.BlogUserDTO
@@ -51,6 +52,7 @@ import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Positive
 import javax.validation.constraints.Size
 import javax.ws.rs.*
@@ -131,6 +133,7 @@ class BlogUserResource {
     @Transactional
     fun updateUsername(
         @Valid
+        @Pattern(regexp = ReConstants.PATTERN_USERNAME, message = ReConstants.PATTERN_USERNAME_DESCRIPTION)
         @NotBlank(message = "用户名不能为空")
         @Size(max = 50, message = "用户名长度不能大于50")
         @RestQuery username: String
