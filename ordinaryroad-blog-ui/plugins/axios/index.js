@@ -98,7 +98,11 @@ export default function (context, inject) {
         console.error(data)
         message = data.message
         if (!message) {
-          message = JSON.stringify(data.violations)
+          if (data.violations) {
+            message = data.violations.map((item) => {
+              return item.message
+            }).toString()
+          }
         }
         if (message === '此账号已被封禁') {
           message += `，解封时间：${$dayjs().add(data.disableTime, 'second').format()}`
