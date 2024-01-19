@@ -24,7 +24,7 @@
 
 <template>
   <div>
-    <div v-if="userInfo">
+    <div v-if="userInfo" class="d-flex align-center">
       <v-menu offset-y open-on-hover>
         <template #activator="{ on, attrs }">
           <v-btn
