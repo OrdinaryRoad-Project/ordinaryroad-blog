@@ -87,6 +87,7 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 ### 其他
 
 - 国际化
+- 每日诗词
 
 ## 框架
 
