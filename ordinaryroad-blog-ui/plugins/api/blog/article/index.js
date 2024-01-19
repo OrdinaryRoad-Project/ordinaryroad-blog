@@ -102,7 +102,10 @@ export default {
       sortBy = ['createdTime'],
       sortDesc = [true]
     }) => {
-      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
+      let data = { createBy, title, summary, content, typeId, sortBy, sortDesc }
+      if (tagName) {
+        data = { ...data, tagName }
+      }
       return $axios({
         url: `/blog/article/page/publish/${page}/20?${urlEncode(data)}`,
         method: 'get'
@@ -118,7 +121,10 @@ export default {
       sortBy = ['createdTime'],
       sortDesc = [true]
     }) => {
-      const data = { createBy, tagName, title, summary, content, typeId, sortBy, sortDesc }
+      let data = { createBy, title, summary, content, typeId, sortBy, sortDesc }
+      if (tagName) {
+        data = { ...data, tagName }
+      }
       return $axios({
         url: `/blog/article/search/publish/${page}/20?${urlEncode(data)}`,
         method: 'get'
