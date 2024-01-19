@@ -95,9 +95,17 @@ export default function (context, inject) {
       if (typeof data === 'string') {
         message = data
       } else {
+        console.error(data)
         message = data.message
+        if (!message) {
+          message = JSON.stringify(data.violations)
+        }
         if (message === '此账号已被封禁') {
           message += `，解封时间：${$dayjs().add(data.disableTime, 'second').format()}`
+        } else if (message.startsWith('Token已过期')) {
+          // Token无效
+          console.log('Token无效，删除Token')
+          store.commit('user/REMOVE_TOKEN_INFO')
         }
       }
     }
