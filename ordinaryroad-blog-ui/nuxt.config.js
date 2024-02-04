@@ -210,7 +210,7 @@ export default {
           url: 'https://www.bing.com'
         }
       ],
-      KEY: '2b7cc4e2b1f34d53887e6d35ac9e144f'
+      KEY: '74f2538a267c4aa1be6a09e8be69f8ef'
     },
 
     FRIEND_LINK_INFO: [
