@@ -242,7 +242,7 @@ export default {
     FILE_DOWNLOAD_BASE_URL: process.env.FILE_DOWNLOAD_BASE_URL,
 
     OAUTH2: {
-      PROVIDERS: ['ordinaryroad', 'github', 'gitee']
+      PROVIDERS: ['ordinaryroad', 'github', 'gitee', 'qq']
     },
 
     APP_VERSION: require('./package.json').version,
