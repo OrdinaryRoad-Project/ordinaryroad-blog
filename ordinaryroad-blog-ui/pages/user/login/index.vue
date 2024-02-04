@@ -54,7 +54,7 @@
             <v-btn icon @click="login('gitee')">
               <simple-icons-gitee />
             </v-btn>
-            <v-btn v-if="false" icon>
+            <v-btn icon @click="login('qq')">
               <v-icon>
                 mdi-qqchat
               </v-icon>

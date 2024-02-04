@@ -226,7 +226,7 @@ export default {
     },
     /**
      * OAuth2账号相关操作
-     * @param provider ordinaryroad|github|gitee
+     * @param provider ordinaryroad|github|gitee|qq
      * @param action add|remove|update
      */
     onClickProvider (provider, action) {

@@ -27,6 +27,9 @@ quarkus:
       address: redis://${REDIS_HOST}:${REDIS_PORT}
       database: 0
   rest-client:
+    qq-oauth2:
+      scope: javax.inject.Singleton
+      url: https://graph.qq.com
     gitee-oauth2:
       scope: javax.inject.Singleton
       url: https://gitee.com/api/v5
@@ -78,3 +81,7 @@ ordinaryroad:
         client-id: f6c5eb5a40981cfb3dd235686ecad5b233c49c646b0b7d71131d0dff29bb8882
         client-secret: ${CLIENT_SECRET_GITEE}
         scopes: user_info
+      qq:
+        client-id: 102091820
+        client-secret: ${CLIENT_SECRET_QQ}
+        scopes:

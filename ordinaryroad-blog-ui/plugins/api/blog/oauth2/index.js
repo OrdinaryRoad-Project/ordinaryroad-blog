@@ -34,7 +34,7 @@ export default {
     /**
      * 获取OAuth2认证链接
      *
-     * @param provider {String} ordinaryroad|github|gitee
+     * @param provider {String} ordinaryroad|github|gitee|qq
      * @param state {String} State
      * @returns {Promise} URL String
      */
@@ -49,7 +49,7 @@ export default {
      * 回掉后端服务
      *
      * @param token 回掉时的token
-     * @param provider {String} ordinaryroad|github|gitee
+     * @param provider {String} ordinaryroad|github|gitee|qq
      * @param code {String} Authorization Code
      * @param state {String} State
      * @returns {Promise} {token,userInfo}

@@ -75,7 +75,7 @@ class OAuth2ProviderChain : BaseOAuth2Provider("CHAIN_HEAD"), Chain<BaseOAuth2Pr
                 AuthConfig.builder()
                     .clientId(properties["client-id"] as String)
                     .clientSecret(properties["client-secret"] as String)
-                    .scopes((properties["scopes"] as String).split(","))
+                    .scopes(properties["scopes"]?.split(","))
                     .redirectUri(oAuth2Properties.redirectUri())
                     .build()
             }
