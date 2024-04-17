@@ -3,7 +3,7 @@
 Frontend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/job/1483779/build.svg)](https://ordinaryroad.coding.net/p/ordinaryroad/ci/job)
 Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/job/1495289/build.svg "Backend")](https://ordinaryroad.coding.net/p/ordinaryroad/ci/job)
 
-项目原型为[我的个人博客](https://blog.ordinaryroad.top)，使用Quarkus框架重构，一个MD风格的Markdown多人博客。
+项目原型为我的个人博客，使用Quarkus框架重构，一个MD风格的Markdown多人博客。
 
 地址：[https://blog.ordinaryroad.tech](https://blog.ordinaryroad.tech)。
 
