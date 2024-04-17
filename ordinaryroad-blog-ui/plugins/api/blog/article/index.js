@@ -245,6 +245,12 @@ export default {
         method: 'get'
       })
     },
+    getRecommendedArticles () {
+      return $axios({
+        url: '/blog/article/recommended',
+        method: 'get'
+      })
+    },
     getArticlePublishedDays ({ userId }) {
       const params = { userId }
       return $axios({

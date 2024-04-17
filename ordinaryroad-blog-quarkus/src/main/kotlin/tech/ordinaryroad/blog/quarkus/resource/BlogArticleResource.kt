@@ -1020,6 +1020,26 @@ class BlogArticleResource {
     //endregion
 
     //region TODO 开发中
+    /**
+     * 获取首页的推荐文章
+     */
+    @GET
+    @Path("recommended")
+    fun getRecommendedArticles(): List<BlogArticlePreviewVO> {
+        val list = ArrayList<BlogArticlePreviewVO>()
+        val browsedTopN = this.getBrowsedTopN(BlogArticleTopNRequest().apply {
+            this.n = 5
+        })
+        for (map in browsedTopN) {
+            val articleId = map["uuid"]
+            val findById = articleService.findById(articleId)
+            if (findById != null) {
+                list.add(articleMapStruct.transferPreview(findById))
+            }
+        }
+        return list
+    }
+
 
     /**
      * 获取固定在个人首页的文章

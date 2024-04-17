@@ -23,6 +23,7 @@
     "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/sitemap": "^2.4.0",
     "core-js": "^3.25.3",
+    "easy-typer-js": "^2.1.0",
     "echarts": "^5.4.3",
     "jinrishici": "^1.0.6",
     "js-cookie": "^3.0.5",

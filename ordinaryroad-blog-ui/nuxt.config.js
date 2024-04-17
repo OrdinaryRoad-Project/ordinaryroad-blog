@@ -75,6 +75,11 @@ export default {
     },
     // dayjs
     '~/plugins/dayjs/index.js',
+    // easytyper Client Mode
+    {
+      src: '~/plugins/easytyper/index.js',
+      mode: 'client'
+    },
     // echarts Client Mode
     {
       src: '~/plugins/echarts/index.js',
@@ -135,6 +140,18 @@ export default {
       target: 'https://www.bing.com',
       pathRewrite: {
         '^/api/indexnow/Bing': '/indexnow'
+      }
+    },
+    '/api/bing': {
+      target: 'https://cn.bing.com',
+      pathRewrite: {
+        '^/api/bing': '/'
+      }
+    },
+    '/api/hitokoto': {
+      target: 'https://v1.hitokoto.cn',
+      pathRewrite: {
+        '^/api/hitokoto': '/'
       }
     },
     '/api/blog': {
