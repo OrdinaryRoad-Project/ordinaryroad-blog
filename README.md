@@ -33,6 +33,7 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 - 文章发布前审核
 - 发布后随机审核
 - 文章违规申诉
+- [ ] 首页推荐文章轮播
 
 ### 分类模块
 
