@@ -34,7 +34,7 @@
         <vue-masonry-wall
           v-if="pinnedArticles.data&&pinnedArticles.data.length"
           :items="pinnedArticles.data"
-          :options="{default:2,padding:1,width:500}"
+          :options="{default:2,padding:4,width:500}"
           :ssr="{columns: 2}"
         >
           <template #default="{ item }">

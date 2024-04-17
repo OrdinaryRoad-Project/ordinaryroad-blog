@@ -107,7 +107,7 @@ export default {
   computed: {
     options () {
       const padding = {
-        default: 1
+        default: 4
       }
       /* if (this.$vuetify.breakpoint.xs) {
         width = 500
