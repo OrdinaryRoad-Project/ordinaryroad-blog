@@ -265,10 +265,12 @@ export default {
   },
   computed: {
     articleCoverImageUrl () {
+      const defaultUrl = `/img/covers/bg${Math.floor(Math.random() * 5) + 1}.jpg`
       return (item) => {
         // return this.$apis.blog.getFileUrl(item.coverImage, 'https://api.ixiaowai.cn/gqapi/gqapi.php')
         // return 'https://tuapi.eees.cc/fengjing/m/1661427654614.jpg'
-        return this.$apis.blog.getFileUrl(item.coverImage, 'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')
+        // return this.$apis.blog.getFileUrl(item.coverImage, 'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')
+        return this.$apis.blog.getFileUrl(item.coverImage, defaultUrl)
       }
     }
   },

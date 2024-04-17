@@ -24,18 +24,18 @@
 
 <template>
   <v-sheet tile>
-    <nuxt-child />
     <v-select
       v-model="selectedPrivacyModel"
       outlined
       dense
       class="mt-8"
       hide-details
-      style="position: absolute; top: 0; right: 20px; width: 150px"
+      style="position: absolute; top: 60px; right: 20px; width: 150px"
       :label="$t('selectVersion')"
       :items="privacyItems"
       @input="onInput"
     />
+    <nuxt-child />
   </v-sheet>
 </template>
 
@@ -67,4 +67,4 @@ export default {
 }
 </script>
 
-<style scoped/>
+<style scoped />

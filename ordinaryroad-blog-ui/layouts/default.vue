@@ -45,7 +45,6 @@
 
     <v-main>
       <v-container
-        fluid
         :class="$route.name==='index'?'pa-0':null"
       >
         <nuxt />

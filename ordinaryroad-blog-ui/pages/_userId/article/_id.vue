@@ -23,13 +23,11 @@
   -->
 
 <template>
-  <v-container fluid class="pa-0">
-    <or-blog-article-detail
-      :article="article"
-      :pre-and-next-article="preAndNextArticle"
-      :preset-article-comments="articleComments"
-    />
-  </v-container>
+  <or-blog-article-detail
+    :article="article"
+    :pre-and-next-article="preAndNextArticle"
+    :preset-article-comments="articleComments"
+  />
 </template>
 
 <script>
