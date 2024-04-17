@@ -88,6 +88,8 @@ Backend: [![构建状态](https://ordinaryroad.coding.net/badges/ordinaryroad/jo
 
 - 国际化
 - 每日诗词
+- 每日必应壁纸
+- 随机一言打字机
 
 ## 框架
 
