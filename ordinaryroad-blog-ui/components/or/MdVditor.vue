@@ -37,7 +37,8 @@ export default {
   props: {
     cdn: {
       type: String,
-      default: `https://fastly.jsdelivr.net/npm/vditor@${require('@/package.json').dependencies.vditor.replace('^', '')}`
+      // default: `https://fastly.jsdelivr.net/npm/vditor@${require('@/package.json').dependencies.vditor.replace('^', '')}`,
+      default: `/vditor@${require('@/package.json').dependencies.vditor.replace('^', '')}`
     },
     placeholder: {
       type: String,
