@@ -73,10 +73,9 @@
       >
         <!-- 每日壁纸 -->
         <v-card
-          :loading="!dailyBing"
           hover
           height="250px"
-          :href="dailyBing.copyrightlink"
+          :href="dailyBing?.copyrightlink"
           target="_blank"
           class="mb-1 mt-3 me-3"
           :class="{
@@ -86,12 +85,17 @@
         >
           <v-img
             class="fill-height"
-            :src="`https://cn.bing.com${dailyBing.url}`"
+            :src="`https://cn.bing.com${dailyBing?.url}`"
             gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
           >
+            <template #placeholder>
+              <div class="d-flex or-index-bing-cover-img">
+                <v-skeleton-loader type="image" class="flex-grow-1" tile/>
+              </div>
+            </template>
             <div class="d-flex fill-height flex-column justify-space-between white--text">
-              <v-card-title>{{ dailyBing.title }}</v-card-title>
-              <small class="px-4 pb-2">{{ dailyBing.copyright }}</small>
+              <v-card-title>{{ dailyBing?.title }}</v-card-title>
+              <small class="px-4 pb-2">{{ dailyBing?.copyright }}</small>
             </div>
           </v-img>
         </v-card>
@@ -167,11 +171,9 @@ export default {
   async asyncData ({ $apis, $axios }) {
     const tags = await $apis.blog.tag.getTopN()
     const recommendArticles = await $apis.blog.article.getRecommendedArticles()
-    const dailyBing = await $axios.get('/bing/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN')
     return {
       tags,
-      recommendArticles,
-      dailyBing: dailyBing?.images[0] ?? null
+      recommendArticles
     }
   },
   data: () => ({
@@ -227,19 +229,34 @@ export default {
   },
   mounted () {
     this.fetchYiyanData()
+    this.fetchDailyBing()
   },
   created () {
   },
   methods: {
-    refreshYiyan () {
+    fetchDailyBing() {
+      this.$axios.get('/bing/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN')
+        .then((data) => {
+          this.dailyBing = data.images[0]
+        })
+        .catch(() => {
+          // ignore
+        })
+    },
+    refreshYiyan() {
       this.yiyanList = []
       this.currentYiyanIndex = 0
     },
     fetchYiyanData () {
       if (this.yiyanList.length < this.maxYiyanListLength) {
         // 一言Api进行打字机循环输出效果
-        this.$axios.get('/hitokoto')
-          .then(({ hitokoto }) => {
+        this.$axios.get('https://v1.hitokoto.cn', {
+          headers: {
+            Origin: 'https://v1.hitokoto.cn',
+            Referer: 'https://v1.hitokoto.cn'
+          }
+        })
+          .then(({hitokoto}) => {
             this.yiyanList.push(hitokoto)
             this.initTyped(hitokoto, () => {
               this.fetchYiyanData()
@@ -278,12 +295,13 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .easy-typed-cursor
   opacity: 1
   -webkit-animation: blink 0.7s infinite
   -moz-animation: blink 0.7s infinite
   animation: blink 0.7s infinite
+
 @keyframes blink
   0%
     opacity: 1
@@ -307,4 +325,10 @@ export default {
     opacity: 0
   100%
     opacity: 1
+
+.or-index-bing-cover-img
+  height: 100%
+
+  .v-skeleton-loader__image
+    height: 100% !important;
 </style>
