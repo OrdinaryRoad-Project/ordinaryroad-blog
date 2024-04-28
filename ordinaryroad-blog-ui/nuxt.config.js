@@ -145,9 +145,10 @@ export default {
     '/api/bing': {
       target: 'https://cn.bing.com',
       pathRewrite: {
-        '^/api/bing': '/'
+        '^/api/bing': ''
       }
     },
+    // TODO 不使用代理
     '/api/hitokoto': {
       target: 'https://v1.hitokoto.cn',
       pathRewrite: {
@@ -157,19 +158,19 @@ export default {
     '/api/blog': {
       target: process.env.BLOG_BASE_URL,
       pathRewrite: {
-        '^/api/blog': '/'
+        '^/api/blog': ''
       }
     },
     '/api/auth': {
       target: process.env.AUTH_BASE_URL,
       pathRewrite: {
-        '^/api/auth': '/'
+        '^/api/auth': ''
       }
     },
     '/api': {
       target: process.env.BASE_URL,
       pathRewrite: {
-        '^/api': '/'
+        '^/api': ''
       }
     }
   },
