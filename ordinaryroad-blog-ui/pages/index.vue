@@ -77,6 +77,7 @@
           hover
           height="250px"
           :href="dailyBing.copyrightlink"
+          target="_blank"
           class="mb-1 mt-3 me-3"
           :class="{
             'ms-3':$vuetify.breakpoint.mdAndDown,
