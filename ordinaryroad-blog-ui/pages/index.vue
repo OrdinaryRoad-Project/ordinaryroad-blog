@@ -90,7 +90,7 @@
           >
             <template #placeholder>
               <div class="d-flex or-index-bing-cover-img">
-                <v-skeleton-loader type="image" class="flex-grow-1" tile/>
+                <v-skeleton-loader type="image" class="flex-grow-1" tile />
               </div>
             </template>
             <div class="d-flex fill-height flex-column justify-space-between white--text">
@@ -234,7 +234,7 @@ export default {
   created () {
   },
   methods: {
-    fetchDailyBing() {
+    fetchDailyBing () {
       this.$axios.get('/bing/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN')
         .then((data) => {
           this.dailyBing = data.images[0]
@@ -243,7 +243,7 @@ export default {
           // ignore
         })
     },
-    refreshYiyan() {
+    refreshYiyan () {
       this.yiyanList = []
       this.currentYiyanIndex = 0
     },
@@ -256,7 +256,7 @@ export default {
             Referer: 'https://v1.hitokoto.cn'
           }
         })
-          .then(({hitokoto}) => {
+          .then(({ hitokoto }) => {
             this.yiyanList.push(hitokoto)
             this.initTyped(hitokoto, () => {
               this.fetchYiyanData()
