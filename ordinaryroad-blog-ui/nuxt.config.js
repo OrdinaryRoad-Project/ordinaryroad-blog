@@ -148,13 +148,13 @@ export default {
         '^/api/bing': ''
       }
     },
-    // TODO 不使用代理
-    '/api/hitokoto': {
-      target: 'https://v1.hitokoto.cn',
-      pathRewrite: {
-        '^/api/hitokoto': '/'
-      }
-    },
+    // 不使用代理
+    // '/api/hitokoto': {
+    //   target: 'https://v1.hitokoto.cn',
+    //   pathRewrite: {
+    //     '^/api/hitokoto': '/'
+    //   }
+    // },
     '/api/blog': {
       target: process.env.BLOG_BASE_URL,
       pathRewrite: {
