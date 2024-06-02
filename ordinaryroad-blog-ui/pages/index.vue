@@ -71,7 +71,7 @@
         lg="5"
         class="d-flex flex-column"
       >
-        <!-- 每日壁纸 -->
+        <!-- 每日壁纸 FIXME 处理接口失败-->
         <v-card
           hover
           height="250px"
@@ -85,7 +85,7 @@
         >
           <v-img
             class="fill-height"
-            :src="`https://cn.bing.com${dailyBing?.url}`"
+            :src="dailyBing?.url?`https://cn.bing.com${dailyBing?.url}`:null"
             gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
           >
             <template #placeholder>
@@ -250,12 +250,7 @@ export default {
     fetchYiyanData () {
       if (this.yiyanList.length < this.maxYiyanListLength) {
         // 一言Api进行打字机循环输出效果
-        this.$axios.get('https://v1.hitokoto.cn', {
-          headers: {
-            Origin: 'https://v1.hitokoto.cn',
-            Referer: 'https://v1.hitokoto.cn'
-          }
-        })
+        this.$axios.get('https://international.v1.hitokoto.cn')
           .then(({ hitokoto }) => {
             this.yiyanList.push(hitokoto)
             this.initTyped(hitokoto, () => {
@@ -263,7 +258,8 @@ export default {
             })
           })
           .catch(() => {
-            this.obj.output = '暂时无法访问一言API'
+            this.$snackbar.info('暂时无法访问一言API')
+            // this.obj.output = '暂时无法访问一言API'
           })
       } else {
         this.initTyped(this.yiyanList[(this.currentYiyanIndex++) % this.maxYiyanListLength], () => {
