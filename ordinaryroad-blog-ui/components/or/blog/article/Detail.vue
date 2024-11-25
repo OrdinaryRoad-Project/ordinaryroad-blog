@@ -203,7 +203,7 @@
 
     <!-- 封面 -->
     <v-img
-      :src="$apis.blog.getFileUrl(blogArticle.coverImage,'https://uapis.cn/api/bing.php')"
+      :src="$apis.blog.getFileUrl(blogArticle.coverImage, $config.ARTICLE_DETAIL_BANNER_DEFAULT)"
       style="height: 400px; margin-top: -70px"
       gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
     >
