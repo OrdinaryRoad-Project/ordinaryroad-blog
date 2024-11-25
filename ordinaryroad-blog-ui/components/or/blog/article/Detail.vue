@@ -203,7 +203,7 @@
 
     <!-- 封面 -->
     <v-img
-      :src="$apis.blog.getFileUrl(blogArticle.coverImage,'https://tuapi.eees.cc/api.php?category={biying,fengjing}&type=302')"
+      :src="$apis.blog.getFileUrl(blogArticle.coverImage,'https://uapis.cn/api/bing.php')"
       style="height: 400px; margin-top: -70px"
       gradient="rgba(0,0,0,.20),rgba(0,0,0,.20)"
     >
