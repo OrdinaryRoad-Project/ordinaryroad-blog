@@ -36,6 +36,13 @@
       <v-spacer />
       <v-btn
         icon
+        href="https://github.com/1962247851/ordinaryroad-blog"
+        target="_blank"
+      >
+        <v-icon>mdi-github</v-icon>
+      </v-btn>
+      <v-btn
+        icon
         @click.stop="toggleRightDrawerModel"
       >
         <v-icon>mdi-close</v-icon>
