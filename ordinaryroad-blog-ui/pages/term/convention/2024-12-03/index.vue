@@ -35,11 +35,27 @@
     </div>
     <br>
 
-    <or-md-vditor
-      read-only
-      :dark="$vuetify.theme.dark"
-      :pre-set-content="commentContent"
-    />
+    <div v-if="!vditorFinished" class="ma-5">
+      <div v-show="false">
+        {{ content }}
+      </div>
+      <v-skeleton-loader
+        v-for="i in skeletonLoaderCount"
+        :key="i"
+        :type="i%3===1?'heading':'paragraph'"
+        :class="i%3===1?'my-3':null"
+      />
+    </div>
+    <v-fade-transition class="transition-fast-in-fast-out">
+      <or-md-vditor
+        v-show="vditorFinished"
+        id="content"
+        read-only
+        :dark="$vuetify.theme.dark"
+        :pre-set-content="content"
+        @after="vditorFinished = true"
+      />
+    </v-fade-transition>
   </div>
 </template>
 
@@ -47,7 +63,8 @@
 export default {
   layout: 'empty',
   data: () => ({
-    commentContent: '### 一、总则\n' +
+    vditorFinished: false,
+    content: '### 一、总则\n' +
         '为构建清朗、和谐、绿色、健康的网络环境，维护网络文明秩序，保障用户合法权益，OR博客平台依据并贯彻《中华人民共和国民法典》、《中华人民共和国网络安全法》、《中华人民共和国个人信息保护法》、《中华人民共和国未成年人保护法》、《中华人民共和国预防未成年人犯罪法》、《网络信息内容生态治理规定》等相关法律法规及主管部门的管理政策，与用户共同制定《OR博客平台自律公约》（以下简称“本公约”）。\n' +
         '### 二、平台倡导以下行为\n' +
         '1. 共同参与网络文明建设，制作符合国家大政方针、服务经济社会发展大局、体现时代发展大势、反映强国建设成就的内容作品，为现代化强国建设和中华民族伟大复兴凝心聚力。\n' +
@@ -100,7 +117,13 @@ export default {
         '### 六、生效和变更\n' +
         '本公约自公布之日起执行，如有任何疑问、意见或建议，可通过[miaojinzhou@126.com](mailto:miaojinzhou@126.com)与我们联系。\n' +
         '在规范实行过程中，我们会结合实际情况，不断完善和更新本公约，并以公告的方式予以公布，请及时关注。'
-  })
+  }),
+  computed: {
+    skeletonLoaderCount () {
+      const totalSeconds = this.content.length / 8
+      return Math.max(Math.round(Math.random() * (totalSeconds / 15) + totalSeconds / 30) * (this.$vuetify.breakpoint.smAndDown ? 2 : 1), 1)
+    }
+  }
 }
 </script>
 
