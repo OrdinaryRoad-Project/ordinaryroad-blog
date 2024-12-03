@@ -111,11 +111,28 @@
         <or-link
           v-if="$config.BEIAN.ENABLED"
           hover-able
+          :class="$vuetify.breakpoint.smAndDown?null:'me-2'"
           href="https://beian.miit.gov.cn"
           hide-icon
         >
           {{ $config.BEIAN.ICP_NUMBER }}
         </or-link>
+        <div>
+          <or-link
+            hover-able
+            href="/term/privacy"
+            hide-icon
+          >
+            {{ $t('term.privacy') }}
+          </or-link>
+          <or-link
+            hover-able
+            href="/term/convention"
+            hide-icon
+          >
+            {{ $t('term.convention') }}
+          </or-link>
+        </div>
       </div>
     </v-container>
   </v-footer>

@@ -262,5 +262,9 @@
   },
   "userSpace": {
     "of": "User Space Of {0}"
+  },
+  "term": {
+    "privacy": "Privacy Policy",
+    "convention": "Platform Convention"
   }
 }

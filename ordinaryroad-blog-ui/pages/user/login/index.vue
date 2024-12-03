@@ -70,8 +70,10 @@
                 dark
               />
               <span>{{ $t('agree') }}<span v-if="false">《用户协议》和</span>
-                <or-link href="/term/privacy"><span class="white--text">{{
+                <or-link class="mx-1" href="/term/privacy" hide-icon><span class="white--text">{{
                   $t('term.privacy')
+                }}</span></or-link><or-link class="mx-1" href="/term/convention" hide-icon><span class="white--text">{{
+                  $t('term.convention')
                 }}</span></or-link></span>
             </div>
           </div>

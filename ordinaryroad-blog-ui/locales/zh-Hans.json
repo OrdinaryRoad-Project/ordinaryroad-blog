@@ -262,5 +262,9 @@
   },
   "userSpace": {
     "of": "{0}的个人空间"
+  },
+  "term": {
+    "privacy": "隐私政策",
+    "convention": "平台公约"
   }
 }
