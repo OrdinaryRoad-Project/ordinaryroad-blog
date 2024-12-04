@@ -46,12 +46,12 @@ export default ({
     ...zhHansOr,
     ...zhHansApp
   }
-  const keysApp = Object.keys(zhHansApp)
-  for (const key in enOr) {
-    if (keysApp.includes(key)) {
-      console.warn('locales key有冲突', key)
-    }
-  }
+  // const keysApp = Object.keys(zhHansApp)
+  // for (const key in enOr) {
+  //   if (keysApp.includes(key)) {
+  //     console.debug('locales key有冲突', key)
+  //   }
+  // }
 
   app.i18n = new VueI18n({
     locale: store.getters['i18n/getLocale'],

@@ -218,6 +218,11 @@
   "tag": {
     "name": "Tag Name"
   },
+  "term": {
+    "agreeHint": "Please tick to agree \"Privacy Policy\" and \"Platform Convention\"",
+    "convention": "Platform Convention",
+    "privacy": "Privacy Policy"
+  },
   "themeTitles": {
     "dark": "Dark",
     "hunk": "Hunk",
@@ -262,9 +267,5 @@
   },
   "userSpace": {
     "of": "User Space Of {0}"
-  },
-  "term": {
-    "privacy": "Privacy Policy",
-    "convention": "Platform Convention"
   }
 }

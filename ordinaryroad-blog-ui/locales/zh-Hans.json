@@ -218,6 +218,11 @@
   "tag": {
     "name": "标签名称"
   },
+  "term": {
+    "agreeHint": "请勾选同意《隐私政策》和《平台公约》",
+    "convention": "《平台公约》",
+    "privacy": "《隐私政策》"
+  },
   "themeTitles": {
     "dark": "深色主题",
     "hunk": "猛男配色",
@@ -262,9 +267,5 @@
   },
   "userSpace": {
     "of": "{0}的个人空间"
-  },
-  "term": {
-    "privacy": "隐私政策",
-    "convention": "平台公约"
   }
 }
